@@ -1,11 +1,12 @@
 # Eater — research cycle 2 and the experience
 
 Lens: **Eater** (blueprint §1.2). Dispatch: step 1 (research cycle 2) and step 4 (the experience). The journeys and micro stories (steps 2, 3, 5) are drafted by other agents per workflow; they read this file and cite its ids.
-Written 2026-10-01. Workflows the eater touches: WF-1…WF-9, plus the eater's side of WF-10 (approving or declining a support Grant in Settings).
+Written 2026-10-01. Workflows the eater touches: WF-1…WF-9, plus the eater's side of WF-10 (approving or declining a Support agent's Grant request in Settings).
 
 ## How to read this file
 
-- **Finding ids** are `E1`…`E44`. Cite them by id. Experience requirements are `EX-01`…, cited the same way.
+- **Finding ids** are `E1`…`E45`. Cite them by id. Experience requirements are `EX-01`…`EX-63`, cited the same way.
+- **Words.** The map's vocabulary (blueprint §1 ¶4) and `way/vocabulary.md` (delta D2) are used throughout; quotes keep their sources' own spelling (for example "suhur", "Sohor"), while this file's own text says **suhoor**.
 - **Labels.** `opened` = I opened the page in this run (2026-10-01) and the quote is page text. `opened (review)` = a public App Store review read through Apple's customer-review feed in this run; the reviewer's name is left out on purpose and the quote is the review text (Arabic reviews are glossed in English). `assumption` = not opened, or reasoned rather than sourced; treat it as a lead.
 - **Weight.** Vendor pages (app listings, a vendor-run benchmark) and travel or food blogs carry a commercial interest and are marked **(vendor)** or **(blog)**. A single review is one person's voice, never a rate.
 - **Cycle-1 ids** (C, F, P, R) point to `way/research/r1-*.md` as corrected by `r1-refute-a.md` and `r1-refute-b.md`. None of the refuted or doubtful ones is used (C6, C8, C26, C27, C39, C47, C50, C54, F10, F18, F31, R34, and the refuted parts of P5, P6, P11 are left out).
@@ -35,16 +36,17 @@ Written 2026-10-01. Workflows the eater touches: WF-1…WF-9, plus the eater's s
 - For the eater: tea, laban (full-fat, low-fat, skimmed are separate items in the survey) and "gahwa with dates" are daily repeat logs. The word لبن means milk in Egypt and a yogurt drink in the Gulf (F27), so the same word resolves differently by dialect.
 
 **E5 · In Egypt bread is the spoon: baladi bread is used to scoop and mop.** `opened` **(blog)**
-- https://belliesenroute.com/bellies-blog/2023/7/26/breaking-bread-with-cairo-must-try-breads · 2023-07-26 · "This bread is a pocket loaf, perfect for sandwiches, and even better for scooping foods and mopping up sauces."
+- https://belliesenroute.com/bellies-blog/2023/7/26/breaking-bread-with-cairo-must-try-breads · page dated 2025-02-23 (its `datePublished`; the URL slug reads 2023/7/26) · "This bread is a pocket loaf, perfect for sandwiches, and even better for scooping foods and mopping up sauces."
 - For the eater: a "bite" of foul or cheese usually includes bread. This is the FRD's bread rule (FR-018–FR-022, AT-04) seen from the table: the eater counts dipped bites, not grams of bread.
 
 **E6 · Saudi kabsa is eaten from one communal tray, with the right hand.** `opened` **(blog)**
 - https://www.pilgrimaps.com/kabsa-a-shared-tradition-in-rice-and-spice/ · 2025-06-04 · "it is served on a large communal tray placed at the center of a shared cloth … Diners gather around, seated on the floor, and eat with their right hand" · "During the month of Ramadan, many families serve kabsa for iftar".
 - For the eater: while eating, the right hand is busy and may be greasy; the phone, if used at all, is in the left hand, often while sitting on the floor. Logging may wait until hands are clean (`assumption`).
 
-**E7 · Shared-plate eating is hard to measure: the open questions are how many spoonfuls or handfuls, and how much each one held.** A review of dietary assessment found shared-plate eating supplied 30–88% of daily energy in the studies it covered (one in Egypt). `opened`
-- https://pmc.ncbi.nlm.nih.gov/articles/PMC6520825/ · Nutrients 11(4):789, 2019-04-05 · "Challenges in quantification of shared plate eating include accurate estimation of the number of spoonfuls or handfuls of each dish consumed, the amount eaten from each spoonful/handful, and the highly variable nutrient composition of dishes" · "Shared plate eating was found to contribute between 30 and 88% of total daily energy intake".
-- For the eater: counting bites or spoonfuls of a known Unit is how shared-plate intake becomes measurable. A table photo can list the dishes but cannot say what one person ate (FR-037, AT-27).
+**E7 · Shared-plate eating is hard to measure: the open questions are how many spoonfuls or handfuls, and how much each one held.** A narrative review of dietary assessment says so. Its one Egyptian source is an ethnographic case study that gives no energy figure. The review's range of "30 and 88% of total daily energy" rests on a single study it cites (its reference 20), of Bedouin Arab adults in southern Israel, which built a weighed method to estimate each person's intake from common-plate meals. `opened` (the review, and the study's abstract)
+- https://pmc.ncbi.nlm.nih.gov/articles/PMC6520825/ (read via Europe PMC full text) · Nutrients 11(4):789, 2019-04-05 · "Challenges in quantification of shared plate eating include accurate estimation of the number of spoonfuls or handfuls of each dish consumed, the amount eaten from each spoonful/handful, and the highly variable nutrient composition of dishes" · "Shared plate eating was found to contribute between 30 and 88% of total daily energy intake [20]" · "Jerome et al. [13] collected ethnographic data on food consumption patterns in Egypt where shared plate eating is common."
+- Abu-Saad et al., Public Health Nutr 12:2464–2472, 2009-05-01 (doi:10.1017/S1368980009005618; abstract read via Europe PMC, PMID 19405990) · "estimate individual intake from common-plate meals among Bedouin Arabs using a modified 24 h recall questionnaire" · "Weighed records were used to develop a method of quantifying intake from common plates." · "Population centres of traditionally semi-nomadic Bedouin Arabs … in southern Israel". The 30–88% figure is the review's attribution; it is not in the abstract.
+- For the eater: counting bites or spoonfuls of a known, weighed Unit is how shared-plate intake becomes measurable, which is what the one study did with weighed records. How large a share of an Egyptian or Saudi eater's energy comes from shared plates is not known from these sources (`assumption` that it is substantial). A table photo can list the dishes but cannot say what one person ate (FR-037, AT-27).
 
 **E8 · In the Gulf, eating from a shared plate is common, and people misjudge rice portions badly even with a photo atlas.** A UAE study of a 115-food atlas found wide limits of agreement; spicy rice was overestimated by 91% on average. `opened`
 - https://pmc.ncbi.nlm.nih.gov/articles/PMC5919643/ · PLOS ONE, 2018-04-26 · "It is common practice in the UAE for people to eat from a shared plate. This may create additional difficulties in the estimation of the individual food consumption from food photographs" · "Mean overestimates ranged from +9.5% for fries to +91.0% for spicy rice."
@@ -58,17 +60,17 @@ Written 2026-10-01. Workflows the eater touches: WF-1…WF-9, plus the eater's s
 - https://pmc.ncbi.nlm.nih.gov/articles/PMC10836020/ · BMC Nutrition, 2024-02-02 · "Evening (7 pm − 12 am) Post-midnight (1 am − 5 am) … 258 21 … 61.6 5.0" · "Dinner was the most frequently ordered meal".
 - For the eater: restaurant meals are frequent, late, and come with menu calories (Saudi law, F20). "Serving" must be explicit (FRD §6.2).
 
-**E11 · In Ramadan the day turns over: most people eat one or two meals, at home with family, at sunset and before dawn.** In a Jeddah cohort, the share eating 1–2 meals on weekdays rose from 49.1% before Ramadan to 75.4% during it; eating out 3–4 times a week fell from 34.2% to 8.7%; suhur is eaten "nearly 30 min before dawn". `opened`
+**E11 · In Ramadan the day turns over: most people eat one or two meals, at home with family, at sunset and before dawn.** In a Jeddah cohort, the share eating 1–2 meals on weekdays rose from 49.1% before Ramadan to 75.4% during it; eating out 3–4 times a week fell from 34.2% to 8.7%; suhoor is eaten "nearly 30 min before dawn" (the source spells it suhur). `opened`
 - https://pmc.ncbi.nlm.nih.gov/articles/PMC9478032/ · Front Nutr 9:966861, 2022-09-02 · "Fast performers are expected to eat two main meals, breakfast at sunset and suhur (a pre-dawn meal) nearly 30 min before dawn" · "the nightly restriction and practice of consuming meals at home with the family during Ramadan in Saudi society".
-- For the eater: for a month, every meal falls between sunset and pre-dawn, so a midnight Day boundary cuts each Ramadan "day" in two. Meals happen at a family table.
+- For the eater: for a month, every meal falls between sunset and pre-dawn, so a diary-day boundary at midnight cuts each Ramadan "day" in two. Meals happen at a family table.
 
-**E12 · Ramadan iftar starts with dates; meal counts and sweets go up for many families; suhur is often bought ready-made.** In Jeddah families: dates at iftar 97.7%, meat soup 95.4%, sambosa 93.6%; 88.8% took a main meal at suhur; meal frequency rose from 3 to 5; 59% bought prepared food for suhur; 59.5% reported weight gain. Note: Arabic calls iftar "breakfast" (فطور). `opened`
+**E12 · Ramadan iftar starts with dates; meal counts and sweets go up for many families; suhoor is often bought ready-made.** In Jeddah families: dates at iftar 97.7%, meat soup 95.4%, sambosa 93.6%; 88.8% took a main meal at suhoor (the source spells it Sohor); meal frequency rose from 3 to 5; 59% bought prepared food for suhoor; 59.5% reported weight gain. Note: Arabic calls iftar "breakfast" (فطور). `opened`
 - https://pmc.ncbi.nlm.nih.gov/articles/PMC3170249/ · Nutrition Journal 10:84, 2011-08-10 · "Dates are on the top of list (97.7%) at breakfast meal (Ifttar) during Ramadan, followed by meat soups (95.4%) and Sambosa" · "Ifttar: the breakfast meal at the sunset; Sohor: the dawn meal at late night".
 - For the eater: E11 and E12 disagree on the number of meals (2 vs 5), so the app must not fix the number or the names of meals. "3 dates + a cup of laban" is the most repeated log of the month.
 
 **E13 · The first Ramadan after any 2026 launch is expected to start on 8 February 2027, ending around 10 March; the start can differ by a day between countries.** `opened`
 - https://gulfnews.com/uae/ramadan/when-does-ramadan-2027-begin-everything-you-need-to-know-1.500630523 · published 2026-08-04, updated 2026-09-01 · "Ramadan 2027 is expected to begin on Monday, February 8, subject to the official sighting of the crescent moon" · "Eid Al Fitr forecast to begin on Wednesday, 10 March 2027."
-- For the eater: Ramadan support (Day boundary, meal names) is needed within months of a launch, not later.
+- For the eater: Ramadan handling (the diary-day boundary, meal names) is needed within months of a launch, not later.
 
 **E14 · The working week in Egypt and Saudi Arabia runs Sunday–Thursday, and Saudi working hours drop to six during Ramadan; an Egyptian Lose It! user asked to change the start of the week.** `opened` and `opened (review)`
 - https://en.wikipedia.org/wiki/Workweek_and_weekend · read 2026-10-01 · "Egypt 40 Sunday–Thursday" · "Saudi Arabia 40–48 (and 30–36 during Ramadan) Sunday–Thursday 8 (6 during Ramadan)".
@@ -93,7 +95,7 @@ Written 2026-10-01. Workflows the eater touches: WF-1…WF-9, plus the eater's s
 **E18 · A total that grows on its own: trackers that add exercise calories the eater did not ask for.** A Saudi MFP user asked to remove exercise that is "forced into" the calories; an Egyptian Cal AI user saw workout calories on rest days. `opened (review)`
 - https://itunes.apple.com/sa/rss/customerreviews/page=1/id=341232718/sortby=mostrecent/json · 2024-07-29 · «يحتاج حذف للتمرين اللي غصب يدخل بالسعرات المفروض انا اختار الاكل فقط بدون التمرين» — "It needs to drop the exercise that gets forced into the calories; I should choose food only, without exercise."
 - https://itunes.apple.com/eg/rss/customerreviews/page=1/id=6480417616/sortby=mostrecent/json · 2025-09-18, 1★ · "On my rest days I can see workout calories added when I didn't move at all. Can't make it to take only workouts from apple health app".
-- For the eater: fixed-target mode as the default, with Activity shown beside the budget, not inside it (FRD §12.1, AT-23), answers a complaint people already voice in both markets.
+- For the eater: fixed mode as the default activity mode (activity-adjusted mode only by the eater's choice), with Activity shown beside the budget, not inside it (FRD §12.1, §12.2, AT-23), answers a complaint people already voice in both markets.
 
 **E19 · A total that does not match the list: "the calories add up, but I don't see the food in my meal."** Egyptian MFP review. `opened (review)`
 - https://itunes.apple.com/eg/rss/customerreviews/page=1/id=341232718/sortby=mostrecent/json · 2022-04-08, 2★ · "When I add any food to my meals, the calories add up. However, I don't see the food logged to my meal."
@@ -146,9 +148,10 @@ Written 2026-10-01. Workflows the eater touches: WF-1…WF-9, plus the eater's s
 - https://pmc.ncbi.nlm.nih.gov/articles/PMC13085986/ · JMIR mHealth uHealth, 2026-04-01 · "This was especially true when app designers chose to use food images over text as an option to select dietary items" · "to easily log dietary intake with copy-paste functionalities … was appreciated" · "an app's usefulness decreased when lacking multiethnic, local, and home-cooked foods as well as take-out meals and restaurant options".
 - For the eater: Unit tiles with a photo or icon and the food's name, numbers second (FRD §14.1).
 
-**E32 · In the market leader, routine logging got slower and copying is limited to yesterday.** US MFP reviews, September 2026. `opened (review)`
-- https://itunes.apple.com/us/rss/customerreviews/page=1/id=341232718/sortby=mostrecent/json · 2026-09-22, 3★ · "several common actions now require more taps to enter the exact same information. For an app built around frequent, repetitive data entry, adding extra steps to routine logging makes the experience noticeably more frustrating." · 2026-09-21, 3★ · "I can only copy yesterday's meal to the present day. However, I can't go back seven days and copy an item and bring it forward." · 2026-09-23, 2★ · "Taking much longer to log stuff … I think that their push towards AI is slowing the app down".
-- For the eater (English speakers too): copy a meal from any past Day, not only yesterday; the repeat path never waits for AI (NFR-02).
+**E32 · Some daily users of the market leader say routine logging got slower; one could not find how to copy an item from a week ago, although MFP's own help says items can be copied to any date.** Reviews are single users' reports, not product facts. `opened (review)` and `opened`
+- https://itunes.apple.com/us/rss/customerreviews/page=1/id=341232718/sortby=mostrecent/json (read 2026-10-01) · 2026-09-22, 3★ · "several common actions now require more taps to enter the exact same information. For an app built around frequent, repetitive data entry, adding extra steps to routine logging makes the experience noticeably more frustrating." · 2026-09-23, 2★ · "Taking much longer to log stuff … I think that their push towards AI is slowing the app down" · 2026-09-21, 3★ (one user's report) · "I can only copy yesterday's meal to the present day. However, I can't go back seven days and copy an item and bring it forward."
+- MFP help "How do I copy a meal from one day to another?", updated 2026-08-26, read via https://support.myfitnesspal.com/api/v2/help_center/en-us/articles/360032622131.json (the source behind C5) · "Tap the "Edit" button on the diary page Tap the check box next to each item you would like to copy. You can select just one item, or even items from different meals. Tap the "Copy" button and select a date to copy the items."
+- For the eater (English speakers too): copying from any past Day exists in MFP but one user could not find it, so in Sips & Bytes "copy a meal or a Day" must be reachable both from the past Day and from Today, not only possible; and the repeat path never waits for AI (NFR-02).
 
 **E33 · The phone is already at the table in about one meal in three.** Experience sampling of 1,780 meals (Singapore): 85.3% used a phone during at least one meal; phones were used at 27.1% of meals. `opened`
 - https://pmc.ncbi.nlm.nih.gov/articles/PMC8138713/ · JMIR mHealth uHealth, 2021-05-06 · "most participants (110/129, 85.3%) recorded at least one instance of mealtime smartphone use, with an average frequency of 1 in 3 meals where phones were used (27.1%…)".
@@ -177,7 +180,7 @@ Written 2026-10-01. Workflows the eater touches: WF-1…WF-9, plus the eater's s
 
 **E39 · iPhone is about half of mobile use in Saudi Arabia and about one in six in Egypt.** StatCounter, September 2026: Saudi Arabia iOS 51.6%, Android 48.37%; Egypt Android 83.4%, iOS 16.58%. `opened`
 - https://gs.statcounter.com/os-market-share/mobile/saudi-arabia and https://gs.statcounter.com/os-market-share/mobile/egypt · "Mobile Operating System Market Share in Saudi Arabia - September 2026 iOS 51.6 %" · "… in Egypt - September 2026 Android 83.4 % iOS 16.58 %".
-- For the eater: the iOS-first eater is as likely Saudi as Egyptian; Egyptian iPhone eaters often share recipes with Android family members (Android is P1, brief §1.4).
+- For the eater: an iOS-first launch reaches about half of the phones in use in Saudi Arabia but only about one in six in Egypt, so the Android follow-up (brief §1.4) matters more for Egyptian eaters. How many eaters each country contributes depends on population and adoption figures that were not opened (`assumption`).
 
 ## D · Language, numerals and voice
 
@@ -200,13 +203,17 @@ Written 2026-10-01. Workflows the eater touches: WF-1…WF-9, plus the eater's s
 - https://itunes.apple.com/eg/rss/customerreviews/page=1/id=6480417616/sortby=mostrecent/json · 2025-04-26, 5★.
 - For the eater: typed food names may arrive as "foul", "fool", "ful" or "فول"; personal Aliases should accept Latin-script Arabic. How common this is among adult loggers is `assumption`.
 
+**E45 · A small iPhone makes a convoluted recipe flow worse, and the user could not tell whether ingredients were going into the recipe or into the food log.** One US Lose It! review (one user's report). `opened (review)`, read 2026-10-01; a retry of the same feed later that day returned no entries, as the verifier also found.
+- https://itunes.apple.com/us/rss/customerreviews/page=1/id=297368629/sortby=mostrecent/json · 2026-08-26, 2★ · "adding recipes, servings, and even foods to daily meals is pretty convoluted. It's hard to tell what page you're on (and even more confusing on a tiny iPhone screen)." · "When adding ingredients, you don't know whether they're being added to your recipe or your food log."
+- For the eater: this is the FRD's calibration-versus-consumption rule (FRD §4.3, AT-13) seen from a user: the Unit editor must say on every step that it is defining, not logging, and its title must name the place (EX-48).
+
 ## E · What the eater uses today, and what they hate (summary)
 
 | today's tool | what they like | what breaks trust or makes them quit | ids |
 |---|---|---|---|
 | Chat assistant (ChatGPT and similar) | a photo or a sentence becomes a table; no database search | different answers on different days; no ledger; forgets or resets (owner's own workflow, brief §1.1) | E22, E23 |
-| MyFitnessPal | huge database, copy yesterday, saved meals | no Arabic; Saudi Arabia missing as a country; barcode paywalled; more taps after redesign; copy only from yesterday; edits do not reach Recents; midnight and frozen zone | E19, E20, E21, E26, E27, E32; C4, C5, C7, C16 |
-| Lose It! / Cronometer | recipes, copy previous day, Health sync | onboarding questions; convoluted recipe flow on a small phone; no Arabic | E17; C19, C22, C23, C29 |
+| MyFitnessPal | huge database, copy items to any date (its help), saved meals | no Arabic; Saudi Arabia missing as a country (one review); barcode paywalled; more taps after the redesign (reviews); one user could not find how to copy from a week ago; edits do not reach Recents; streak midnight and frozen zone | E19, E20, E21, E26, E27, E32; C4, C5, C7, C16 |
+| Lose It! / Cronometer | recipes, copy previous day, Health sync | onboarding questions (one review, E17); a recipe flow one user found convoluted on a small iPhone, unsure whether ingredients went to the recipe or the food log (one review, E45); no Arabic in either store listing (C16 as corrected, C29) | E17, E45; C16, C19, C22, C23, C29 |
 | Cal AI and other photo-first apps | fastest capture | hard paywall and billing complaints; workout calories added on rest days; absurd totals from text descriptions | E18; C38, C40 (its undercount figure is unverified and not used) |
 | Arabic-first apps (Loqma, Kam Calorie, Kilo, Mezan) | Arabic, local dishes and restaurants, dialect quantities | same meal different number on different days; numbers jump after an update; restaurant numbers not believable; long onboarding; forced subscription | E15–E17, E28–E30; F32, F33, F34, F35 |
 | Delivery-app menu calories | free, at the moment of ordering | "both … wrong and unreliable" (Kilo review, E28); serving meaning unclear | E10, E28; F20 |
@@ -233,8 +240,8 @@ Written 2026-10-01. Workflows the eater touches: WF-1…WF-9, plus the eater's s
 
 *All three are synthetic. They exist to make the moments concrete; their foods are calibration fixtures in the FRD's sense, not data.*
 
-- **Mona, Cairo (Arabic, Egyptian dialect, Arabic-Indic digits).** 08:40 at the table: foul with oil, 2 boiled eggs, white cheese, 6 dipped bites of baladi bread, tea with milk and two sugars. She logs with her left thumb: tap "قرصة جبنة" (cheese bite) ×3, "معلقة فول" ×4, "شاي بلبن" ×1, Undo once because she tapped 4 instead of 3. 15:45: a shared lunch tray of rice, molokhia and chicken; she counts her spoons and logs after the meal. 23:50: a sandwich; she logs it at 00:20 and it lands on "today" because her Day ends at 03:00.
-- **Faisal, Riyadh, in Ramadan (Arabic, Gulf dialect, Western digits).** 18:02 iftar: says «٣ تمرات وكوب لبن» into Siri; the Entry shows "3 dates (Sukkari) · 1 cup laban (Gulf: yogurt drink)". 21:30 after taraweeh: the family kabsa tray; he photographs it, chooses "Plan a meal", gets "5 spoons of rice + 2 pieces of chicken fit your 600 kcal" and taps Ate as planned. 03:40 suhoor: foul and eggs; the Day boundary he set for Ramadan keeps all three on one Day.
+- **Mona, Cairo (Arabic, Egyptian dialect, Arabic-Indic digits).** 08:40 at the table: foul with oil, 2 boiled eggs, white cheese, 6 dipped bites of baladi bread, tea with milk and two sugars. She logs with her left thumb: tap "قرصة جبنة" (cheese bite) ×3, "معلقة فول" ×4, "شاي بلبن" ×1, Undo once because she tapped 4 instead of 3. 15:45: a shared lunch tray of rice, molokhia and chicken; she counts her spoons and logs after the meal. 23:50: a sandwich; she logs it at 00:20 and it lands on "today" because her diary-day boundary is 03:00.
+- **Faisal, Riyadh, in Ramadan (Arabic, Gulf dialect, Western digits).** 18:02 iftar: says «٣ تمرات وكوب لبن» into Siri; the Entry shows "3 dates (Sukkari) · 1 cup laban (Gulf: yogurt drink)". 21:30 after taraweeh: the family kabsa tray; he photographs it, chooses "Plan a meal", gets "5 spoons of rice + 2 pieces of chicken fit your 600 kcal" and taps Ate as planned. 03:40 suhoor: foul and eggs; the diary-day boundary he set for Ramadan keeps all three on one Day.
 - **Sam, London (English).** Left MFP after the redesign (E32). Lunch at a Lebanese restaurant: photo plus "half the rice, no bread", ≤2 questions, approves. Next morning corrects "the hummus was 2 spoons, not 4"; sees old, new and delta.
 
 ## 3 · The moment that matters, per workflow
@@ -247,16 +254,16 @@ Written 2026-10-01. Workflows the eater touches: WF-1…WF-9, plus the eater's s
 | **WF-4** Capture and analyse | Photographing the shared tray or the restaurant plate and adding words | table or restaurant; people in frame; sun on the screen | "It asked only what mattered and did not pretend." | a shared tray counted as one person's meal (FR-037); an exact gram figure from a photo (E8, FR-033); a misheard dialect committed silently (E43) |
 | **WF-5** Plan a meal and confirm | "How much of this kabsa fits my 600?" before reaching for the tray | at the table, before eating | "A straight answer in spoons I can eat." | percentages without counts; a plan that silently breaks a limit (AT-20); plan and meal both counted (AT-21) |
 | **WF-6** Correct history | "The spoon was 18 g, not 15" — that evening or the next morning | sofa or bed, late (E9) | "The past is safe; nothing moved that I didn't move." | a correction that adds instead of replaces (AT-11); yesterday's fix changing today (AT-14); an AI "re-think" that rewrites the number (E29); the fix not reaching the recent Unit (E21) |
-| **WF-7** Activity | Glancing at Today after a walk | anywhere, a glance | "My food budget did not quietly grow." | exercise added to the food budget unasked (E18); "no data" shown as zero (FR-067) |
+| **WF-7** Activity | Glancing at Today after a walk | anywhere, a glance | "My food budget did not quietly grow." | exercise added to the food budget unasked (E18) — fixed mode is the default activity mode, activity-adjusted mode only by choice (FRD §12.1–12.2); "no data" shown as zero (FR-067) |
 | **WF-8** Reports and progress | Looking at the week on the weekend, or the Day before bed | sofa, unhurried | "An honest picture, without scolding." | missing days counted as zero-calorie wins (AT-25); a Monday week (E14); left-to-right charts in Arabic (E41); red warnings for ordinary eating (FRD §14.2) |
 | **WF-9** Privacy | Deciding whether to let photos of the family table and their voice go to Google's AI; later, leaving | Settings, unhurried | "My diary is mine; I can take it and go." | consent bundled or paywalled (R3); people in family photos analysed (FR-038); "recordings may be kept" (E30) instead of the 24-hour rule (FR-078) |
-| **WF-10** (eater's side) | A support Grant request appears in Settings | Settings | "Nobody reads my diary unless I say yes, and only for as long as I said." | access without approval; a request that is hard to decline (blueprint §1.3) |
+| **WF-10** (eater's side) | A Support agent's Grant request (Requested) appears in Settings | Settings | "Nobody reads my diary unless I say yes, and only for as long as I said." | access without approval; a request that is hard to decline; a request left Unanswered when its request window closes that still gives access (vocabulary D2: Unanswered gives no access) (blueprint §1.3) |
 
 ## 4 · The matching style
 
 One sentence: **large, calm and one-handed at the table; food first, numbers second; true at a glance.**
 
-- **One thumb, either hand.** Every WF-3 step — find the Unit, set the count, log, Undo — sits in the middle band of the screen, reachable by one thumb (E34, E35). Tabs (Today · Capture & Plan · My Units · Progress) stay at the bottom edge; rarely used controls (Settings, Day switch) at the top. Nothing in the logging path needs a two-finger gesture or a long-press without a visible alternative.
+- **One thumb, either hand.** Every WF-3 step — find the Unit, set the count, log, Undo — sits in the middle band of the screen, reachable by one thumb (E34, E35). Tabs (Today · Capture & Plan · My Units · Progress) stay at the bottom edge; rarely used controls (Settings, choosing another Day) at the top. Nothing in the logging path needs a two-finger gesture or a long-press without a visible alternative.
 - **Large targets.** Every control at least 44×44 pt with about 12 pt between bezelled neighbours (E36). The count stepper and recent-Unit tiles are larger than the minimum; their exact size is chosen on the served screen at the table, not left at the framework default (care.md group 3).
 - **Calm.** No confetti, no streak flames, no sounds, no red for an ordinary over-target day (FRD §14.2, §11.4). Status is quiet; an interruption only for loss or a failed limit. Animations short, never on the repeat-log path, and off under Reduce Motion (E36).
 - **Glanceable totals.** Today's first glance answers one question — how much is left — in one large number, with the Pending state marked on it when it applies (FRD §8.3). Macro detail is one tap deeper.
@@ -268,7 +275,7 @@ One sentence: **large, calm and one-handed at the table; food first, numbers sec
 
 ## 5 · Care questions this persona raises, answered as requirements
 
-Size is **platform**, so every care.md group applies on every eater screen; the lines below are the eater-specific answers. Each `EX-nn` is a requirement the drafters turn into stories and acceptance. Where an `EX` restates an FR, the FR is binding and the `EX` names the eater's moment.
+Size is **platform**, so every care.md group applies on every eater screen, and every question is answered for the eater or marked not applicable with its reason (§5a). Each `EX-nn` is a requirement the drafters turn into stories and acceptance. Where an `EX` restates an FR, the FR is binding and the `EX` names the eater's moment. The `EX` lines are grouped by care.md group; §5a then takes every care.md question, one by one, and points it to its `EX` lines or marks it not applicable with the reason.
 
 ### Group 1 · Does it deserve to exist, and where does it live
 
@@ -278,15 +285,40 @@ Size is **platform**, so every care.md group applies on every eater screen; the 
 - **EX-04 · Actions sit next to what they act on.** Undo, Correct and Void are on the Entry; "Plan a meal" vs "Log what I ate" is chosen on the photo itself (FRD §2.4); places (the four tabs) are the only navigation.
 - **EX-05 · Defaults instead of settings.** Language, numeral system and first weekday default from the device region (E14, E41); dialect defaults from the region (EG/Gulf) for alias resolution (F27); the diary-day boundary has a default and a Ramadan option (EX-20). Each can be changed in Settings, none must be.
 - **EX-06 · No separate mode for confirmation.** Count steppers and the Undo banner live inside Today; a pop-up appears only for a permanent loss (care.md group 4).
+- **EX-45 · Every eater screen has one sentence, and every element on it serves that sentence.** Anything that does not serve it moves one step deeper.
+  - **Today:** what I ate on this Day and how much is left (EX-01).
+  - **Capture & Plan:** turn a photo, a label, a scale reading, voice or words into an Analysis, or plan a meal from the food in front of me (WF-4, WF-5).
+  - **My Units:** my saved Units, Composites, Recipes and Templates — find, recalibrate or archive them (WF-2).
+  - **Progress:** how my Days and weeks went against the Target in effect on each Day, with coverage (WF-8, FR-071, FR-073).
+  - **Settings** (Goals, Food rules, Activity, Units & language, Privacy, Export): my choices, each with a default, plus Grant requests from a Support agent (WF-1, WF-7, WF-9, WF-10).
+  - **Analysis review:** check what the Analysis found and approve only what I ate, or save it as a Unit (FRD §4.3, FR-039).
+  - **Unit editor:** define one Unit, Composite or Recipe once, with its Evidence; saving never logs (AT-13, E45).
+  - **Meal planner:** counts of my Units that fit my limits, or which limit blocks them (FR-054, FR-055).
+  - **Meal review:** confirm what I actually ate from a Plan — Ate as planned, Change amounts or Not eaten (FRD §2.5).
+  - **Siri phrase and widget:** log a recent Unit or Template without opening the app; the widget shows an innocuous summary (P22–P24, C55).
+- **EX-46 · What we said no to, so the table moment stays light.** No streak flames or badges, which punish a missed midnight (E20); no social feed and no barcode-first journey (both excluded, FRD §1.3); no chat window with hidden state (FRD §2.1); no fixed breakfast/lunch/dinner slots (E1, E11, E12; Conflict 2); no AI re-thinking of a saved number (E29); no full-screen interruptions in the logging path (C21); no advertising based on diary data (FR-079).
+- **EX-47 · Need first, technology second.** Every eater feature traces to a moment in §3 and to a finding or an FR line. AI is used only where the moment needs interpretation (photo, label, voice, free text), never for arithmetic, never on the repeat path, and never as the only way to log (FRD principle "AI interprets … deterministic code calculates"; E15, E16, E32, E43).
 
 ### Group 2 · How it is found and understood
 
-- **EX-07 · Where am I, which Day.** Every eater screen names its place; Today always shows the selected Day and its time zone when it differs from the device's (FR-044). A Day after midnight but before the boundary is labelled with the Day it belongs to.
-- **EX-08 · One word per thing, in both languages.** The map's vocabulary (Unit, Template, Entry, Day, Target, Plan, Analysis, Evidence, Correction, Void, Restore, Pending, Activity, Consent, Grant) has one fixed Arabic label each in the string catalogue, the same on every screen (blueprint §1.4).
+- **EX-07 · Where am I, which Day.** Every eater screen names its place; Today always shows the selected Day and its time zone when it differs from the device's (FR-044). After midnight but before the diary-day boundary, Today is labelled with the Day it belongs to.
+- **EX-08 · One word per thing, in both languages.** Every word below has one fixed Arabic label in the string catalogue and is the same on every screen, in Siri phrases and in widgets (blueprint §1 ¶4, `way/vocabulary.md` D2):
+  - **things:** Unit, Composite, Recipe, Food, Alias (with its dialect: EG, Gulf, MSA), Template, Entry, Day, Target, Plan, Analysis, Evidence, Correction, Void, Restore, Pending, Activity, Consent, Policy, Grant;
+  - **Evidence values:** label-verified, recipe-calculated, measured, estimated analogue, user-defined;
+  - **states the eater sees:** Entry — Pending, Confirmed, Corrected, Voided, Restored; Day — Provisional, Complete, Partial, Unlogged; Analysis — Processing, Needs answers, Ready for review, Approved, Discarded, Failed, Pending; Plan — Proposed, Infeasible, Saved, Confirmed (Ate as planned · Changed), Not eaten; Unit, Composite and Recipe — Draft, Saved (version n), Archived; Grant — Requested, Approved, Active, Expired, Ended, Withdrawn, Declined, Unanswered; Consent — Given, Withdrawn; Privacy job — Requested, Running, Completed, Failed;
+  - **places:** the tabs Today · Capture & Plan · My Units · Progress; the screens Analysis review, Unit editor, Meal planner, Meal review, Settings; the Settings sections Goals, Food rules, Activity, Units & language, Privacy, Export;
+  - **settings and modes:** diary-day boundary; fixed mode and activity-adjusted mode; tracking-only mode; the "hide numbers" view;
+  - **roles named to the eater:** Support agent (in a Grant request);
+  - **errors the eater can meet:** each error code in EX-62 has one fixed message.
 - **EX-09 · Verbs on buttons.** "Log", "Save unit", "Ate as planned", "Change amounts", "Not eaten", "Approve", "Undo" — never "OK" for a ledger action (FRD §2.5).
 - **EX-10 · Never ask what the app already knows.** A recent Unit is offered, not searched; the last count used for a Unit is pre-filled (FRD §14.1 "persist the last used unit for each food"); the photo's time sets the Entry's time.
 - **EX-11 · Squint test.** On Today the eye lands first on the remaining figure, then the Entries; on a Unit tile, first the food's name and picture, then the count.
 - **EX-12 · Key status where people look.** Pending (not yet synced) and the offline note sit on the remaining figure and the affected Entries, not in an alert (FRD §8.3).
+- **EX-48 · Where am I, and how do I get out.** Every screen's title names the place in the vocabulary (Today, My Units, Analysis review, Unit editor, Meal planner, Meal review, Settings), never the app's name. Every pushed screen has Back (pointing right in Arabic, E40); every sheet has Cancel or Close; the tab bar always shows where else the eater can go. A first-time eater can answer, on each screen and within seconds: where am I, what can I do here, where can I go next, what will I find there, how do I get out.
+- **EX-49 · Platform conventions, not inventions.** The standard iOS tab bar, navigation stack, sheets, swipe actions (each with a visible button, EX-37), system share and permission sheets and SF Symbols; the system's own right-to-left mirroring for Arabic; Siri and widgets through App Intents (P22–P24).
+- **EX-50 · Each colour means one thing.** One accent colour means "tappable or primary". One caution colour appears only for a failed limit or an uncertain measurement (FRD §14.2), never for an ordinary over-Target Day. Pending uses a neutral tone with its word. Evidence values differ by word and icon, not by hue alone (EX-35). The meanings are the same in light and dark.
+- **EX-51 · Labels a newcomer understands.** The eater sees the map's words (Entry, Void, Restore, Evidence, Pending, Correction), because one name per thing is binding (blueprint §1 ¶4), but each comes with plain help where it first matters: the Void button carries the line "Removes it from this Day; you can restore it"; Pending reads as "Pending — saved on this phone, not yet sent" (D2: queued on the device); each Evidence value opens a one-line explanation. Internal names (resolver, registry, Tier A or Tier B, projection, command, idempotency) never reach an eater screen. The exact help wording is chosen on the served screen (EX-55).
+- **EX-52 · Tappable or plain, at a glance.** Unit tiles look like buttons (filled tile, picture or icon, name, count control); Entry rows are list rows with a disclosure that opens the Entry; totals and macro figures are plain text, and when one opens a detail it carries a disclosure too. Nothing plain looks tappable, nothing tappable looks plain.
 
 ### Group 3 · How it feels
 
@@ -294,24 +326,34 @@ Size is **platform**, so every care.md group applies on every eater screen; the 
 - **EX-14 · A number never changes without a visible cause.** Every change to a Day total traces to an Entry, a Correction, a Void or a Restore the eater can see in the Day's timeline (FR-042, FR-046, E15, E18, E19). Model or registry rollouts never change a saved Unit or a past Day (E16, FR-031).
 - **EX-15 · One main action per view, never destructive.** Today: Log. Analysis review: Approve. Plan: Ate as planned. Void is always secondary.
 - **EX-16 · The repeat path has no animation and no wait.** No spinner, no transition longer than the system's, on Unit tap, count change or Undo (care.md group 3, E36).
-- **EX-17 · Change of mind mid-gesture.** The count stepper can go down as easily as up; Undo is available before the banner ends; a draft Analysis can be discarded without a confirmation dialog (it never touched the ledger, FR-045).
+- **EX-17 · Change of mind mid-gesture.** The count stepper can go down as easily as up; Undo is available before the banner ends; an Analysis in Needs answers or Ready for review can be Discarded without a confirmation dialog, because it never touched the ledger (FR-045).
 - **EX-18 · Resume where they left off.** Reopening the app returns to the same tab and Day with no flash of an empty Today (care.md group 3).
+- **EX-53 · Every action answers, at the right loudness.** Beyond logging (EX-13): an Analysis shows its state (Processing → Needs answers → Ready for review) and what it is doing; a sync moves Pending → Confirmed quietly; a warning comes before trouble (ml read as grams, AT-07; a Target below the floor, `POLICY_FLOOR`); a failure says what failed (a Failed Analysis, `AI_UNAVAILABLE`). Quiet inline status for small things; a banner for Undo; an alert only for permanent loss (delete account) — never for an over-Target Day. Every custom control has a press state (E36).
+- **EX-54 · Edges, gaps and baselines line up, in both directions.** One spacing scale on every eater screen; layout uses leading and trailing, never left and right, so mirrored Arabic keeps identical gaps; mixed Arabic–English rows share one baseline; counts and kcal use tabular digits so columns line up in both numeral systems. Checked on the smallest and the largest iPhone (P34), in both languages, at the default and the largest text size.
+- **EX-55 · Values with no provably right answer are chosen on purpose.** For the eater these are: how long the Undo banner stays, the stepper and tile size, how many recent Units Today shows, the default diary-day boundary and the Ramadan option's hours, the near-duplicate window (FR-043), the Arabic size adjustment (E41), the help wording (EX-51), and the AI progress wording and wait bound (NFR-03). Each is tried on the served screen and recorded with its value and reason in the slice's care file; none stays at a framework default.
+- **EX-56 · Start and resume are measured, not hoped for.** The release proof's performance pass measures cold start to an interactive Today and resume to the last tab and Day, on the smallest supported iPhone simulator (P34) with a slow-network profile, reporting median and worst case. A cached Today appears before any network answer. The target figures are `assumption` until the model phase sets them; NFR-02 already bounds the log itself.
 
 ### Group 4 · When it goes wrong, is empty, or is slow
 
 - **EX-19 · The empty Today says what to do next**, with the button to do it: "Log what you ate" (opens quick-add) and "Make your first unit" (opens the Unit editor) — in the eater's language (care.md group 4).
-- **EX-20 · The Day follows the eater's night, not the clock.** A diary-day boundary setting (FRD §8.1) with a sensible default and a one-tap Ramadan option that keeps iftar and suhoor on one Day; late Entries before the boundary land on the current Day; the selected Day stays visible; travel and time-zone change neither duplicate nor lose Entries (FRD §8.1, E9–E13, E20). Exact default hours are `assumption` for the model phase (see Conflicts).
-- **EX-21 · Offline is quiet.** With no network, Today, My Units, recent Units and Templates work; new Entries show as Pending; on reconnection each command is accepted once (FRD §8.3, AT-10, AT-31, NFR-06). An offline photo stays a Pending draft and is never posted as eaten (FRD §7.2).
+- **EX-57 · Every other eater screen has a designed empty state with its next step.** My Units with nothing saved → "Make your first unit" (Unit editor). Progress with too few logged Days → the FRD's "Insufficient data" state (FRD §14) with "Log what you ate". Meal planner with no available food → "Add food from a photo or from My Units". An Analysis that finds no food → recapture guidance and "Type what you ate" (FRD §7.2). No Templates yet → "Save this meal as a Template" on any logged meal.
+- **EX-58 · The first second shows real content.** Today, My Units and Progress show the last saved content from the device at once, with a quiet "updating" note while fresher data loads; Analysis review shows the photo and the Processing state at once. Nothing shows a blank screen, and a report never shows zeros while it loads (EX-27).
+- **EX-59 · Long tasks are honest and can be left.** An Analysis that takes more than a moment says what it is doing in plain steps, shows progress that moves only when work moves, and offers Cancel; past the NFR-03 bound it continues in the background and the eater keeps logging (NFR-03, AT-32). An export or deletion (Privacy job) shows Requested → Running → Completed and can be left while it runs.
+- **EX-20 · The Day follows the eater's night, not the clock.** A diary-day boundary setting (FRD §8.1) with a sensible default and a one-tap Ramadan option that keeps iftar and suhoor on one Day; late Entries before the diary-day boundary land on the current Day; the selected Day stays visible; travel and time-zone change neither duplicate nor lose Entries (FRD §8.1, E9–E13, E20). Exact default hours are `assumption` for the model phase (see Conflicts).
+- **EX-21 · Offline is quiet.** With no network, Today, My Units, recent Units and Templates work; new Entries show as Pending; on reconnection each command is accepted once (FRD §8.3, AT-10, AT-31, NFR-06). An offline photo becomes a Pending Analysis (captured offline, not sent) and is never posted as eaten (FRD §7.2).
 - **EX-22 · AI down is not logging down.** If the analyzer is unavailable or the quota is used up, typed counts, recent Units, Templates and manual amounts still log, and the screen says why AI is unavailable in one line (AT-32, FR-039, brief §16.4 kill switch).
 - **EX-23 · Errors next to the problem, without blame.** "This label shows ml; the unit is grams — confirm the basis" beside the reading (AT-07); never "Oops" or "we".
+- **EX-60 · Fields are checked as they are typed, and obvious slips are fixed quietly.** In the Unit editor (weights, sample count, component weights, pot weight, cooked yield), the count stepper and the profile and Target inputs: Arabic-Indic and Western digits and both decimal marks (٫ and .) are accepted and normalised without comment (FRD §14.1 "decimal input", E41, E43). Negative or zero masses, counts below zero, and macro percentages that do not sum to 100 are caught as typed, with the fix offered (FR-006, AT-09). A component sum outside the tolerance and a reading in ml where grams were meant are flagged beside the field (FR-023, AT-07). An age under 18 stops at the age gate (`AGE_REQUIREMENT`); a Target below the floor is explained (`POLICY_FLOOR`). Quiet fixes: stray spaces, "١٥" read as 15, "15,5" read as 15.5.
 - **EX-24 · Undo instead of warnings.** Void and Correct are undoable and show what they reversed; a warning appears only before permanent loss (delete account, FR-078). A near-duplicate log ("you logged 3 cheese bites 1 minute ago") is a quiet note, not a block (FR-043).
-- **EX-25 · Half-built Units survive.** Closing the Unit editor or the Recipe pot-weighing midway keeps the draft (care.md group 4).
+- **EX-25 · Half-built work survives.** Closing the Unit editor or the Recipe pot-weighing midway keeps the Unit's Draft; closing onboarding, an Analysis in Needs answers, or the Meal planner's limits midway keeps the answers already given (care.md group 4).
 - **EX-26 · Permissions asked at the moment of use, with one plain sentence.** Camera on first photo, microphone on first voice log, Health on first Activity or Health write, each separately (FR-076, R3). Declining keeps manual logging (FRD §3.2).
 - **EX-27 · Missing data is "unknown", never zero.** Unlogged Days are shown as coverage, not as successes (AT-25); a calorie-only Entry marks macro coverage incomplete (AT-16); Health with no data is "no data", not "denied" (P30, FR-067).
+- **EX-62 · Every error the eater can meet has words, and says why.** Each error the eater can reach — `UNIT_NOT_FOUND`, `UNIT_AMBIGUOUS`, `STALE_REVISION`, `SOURCE_BASIS_UNKNOWN`, `MASS_BALANCE_ERROR`, `MACROS_INCOMPLETE`, `PLAN_INFEASIBLE`, `AI_UNAVAILABLE`, `RATE_LIMITED`, `VALIDATION_ERROR`, `UNAUTHENTICATED`, `CONSENT_REQUIRED`, `AGE_REQUIREMENT`, `POLICY_FLOOR`, `NOT_FOUND` (vocabulary D2) — has one fixed message in both languages that says why the command cannot work now and what to do; no code reaches the screen raw; no unhandled state leaves an empty screen.
 
 ### Group 5 · The inside the eater never sees
 
 - **EX-28 · The same words inside and out.** Code, logs and data use Unit, Entry, Day, Correction, Void, Restore, Pending — the words on the screen (care.md group 5, blueprint §1.4).
+- **EX-61 · The eater's arithmetic is proved, not trusted, including the paths nobody sees.** Every number the eater sees on Today, Progress, the Meal planner and the Unit editor is covered by the FRD's golden fixtures (AT-01–AT-32 as they apply) and replaying the ledger reproduces every Day total (FR-042, NFR-01). The rarely used paths each have a test: Restore after Void, a `STALE_REVISION` conflict from two devices (AT-31), a diary-day boundary change, a time-zone change while travelling, a Pending Entry replayed after reinstall (NFR-06), and an Analysis left in Needs answers.
 - **EX-29 · Logs carry no diary.** No food names, photos, audio, weights or Target values in operational logs or crash reports; request id, Entry id and validation codes only (FRD §19.2).
 - **EX-30 · Sample data is the eater's real world, synthetic.** Fixtures include Arabic and English names, long Arabic dish names, Arabic-Indic and Western digits, dialect aliases (لبن EG vs Gulf, F27), Latin-script Arabic (E44), a Ramadan week, a post-midnight Entry and a 200% text size — and no real person's diary.
 - **EX-31 · Collect only what the moment needs.** Photos are cropped and stripped of metadata before upload; people in a family-table photo are neither identified nor described (FR-038, FR-077); audio is deleted within 24 h (FR-078).
@@ -327,6 +369,7 @@ Size is **platform**, so every care.md group applies on every eater screen; the 
 - **EX-38 · Reduced motion and no timers that beat a slow reader.** The Undo banner does not vanish before a slow reader can act; with Reduce Motion, movement becomes fades (E36).
 - **EX-39 · Arabic done right.** Mirrored layout, back points right, progress and week charts fill right-to-left, digits never reversed, numerals per the eater's setting in every number including the stepper, the Plan and the reports; Arabic voice "١٨ مش ١٥" and typed "18 not 15" give the same Correction (E40, E41, E43, AT-26).
 - **EX-40 · Mixed input in one line.** Typed or spoken input accepts Arabic and English in one sentence and both digit forms (E42, E43, FR-036); the transcript is editable and confirmed as chips before anything is committed (FRD §14.1).
+- **EX-63 · Focus ring, keyboard, Switch Control and Voice Control.** With Full Keyboard Access every interactive element — the custom Unit tiles and the count stepper included — shows the system focus ring and is reached in reading order (mirrored in Arabic). The whole of WF-3 (log a recent Unit, change the count, Undo) and WF-6 (Correct, Void, Restore) can be done by keyboard, by Switch Control and by Voice Control; each control has a speakable name that matches its visible label ("Log", "Cheese bite"). On iOS, "someone who cannot use a mouse" means these three paths; a mouse itself is not part of the eater's surface.
 - **EX-41 · Works for someone new to trackers and for someone leaving MFP.** Templates, copy a meal or a Day, and Health write-back behave as an MFP or Cronometer user expects (C5, C12, C23), while a first-time Egyptian user can log with bites and loaves and never see a gram unless they ask (E2).
 
 ### The eater's safety and tone (FRD §11.4, §14.2, §19.3)
@@ -335,19 +378,84 @@ Size is **platform**, so every care.md group applies on every eater screen; the 
 - **EX-43 · A view without numbers.** The "hide numbers" view (blueprint §1.6, R37) keeps logging and Units but hides kcal and macro figures, for eaters who find numbers harmful.
 - **EX-44 · Tracking-only mode is not a lesser app.** After a safety-screen answer that triggers it (R35, R38), logging, Units, reports and export all work; only automated weight-change targets are withheld, with neutral wording (FRD §3.3, WF-1 done-when).
 
+## 5a · Every care.md question, answered for the eater
+
+Each row is one question from care.md, "The questions", in its order. "n/a" means not applicable for the eater, with the reason. Screens in scope: Today, Capture & Plan, My Units, Progress, Settings, Analysis review, Unit editor, Meal planner, Meal review, and the Siri phrase and widget.
+
+| # | care.md question (short) | the eater's answer |
+|---|---|---|
+| 1.1 | One sentence per screen; every element serves it | EX-45 (all eater screens), EX-01 (Today) |
+| 1.2 | What should the person feel; what did we say no to | the feelings per workflow in §3; the no's in EX-46 |
+| 1.3 | Started from the need, not a technology looking for a use | EX-47 |
+| 1.4 | Among the few things most people do most of the time, else one step deeper | EX-02 (logging closest), EX-45 (anything else one step deeper), EX-01 |
+| 1.5 | A place people go to, or a thing people do | EX-04 (four tabs are places; Undo, Correct, Void sit on the Entry) |
+| 1.6 | Does this setting need to exist | EX-05: Settings holds only the map's user settings (blueprint §1.6), each with a default from the region or the FRD |
+| 1.7 | Does this need a pop-up or a separate mode | EX-06, EX-53 (alert only for permanent loss) |
+| 1.8 | If this changes how an existing screen works, is it clearly better for current users, and was it tried on them | **n/a for v1:** no eater screen has shipped and no eater exists yet (`way/ledger.md`: nothing built). It applies to any later delta that changes a shipped eater screen; that delta is tried on eaters in the consented pilot (brief §23.1) before it ships |
+| 2.1 | Where am I, what can I do, where next, what will I find, how do I get out | EX-48, EX-07 |
+| 2.2 | The title names the place, not the brand | EX-48 |
+| 2.3 | Icons, words and gestures work as the platform does | EX-49 |
+| 2.4 | One word per thing; each colour means one thing | EX-08 (words), EX-50 (colours) |
+| 2.5 | Someone who knows none of our internal names understands every label | EX-51 |
+| 2.6 | Buttons say what they do with a verb; multi-step flows keep the same words | EX-09; the Plan's "Ate as planned · Change amounts · Not eaten" are the same words in the Meal planner and Meal review (FRD §2.5) |
+| 2.7 | Most people can start without changing a setting | EX-03, EX-05 |
+| 2.8 | Never ask the person to type what the system knows or could offer | EX-10 |
+| 2.9 | Tappable vs plain content at a glance | EX-52 |
+| 2.10 | Squint: the eye lands on the most important thing; related things grouped | EX-11 |
+| 2.11 | Key status visible where people look | EX-12 |
+| 3.1 | Every action says what happened, what is happening, what comes next; warns before trouble; fails clearly | EX-13, EX-53 |
+| 3.2 | Loudness matches importance | EX-53; the Calm line of §4 |
+| 3.3 | Responds at the instant of touch; no undesigned wait | EX-13 (≤300 ms, NFR-02), EX-16, EX-53 (press state) |
+| 3.4 | Can change one's mind mid-motion | EX-17 |
+| 3.5 | Animations have a purpose, stay brief, stay off repeated actions | EX-16; the Calm line of §4 |
+| 3.6 | One clear main action per view, never the destructive one | EX-15 |
+| 3.7 | Edges, gaps and baselines line up | EX-54 |
+| 3.8 | Values with no provably right answer were tried and chosen on purpose | EX-55 |
+| 3.9 | First screen appears at once, where the person left off, no flash | EX-18, EX-56, EX-58 |
+| 4.1 | Empty state says what to do next, with the button | EX-19 (Today), EX-57 (every other eater screen) |
+| 4.2 | What appears in the first second while data loads | EX-58 |
+| 4.3 | Long tasks: honest progress, say what they do, offer cancel | EX-59 |
+| 4.4 | Errors next to the problem, saying how to fix, without blame, "oops" or "we" | EX-23, EX-62 |
+| 4.5 | Fields checked as typed; obvious slips fixed quietly | EX-60 |
+| 4.6 | Undo exists and shows what it reversed | EX-13, EX-24 |
+| 4.7 | Warn only before unexpected, permanent loss | EX-24, EX-53 |
+| 4.8 | Half-filled work is protected | EX-25 |
+| 4.9 | Permission asked at the moment it is needed, with one plain sentence | EX-26 |
+| 4.10 | No network: last saved data with a quiet note | EX-21, EX-12 |
+| 4.11 | When a command cannot work now, say why | EX-22, EX-62 |
+| 5.1 | The inside is built with the same care as the screen | EX-61, EX-28 |
+| 5.2 | Nothing left to chance: unhandled cases, guessed values, unchecked states | EX-61 (rare paths tested), EX-62 (every error has words), EX-55 (no guessed values) |
+| 5.3 | Names in code, data and logs match the screen's words | EX-28, EX-08 |
+| 5.4 | Logs hide personal data and still follow one record | EX-29 (request id and Entry id, no diary content) |
+| 5.5 | Placeholders gone; sample data realistic | EX-30 |
+| 5.6 | Collect only what the feature needs | EX-31 |
+| 5.7 | Start and resume time measured on a slow device and link | EX-56 |
+| 5.8 | The product claims only what it does | EX-32 |
+| 6.1 | Largest text size: nothing clips or overlaps | EX-33 |
+| 6.2 | 4.5:1 contrast in light and dark | EX-34 |
+| 6.3 | Visible focus ring on every interactive element | EX-63 |
+| 6.4 | No meaning by colour alone | EX-35, EX-50 |
+| 6.5 | Screen reader labels, kept current | EX-36 |
+| 6.6 | Targets big enough, with room between | EX-37, the Large targets line of §4 |
+| 6.7 | Every gesture has a visible control; the whole flow works by keyboard | EX-37 (gestures), EX-63 (keyboard) |
+| 6.8 | Reduced motion: fades, nothing flashes | EX-38 |
+| 6.9 | Nothing disappears on a timer before a slow reader acts | EX-38 |
+| 6.10 | Arabic: mirror where direction carries meaning; numbers, logos and clocks stay; paragraphs aligned by language | EX-39, EX-40, the Arabic line of §4 |
+| 6.11 | Works for a first-time user, someone who cannot use a mouse, someone from another platform | EX-41 (first-time and coming from MFP), EX-63 (keyboard, Switch Control, Voice Control) |
+
 ## 6 · Conflicts for the model phase
 
 These are tensions between the eater and other personas or within the model; they are for the model phase, never for the owner.
 
-1. **Diary-day boundary vs reports and Targets (eater vs auditor/approver).** The eater needs a late boundary and a Ramadan option (EX-20); reports use "the target version effective on each day" (FR-071) and the approver versions policy by date. The model must say which boundary a Day uses when the eater changes it mid-month, and that changing it never reassigns past Entries (FRD §8.1 "a manual day switch is not an instruction to reinterpret all past events").
-2. **Meal grouping has no word in the vocabulary.** The FRD speaks of "meal" reports and copying a meal; the eater needs flexible groups (Ramadan iftar/suhoor, Egyptian late lunch, E1, E11, E12). The model must name the meal grouping once (one word, both languages) and say whether it is fixed slots or time-based.
-3. **Personal Alias vs approver's dialect Alias (eater vs nutrition approver).** "laban" resolves to milk (EG) or yogurt drink (Gulf) by the approver's dialect-tagged Alias (F27); the eater's own Unit named "laban" must win for that eater (FRD §5.1 precedence). The model must fix the precedence: eater's Unit alias > eater's dialect setting > approver default.
+1. **Diary-day boundary vs reports and Targets (Eater vs Auditor and Nutrition approver).** The eater needs a late diary-day boundary and a Ramadan option (EX-20); reports use "the target version effective on each day" (FR-071) and the Nutrition approver versions Policy by date. The model must say which diary-day boundary a Day uses when the eater changes it mid-month, and that changing it never reassigns past Entries (FRD §8.1 "a manual day switch is not an instruction to reinterpret all past events").
+2. **Meal grouping has no word in the vocabulary.** The FRD speaks of "meal" reports and copying a meal; the eater needs flexible groups (Ramadan iftar and suhoor, Egyptian late lunch, E1, E11, E12). The model must name the meal grouping once (one word, both languages) and say whether it is fixed slots or time-based.
+3. **Personal Alias vs the Nutrition approver's dialect Alias (Eater vs Nutrition approver).** "laban" resolves to milk (EG) or yogurt drink (Gulf) by the Nutrition approver's dialect-tagged Alias (F27); the eater's own Unit named "laban" must win for that eater (FRD §5.1 precedence). The model must fix the precedence: the eater's Unit Alias > the eater's dialect setting > the Nutrition approver's approved Alias.
 4. **Week start vs period reports.** 7-day and 28-day views (FR-072) need a first weekday per locale (E14); the model must say whether "week" is rolling 7 days or a calendar week, and where the first weekday is stored.
-5. **Family-table photos vs evaluation data (eater vs approver/admin).** NFR-10 needs consented target-cuisine test cases; the eater's photos show family members. Raw images for quality review need a separate explicit opt-in (FRD §19.2, FR-079) and must never be the default.
-6. **Support speed vs the eater's control (eater vs support agent).** Support wants quick diary access; the eater approves or declines each Grant in Settings (blueprint §1.3). The model must make "decline" the default when the eater does nothing, and set the request's own expiry.
+5. **Family-table photos vs evaluation data (Eater vs Nutrition approver and Platform admin).** NFR-10 needs consented target-cuisine test cases; the eater's photos show family members. Raw images for quality review need a separate explicit opt-in (FRD §19.2, FR-079) and must never be the default.
+6. **The Support agent's speed vs the eater's control (Eater vs Support agent).** The Support agent wants quick diary access; the eater approves or declines each Grant in Settings (blueprint §1.3). Per D2, a request the eater does not answer before its request window closes becomes Unanswered and gives no access (`GRANT_NOT_ACTIVE`). The model must set the length of the request window and say whether the eater is reminded before it closes.
 7. **One glanceable number vs Pending and coverage.** The eater wants one "remaining" figure (EX-11); the FRD requires distinguishing pending from confirmed totals (FRD §8.3) and showing coverage (FR-073). The model must define which total the headline shows when some Entries are Pending.
-8. **Numeral system in exports and the console (eater vs auditor/support).** The eater sees Arabic-Indic digits; exports and the admin console must stay machine-readable. The model must say exports use Western digits and ISO dates regardless of the eater's display setting.
-9. **AI quota exhaustion vs "repeat logging is free" (eater vs platform admin).** Per-user AI quotas (blueprint §1.6) must never block a confirmed repeat Unit, which "uses no new nutrition inference" (FRD §16.5).
+8. **Numeral system in exports and the admin console (Eater vs Auditor and Support agent).** The eater sees Arabic-Indic digits; exports and the admin console must stay machine-readable. The model must say exports use Western digits and ISO dates regardless of the eater's display setting.
+9. **AI quota exhaustion vs "repeat logging is free" (Eater vs Platform admin).** Per-user AI quotas (blueprint §1.6) must never block a confirmed repeat Unit, which "uses no new nutrition inference" (FRD §16.5).
 
 ## 7 · Assumptions this file leaves open
 
@@ -359,6 +467,9 @@ These are tensions between the eater and other personas or within the model; the
 - Whether App Shortcut phrases work in Arabic with Siri (P22 as checked in r1-refute-b) — typed and tapped logging never depend on it.
 - OpenAI's Memory FAQ wording on what ChatGPT does not remember (E22; host blocked).
 - Paper food diaries in Egypt and Saudi Arabia: no source opened.
+- How large a share of an Egyptian or Saudi eater's energy comes from shared plates (E7).
+- The start and resume target figures for the release proof (EX-56).
+- How many eaters each country contributes to an iOS-first launch (E39).
 
 ## Lens verdict (2026-10-01)
 
@@ -416,3 +527,30 @@ Apple's customer-review feed returned zero entries for every app tried today, in
 ### Cross-lens (for the model phase join, uncounted)
 
 None found within checks 4 and 6.
+
+## Fix round 1 (2026-10-01)
+
+All 16 defects of the verdict above were fixed at their root, in this file only. Sources were re-opened with a generic User-Agent; no owner identifier was sent anywhere.
+
+| # | defect | fix |
+|---|---|---|
+| 1 | E7 claimed 30–88% across the review's studies | E7 now says the range rests on one study the review cites (its reference 20), whose abstract was opened via Europe PMC: Abu-Saad et al. 2009, Bedouin Arab adults in southern Israel, a weighed common-plate method. The Egyptian source is named as an ethnographic case study with no energy figure; the share for Egyptian or Saudi eaters is labelled `assumption`. |
+| 2 | E32 and the MFP row stated one review as a product fact | MFP's help article 360032622131 (updated 2026-08-26) was opened and is quoted in E32: items can be copied to any date. The review is labelled as one user's report; the requirement became "copy from any past Day must be easy to find" (EX-02). The table row now says "copy items to any date (its help)" and "one user could not find how to copy from a week ago". |
+| 3 | Row "Lose It! / Cronometer": "convoluted recipe flow on a small phone" unsourced | New finding **E45** quotes the US Lose It! review (2026-08-26) it came from, labelled one user's report; the row cites E45, and C16 (as corrected) for Lose It!'s missing Arabic. |
+| 4 | E39 reasoned claims without source or label | Rewritten to what the shares show (about half of Saudi phones, about one in six Egyptian phones); the country comparison of eater numbers is labelled `assumption`; the recipe-sharing claim was removed. |
+| 5 | E5 wrong date | Now "page dated 2025-02-23 (its `datePublished`; the URL slug reads 2023/7/26)", re-opened today. |
+| 6 | Group 1: purposes for every screen; question 1.8 | **EX-45** gives one sentence for Today, Capture & Plan, My Units, Progress, Settings, Analysis review, Unit editor, Meal planner, Meal review, and the Siri phrase and widget. **EX-46** (what we said no to) and **EX-47** (need first) added. Question 1.8 is marked n/a for v1 with its reason in §5a. |
+| 7 | Group 2: internal names, tappable vs plain, colour meaning | **EX-51** (labels a newcomer understands), **EX-52** (tappable or plain), **EX-50** (each colour means one thing); also **EX-48** (where am I, how do I get out; titles) and **EX-49** (platform conventions). |
+| 8 | Group 3: alignment | **EX-54** (one spacing scale, leading/trailing for mirrored Arabic, shared baselines for mixed-script rows, tabular digits); also **EX-53** (every action answers, loudness, press state) and **EX-55** (values chosen on purpose). |
+| 9 | Group 4: first second beyond Today; field checks | **EX-58** (first second on Today, My Units, Progress, Analysis review) and **EX-60** (Unit editor weights, pot weight, cooked yield, counts, profile and Target inputs checked as typed; digits and decimal marks normalised quietly); also **EX-57** (empty states on every other eater screen), **EX-59** (long tasks) and **EX-62** (every reachable error has words). EX-25 now covers onboarding, Needs answers and the Meal planner too. |
+| 10 | Group 5: start and resume measurement | **EX-56**: cold start and resume measured on the smallest iPhone simulator with a slow-network profile in the release proof's performance pass; target figures labelled `assumption`. Also **EX-61** (arithmetic proved; rare paths tested). |
+| 11 | Group 6: focus ring, keyboard, cannot use a mouse | **EX-63**: Full Keyboard Access focus ring on every control, WF-3 and WF-6 operable by keyboard, Switch Control and Voice Control; the mouse case is stated as these three paths on iOS. |
+| — | All care questions | New **§5a** takes all 58 care.md questions (groups 1–6) one by one and points each to its EX lines, or marks it n/a with the reason (only 1.8 is n/a). |
+| 12 | "draft" used for an Analysis | EX-17 now says an Analysis in Needs answers or Ready for review can be Discarded; EX-21 says an offline photo becomes a Pending Analysis (captured offline, not sent). "Draft" remains only for a Unit (EX-25), as D2 allows. |
+| 13 | Conflict 6 contradicted the Grant states | Conflict 6 now uses D2: a request not answered before its request window closes becomes Unanswered and gives no access (`GRANT_NOT_ACTIVE`); the model sets the request window. The WF-10 row says the same. |
+| 14 | Role names in more than one form | Every role is now written in full: Nutrition approver, Support agent, Platform admin, Auditor (header line 4, WF-10 row, EX-45, Conflicts 1, 3, 5, 6, 8, 9). |
+| 15 | Two names for one thing | The file's own text says **suhoor** (quotes keep the sources' "suhur" and "Sohor", noted in "How to read"); **diary-day boundary** everywhere (E11, E13, Mona, Faisal, EX-07, EX-20, Conflict 1); **fixed mode** and **activity-adjusted mode** for the activity modes (E18, WF-7 row, EX-08). |
+| 16 | EX-08's word list incomplete | EX-08 now lists every map thing (adding Composite, Recipe, Food, Alias, Policy), the Evidence values, every D2 state the eater sees (Entry, Day, Analysis, Plan, Unit/Composite/Recipe, Grant, Consent, Privacy job), the places and Settings sections, the settings and modes, the role named to the eater, and points to EX-62 for error messages. |
+
+Counts after this round: 45 findings (E1–E45), 63 experience requirements (EX-01–EX-63), 58 care questions answered in §5a (57 answered, 1 marked n/a with its reason).
+
