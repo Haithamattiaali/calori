@@ -18,7 +18,7 @@ Extends `blueprint.md` §1 ¶4. Every lens, contract, screen, log line and test 
 | **Policy version** | Proposed → Approved (with effective-from) → In effect → Superseded | one approver may approve; the audit trail records who proposed and who approved (two people when two exist; the same person is allowed only when the role has one holder, and the trail says so) |
 | **Registry version** (model id + prompt + schema per task) | Proposed → Shadow → Canary → Rollout · Rolled back | the **Kill switch** per task is On/Off; when On, AI requests for that task fail fast with `AI_UNAVAILABLE` and nothing is queued to send later |
 | **Grant** (just-in-time diary access) | Requested → Approved → Active → Expired · Ended (by the support agent) · Withdrawn (by the eater); Requested → Declined · Unanswered (no answer before the request window closes) | reads are allowed only while Active; writes never |
-| **Consent** | Given · Withdrawn (each with version, time, method) | one Consent per purpose |
+| **Consent** | Not given → Given · Withdrawn (each change with version, time, method) | one Consent per purpose; "Not given" is the state before the eater has decided (delta D3) |
 | **Privacy job** | Requested → Running → Completed · Failed (retried with the same id) | deletion leaves a completion record with no identifiers |
 
 ## Errors (API `code`; extends brief §18.2)

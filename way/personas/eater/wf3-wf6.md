@@ -236,7 +236,7 @@ As the Eater, I copy a whole earlier Day's food into today and can leave a meal 
 - `/r` Given Faisal's Mon 8 Feb 2027 holds food Entries in three meals, an Activity "walk 30 min" and one Voided Entry, When on Tue 9 Feb he picks 8 Feb in the Day picker → "Copy this Day" and taps Log, Then today receives every Confirmed food Entry of that Day under the same meal names, and neither the Activity nor the Voided Entry is copied.
 - `/r` Given "Copy this Day", When quick-add lists the Day's meals, Then it shows each meal with its kcal and a tick per meal, all ticked; unticking one meal leaves it out of the copy.
 - `/r` Given Faisal copies the same Day again two minutes later, When he taps Log, Then the near-duplicate note appears (eater-3.24) and nothing is thrown away.
-- `/r` Given a Day whose only Entries are an Activity and a Voided Entry, When "Copy this Day" is chosen for it, Then quick-add reads "No food to copy from this Day", shows no Log button, and today's timeline is unchanged.
+- `/r` Given a Day whose timeline holds only an Activity and one Voided Entry (no Confirmed Entry), When "Copy this Day" is chosen for it, Then quick-add reads "No food to copy from this Day" with one button, "Pick another Day", which opens the Day picker; it shows no Log button, and today's timeline is unchanged.
 
 #### eater-3.19 · Save a meal as a Template
 As the Eater, I save a meal I eat often as a named Template, so that next time it is one tap from quick-add. · map §1 ("save meal Templates", vocabulary "Template (a saved meal)"), FRD §2.1 ("recent units, or a meal template"), FR-045 · C5, C45, EX-02
@@ -989,3 +989,8 @@ These parts hold:
   - Conflicts item 11 says this file stores the device's diary_day_id "as sent, so a boundary setting that syncs late between two iPhones cannot move an Entry".
 - The correction preview that shows the move to another Day (6.17) is drawn on the device.
 - Conflicts items 9 and 11 should point to each other, so the model phase settles one rule.
+
+
+## Fix by the session (2026-10-01)
+1–2. eater-3.18's empty "Copy this Day" now offers the next step ("Pick another Day", opening the Day picker) and calls the Day's contents "an Activity and one Voided Entry" — an Activity is not an Entry.
+3. "Not given" is now a Consent state in `way/vocabulary.md` (delta D3: Consent = Not given → Given · Withdrawn), because a purpose the eater has not yet decided is a real state the screens must show; eater-3.40's lines stand as written.
