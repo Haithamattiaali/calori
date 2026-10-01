@@ -647,3 +647,61 @@ Proposals for the model phase, to be added to the map's vocabulary or renamed: *
 | WF-10 done-when (request, approval in Settings, read in the box, expiry, trail; decline gives no access) | 10.2, 10.6, 10.7, 10.11, 10.15, 10.17, 10.23 |
 
 **Totals:** 48 stories (journey 9: 25, journey 10: 23); 146 acceptance lines (78 in journey 9, 68 in journey 10): 106 `/r`, 34 `/s`, 6 `/m`. Every story has at least one `/r` line.
+
+---
+
+## Lens verdict (2026-10-01)
+
+**fail**: 21 defects.
+
+The verifier did not write this lens. It was checked against `way/blueprint.md` §0–§1, `way/brief/frd-v1.0.md`, `way/personas/_lens-brief.md`, `care.md` ("The questions", "By size"), `way/research/r1-*.md` and both refutations.
+
+These parts hold:
+- The counts are right: 48 stories and 146 acceptance lines (106 `/r`, 34 `/s`, 6 `/m`).
+- Every story has a `/r` line.
+- Every WF-10 step and both done-when clauses (WF-9 and WF-10) have stories.
+- Every cycle-1 finding the lens cites (R2–R4, R7, R8, R21–R25, R31) stands in `r1-refute-b.md`. R34, R29's decree type and P11 are named only as avoided.
+- All 16 SR sources were re-opened on 2026-10-01 with a generic User-Agent; the one exception is SR2's approve-requests page. Every quote and date checked is on its page.
+
+### Defects
+
+1. **support-9.13 · traced.** "Covers: FR-082 · SR9 Art. 12(3), SR11 Art. 3(1)(a)(d) · R23, R31". FR-082 is the story's only FRD line, and FR-082 is a gate before release ("Complete launch-market privacy/legal review … before public release"). It is not a request log that runs in the product. The Privacy requests log rests on SR11 Art. 3(1)(d) and on the map's Privacy job row (R23, R31). Cite those as the trace.
+2. **Missing step: consent withdrawal propagating (WF-9, AT-29) · complete.** AT-29 says "Account deletion and consent withdrawal propagate to media, queues, private cached analysis, and exports". Support can see the deletion stages (9.9). For a withdrawn Consent it sees only "Off · withdrawn 2026-09-30 21:14 · v3" (9.6). No story lets support see or explain the propagation that follows a withdrawal.
+3. **support-9.7 / 9.8 · complete.** The export states shown are Ready (9.7), Failed and Queued (9.8). Two states have no acceptance: Running, when the eater asks "where is my export?" while it is still being built, and Expired, after the lens's own window (A8: "A ready export stays downloadable in the app for 7 days").
+4. **support-9.8 · complete and observable.** A9 says "Support may re-queue a failed export once". No line shows what happens when the re-queued job fails again. "Re-queue … the button disappears" covers only the moment after the press, so the "once" rule and the next step after it cannot be observed.
+5. **Missing unhappy path: deletion or export for an eater who cannot sign in (WF-9) · complete.** 9.3 is "so that I can help someone who cannot open the app". 9.12 says support will "never do it for them". 9.13 closes a row only as "Completed by in-app export". No story says how a request from an eater who has lost access (lost phone, Sign in with Apple account gone) is answered within the 30 days that G3 promises.
+6. **support-9.1 · complete.** The story is "so that everything I do is tied to me and nobody can act as me" and it covers SR6, whose summary lists "person authentication". Its acceptance has only a successful sign-in, the idle logoff and the refusal of tokens that are not staff tokens. A failed staff sign-in has no line, and neither does a second factor (or a decision not to require one).
+7. **Unhappy paths outside Failed jobs · complete.** Slow, error and offline states exist only for Failed jobs (9.20). Account lookup, Account state, Privacy jobs, the Grant request form and the Grant panel have none. §7 promises "No network in the console: … a quiet 'Offline — showing data from 10:42'", but no story carries it. "Send request", "Withdraw request" and "End access now" have no line for a call that fails or is made offline.
+8. **support-9.10 · observable.** The row offers "only 'Escalate to platform admin'" and then shows "Escalated 2026-10-01 11:05 by Mona K.". Nothing says where the escalation lands or how the platform admin sees it. Past the support row, nobody can observe the story's outcome ("no deletion quietly misses its legal window").
+9. **Vague acceptance lines · observable.**
+   - support-9.3 `/s`: "the Audit trail marks the burst for the auditor" names no event and no field.
+   - support-9.20: "Given the jobs API answers slowly … placeholders appear at once" gives no number for either delay.
+   - support-10.16: "the bar says so quietly" does not give the warning text.
+   - support-10.15: "lists three lines such as 'Mona K. viewed your diary for 29 Sep · 13:24'" leaves two of the three lines unspecified.
+10. **The fixtures contradict each other · observable.** One seed cannot satisfy all of these lines:
+    - (a) E1 withdrew "Send photos, voice and text to Google's AI" on 2026-09-30 21:14 (9.6). E1 still has "AI analyses today 3 of 10" (9.4), Analysis `an_5530` at 2026-10-01 12:04 (9.14), and "used 10 of 10 analyses on 2026-10-01" (9.15).
+    - (b) E2 asked for deletion on 2026-09-15 and shows "signed out and disabled — done 09-15; private records deleted — done 09-15" (9.9). E2 still requests exports on 2026-09-30 (9.7) and on 2026-10-01 (9.13, `job_exp_88`).
+    - (c) `staff_omar`'s console is "in Arabic", yet 10.4 expects him to see the English "Mona K. has a request waiting for this eater …".
+11. **support-10.21 against support-9.22 · observable.** 10.21 says "after signing in again before expiry the agent can reopen the Diary". A13 says "Every support read about an account requires a look-up of that account in the same console session", and 9.22 enforces it with `LOOKUP_REQUIRED`. The new session after the idle logoff has no look-up, so a verifier cannot tell which result is right: the Diary opens directly, or a look-up comes first.
+12. **Time zones · observable and experience.** support-10.19 expects the eater's app to show "Ended early by support at 10:49". 10:49 is UTC (31 min before 11:20 UTC). E1 is in Asia/Riyadh, and 10.15 says the access history is "in the eater's language and time zone", so the app should show 13:49. More broadly, §2 says "every time shows in both zones", yet many console lines show one zone or none: 9.7 "requested 2026-09-30 18:02 · ready 18:09", 9.10 "Escalated 2026-10-01 11:05", 9.16 "since 09:10 UTC", 10.5 "sent 10:05 UTC", 10.7 "at 10:12 UTC".
+13. **§2 · sourced.** "What they use today and hate" credits dislikes to sources that record none. SR10 is a regulator's guidance on proportionality, SR13 documents vendors' settings, and SR2 states a cost in response time. Only SR16 gives agents' own view ("tiresome for agents"). "overbroad access made every employee a suspect" is not in SR12. "continued spying for months" is in SR12 and holds. Label the rest `assumption`, or reword it to what the sources say.
+14. **Vocabulary: Day.** The map's word is **Day**. The lens writes "per-Day counts" once (9.7 `/s`) and "diary day(s)" everywhere else (fixture G1, 10.2, 10.3, 10.12 …). Use one name for the thing: keep Day, or propose "diary day" in §10.
+15. **Vocabulary: Grant actions and states.** The screen, the code and the trail use different words for the same thing (care group 5):
+    - The eater taps "Allow", but the endpoint, state and event are `approve` / `approved` / `grant.approved`.
+    - The eater's screen says "Support can read, not change. Every view is listed here." and "Mona K. viewed your diary", but the event is `grant.read`.
+    - The eater's "End access" produces state `revoked` / `GRANT_REVOKED`, but the console says "The eater ended access".
+    - Support's "End access now" produces state `ended`, but a read then returns "403 `GRANT_EXPIRED` with state `ended`" (10.19).
+16. **Vocabulary: the lens's own screen names drift.**
+    - One view has three names: "Diary (read-only)" (10.11, §7), "Diary view" (10.11, 10.13, 10.17) and "the Diary" (10.16).
+    - "Grant panel" (9.24, 10.11), "Grant bar" (9.24, 10.16, §7), "the panel" and "the bar" (10.16, 10.20) all carry the end time, and their relation is never defined.
+    - "Privacy help" (9.12) and "Settings → Help" (9.2) are missing from §10's list of names the map does not yet have.
+17. **§6, matching style · experience.** §6 states three style rules that no acceptance line checks: "One accent colour is reserved for 'inside an active Grant' and means nothing else", "no animation on repeated actions", and "ordinary states use words, not red". §6 also says "a large monitor (1440 px and up)", but 9.24 proves the three-column layout only at 1920×1080.
+18. **Timers · experience (care group 6).** §7 says "Nothing else disappears on a timer". But 9.1 and 10.21 sign the agent out after 15 minutes idle and clear the page, with no warning before it happens. For the console, this answers the care question "Does anything disappear on a timer before a slow reader can act on it?" wrongly.
+19. **Care group 4 questions this persona raises, left unanswered.**
+    - "If someone closes a half-filled form, is their work protected?" is not answered for the Grant request form or the Privacy requests log form.
+    - "Do we … quietly fix an obvious slip?" is not answered for the support code. 9.2 treats any inexact code as "No account matches this code", and nothing says whether lowercase, spaces or a missing hyphen in `SB-7KQ2-94XM` are normalised.
+20. **Ids: journey = WF number.** support-9.14 to 9.20 (Analysis failures, AI quota, kill switch, sync conflicts, duplicate deliveries, Activity import, Failed jobs states) carry journey 9. The map's WF-9 is "Privacy — consents, export, delete account". Their content belongs to WF-4, WF-3, WF-7 and the WF-10 registry. The dispatch put failed jobs under WF-9, so this is a gap in the map: no workflow owns FR-080's failed jobs for support. The model phase should settle it, either by renumbering these stories or by adding the support side to a workflow in the map.
+21. **Shared stories not marked (lens brief item 5).** These stories have acceptance on another persona's surface but carry no "Shared:" line, and §8 leaves them out:
+    - eater: 10.5 ("the eater's Settings → Privacy → Grants shows it in history as 'Withdrawn by support'"), 10.8, 10.17 and 10.19;
+    - auditor (its Audit trail): 9.1, 9.3, 9.8, 9.10 and 10.2 ("When the auditor opens the Audit trail");
+    - platform admin: 9.10, which the escalation is addressed to.
