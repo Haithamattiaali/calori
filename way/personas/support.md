@@ -58,7 +58,7 @@ One seed holds all of these at once. Times are on 2026-10-01 unless a date is gi
 | E12 | `acct_0d4e9b` · emulator seed only · Grant `grant_8e20` by `staff_omar`, Active, used to request deletion during a Grant |
 | E13 | anonymous-session eater `acct_anon_71f2`; and a local-trial install with no account |
 | E14 | `acct_7b12aa` · 240 Failed Analyses in the last 30 days, none on any day above the daily quota · among them `an_7740`, Failed with `AI_UNAVAILABLE` at 09:20 UTC while the kill switch was On |
-| Staff | `staff_mona` "Mona K." Support agent, console English, Europe/Dublin<br>• At 09:00 UTC she looked up E1 by support code; at 09:01 she opened its account panel; at 09:02 she opened its Sync tab<br>`staff_lee` "Lee T." Support agent, console English, Europe/Dublin, no Grants<br>• Five failed sign-ins at 09:30:00, 09:30:30, 09:31:00, 09:31:30 and 09:32:00 UTC<br>`staff_omar` "Omar S." Support agent, console Arabic, Asia/Riyadh<br>`staff_dina` Nutrition approver · `staff_ali` Platform admin · `staff_hana` Auditor<br>Every staff account has a password and an authenticator second factor (A19) |
+| Staff | `staff_mona` "Mona K." Support agent, console English, Europe/Dublin<br>• At 09:00 UTC she looked up E1 by support code, which opened its account panel (one `support.account_viewed` at 09:00); at 09:02 she opened its Sync tab<br>`staff_lee` "Lee T." Support agent, console English, Europe/Dublin, no Grants<br>• Five failed sign-ins at 09:30:00, 09:30:30, 09:31:00, 09:31:30 and 09:32:00 UTC<br>`staff_omar` "Omar S." Support agent, console Arabic, Asia/Riyadh<br>`staff_dina` Nutrition approver · `staff_ali` Platform admin · `staff_hana` Auditor<br>Every staff account has a password and an authenticator second factor (A19) |
 | Grant G1 | `grant_31f0` for E1, by `staff_mona`<br>• reason "An Entry is missing or appears twice"; Days 2026-09-28 to 2026-09-30; areas "Entries and day reports" and "My Units"; 1 hour; case `CASE-1182`<br>• Requested 10:05; Approved and Active 10:20; Expired 11:20 UTC (12:20 Dublin, 14:20 Riyadh)<br>• **Reads:** Day 2026-09-29 at 10:24; Entry `en_9921` at 10:25; My Units at 10:27 UTC<br>• **Refused read attempts after expiry:** 11:20:01 and 11:20:05 UTC<br>• Nothing else happens under this Grant |
 | Grant G2 | `grant_31f9` for E1, by `staff_mona`<br>• the same reason, Days, areas and case as G1<br>• Requested 11:30; Declined 11:42 UTC; one refused read attempt at 11:45 UTC |
 | Platform | the kill switch for image analysis is On from 09:10 to 09:55 UTC |
@@ -234,7 +234,7 @@ Covers: FR-080, FR-081, NFR-12 · SR4 (MFA), SR6, SR8 (AC-12) · A7, A18, A19
 Shared: Support agent + eater (Settings → Privacy → Support code; eater-9.29).
 As the Support agent, I find an account by the support code the eater reads me from Settings → Privacy, so that I reach the right account without searching for people.
 Covers: FR-080, FR-081, FR-001 · SR10, SR12 · A2
-- `/r` **Given** E1's Settings → Privacy → Support code shows `SB-7KQ2-94XM` with "Copy" and "Valid until 2 Oct, 09:12" on the iOS simulator, **When** `staff_mona` enters `SB-7KQ2-94XM` in Jobs → Look up an account at 09:00 UTC, **Then** E1's account panel opens.
+- `/r` **Given** E1's Settings → Privacy → Support code on the iOS simulator (E1's app in Arabic) shows `SB-7KQ2-94XM` with «نسخ» and «صالح حتى ٢ أكتوبر، ٠٩:١٢» (English catalogue: "Copy", "Valid until 2 Oct, 09:12"), **When** `staff_mona` enters `SB-7KQ2-94XM` in Jobs → Look up an account at 09:00 UTC, **Then** E1's account panel opens.
 - `/r` **Given** E1's older code `SB-3MRT-7WQD` (expired 2026-09-30 06:12 UTC), **When** it is entered at 09:10 UTC, **Then** Jobs reads "This support code has expired. Ask the eater for a new one from Settings → Privacy → Support code." and no account opens.
 - `/r` **Given** `sb 7kq2 94xm`, `SB7KQ294XM` or ` SB-7KQ2-94XM `, **When** each is entered at 09:12 UTC, **Then** the field shows `SB-7KQ2-94XM` and E1's account panel opens (case, spaces and hyphens are normalised).
 - `/r` **Given** `SB-7KQ2-94X` (one character short), **When** it is looked up, **Then** Jobs reads "No account matches this code" with no suggestions or list, and `GET /v1/support/accounts?support_code=SB-7KQ2-94X` returns 404 `NOT_FOUND`.
@@ -398,7 +398,7 @@ Covers: NFR-07, FRD release blockers ("any cross-user exposure") · A13
 Shared: Support agent + auditor (Audit trail).
 As the Support agent, I know each look-up, view, retry, escalation and Grant step is recorded with who, what, when, where and outcome, so that honest work is provable and misuse is visible.
 Covers: FR-081 · SR3, SR8 (AU-3, AC-6(9)), SR11 Art. 26(4) · R24
-- `/r` **Given** `staff_mona`'s look-up of E1 at 09:00, its account panel at 09:01 and its Sync tab at 09:02 UTC (§0.3), **When** `staff_hana` filters the Audit trail by `staff_mona`, account `acct_9c41e2` and 09:00–09:05 UTC, **Then** exactly three events show: `support.lookup` (method `support_code`), `support.account_viewed` and `support.jobs_viewed`. Each has the time (UTC), where (console route and API path), staff id and role, account id, case reference (none for a support-code look-up) and outcome.
+- `/r` **Given** `staff_mona`'s look-up of E1 at 09:00, which opened its account panel once, and its Sync tab at 09:02 UTC (§0.3; `support.account_viewed` is written each time an account panel is shown), **When** `staff_hana` filters the Audit trail by `staff_mona`, account `acct_9c41e2` and 09:00–09:05 UTC, **Then** exactly three events show: `support.lookup` (method `support_code`), `support.account_viewed` and `support.jobs_viewed`. Each has the time (UTC), where (console route and API path), staff id and role, account id, case reference (none for a support-code look-up) and outcome.
 - `/s` **Given** any `/v1/support/*` request, **When** it completes with 2xx or 4xx, **Then** exactly one Audit trail event is written; if the write fails, the request fails and returns no data.
 - `/r` **Given** `staff_mona`, **When** she opens `/console/audit-trail`, **Then** the screen reads "You don't have access to this area", and the API returns 403 `FORBIDDEN` — a Support agent can neither read nor edit the trail.
 
@@ -560,7 +560,7 @@ Covers: WF-10, FR-081 · SR2 ("support response time increases") · A11 · confl
 Shared: Support agent + eater (eater-9.22) + auditor (Audit trail).
 As the Support agent, I rely on the eater seeing my name, the reason, the Days and areas, the duration and the case in Settings → Privacy → Grants, and approving it there, so that access exists only because the eater chose it.
 Covers: WF-10 ("the eater approves or declines in Settings"); map interaction row "Support → Eater"; FR-081; blueprint §2 (the approver is the eater) · SR1, SR2, SR14 · A22
-- `/r` **Given** `grant_31f0` is Requested, **When** E1 opens Settings (badge "1") → Privacy → Grants on the iOS simulator, **Then** the request shows:
+- `/r` **Given** `grant_31f0` is Requested, **When** E1 opens Settings (badge "1") → Privacy → Grants on the iOS simulator, **Then** the request shows, in E1's Arabic app, the Arabic catalogue form of each line below (the English catalogue text is given; the Arabic line further down gives the Arabic for the Days):
   - who: "Mona K. · Support agent";
   - why: "An Entry is missing or appears twice";
   - what: "Entries and day reports, My Units · 28–30 Sep 2026";
@@ -569,7 +569,7 @@ Covers: WF-10 ("the eater approves or declines in Settings"); map interaction ro
   - "Never included: photos, voice, your Target and goal settings";
   - "The Support agent can read, not change. Every read is listed here.";
   - two equal-size buttons, "Approve" and "Decline".
-- `/r` **Given** the eater taps Approve at 13:20 their time (10:20 UTC), **When** the server confirms, **Then** the app reads "Active · ends 14:20", and the console's Grant panel turns to "Active · read-only · ends 12:20 your time (11:20 UTC) · 14:20 eater's time". The time box starts at approval, not at the request.
+- `/r` **Given** the eater taps Approve at 13:20 their time (10:20 UTC), **When** the server confirms, **Then** the app reads the Arabic catalogue form of "Active · ends 14:20" (with Arabic-Indic digits «١٤:٢٠»), and the console's Grant panel turns to "Active · read-only · ends 12:20 your time (11:20 UTC) · 14:20 eater's time". The time box starts at approval, not at the request.
 - `/s` **Given** `POST /v1/grants/grant_31f0/approve` with the eater's own token, **When** it is processed, **Then**:
   - it returns 200;
   - the state passes Approved to Active in one transaction;
@@ -760,6 +760,7 @@ Covers: WF-10 ("roll models and config"); blueprint §6 (Registry: "kill switch"
 - `/s` **Given** a support token, **When** it calls any Registry write endpoint, **Then** 403 `FORBIDDEN`.
 
 #### support-10.25 · Grant actions and the Diary (read-only) when slow, failing or offline
+Shared: Support agent + eater (Settings → Privacy → Grants history) + auditor (Audit trail).
 As the Support agent, I am told plainly when Send request, a read or End access fails or the network drops, and the diary never stays on screen without the server, so that a failure never leaves a request half-sent or a diary half-open.
 Covers: WF-10, FR-081, NFR-05 · care group 4 · A15, A21
 - `/r` **Given** the Grants API returns 503 (fault injection), **When** the agent presses Send request on a filled form, **Then** the form keeps every field and reads "Couldn't send the request. Nothing was sent to the eater. Try again.", and no new row appears in Grants.
@@ -848,7 +849,7 @@ Size is platform, so every question is asked on every screen this persona uses: 
 | Half-filled form protected | the Grant form and the Requests-received form keep a draft for the session (10.3, 9.15) |
 | Permission asked when first needed | n/a for the console (it asks for no device permission). In the app, answering a Grant needs no OS permission, and push notifications are not required (conflict K2) |
 | No network: last data with a quiet note | Jobs keeps the last data with an offline strip (9.21). The Diary (read-only) is never kept and is removed offline (10.25) |
-| Say why a command cannot work | "This support code has expired" (9.2), "Look up this account first" (9.17), "27 Sep is outside this Grant" (10.12), "Withdrawn by the eater" (10.18), "Connect to send a request" (10.25) |
+| Say why a command cannot work | "This support code has expired" (9.2), "Look up this account first" (9.17), "28 Sep is outside this Grant" (10.12), "Withdrawn by the eater" (10.18), "Connect to send a request" (10.25) |
 
 **5 · The inside the user never sees**
 
@@ -889,6 +890,7 @@ Size is platform, so every question is asked on every screen this persona uses: 
 | support-9.2 | eater | reads the support code in Settings → Privacy → Support code (eater-9.29) |
 | support-9.3 | auditor | sees `support.lookup` and `support.lookup_rate_limited` |
 | support-9.9 | eater, auditor, platform admin | the eater sees "Running" in Settings → Export (eater-9.14); the auditor sees `support.job_retried`; the platform admin receives the escalation after a second failure |
+| support-10.25 | eater, auditor | the eater's Grant history does not list a read that ended in an error; the auditor sees that attempt as `grant.read` with outcome `error` |
 | support-9.11 | platform admin, auditor | the platform admin sees the escalation in Jobs → "Escalated" and resolves it; the auditor sees `support.escalated` |
 | support-9.14 | platform admin | receives the "cannot sign in" escalation |
 | support-9.15 | auditor | sees `support.request_logged` |
@@ -1345,3 +1347,104 @@ Each defect of the re-verify was fixed at its root in the body. Both verdict sec
 Where the eater file differs from the map or from D2, K12 lists each line for the eater lens to align: "view" against "read", "done/waiting" stage words, "re-queue", reused Grant ids, stale story ids, the "No Target" note and the capital of "Entry".
 
 **Counts after the fix:** 52 stories, 190 acceptance lines (149 `/r`, 35 `/s`, 6 `/m`); 10 defects fixed. No owner identifier was sent to any service, and no outside source was opened in this round.
+
+## Lens verdict — re-verify 2 (2026-10-01)
+
+**fail**: 4 defects.
+
+The verifier did not write this lens. It re-read `way/personas/_lens-verifier-brief.md` (with its cross-lens addendum), `way/blueprint.md` §1 (the interaction table, workflows, vocabulary and done-when), `way/vocabulary.md` (delta D2, binding) and `r1-refute-b.md` for R2. It checked each of the 10 re-verify defects against the body, then checked every line that fix round 2 changed (the diff from the re-verify commit to the fix-round-2 commit) for new defects. Lines that round 2 did not touch were not judged again.
+
+These parts hold:
+- The counts are right: 52 stories (journey 3: 2 · 4: 3 · 7: 1 · 9: 21 · 10: 25) and 190 acceptance lines (149 `/r`, 35 `/s`, 6 `/m`; by journey 5 · 9 · 2 · 91 · 83), as §14 says. Every story has a `/r` line.
+- Every changed Covers line still names a WF step, an interaction row or an FR/AT/NFR line, and every id carries its WF number.
+- Every changed time matches SR17's offsets. Examples: 9.8's window ends at 2026-10-07 15:09 UTC, which is 16:09 Dublin and 18:09 Cairo. 10.19's app shows 16:33 Cairo, and 10.25 shows 19:00 Dublin.
+- The staff timeline for 2026-10-01 holds:
+  - `staff_mona` signs in again at 15:28 and requests `grant_7d01` at 15:29;
+  - `staff_lee`'s lock ends at 09:47, before 10.4 (10:10) and 9.21 (10:42);
+  - 10.22's eight rows match §0.3 at 16:00.
+- Round 2 cites no new outside source. A23–A29 are labelled assumptions. K2 cites R2, which still stands in `r1-refute-b.md` ("may not require users to enable system functionalities").
+- No owner identifier was sent to any service.
+
+### The 10 re-verify defects
+
+1. **Fixed.** Every "your time" in the body now carries its UTC time:
+   - support-9.7: "new Analyses refused — Completed 19:14 your time (18:14 UTC)".
+   - support-9.8: "download in the app until 2026-10-07 16:09 your time (15:09 UTC) · 18:09 eater's time".
+   - support-10.5: "when it closes on 2026-10-04 at 11:05 your time (10:05 UTC) · 13:05 eater's time." 10.2 reads the same.
+   - The Grant end times:
+     - 10.11: "ends 12:20 your time (11:20 UTC)";
+     - 10.16, both warnings: "the diary closes at 12:20 your time (11:20 UTC)";
+     - 10.21: "its end time "17:02 your time (16:02 UTC)" unchanged";
+     - 10.25: "until 19:00 your time (18:00 UTC)".
+2. **Fixed.**
+   - (a) §0.3 G1 lists "**Refused read attempts after expiry:** 11:20:01 and 11:20:05 UTC" and "Nothing else happens under this Grant".
+     - 10.15 ends with "the two `grant.read_denied` attempts of support-10.17 (11:20:01 and 11:20:05 UTC)".
+     - 10.23 reads "requested → approved → active → read ×3 → expired → read_denied ×2".
+     - 10.12 and 10.13 now run on `grant_7d01`, 10.21 on `grant_6c10`, and 10.25 on `grant_9b30`.
+     - Every remaining use of `grant_31f0` fits G1: 9.4, 10.2, 10.4–10.6, 10.10, 10.11, 10.14–10.17, 10.22 and 10.23.
+   - (b) support-9.18: "filters the Audit trail by `staff_mona`, account `acct_9c41e2` and 09:00–09:05 UTC, **Then** exactly three events show". The failed sign-ins are now `staff_lee`'s (9.1). New defect 4 is about these three events.
+   - (c) support-9.4: "opens its account panel in Jobs at 10:03 UTC" with "Grants: none Requested or Active (`grant_31f0` is requested at 10:05 UTC)".
+3. **Fixed.**
+   - support-9.20: "his `grant_a1d4` for E6 is Active at 08:30 UTC". In §0.3, E6 reads "Requested 07:55, Active 08:00, Expired 09:00 UTC".
+   - support-10.20 and 10.22: every one of `staff_mona`'s Grants in §0.3 has a reason, Days, area, case and request time. For example, `grant_6c10` has "reason "Imported Activity looks wrong"; … case `CASE-1236`; Requested 14:58". 10.22 adds ""—" marks a time that has not happened".
+   - support-9.10: E2 now reads "email sign-in".
+   - support-10.24: E14 has "`an_7740`, Failed with `AI_UNAVAILABLE` at 09:20 UTC while the kill switch was On". The line reads "only `an_7740` carries the tag "Kill switch On"; rows from outside 09:10–09:55 UTC never do."
+4. **Fixed.** support-4.3: "No failed Analyses in the last 30 days. Next, check Privacy jobs and Consents." and "The Activity tab's own empty text is in support-7.1."
+5. **Fixed.**
+   - support-9.11: "retries the stage with the same id at 14:10 UTC and it Completes at 14:12 UTC", then "escalation resolved by the platform admin at 15:12 your time (14:12 UTC)".
+   - support-10.7: "Declined · 12:42 your time (11:42 UTC). Next: check Sync and Privacy jobs for this account.", with links to those two tabs.
+   - support-9.1: "`staff_lee`'s five failed sign-ins, the fifth at 09:32:00 UTC". The 09:47 end of the lock follows from A18.
+   - support-9.18: "the screen reads "You don't have access to this area"".
+   - support-3.1 gives the whole text in both languages. The English reads "Your iPhone with the older app version has two versions of one Entry. …".
+6. **Fixed.** A23–A29 are in the assumptions table, and each story that uses one cites it:
+   - A23: 9.11, 9.15 and 9.19;
+   - A24: 4.3;
+   - A25: 9.15;
+   - A26: 10.16 and 10.20;
+   - A27: 3.2, 4.3 and 7.1;
+   - A28 and A29: 9.19.
+
+   §10 reads "(A2–A29)".
+7. **Fixed.** support-10.12: "the API returns 403 `GRANT_REQUIRED` (no Grant covers this read)", and K11 records the stretch. 10.13 keeps `FORBIDDEN` "(the Support agent role has no write permission)".
+8. **Fixed.** support-9.11: "the row keeps its state and reads "Deletion · Failed · escalated to the platform admin at 12:05 your time (11:05 UTC) by Mona K."".
+9. **Fixed.**
+   - support-10.22: "Still loading — Cancel" and "Couldn't load your Grants. Try again.".
+   - support-10.25: "Loading 30 Sep…" and "Couldn't load 30 Sep. Nothing was shown. Try again.".
+   - support-9.9: "Couldn't retry this export. Nothing changed. Try again.".
+   - support-9.11 and 9.14: "Couldn't escalate. Nothing was sent to the platform admin. Try again.".
+   - support-9.15: "No requests recorded for this account. …" and "Couldn't save this request. Nothing was recorded. Try again.". §10's "Empty" row now names 9.15.
+10. **Fixed.**
+    - support-9.16: "Shared: Support agent + nutrition approver (`staff_dina`'s session) + platform admin (`staff_ali`'s session)."
+    - support-10.9: "Shared: Support agent + platform admin (`staff_ali`'s token) + auditor …".
+    - §11 has a row for each. The 25 stories with a "Shared:" line and the 25 rows of §11 match one to one. New defect 1 is a story that should be among them.
+
+### Defects
+
+1. **support-10.25 · a shared story is not marked (lens brief item 5).** Round 2 added this line: "The Audit trail records the attempt as `grant.read` with outcome `error`, and the eater's Grant history does not list it." That acceptance runs on the auditor's Audit trail and on the eater's Settings → Privacy → Grants. Yet 10.25 has no "Shared:" line, and §11, rewritten in round 2, has no row for it. §0 says "'Shared:' names the other personas whose surface a story's acceptance uses". Round 2 marked 10.1, 10.17 and 10.21 for the same kind of line.
+2. **§10 against support-10.12 · one string, two texts.** Round 2 moved 10.12 to `grant_7d01`, and its screen now reads "28 Sep is outside this Grant". The §10 row "Say why a command cannot work" still cites ""27 Sep is outside this Grant" (10.12)". No story produces that string.
+3. **E1's app language · observable (one seed).** §0.3 now says "One seed holds all of these at once", and E1 is "Arabic, Arabic-Indic numerals". Yet lines rewritten in round 2 expect English copy with Western digits on E1's app, while the same stories' Arabic lines expect Arabic on the same screen:
+   - support-9.2 expects "E1's Settings → Privacy → Support code shows `SB-7KQ2-94XM` with "Copy" and "Valid until 2 Oct, 09:12"". Its own later line says "E1's app is in Arabic with Arabic-Indic numerals".
+   - support-10.6 expects "what: "Entries and day reports, My Units · 28–30 Sep 2026"". Its Arabic line expects "the Days read «٢٨–٣٠ سبتمبر ٢٠٢٦»". The same holds for "who: "Mona K. · Support agent"", "Never included: …", "The Support agent can read, not change. …" and "the app reads "Active · ends 14:20"".
+
+   10.15 already shows a fix: "in the catalogue's Arabic, whose English keys read". Another fix is an English-language eater. Two unchanged lines about E1's app follow the same pattern and would take the same fix: 10.10 ("Connect to answer this request") and 10.17 ("Expired · 14:20").
+4. **support-9.18 against support-9.2 and §0.3 · observable.** 9.18 expects "exactly three events": `support.lookup`, `support.account_viewed` and `support.jobs_viewed`. The seed's order of events is not clear:
+   - 9.2 says the look-up at 09:00 opens the panel: "enters `SB-7KQ2-94XM` in Jobs → Look up an account at 09:00 UTC, **Then** E1's account panel opens".
+   - §0.3 says "at 09:01 she opened its account panel".
+   - §0.2 adds `support.account_viewed` but does not say which action writes it.
+
+   If showing the panel writes the event, the seed gives `support.account_viewed` at 09:00 and again at 09:01: four events, not three. If the panel that the look-up opens writes no event, the lens does not say so. A verifier cannot tell which count is right.
+
+### Cross-lens (for the model phase join; not counted)
+
+- **Eater lens (`way/personas/eater/wf1-wf9.md`).** K12 lists the differences as of the committed eater file: "view" against "read", the "done/waiting" stage words, "re-queue", Grant fixtures reused or moved (`grant_31f0` declined or withdrawn, `grant_40aa` against this lens's `grant_40ab`), stale support ids, "No Target", and "An entry" in lowercase. The eater file was being rewritten in the working tree while this check ran. Its story ids have moved, and some of its lines now differ again: it reads "Active until 14:20" where this lens reads "Active · ends 14:20", and its `grant_40aa` now sits on E10. The join should re-read the eater file as it stands then.
+- **Auditor lens (`way/personas/auditor.md`).** Its Audit trail event names differ from this lens's §0.2:
+  - it writes `grant.read_refused` and `grant.write_refused`, where this lens writes `grant.read_denied` and has no event for a refused write (E4's 15:45 write attempts in 10.13 name no event);
+  - it writes `staff.signed_in`, which this lens does not have.
+- **Platform admin, approver and auditor lenses.** K3, K4, K5, K7 and K9 still wait on these lenses to decide who owns the Grant limits, who retries Failed jobs, which role combinations are refused, and who acts for an eater who cannot sign in.
+
+## Diagnosis and fix by the session (2026-10-01)
+After two fix rounds, 4 defects remained (re-verify 2). Cause in one sentence: round 2 changed fixtures and screens without re-reading the lines that quote them (the Shared list, §10, the seed's language and its event times). The session fixed the 4:
+1. support-10.25 has its "Shared:" line and a §11 row.
+2. §10 quotes "28 Sep is outside this Grant" as 10.12 now produces.
+3. support-9.2 and 10.6 observe E1's Arabic app in Arabic (Arabic text with Arabic-Indic digits, the English catalogue text given for reference).
+4. The seed says the 09:00 look-up opens the account panel once (one `support.account_viewed` at 09:00); 9.18's Given matches, so exactly three events show.

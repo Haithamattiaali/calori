@@ -894,3 +894,98 @@ Each defect was fixed in the story it names. Every changed line was re-read agai
 - Conflicts item 4 adds one point: the Consent is named for dietary energy, but the correlation also carries protein, carbohydrates and fat.
 - The withdrawn-AI and microphone-off messages in quick-add now use the wording of eater-9.2 and eater-2.5.
 - The fixtures' "kcal left" now reads "kcal remaining", matching the stories.
+
+## Lens verdict — re-verify (2026-10-01)
+
+**fail**: 3 defects.
+
+The verifier did not write this lens or its fix. It checked the 16 defects of the first verdict against the file as fix round 1 left it (commit `462ac11`), then checked only the lines that round changed (`git diff 165507a 462ac11`). It checked them against `way/vocabulary.md` (D2, binding), blueprint §1, `way/brief/frd-v1.0.md`, care.md and `way/research/r1-refute-a.md`. It read `way/personas/eater/research.md` and the other eater and support files this file cites as context.
+
+These parts hold:
+- The counts are right: 69 stories (43 in WF-3, 26 in WF-6) and 276 acceptance lines (219 `/r`, 53 `/s`, 4 `/m`). Every story has a `/r` line, every line reads Given … When … Then, and the ids have no gaps.
+- Every new date falls on the weekday the file gives it: Mon 28 Sep, Wed 10 Mar 2027 and Thu 11 Mar 2027.
+- Every new figure adds up: 1,540 → 1,465; 120 → 135; 1,113; 1,938; 212.
+
+### The 16 earlier defects
+
+1. **Fixed.**
+   - 3.1: "with the device back in Asia/Riyadh the header still reads "Thu 1 Oct · Riyadh time" and the second line is gone".
+   - 3.32: "Today shows "Thu 1 Oct · Cairo time", empty".
+   - Conflicts item 19 records that this narrows EX-07.
+2. **Fixed.** 6.5: "When Sam types "make the تلبينة 18 not 15" and Mona says «الـ talbina كانت ١٨ مش ١٥», Then each one's correction preview opens at 15 → 18 … and neither shows a consumption chip".
+3. **Fixed.** 6.11: "When she types «طبّق المقاس ده على غدا النهارده» ("apply that measurement to today's lunch") in quick-add, Then the correction preview opens with only today's Lunch Entry ticked, showing 120 → 135".
+4. **Fixed.** 6.7: "old 25 g · 125 kcal, new 10 g · 50 kcal, Snack 125 → 50 (75 less), Day 1,540 → 1,465 (75 less), and "This Entry only" and "This Entry and future logs"".
+5. **Fixed.**
+   - 3.14, a slow sentence: "within 1 s quick-add shows the Analysis as Processing with "Reading your words…" and a Cancel button".
+   - 3.14, a failed sentence: "the Analysis is Failed … nothing is logged from the Failed Analysis on its own and `GET /v1/reports/day` still returns consumed_kcal 290 (AT-32)".
+6. **Fixed.**
+   - 6.2: "Given the text-intent Kill switch is On, or Mona's daily AI quota is used up, or her Consent … is Withdrawn, or the simulator is offline … When she taps «١٥ معلقة تلبينة» there, Then its correction preview opens with the count stepper at 15".
+   - 6.3: "When Mona taps Correct in its Entry details and sets the count stepper to 18".
+   - 6.21: "she taps Correct in the Entry details".
+7. **Fixed.**
+   - 6.25, another eater's token: "each returns 404 `NOT_FOUND` with the same body as for a random entry_id".
+   - 6.25, no token: "Given no token … each returns 401 `UNAUTHENTICATED`".
+8. **Fixed.**
+   - 3.33: "its Time row reads "09:15 · Wed 30 Sep"".
+   - 6.17, a time change: "the correction preview reads "Time 21:00 → 22:30 · Wed 30 Sep · kcal unchanged"".
+   - 6.17, crossing the boundary: "the preview adds "This also moves it to Thu 1 Oct: …"".
+   - 6.17 `/s`: the command "carries eaten_at".
+   - 6.17, a move: "a move never changes the time on its own".
+   - Conflicts item 9 records eaten_at as a proposed field.
+9. **Partly fixed.** Three of the four screens are fixed:
+   - 3.16: "quick-add reads "Nothing logged on Mon 28 Sep", lists the last Days that have food Entries to choose instead";
+   - 3.19: "No Templates yet — save a meal you eat often" with a "Go to Today" button;
+   - 3.22: "it reads "Log your first food in Sips & Bytes" with no tiles, and tapping it opens the app on Today with quick-add open".
+   3.18's new line does not say what to do next. See defect 1 below.
+10. **Fixed.** 6.15: "(C10 — `assumption`: that window rests only on a competitor blog, r1-refute-a)". C10 is no longer in the traces of 3.5 and 6.14.
+11. **Fixed.**
+    - 3.8: "it returns 404 `NOT_FOUND` (D2: another eater's ids), with the same status and body as the same request naming a random unit_version_id".
+    - Conflicts item 18 records that eater-4.23 uses a different code.
+12. **Fixed.**
+    - 3.21: "Logged 3 cheese bites · Pending".
+    - 6.22: "the Entry stays Confirmed at 18 … the note "Changed on two iPhones — choose which to keep" (a message, not a state)".
+    - Conflicts item 6: "a Unit version that is no longer the latest".
+13. **Fixed.**
+    - "How to read" names all four as proposed.
+    - Each is marked at its first use: 3.1 "timeline *(proposed)*", 3.2 "quick-add *(proposed)*", 3.3 "count stepper *(proposed)*" and 3.13 "correction preview *(proposed)*".
+    - All four are in Conflicts item 15.
+14. **Fixed.**
+    - 3.5: "When 6 s have passed with no touch, Then the banner and its Undo are still on screen".
+    - 3.12: «حتة كنافة وحتة بسبوسة وشوية محشي» gets "two questions in this pass".
+    - 3.29: "the 02:30 Entry is in Wed 10 Mar's timeline and the 03:30 Entry in Thu 11 Mar's".
+    - 3.31: "the new Entry's Entry details read "Time zone: Europe/London"".
+15. **Fixed.** 3.20:
+    - "three taps from Today in the recorded walk";
+    - "(two more taps)" for the changed counts;
+    - "two taps from Today" with one-tap logging.
+16. **Fixed.** 3.41:
+    - "no confetti, badge, streak or celebration screen";
+    - "the spy records no sound played";
+    - "the Arabic text's line is at least 10 % taller";
+    - "pure black (#000000)". E28 supports this: "I wish dark mode were black".
+
+### Defects
+
+1. **eater-3.18, the empty "Copy this Day" screen does not say what to do next · experience (the open part of defect 9).**
+   - The new line reads: "Given a Day whose only Entries are an Activity and a Voided Entry, When "Copy this Day" is chosen for it, Then quick-add reads "No food to copy from this Day", shows no Log button, and today's timeline is unchanged."
+   - Defect 9 quoted care group 4: "does it say what to do next with the button to do it?" This screen offers no next step and no button.
+   - The other empty screens fixed in this round do: 3.16 "lists the last Days that have food Entries to choose instead", and 3.19 offers "Go to Today".
+2. **eater-3.18, an Activity is called an Entry · vocabulary.**
+   - The same line says: "a Day whose only Entries are an Activity and a Voided Entry".
+   - The map keeps the two apart. §1 ¶4 lists Entry and Activity as separate words. The interaction table writes an Entry in "Eater → ledger" and an Activity in "HealthKit → app → API".
+   - 3.18's first line keeps them apart too: "food Entries in three meals, an Activity "walk 30 min" and one Voided Entry".
+3. **eater-3.40, the Consent state "Not given" · vocabulary.**
+   - Two new lines use a Consent state that D2 does not have: "Given Settings → Privacy shows "Health: write dietary energy" as Not given" and "Settings → Privacy shows "Health: write dietary energy" as Not given".
+   - D2 gives a Consent two states, Given · Withdrawn. This file's own "How to read" says the same: "Consent **Given · Withdrawn**".
+   - Conflicts item 15 does not list the word.
+   - The word comes from `wf1-wf9.md`, whose verdict counts it as its defect 17.
+
+### Cross-lens (for the model phase join, uncounted)
+- The support lens's Jobs → Sync row calls a command refused with `STALE_REVISION` "Pending on the device" (`support.md`, the Jobs → Sync story). 6.22 treats the same command as neither Pending nor counted. Conflicts item 8 already records this.
+
+### Noted for the model phase (uncounted)
+- Two items give different rules for who assigns the Day:
+  - 6.17's new `/s` line has "the server's Day assigner" set diary_day_id from a corrected eaten_at;
+  - Conflicts item 11 says this file stores the device's diary_day_id "as sent, so a boundary setting that syncs late between two iPhones cannot move an Entry".
+- The correction preview that shows the move to another Day (6.17) is drawn on the device.
+- Conflicts items 9 and 11 should point to each other, so the model phase settles one rule.
