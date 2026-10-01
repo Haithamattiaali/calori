@@ -303,3 +303,97 @@ Blueprint §0 line 3: "**C1** — versioned product policies …". Model header:
 3. **The fix-log D9 row.** `seed.md`'s row D9 still reads "With 809.7, 53 other sets reach the aim exactly". The re-check asked for the change "In both places". The §7.6 row is fixed, and the R4 line directly below the fix log corrects the D9 row ("170 … not 53"), but the row itself was not edited.
 4. **`sdks.md` is keyed by decision in words** ("Python runtime", "Document store client" …), not by A-number. It was written one minute before §4 (`142bf83` 07:24, `9a1ea98` 07:25). The mapping above is by name.
 5. **admin-10.41 against J124.** admin-10.41's second `/r` line (anonymous `POST /v1/consumption` returns a Confirmed Entry) is superseded by J124 ("→ 403 `CONSENT_REQUIRED`"). The model follows J124 (§3.2 ledger). Recorded only because the lens line still reads the old way.
+
+## Re-audit 2026-10-01
+
+Checked at HEAD `3369c2b` ("way: model governor gaps 1–7 fixed (model.md); CostView token fields"). The working tree was clean, and HEAD equals `origin/claude/magical-cerf-axi3k1`. The fixes came in two commits after the first audit: `892156d` (delta D7, `Price.cached_input_usd_per_mtok`, the `google-cloud-storage` row in `sdks.md`, README size line) and `3369c2b` (`model.md` 88 lines in and 73 out; `CostView` token fields; D7 widened).
+
+Records read: `way/model.md` §1–§5, `contracts/openapi.yaml`, `contracts/README.md`, `way/research/sdks.md`, `way/blueprint.md` §3 (D7), `way/join.md` J158–J160, `way/events.md`, `way/seed.md` §4.5, the lens files and `added-stories.md` (story ids only), and git. Not checked, as instructed: `blueprint.md` §2, `model.md` §6 and the ledger's slice rows. No outside service was contacted, and no identifier was sent anywhere.
+
+**Method.** The scripts of the first audit were run again, from outside the repo:
+- **Story ids and §1 traces.** 629 ids (eater 369, admin 77, approver 70, auditor 61, support 52); 230 §1 rows; every id cited, no cited id that does not exist; no row reads "no story yet".
+- **The contract.** openapi-spec-validator 0.9.0 in the venv `/tmp/claude-0/gov`: `OpenAPIV31SpecValidator(spec).iter_errors()` gives **0 errors**. `openapi: 3.1.0`, `info.version` `1.0.0-2026-10-01`, **149 paths, 172 operations, 355 schemas**.
+- **§3 against the contract.** Every one of the 172 operations is on the "**Routes:**" line of the module its `x-module` names, and every §3.2 route is an operation. The §3.2 "**Emits:**" lines name 120 events, exactly the 120 of the `events.md` catalogue (§2–§3). Every `x-events` name and every §1 event name is in the catalogue. Every §1 route is an operation (the only differences are the `\|` table escapes, `{tab}` and the concrete gate `privacy_review`).
+
+**Verdict: 6 of 8 fixed; gaps 7 and 8 are still open, each narrowed.**
+
+### Gap 1 — the six D5 stories in §1 and §2.7: fixed
+- The §1 header reads "the five lenses and the six stories of delta D5 (`personas/added-stories.md`) — 629 ids: eater 369, admin 77, approver 70, auditor 61, support 52". The script agrees.
+- The three rows now cite their stories: 5.14 "… `plan.expired` | Eater: the Today card changes (no push) | eater-5.45 |"; 10F.10 "… `POST /v1/admin/audit-trail/review-notes` {`scope`, `period`, `finding`, `note`} (J17, J149) … | auditor-10.42 |"; 10F.11 "… | auditor-10.43 |".
+- The missing rows exist:
+  - 10E.15 "`PUT /v1/admin/grant-settings` … Grant settings version n+1 In use; the previous → Replaced (J155) … | `grant_settings.version.saved`, `access.refused` | … | admin-10.72 |";
+  - 7.13 "`GET /v1/targets/activity-credit-offer`; Review → Approve … `POST /v1/targets/activity-credit-offer/approve` … | eater-7.25 |";
+  - 10D.6 "`POST /v1/admin/wording/proposals` … | `wording.proposed`, `access.refused` …| admin-10.73 |", 10D.7 "`POST /v1/admin/wording` {`text_version`, `asks_again`} (J158, J160) … | admin-10.73 |" and 9.28 (asks again, admin-10.73).
+- §2.7: "The six gaps this section first listed are **closed by delta D5**", with G1–G6 each naming its story and row.
+- The row count line reads "WF-1 18 · … · WF-10 69 — **230 rows**", and the recount agrees.
+
+### Gap 2 — §2 entities and states after D6: fixed
+- E12 **Wording**: fields "`state`; `asks_again` (J154); `proposed_at`, `proposed_by`", states "Proposed → Published · Superseded (a newer version of the family is Published) (J153)", created-by "admin-10.73, approver-10.53 · auditor-9.3". This matches the contract's `Wording` (`state`, `asks_again` required) and `WordingState` `proposed, published, superseded`.
+- E21 **Grant settings version**: states "In use → Replaced · Rolled back (J155)", created-by "admin-10.72 (`seed.md` §4.6 holds version 1) · support-10.2". §2.5 item 5: "**Grant settings versions** too (In use → Replaced · Rolled back, J155)". This matches `GrantSettingsState` `in_use, replaced, rolled_back`.
+- Row 7.8: "a new Target version (`activity_mode`, `credit_factor`, `credit_cap_kcal`)". `grep` finds no bare `credit_cap` left in `model.md`.
+
+### Gap 3 — eater-2.29's remembered pot: fixed
+- §2.7 device-only records now end: "and the **remembered containers** — per eater, a container's name and empty weight in grams (tare), e.g. "big pot · 1,216 g", offered as "(last time)" when a Recipe's pot is weighed (eater-2.29). They are not synced in v1, so no contract field carries them; only the resulting `cooked_yield_g` reaches the server (E45)."
+- Row 2.7 reads it: "the remembered containers on the iPhone ("big pot · 1,216 g (last time)", device-only, §2.7)". `SaveRecipe` is unchanged, as the device-only line says it should be.
+
+### Gap 4 — admin-10.47's token kinds and prices: fixed
+- E36 **Price**: "`cached_input_usd_per_mtok` (when the provider states one; else cached input is priced at the input rate)" and "thinking tokens are priced at the output rate (Gemini bills thinking as output; `seed.md` §4.5)". The seed's column reads "output $ / 1 M tokens (thinking included)", so model and seed agree.
+- E38 **AI request record**: "`input_tokens` (not cached); `cached_input_tokens`; `output_tokens`; `thinking_tokens`; … `estimated_usd` (input × input rate + cached × cached rate + (output + thinking) × output rate, admin-10.47)".
+- §3.4: "AnalyzerResult: json, input_tokens (not cached), cached_input_tokens, output_tokens, thinking_tokens (Gemini bills them as output), latency_ms, finish." The registry interface: "`record_request` … input, cached input, output and thinking tokens, each at its rate (thinking at the output rate)".
+- Contract: `Price` and `PriceIn` carry `cached_input_usd_per_mtok`; `Price.description` gives the thinking and cached rule; `CostView.by_task` carries `input_tokens`, `cached_input_tokens`, `output_tokens`, `thinking_tokens`. D7 records it: "`Price.cached_input_usd_per_mtok` and per-task token fields on `CostView` (cached input, thinking at the output rate; admin-10.47)".
+
+### Gap 5 — §3 routes, event, interfaces and console place: fixed
+- §3.2 "**Routes:**" lines now carry all eight: targets "`POST /v1/targets/suggestions/{id}/keep` (`keepTarget`) *(new)*, `GET /v1/targets/activity-credit-offer` (`getActivityCreditOffer`), `POST /v1/targets/activity-credit-offer/approve` (`approveActivityCreditOffer`) (J156)"; plans "`POST /v1/meal-plans/{id}/reopen` (`reopenMealPlan`) *(new)*"; grants "`GET /v1/admin/grant-settings/versions` (`listGrantSettingsVersions`)"; privacy "`POST /v1/admin/wording/proposals` (`proposeWording`), `GET /v1/admin/wording/versions` (`listWordings`)"; units "`POST /v1/units/name-match` (`matchUnitNames`) *(new)*".
+- The name match has one owner: units, with "`def match_unit_names(…)` # matchUnitNames: the Unit-name match (J126)". `unit_name_match` no longer appears in `model.md`, and the contract's `x-module` is `units`.
+- Privacy "**Emits:**" ends "`wording.proposed`, `wording.published`". The script finds 120 events emitted against 120 in the catalogue.
+- Interfaces: privacy `propose_wording` and `wordings`; targets `keep_target`, `activity_credit_offer`, `approve_activity_credit_offer`; plans `reopen`; grants `settings_versions`.
+- §3.5: "| Settings › Wordings (J153) | privacy |". §3.4 "Routes this model adds" ends with the eight routes, "added since §1–§3 were first written (the contract's own additions, D5, D6)".
+
+### Gap 6 — research behind the decisions: fixed
+- The §4 preamble now reads "Each line names its source — the brief, research or the /way method", and every line A1–A24 does.
+- A4 and A7 now cite the research that exists: A4 "`research/sdks.md` (google-cloud-firestore 2.33.0; N2 protobuf pin; N6 the emulators on Java 21)"; A7 "`research/sdks.md` (ortools 9.15.6755; N2)". A21 now cites "`way/design/kit.md` … and `personas/eater/research.md` §4"; both exist.
+- The lines with no research say what fixes them, for example A1 "source: the /way method — … (system.md)", A5 "source: brief FR-040–FR-043 and §17.1", A23 "source: blueprint §0 line 10". The preamble's claim now holds.
+
+### Gap 7 — the Cloud Storage client: still open (narrowed)
+- **Fixed:**
+  - §4 has a new line: "A24 | Media store | Cloud Storage · Firestore blobs | **Cloud Storage through `google-cloud-storage` 3.15.1** (PyPI, 2026-09-29, Apache-2.0, Python ≥ 3.10) behind the `MediaStore` port (§3.4) …".
+  - `sdks.md` has a row: "| Media store (raw scans, audio, Unit pictures) | `google-cloud-storage` | 3.15.1 (2026-09-29) | … | Apache-2.0 | … (PyPI JSON, opened 2026-10-01 by the session) …". The privacy interface depends on "the `MediaStore` port (Cloud Storage, A24)".
+- **Still open:** the first audit asked for a row "with its registry version, licence and **OSV result**". There is no OSV result for `google-cloud-storage` 3.15.1:
+  - The table "Security and upkeep per package" has no row for it.
+  - The file's method says "OSV.dev was queried for the exact pinned version", but nothing records that query for this package.
+  - N19's audit ("`pip-audit` … over the full Python 3.13 venv (133 distributions) → "No known vulnerabilities found"") and N1's measured resolve ("`uv pip compile` resolves the whole pinned set") both ran before the package was added. The record does not show that it resolves with ortools' protobuf cap (N2).
+  - Unlike the other rows, it has no N-note quoting the PyPI JSON.
+
+### Gap 8 — dated delta for later contract changes; stale counts: still open (narrowed)
+- **Fixed:**
+  - Blueprint §3 now has a delta: "**2026-10-01 · delta D7 · contract and model changes after the contract's first write** — `contracts/openapi.yaml`: three routes added (`GET /v1/admin/grant-settings/versions`, `GET /v1/admin/wording/versions`, `POST /v1/admin/wording/proposals` with event `wording.proposed`), the `ProposeWording` schema and publish-by-id (J158–J160), Wording readers (J159), … `join.md` J158–J160. Counts now 149 paths, 172 operations, 355 schemas, 120 events. Impact: no banked work." J158–J160 in `join.md` match the contract (`PublishWording` requires `text_version` and `asks_again`, `en`/`ar` optional; `listWordings` lists `access.refused`; 422 on `publishWording`).
+  - Model §5: "OpenAPI 3.1.0, 149 paths, 172 operations, 355 schemas" and "`way/events.md` (120 events …)". Both are true.
+  - README: "**Size on 2026-10-01:** 149 paths, 172 operations …, 355 schemas". True.
+- **Still open, all in `contracts/` (the README and three `x-contract-added` texts):**
+  1. **No "Changes" line.** The README's rule: "… and a line added under "Changes" below. No change lands without its delta". "## Changes" still has the single line "**2026-10-01 · created.** From model §3 (A2), join J1–J157 …". D7 has no line there.
+  2. **The audience split is stale.** The README reads "149 paths, 172 operations (78 for the eater app, 87 for staff, 4 in test builds only)". 78 + 87 + 4 = 169. By security scheme the file has 78 eater, **90** staff (89 `staffSession` plus the sign-in `POST /v1/admin/session`) and 4 test.
+  3. **The module table is stale.** It reads privacy "| 9 | 1 |" and grants "| 17 | 12 |". The file has privacy **11 operations, 3 staff** and grants **18, 13 staff**.
+  4. **The proposing route is said not to exist.** The README reads "Wording state `proposed` (J153) has no route of its own in v1: the texts are supplied when publishing; a proposing route, if the console needs one over HTTP, is a delta." `POST /v1/admin/wording/proposals` exists (D7), and publishing no longer supplies the texts (J160).
+  5. **The `x-contract-added` routes are still marked unbanked.** The README reads "**Added** (`x-contract-added`: model §3.2 names the interface but no route; to be banked by a dated delta): `POST /v1/units/name-match` (`analysis.unit_name_match`, J126 …)". The three `x-contract-added` values in `openapi.yaml` read "… §3.2 lists none" (reopen, keep) and "model §3.2 analysis.unit_name_match … §3.2 lists no route for it". `info.description` also reads "(to be banked by a dated delta)". All are now false:
+     - model §3.2 lists all three routes;
+     - the name match is `units.match_unit_names`;
+     - no delta names `reopen`, `keep` or `name-match` (D7 names only the three later routes).
+
+## Line by line (re-audit)
+
+1. Interactions traced to every story: **pass** (gap 1 fixed).
+2. Data model covering every story's data: **pass** (gaps 2, 3 and 4 fixed). The sample rows marked ✗ in the first audit (eater-2.29 pot, admin-10.47 rates, admin-10.72 Replaced, admin-10.73 `state` and `asks_again`) are now in the model.
+3. Variation matrix: **not applicable** (C1).
+4. Modules, routes, events: **pass** (gap 5 fixed).
+5. Decisions with research: **pass** (gap 6 fixed).
+6. Contracts: the file is **valid** (0 errors, 149 · 172 · 355), and §3 and the contract match in both directions. The README and the `x-contract-added` texts are **stale** (gap 8).
+7. `sdks.md`: **fail**. The OSV result for `google-cloud-storage` 3.15.1 is missing (gap 7).
+8. Join, seed, deltas: D7 covers J158–J160 and the later routes. The README "Changes" line and the banking of the three `x-contract-added` routes are missing (gap 8).
+9. Committed: `3369c2b` was clean and pushed when checked. This section is not yet committed.
+
+## Notes (not counted)
+
+1. **D7's impact line.** It reads "Impact: no banked work". The README's rule asks a delta for its "impact on modules, the iOS client, the console and the stories or tests that read it". D6 has the same short form.
+2. **The Storage emulator.** The `sdks.md` firebase-tools row says "Firestore, Auth and Tasks emulators for tests", but A24 and the new row use the Storage emulator. N6's enum (`… STORAGE …`) shows it exists. The firebase-tools row does not name it.
+
+**Open: gap 7** (no OSV result, audit or resolve on record for `google-cloud-storage` 3.15.1 in `sdks.md`) and **gap 8** (`contracts/README.md` has no "Changes" line for D7 and four stale statements; the three `x-contract-added` texts and `info.description` still say "§3.2 lists none" or "to be banked by a dated delta").

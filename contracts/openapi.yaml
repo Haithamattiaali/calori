@@ -46,8 +46,8 @@ info:
     operation writes in its own transaction, on success or refusal; `x-events-later` — events a job or the clock writes
     later for what the operation started. Two events may follow any operation and are listed only where a story tests
     them: `access.refused` (every 403 `FORBIDDEN`) and `command.duplicate_ignored` (every repeated `command_id`).
-    `x-stories` — a few story ids the operation serves. `x-contract-added` — a path this contract adds where model §3.2
-    names the interface but no route (to be banked by a dated delta).
+    `x-stories` — a few story ids the operation serves. `x-contract-added` — a path this contract added beyond model §3.2's
+    first write (model §3.2 now lists it; later changes are recorded by delta D7).
   license: {name: Proprietary — synthetic examples only, identifier: LicenseRef-SipsAndBytes}
 jsonSchemaDialect: https://spec.openapis.org/oas/3.1/dialect/base
 servers:
@@ -5807,7 +5807,7 @@ paths:
       x-module: plans
       x-events: [plan.reopened, entry.voided, day.revised]
       x-stories: [eater-5.34]
-      x-contract-added: model §3.2 plans.reopen and J68 (Undo → Saved) need a path; §3.2 lists none
+      x-contract-added: plans.reopen (model §3.2) and J68 (Undo → Saved); added by the contract, now listed in model §3.2
       security:
       - eaterBearer: []
       parameters:
@@ -7212,7 +7212,7 @@ paths:
       x-module: targets
       x-events: [target.suggestion.kept]
       x-stories: [eater-8.31]
-      x-contract-added: model §3.2 targets.keep_target and events.md `target.suggestion.kept` need a path; §3.2 lists none
+      x-contract-added: targets.keep_target (model §3.2) and events.md `target.suggestion.kept`; added by the contract, now listed in model §3.2
       security:
       - eaterBearer: []
       parameters:
@@ -7537,7 +7537,7 @@ paths:
       x-module: units
       x-events: []
       x-stories: [eater-4.44, eater-3.14]
-      x-contract-added: model §3.2 analysis.unit_name_match and J126 name a server path; §3.2 lists no route for it
+      x-contract-added: units.match_unit_names (model §3.2) and J126; added by the contract, now listed in model §3.2
       security:
       - eaterBearer: []
       requestBody:

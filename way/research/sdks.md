@@ -91,6 +91,7 @@ Research cycle 3, written 2026-10-01 for the /way build of Sips & Bytes. Reads `
 | pyright 1.1.414 | 0 | 322 | 6.8 |
 | pip-audit 2.10.1 | 0 | 63 | — |
 | cyclonedx-bom 7.5.0 | 0 | 33 | 6.7 |
+| google-cloud-storage 3.15.1 (+ google-resumable-media 2.11.0, google-crc32c 1.9.0) | 0 (none ever recorded in OSV for the package) | 569 (monorepo `googleapis/google-cloud-python`) | 8.3 |
 | firebase-tools 15.32.1 | 0 | 1,050 | 6.1 |
 | GRDB.swift 7.11.1 | 0 (none ever recorded in OSV) | 12 | 5.0 |
 | firebase-ios-sdk 12.19.2 | 0 (none ever recorded) | 427 | 6.0 |
@@ -221,6 +222,8 @@ Research cycle 3, written 2026-10-01 for the /way build of Sips & Bytes. Reads `
 
 **N19 · The audit and the SBOM work on the pinned set.** `measured`, `opened`
 - `measured`: `pip-audit --path <venv site-packages>` over the full Python 3.13 venv (133 distributions) → "No known vulnerabilities found" (2026-10-01).
+- `measured`, re-run after A24 added `google-cloud-storage==3.15.1` (2026-10-01): `uv pip compile` resolves the whole pinned set (23 direct pins) to 142 pins on Python 3.12, 3.13 and 3.14, still with `protobuf==6.33.6` and `starlette==1.7.0`; installed into a fresh CPython 3.13 venv (142 distributions), `pip-audit --path` → "No known vulnerabilities found" with the PyPI service and again with `-s osv`.
+- OSV `POST /v1/query` · 2026-10-01 · `google-cloud-storage` 3.15.1 → `{}` (no advisories); the package with no version → none ever recorded; `google-resumable-media` 2.11.0 and `google-crc32c` 1.9.0 → `{}`. deps.dev `pypi/google-cloud-storage@3.15.1` · published 2026-09-29T19:25:44Z, `advisoryKeys` [], licence Apache-2.0, source repo `github.com/googleapis/google-cloud-python` (569 open issues, Scorecard 8.3 dated 2026-08-24).
 - `measured`: `cyclonedx-py environment venv313 --of JSON` wrote a CycloneDX **1.6** SBOM with 133 components. `--spec-version` accepts "1.7, 1.6, 1.5, 1.4, 1.3, 1.2, 1.1, 1.0 (default: 1.6)".
 - https://github.com/CycloneDX/cyclonedx-python (README) · 2026-10-01 · "`uv` manifest and lockfile are not explicitly supported. However, uv's Python virtual environments are fully supported." So generate the SBOM from the built environment, not from `uv.lock`.
 - https://github.com/pypa/pip-audit (README) · 2026-10-01 · "Support for multiple vulnerability services (PyPI, OSV)".

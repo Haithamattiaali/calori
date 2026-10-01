@@ -1387,4 +1387,415 @@ Each line names its source — the brief, research or the /way method. Versions 
 
 ## §6 The dependency map
 
-(written at Plan to the end)
+Written at Plan, 2026-10-01, from `blueprint.md` §2 (74 slices). "Needs" lists the operations a slice extends or calls that an earlier slice provides; "provides" lists the operations it is the first to serve (`contracts/openapi.yaml`, 172 in all, each provided once). Modules in **bold** are created by that slice; the others it extends (§3.2; `nutrition_core` §3.3; `SipsCore`, `SipsApp` A16; the console adapter §3.5).
+
+### §6.1 Each slice — what it needs and what it provides
+
+| slice | lane | depends on | needs (operations) | provides (operations) | modules |
+|---|---|---|---|---|---|
+| S00 ★ | L-core | — | — | `setTestClock`, `loadSeed`, `setTestFaults`, `signInStaff`, `signOutStaff`, `listRoles`, `getUserRoles`, `updateRole`, `deleteRole`, `getSettings`, `changeSettings`, `getCurrentTarget`, `consume`, `getDayReport`, `listAuditTrailEvents`, `getAuditTrailEvent` | **platform**, **audit**, **jobs**, **identity**, **access**, **profile**, **privacy**, **policy**, **registry**, **targets**, **ledger**, **reports**, **console**, **SipsCore**, **SipsApp** |
+| S01 ★ | L-core | S00 | `getDayReport` (S00) | — | **nutrition_core**, SipsCore, ledger, reports |
+| S02 ★ | L-ref | S01 | — | `searchFoods`, `getAttributions`, `listFoods`, `getFoodEvidence`, `listTierBRecipeRecords`, `proposeTierBRecipeRecord`, `claimTierBRecipeRecord`, `approveTierBRecipeRecord` | **reference**, policy, nutrition_core, console |
+| S03 ★ | L-ref | S02 | `searchFoods` (S02) | `saveUnit`, `listUnits`, `getUnit`, `getUnitPicture` | **units**, reference, nutrition_core, SipsApp |
+| S03b ★ | L-ref | S03 | `saveUnit` (S03) | `listFoodRules`, `saveFoodRule` | units, nutrition_core, SipsApp |
+| S04 ★ | L-core | S03b | `consume` (S00), `getDayReport` (S00), `getCurrentTarget` (S00), `listUnits` (S03) | `voidEntry` | ledger, units, targets, reports, nutrition_core, SipsApp |
+| S05 ★ | L-ios | S04 | `consume` (S00), `saveUnit` (S03), `voidEntry` (S04), `listUnits` (S03) | — | SipsCore, platform, SipsApp |
+| S06 ★ | L-core | S05 | `voidEntry` (S04), `getDayReport` (S00) | `correctEntry`, `restoreEntry`, `getEntryHistory` | ledger, units, SipsCore, SipsApp |
+| S07 ★ | L-gov | S00 | `getSettings` (S00) | `confirmAge`, `decideConsent`, `listConsents`, `getWording` | privacy, identity, SipsApp |
+| S03c | L-ref | S03b | — | `saveRecipe`, `listRecipes`, `newRecipeVersion` | units, nutrition_core, SipsApp |
+| S03d | L-ref | S03 | `listUnits` (S03), `searchFoods` (S02) | `archiveUnit`, `unarchiveUnit` | units, reference, SipsApp |
+| S04b | L-core | S04, S06 | `changeSettings` (S00), `consume` (S00), `getSettings` (S00) | `startDay` | ledger, profile, nutrition_core, SipsApp |
+| S06b | L-core | S06 | `correctEntry` (S06), `getEntryHistory` (S06) | `newUnitVersion` | units, ledger, SipsApp |
+| S02b | L-ref | S02 | `searchFoods` (S02) | `listAliases`, `proposeAlias`, `approveAlias`, `rejectAlias`, `retireAlias` | reference, console |
+| S02c | L-ref | S02 | `proposeTierBRecipeRecord` (S02) | `rejectTierBRecipeRecord`, `retireTierBRecipeRecord` | reference, console |
+| S07d ★ | L-plan | S07, S03 | `changeSettings` (S00), `getSettings` (S00), `getWording` (S07) | `setSafetyMode` | profile, policy, privacy, SipsApp |
+| S07b ★ | L-plan | S07d, S03, S05 | `getSettings` (S00), `getCurrentTarget` (S00) | `proposeTargets`, `approveTarget` | targets, policy, nutrition_core, SipsApp |
+| S07e | L-plan | S07b | `proposeTargets` (S07b), `approveTarget` (S07b), `decideConsent` (S07), `getCurrentTarget` (S00) | — | targets, privacy, nutrition_core, SipsApp, **activity** |
+| S08 | L-core | S06, S07b | `getDayReport` (S00), `getCurrentTarget` (S00), `getEntryHistory` (S06) | `markDay` | reports, ledger, nutrition_core, SipsApp |
+| S08b | L-core | S08, S07b | `getDayReport` (S00) | `getPeriodReport`, `listTargetVersions` | reports, targets, SipsApp |
+| S09 | L-ai | S04, S07 | `consume` (S00), `searchFoods` (S02), `listUnits` (S03), `decideConsent` (S07) | `createAnalysis`, `getAnalysis`, `listAnalyses`, `discardAnalysis`, `getAiAvailability` | **analysis**, registry, ledger, SipsApp |
+| S09b | L-ai | S09 | `getAnalysis` (S09) | `answerAnalysisQuestion` | analysis, reference, SipsApp |
+| S09f | L-ai | S09, S07b, S05 | `decideConsent` (S07), `createAnalysis` (S09), `listConsents` (S07) | — | privacy, analysis, SipsCore, SipsApp |
+| S09c | L-ai | S09, S06, S04b | `createAnalysis` (S09), `consume` (S00), `correctEntry` (S06), `startDay` (S04b), `saveUnit` (S03), `listUnits` (S03) | `matchUnitNames` | units, analysis, SipsApp |
+| S09d | L-ai | S09c, S06 | `createAnalysis` (S09), `correctEntry` (S06), `voidEntry` (S04), `getEntryHistory` (S06) | — | analysis, ledger, SipsApp |
+| S09e | L-ai | S09, S03c | `createAnalysis` (S09), `saveUnit` (S03), `saveRecipe` (S03c) | `submitLabel` | analysis, units, reference, SipsApp |
+| S11 | L-ios | S05, S04b | `consume` (S00), `listUnits` (S03), `getDayReport` (S00) | `listTemplates`, `saveTemplate`, `deleteTemplate` | units, ledger, SipsApp |
+| S07c | L-ios | S11, S09, S07b | `consume` (S00), `saveUnit` (S03), `saveTemplate` (S11), `createAnalysis` (S09), `confirmAge` (S07), `decideConsent` (S07), `listTemplates` (S11) | — | SipsCore, identity, registry, units, ledger, SipsApp |
+| S10 | L-ai | S09 | `createAnalysis` (S09) | `getRegistry`, `recordModel`, `savePromptVersion`, `proposeRegistryVersion` | registry, console |
+| S10d | L-ai | S10, S11 | `getAiAvailability` (S09), `createAnalysis` (S09), `consume` (S00) | `setKillSwitch` | registry, analysis, console, SipsApp |
+| S10e | L-ai | S10d, S11 | `createAnalysis` (S09), `setKillSwitch` (S10d) | `saveQuotas`, `rollBackQuotas`, `getQuotaUsage`, `saveSpendCap` | registry, analysis, console |
+| S12 | L-plan | S09 | `listUnits` (S03), `createAnalysis` (S09), `getCurrentTarget` (S00) | `solveMealPlan`, `getMealPlan`, `setTestPlanner` | **plans**, platform, nutrition_core, SipsApp |
+| S12b | L-plan | S12, S07b, S05 | `getSettings` (S00) | `validateMealPlan` | plans, SipsApp |
+| S12c | L-plan | S12, S06, S08 | `consume` (S00), `correctEntry` (S06), `voidEntry` (S04) | `saveMealPlan`, `markPlanNotEaten`, `reopenMealPlan`, `listMealPlans` | plans, ledger, SipsApp |
+| S12d | L-plan | S12, S09b, S10e, S11 | `createAnalysis` (S09), `solveMealPlan` (S12), `getAnalysis` (S09) | — | analysis, plans, SipsApp |
+| S13 | L-plan | S07, S04, S09, S08b | `decideConsent` (S07), `getDayReport` (S00) | `importActivity`, `listActivity` | activity, privacy, SipsApp |
+| S13b | L-plan | S13, S07e, S08, S08b, S05 | `getCurrentTarget` (S00) | `addActivity`, `linkActivity`, `correctActivity`, `voidActivity`, `restoreActivity`, `getActivityCreditOffer`, `approveActivityCreditOffer` | activity, targets, nutrition_core, SipsApp |
+| S14 | L-plan | S06, S13 | `consume` (S00), `correctEntry` (S06), `voidEntry` (S04), `restoreEntry` (S06) | `reportHealthSample` | ledger, SipsApp |
+| S08c | L-plan | S08b, S13 | `listActivity` (S13), `getPeriodReport` (S08b) | `recordWeight`, `listWeights`, `excludeWeight`, `getSuggestedTarget`, `acceptSuggestedTarget`, `keepTarget` | activity, targets, SipsApp |
+| S15 | L-gov | S09, S13, S11, S05, S08b | `listConsents` (S07), `decideConsent` (S07), `createAnalysis` (S09), `importActivity` (S13) | — | privacy, activity, SipsApp |
+| S15b | L-gov | S15, S11, S05 | `listConsents` (S07) | `requestPrivacyJob`, `getPrivacyJob`, `listPrivacyJobs`, `getExportFile` | privacy, jobs, SipsApp |
+| S15c | L-gov | S15b, S07b, S08b | `createAnalysis` (S09), `approveTarget` (S07b) | — | privacy, analysis, platform, jobs |
+| S10b | L-ai | S10e, S15, S12 | `decideConsent` (S07), `createAnalysis` (S09) | `startEvaluation`, `getRegressionCase`, `moveRegistryVersion` | registry, privacy, console |
+| S10c | L-ai | S10b, S08b | `moveRegistryVersion` (S10b), `createAnalysis` (S09) | `rollBackRegistryVersion`, `listPrices`, `addPrice` | registry, console |
+| S10f | L-ai | S10c | `listPrices` (S10c) | `getCostView`, `getEvidenceMetrics`, `getQualityMetrics` | **metrics**, console |
+| S17 | L-gov | S15b, S11 | `listConsents` (S07), `listPrivacyJobs` (S15b) | `issueSupportCode`, `lookUpAccount`, `getAccountPanel` | **support**, identity, privacy, SipsApp, console |
+| S17b | L-gov | S17, S05, S10e | `getAccountPanel` (S17), `listPrivacyJobs` (S15b) | `getAccountTab`, `retryJob`, `escalateJob`, `recordOutsideRequest`, `listOutsideRequests`, `updateOutsideRequest`, `actOnOutsideRequest` | support, jobs, console |
+| S17c | L-core | S17b, S15c, S10d | `retryJob` (S17b), `listPrivacyJobs` (S15b) | `listJobs` | jobs, console |
+| S16 | L-gov | S17 | `lookUpAccount` (S17), `getAccountPanel` (S17), `getWording` (S07) | `requestGrant`, `approveGrant`, `declineGrant`, `endGrant`, `listMyGrants` | **grants**, privacy, console, SipsApp |
+| S16b | L-gov | S16, S08, S11, S13 | `getDayReport` (S00), `getEntryHistory` (S06), `listUnits` (S03), `listTemplates` (S11), `listActivity` (S13) | `readGrantDay`, `readGrantEntry`, `readGrantUnits`, `readGrantTemplates`, `readGrantActivity`, `listGrantReads` | grants, units, activity, reports, console, SipsApp |
+| S16c | L-gov | S16b | `endGrant` (S16), `listMyGrants` (S16) | `withdrawGrant`, `listMyRequestedGrants`, `getGrantSettings`, `saveGrantSettings`, `listGrantSettingsVersions` | grants, console |
+| S18 | L-gov | S16c | `listAuditTrailEvents` (S00) | `verifyAuditTrail`, `listGrants`, `getGrant` | audit, grants, **audit_views**, console |
+| S18e | L-gov | S18 | `listAuditTrailEvents` (S00) | `exportAuditTrail`, `addReviewNote`, `findAccount`, `getAuditSummary` | audit, audit_views, console |
+| S18b | L-gov | S18e, S15 | `listConsents` (S07), `getWording` (S07) | `getAuditConsents` | audit_views, privacy, console |
+| S18c | L-gov | S18b, S15c | `listPrivacyJobs` (S15b), `listJobs` (S17c) | `getRecordsOfProcessing` | audit_views, console |
+| S19 | L-ref | S07b, S08 | `getCurrentTarget` (S00) | `listPolicyVersions`, `proposePolicyVersion`, `approvePolicyVersion` | policy, targets, console, SipsApp |
+| S19c | L-ref | S02, S03d, S09, S08, S08b | `listUnits` (S03) | `proposeFood`, `approveFoodVersion`, `rejectFoodVersion`, `retireFoodVersion`, `listUsdaReleases`, `getUsdaRelease` | reference, units, console |
+| S19b | L-ref | S19c, S09b, S02b | `proposeAlias` (S02b), `proposeFood` (S19c), `approveFoodVersion` (S19c) | `listFlags`, `closeFlag`, `claimFoodVersion` | reference, console |
+| S19e | L-ref | S19b, S09e | `approveFoodVersion` (S19c), `rejectFoodVersion` (S19c), `claimFoodVersion` (S19b), `submitLabel` (S09e) | — | reference, access, privacy, console |
+| S20 | L-core | S00, S10d, S16b | `updateRole` (S00), `deleteRole` (S00), `listRoles` (S00), `getUserRoles` (S00) | `createRole`, `setUserRoles` | access, identity, console |
+| S21 | L-core | S04, S09 | `getDayReport` (S00) | `listLaunchGates`, `recordLaunchGate` | platform, **gates**, console |
+| S21b | L-core | S21, S19, S15 | `listLaunchGates` (S21), `listTierBRecipeRecords` (S02) | `signLaunchGate`, `proposeWording`, `publishWording`, `listWordings` | gates, privacy, console |
+| S19d | L-ref | S19, S21b, S08b | `proposePolicyVersion` (S19), `publishWording` (S21b), `listFlags` (S19b) | — | policy, privacy, console |
+| S18d | L-gov | S18, S19, S10c, S20, S02b, S19c | `listPolicyVersions` (S19), `getRegistry` (S10), `listRoles` (S00), `listAliases` (S02b), `listFoods` (S02) | `getAnomalies` | audit_views, audit, console |
+| C01 | L-ios | S07, S07b, S07c, S07d, S07e | — | — | — |
+| C02 | L-ios | S03, S03b, S03c, S03d, S06b, S19c | `changeSettings` (S00) | — | profile |
+| C03 | L-ios | S04, S04b, S05, S11, S14, S09c, C02 | — | — | — |
+| C04 | L-ios | S09, S09b, S09c, S09d, S09e, S09f, S10d, S10e, C02 | — | — | — |
+| C05 | L-ios | S12, S12b, S12c, S12d, C02 | — | — | — |
+| C06 | L-ios | S06, S06b, S09d, C02 | — | — | — |
+| C07 | L-ios | S13, S13b, C02 | — | — | — |
+| C08 | L-ios | S08, S08b, S08c, C02 | — | — | — |
+| C09 | L-gov | S15, S15b, S15c, S17, S17b, S16b | — | — | — |
+| C10 | L-ref | S02c, S10f, S16c, S17c, S18c, S18d, S19d, S19e, S20, S21b | — | — | — |
+
+### §6.2 The graph
+
+An arrow runs from a slice to each slice that depends on it (read it as "unlocks"); the lanes are the subgraphs; ★ marks the MVP.
+
+```mermaid
+flowchart LR
+  subgraph L_core["L-core"]
+    S00["S00 ★"]
+    S01["S01 ★"]
+    S04["S04 ★"]
+    S06["S06 ★"]
+    S04b["S04b"]
+    S06b["S06b"]
+    S08["S08"]
+    S08b["S08b"]
+    S17c["S17c"]
+    S20["S20"]
+    S21["S21"]
+    S21b["S21b"]
+  end
+  subgraph L_ref["L-ref"]
+    S02["S02 ★"]
+    S03["S03 ★"]
+    S03b["S03b ★"]
+    S03c["S03c"]
+    S03d["S03d"]
+    S02b["S02b"]
+    S02c["S02c"]
+    S19["S19"]
+    S19c["S19c"]
+    S19b["S19b"]
+    S19e["S19e"]
+    S19d["S19d"]
+    C10["C10"]
+  end
+  subgraph L_ai["L-ai"]
+    S09["S09"]
+    S09b["S09b"]
+    S09f["S09f"]
+    S09c["S09c"]
+    S09d["S09d"]
+    S09e["S09e"]
+    S10["S10"]
+    S10d["S10d"]
+    S10e["S10e"]
+    S10b["S10b"]
+    S10c["S10c"]
+    S10f["S10f"]
+  end
+  subgraph L_plan["L-plan"]
+    S07d["S07d ★"]
+    S07b["S07b ★"]
+    S07e["S07e"]
+    S12["S12"]
+    S12b["S12b"]
+    S12c["S12c"]
+    S12d["S12d"]
+    S13["S13"]
+    S13b["S13b"]
+    S14["S14"]
+    S08c["S08c"]
+  end
+  subgraph L_gov["L-gov"]
+    S07["S07 ★"]
+    S15["S15"]
+    S15b["S15b"]
+    S15c["S15c"]
+    S17["S17"]
+    S17b["S17b"]
+    S16["S16"]
+    S16b["S16b"]
+    S16c["S16c"]
+    S18["S18"]
+    S18e["S18e"]
+    S18b["S18b"]
+    S18c["S18c"]
+    S18d["S18d"]
+    C09["C09"]
+  end
+  subgraph L_ios["L-ios"]
+    S05["S05 ★"]
+    S11["S11"]
+    S07c["S07c"]
+    C01["C01"]
+    C02["C02"]
+    C03["C03"]
+    C04["C04"]
+    C05["C05"]
+    C06["C06"]
+    C07["C07"]
+    C08["C08"]
+  end
+  S00 --> S01
+  S01 --> S02
+  S02 --> S03
+  S03 --> S03b
+  S03b --> S04
+  S04 --> S05
+  S05 --> S06
+  S00 --> S07
+  S03b --> S03c
+  S03 --> S03d
+  S04 --> S04b
+  S06 --> S04b
+  S06 --> S06b
+  S02 --> S02b
+  S02 --> S02c
+  S07 --> S07d
+  S03 --> S07d
+  S07d --> S07b
+  S03 --> S07b
+  S05 --> S07b
+  S07b --> S07e
+  S06 --> S08
+  S07b --> S08
+  S08 --> S08b
+  S07b --> S08b
+  S04 --> S09
+  S07 --> S09
+  S09 --> S09b
+  S09 --> S09f
+  S07b --> S09f
+  S05 --> S09f
+  S09 --> S09c
+  S06 --> S09c
+  S04b --> S09c
+  S09c --> S09d
+  S06 --> S09d
+  S09 --> S09e
+  S03c --> S09e
+  S05 --> S11
+  S04b --> S11
+  S11 --> S07c
+  S09 --> S07c
+  S07b --> S07c
+  S09 --> S10
+  S10 --> S10d
+  S11 --> S10d
+  S10d --> S10e
+  S11 --> S10e
+  S09 --> S12
+  S12 --> S12b
+  S07b --> S12b
+  S05 --> S12b
+  S12 --> S12c
+  S06 --> S12c
+  S08 --> S12c
+  S12 --> S12d
+  S09b --> S12d
+  S10e --> S12d
+  S11 --> S12d
+  S07 --> S13
+  S04 --> S13
+  S09 --> S13
+  S08b --> S13
+  S13 --> S13b
+  S07e --> S13b
+  S08 --> S13b
+  S08b --> S13b
+  S05 --> S13b
+  S06 --> S14
+  S13 --> S14
+  S08b --> S08c
+  S13 --> S08c
+  S09 --> S15
+  S13 --> S15
+  S11 --> S15
+  S05 --> S15
+  S08b --> S15
+  S15 --> S15b
+  S11 --> S15b
+  S05 --> S15b
+  S15b --> S15c
+  S07b --> S15c
+  S08b --> S15c
+  S10e --> S10b
+  S15 --> S10b
+  S12 --> S10b
+  S10b --> S10c
+  S08b --> S10c
+  S10c --> S10f
+  S15b --> S17
+  S11 --> S17
+  S17 --> S17b
+  S05 --> S17b
+  S10e --> S17b
+  S17b --> S17c
+  S15c --> S17c
+  S10d --> S17c
+  S17 --> S16
+  S16 --> S16b
+  S08 --> S16b
+  S11 --> S16b
+  S13 --> S16b
+  S16b --> S16c
+  S16c --> S18
+  S18 --> S18e
+  S18e --> S18b
+  S15 --> S18b
+  S18b --> S18c
+  S15c --> S18c
+  S07b --> S19
+  S08 --> S19
+  S02 --> S19c
+  S03d --> S19c
+  S09 --> S19c
+  S08 --> S19c
+  S08b --> S19c
+  S19c --> S19b
+  S09b --> S19b
+  S02b --> S19b
+  S19b --> S19e
+  S09e --> S19e
+  S00 --> S20
+  S10d --> S20
+  S16b --> S20
+  S04 --> S21
+  S09 --> S21
+  S21 --> S21b
+  S19 --> S21b
+  S15 --> S21b
+  S19 --> S19d
+  S21b --> S19d
+  S08b --> S19d
+  S18 --> S18d
+  S19 --> S18d
+  S10c --> S18d
+  S20 --> S18d
+  S02b --> S18d
+  S19c --> S18d
+  S07 --> C01
+  S07b --> C01
+  S07c --> C01
+  S07d --> C01
+  S07e --> C01
+  S03 --> C02
+  S03b --> C02
+  S03c --> C02
+  S03d --> C02
+  S06b --> C02
+  S19c --> C02
+  S04 --> C03
+  S04b --> C03
+  S05 --> C03
+  S11 --> C03
+  S14 --> C03
+  S09c --> C03
+  C02 --> C03
+  S09 --> C04
+  S09b --> C04
+  S09c --> C04
+  S09d --> C04
+  S09e --> C04
+  S09f --> C04
+  S10d --> C04
+  S10e --> C04
+  C02 --> C04
+  S12 --> C05
+  S12b --> C05
+  S12c --> C05
+  S12d --> C05
+  C02 --> C05
+  S06 --> C06
+  S06b --> C06
+  S09d --> C06
+  C02 --> C06
+  S13 --> C07
+  S13b --> C07
+  C02 --> C07
+  S08 --> C08
+  S08b --> C08
+  S08c --> C08
+  C02 --> C08
+  S15 --> C09
+  S15b --> C09
+  S15c --> C09
+  S17 --> C09
+  S17b --> C09
+  S16b --> C09
+  S02c --> C10
+  S10f --> C10
+  S16c --> C10
+  S17c --> C10
+  S18c --> C10
+  S18d --> C10
+  S19d --> C10
+  S19e --> C10
+  S20 --> C10
+  S21b --> C10
+```
+
+### §6.3 The critical path
+
+- **Whole build** (longest chain of dependencies, 22 slices): S00 → S01 → S02 → S03 → S03b → S04 → S05 → S06 → S08 → S08b → S13 → S15 → S15b → S17 → S16 → S16b → S16c → S18 → S18e → S18b → S18c → C10, then `whole-app`. It runs through L-core (the ledger), L-plan (Health import) and L-gov (privacy, support, Grants, the Auditor): L-gov holds 15 slices in one line, so it is the lane to start first after S07 and keep busy.
+- **MVP** (8 slices on its longest chain): S00 → S01 → S02 → S03 → S03b → S04 → S05 → S06; S07 (L-gov) → S07d → S07b (L-plan) run beside it after S00 and S03; S07b also waits for S05.
+- **What runs at once:** after S00, S01 (L-core) and S07 (L-gov); after S01, S02 (L-ref); after S03, S07d (L-plan, with S07) and S03d; after S03b, S04 (L-core) while L-ref goes on with S03c, S03d, S02b and S02c; after S04, S05 (L-ios) and — S07 being banked — S09 (L-ai); after S06, S04b and S06b (L-core); after S07d, S07b (L-plan). Each slice starts when its depends-on slices are banked; two slices that edit the same files never run at once (the SipsApp project file and the string catalogue are shared — iOS changes are batched per CI run, `lessons.md`).
+
+### §6.4 Carried lines — story lines a later slice closes (127)
+
+Found at Plan by a surface-word pass over each story's acceptance lines: a line, in a story whose slice does not depend on the slice that builds the surface it names, is carried to that slice. The closing slice re-runs the line; the story is finished when its last carried line passes. A verifier adds any line this pass missed.
+
+| closes in | story (words that name the surface) |
+|---|---|
+| S03 | eater-3.2 (Make your first unit) |
+| S04 | eater-2.27 (count stepper) |
+| S05 | eater-3.38 (Pending) |
+| S06 | eater-3.5 (Entry details) · eater-3.7 (Entry details) · eater-3.8 (Entry details) · eater-3.15 (Entry details) · eater-3.38 (Restore) |
+| S04b | eater-6.17 (Day picker) · eater-6.18 (Start new day) |
+| S07b | eater-3.2 (Set a Target) · eater-1.12 (Onboarding · Energy) · eater-1.16 (Onboarding · Energy) · eater-1.17 (Onboarding · Energy) · eater-1.19 (Set a Target) · eater-1.20 (Onboarding · Target) · eater-1.22 (Settings → Goals) |
+| S08 | approver-10.46 (Day report) |
+| S08b | eater-3.29 (Progress) · eater-3.30 (Progress) · eater-6.13 (Progress) · eater-1.19 (Progress) · eater-1.22 (Progress) · eater-1.29 (Progress) · eater-1.32 (Progress) · eater-1.43 (Progress) · eater-1.47 (Progress) · eater-8.6 (Progress) · eater-8.13 (Progress) · eater-8.32 (Progress) · eater-8.33 (Progress) |
+| S09 | approver-10.33 (Capture & Plan) · approver-10.39 (/v1/analyses) · approver-10.64 (Analysis review) · eater-2.9 (/v1/analyses) · eater-2.28 (Analysis review) · eater-3.43 (Capture & Plan) · eater-1.6 (Capture & Plan) · eater-2.15 (/v1/analyses) · eater-2.37 (Analysis review) · eater-2.41 (Analysis review) · eater-2.42 (Analysis review) · eater-2.43 (Analysis review) · approver-10.41 (Capture & Plan) · approver-10.42 (Capture & Plan) · approver-10.46 (/v1/analyses) · approver-10.67 (Capture & Plan) |
+| S11 | eater-3.7 (Template) · eater-3.23 (Template) · eater-3.25 (Template) · eater-6.12 (widget) · eater-3.11 (Template) · eater-3.14 (Template) |
+| S10 | approver-10.2 (/v1/admin/registry) |
+| S10d | eater-1.27 (kill switch) · admin-10.1 (kill switch) |
+| S10e | eater-3.14 (quota) · eater-4.44 (quota) · eater-6.2 (quota) · eater-9.22 (quota) |
+| S12 | eater-1.15 (Meal planner) · eater-4.2 (Plan a meal) · eater-3.13 (Meal planner) · eater-4.25 (Meal planner) |
+| S12c | eater-3.43 (Saved Plan) · eater-5.11 (Meal review) · eater-5.18 (Saved Plan) · eater-5.27 (Saved Plan) |
+| S13 | eater-1.6 (Apple Health) · eater-1.14 (Apple Health) · eater-1.39 (Apple Health) · eater-1.41 (Apple Health) |
+| S15 | eater-1.3 (Settings → Privacy) · eater-1.5 (Settings → Privacy) · eater-1.6 (Settings → Privacy) · eater-1.14 (Settings → Privacy) · eater-4.6 (Settings → Privacy) · eater-3.14 (Settings → Privacy) · eater-3.22 (Settings → Privacy) · eater-9.22 (Settings → Privacy) · eater-3.40 (Settings → Privacy) |
+| S15b | eater-1.19 (Settings → Export) · eater-9.17 (Settings → Export) · eater-9.2 (Settings → Export) · eater-9.9 (Settings → Export) |
+| S10c | eater-6.13 (Rolled back) · eater-8.8 (Rolled back) · admin-10.1 (Canary) · admin-10.7 (Canary) · admin-10.8 (Canary) · admin-10.35 (Canary) · admin-10.37 (Canary) · admin-10.20 (Canary) |
+| S17 | eater-9.16 (support code) |
+| S17b | support-10.24 (Failed Analyses) · support-9.18 (Sync tab) |
+| S16 | support-9.1 (Grants) · approver-10.2 (Grants) · eater-3.38 (Grant) · eater-6.25 (Grant) · support-10.24 (Grants) · eater-9.19 (Grant) · support-9.4 (Grants) · support-9.13 (Grants) · support-9.15 (Grants) |
+| S16b | eater-3.38 (Active Grant) · eater-6.25 (Active Grant) · eater-9.19 (Active Grant) · support-10.1 (Active Grant) |
+| S19 | eater-8.11 (Policy version) · eater-7.25 (Policy version) |
+| S19c | approver-10.21 (USDA release) |
+| S21 | admin-9.4 (launch gates) |
+| S18d | auditor-10.1 (Anomalies) · auditor-10.8 (Anomalies) · auditor-10.9 (Anomalies) · auditor-10.13 (Anomalies) · auditor-10.15 (Anomalies) · auditor-10.41 (Anomalies) · auditor-10.43 (Anomalies) · auditor-9.4 (Anomalies) · auditor-9.5 (Anomalies) · auditor-9.8 (Anomalies) · auditor-9.18 (Anomalies) · auditor-9.10 (Anomalies) · auditor-9.15 (Anomalies) |
+| C02 | eater-3.22 (Hide numbers) |

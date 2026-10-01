@@ -6,7 +6,7 @@ routes), `way/join.md` (paths, field names, error rules, through §22 / delta D6
 `way/events.md`, `way/seed.md` (every example) and FRD §17–§18. Where those files disagree with an older lens
 line, they win and the contract follows them.
 
-**Size on 2026-10-01:** 149 paths, 172 operations (78 for the eater app, 87 for staff, 4 in test builds only),
+**Size on 2026-10-01:** 149 paths, 172 operations (78 for the eater app, 90 for staff, 4 in test builds only),
 355 schemas.
 
 ## How the contract is used
@@ -93,7 +93,7 @@ the console adapter §3.5 and the dependency graph §3.6.
 | 5 | `access` | §3.2 #5 — permissions and roles | 6 | 6 |
 | 6 | `gates` | §3.2 #6 — launch gates | 3 | 3 |
 | 7 | `profile` | §3.2 #7 — the eater's settings | 3 | — |
-| 8 | `privacy` | §3.2 #8 — age, Consent, Wording, Privacy jobs | 9 | 1 |
+| 8 | `privacy` | §3.2 #8 — age, Consent, Wording, Privacy jobs | 11 | 3 |
 | 9 | `policy` | §3.2 #9 — the nutrition Policy | 3 | 3 |
 | 10 | `reference` | §3.2 #10 — Foods, records, Aliases, Review | 25 | 22 |
 | 11 | `registry` | §3.2 #11 — Registry, quotas, cost | 16 | 15 |
@@ -104,15 +104,15 @@ the console adapter §3.5 and the dependency graph §3.6.
 | 16 | `plans` | §3.2 #16 — the meal planner | 7 | — |
 | 17 | `activity` | §3.2 #17 — Activity and Weights | 10 | — |
 | 18 | `reports` | §3.2 #18 — Day and period reports | 2 | — |
-| 19 | `grants` | §3.2 #19 — just-in-time diary access | 17 | 12 |
+| 19 | `grants` | §3.2 #19 — just-in-time diary access | 18 | 13 |
 | 20 | `support` | §3.2 #20 — support codes, look-ups, account panel | 8 | 7 |
 | 21 | `metrics` | §3.2 #21 — de-identified figures | 3 | 3 |
 | 22 | `audit_views` | §3.2 #22 — the Auditor's views | 5 | 5 |
 
 ## Routes this contract adds, and lines read through it
 
-**Added** (`x-contract-added`: model §3.2 names the interface but no route; to be banked by a dated delta):
-`POST /v1/units/name-match` (`analysis.unit_name_match`, J126 — a POST so typed words never sit in a URL) ·
+**Added** (`x-contract-added`: routes this contract added beyond model §3.2's first write; model §3.2 now lists all three, and delta D7 records the contract's later changes):
+`POST /v1/units/name-match` (`units.match_unit_names`, J126 — a POST so typed words never sit in a URL) ·
 `POST /v1/targets/suggestions/{id}/keep` (`targets.keep_target`, event `target.suggestion.kept`) ·
 `POST /v1/meal-plans/{id}/reopen` (`plans.reopen`, J68 Undo → Saved). The D6 routes
 `GET /v1/targets/activity-credit-offer` and `POST /v1/targets/activity-credit-offer/approve` come from J156.
@@ -125,8 +125,8 @@ the console adapter §3.5 and the dependency graph §3.6.
 - Grant lengths are ISO 8601 hours: `duration: "PT1H"` on a Grant, `durations` / `default_duration` on Grant
   settings (field names as admin-10.72 reads them; 1–24 h, D6-A1).
 - `POST /v1/admin/wording` names the version in `text_version` (`c-ai-5`); `wording.published` calls it `key`.
-  Wording state `proposed` (J153) has no route of its own in v1: the texts are supplied when publishing; a
-  proposing route, if the console needs one over HTTP, is a delta.
+  Wording state `proposed` (J153) has its own route since delta D7: `POST /v1/admin/wording/proposals` writes a
+  Proposed version (event `wording.proposed`), and publishing names that version by id (J158–J160).
 - `GET /v1/reports/day` carries `consumed_kcal`, `target_kcal` and `remaining_kcal` at the top (the eater stories
   read them there) as well as the unrounded `totals`.
 
@@ -136,3 +136,9 @@ the console adapter §3.5 and the dependency graph §3.6.
   on consume, `include_expired` on Plans, the activity-credit-offer routes, Wording states and `asks_again`, Grant
   settings In use → Replaced · Rolled back with 1–24 h durations, review-note `scope`/`period`/`finding`, the
   retention run's `removed_through_seq`/`anchor_hash`/`roles_held_at_anchor`). Impact: none yet — nothing is built.
+- **2026-10-01 · delta D7 (blueprint §3).** Three routes added: `GET /v1/admin/grant-settings/versions`,
+  `GET /v1/admin/wording/versions` and `POST /v1/admin/wording/proposals` (event `wording.proposed`); the
+  `ProposeWording` schema; `PublishWording` names the Proposed version by id and requires only `command_id`,
+  `text_version` and `asks_again` (J158–J160); `Price.cached_input_usd_per_mtok` and per-task token fields on
+  `CostView` (cached input; thinking at the output rate; admin-10.47). Counts: 149 paths, 172 operations (78 · 90 ·
+  4), 355 schemas. Impact: none yet — nothing is built.
