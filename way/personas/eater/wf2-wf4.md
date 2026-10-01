@@ -1083,3 +1083,106 @@ FRD §18 endpoints are used as written: `POST /v1/analyses`, `POST /v1/units`, `
 | EX-40 (mixed input in one line) | 4.39, 4.43 |
 | EX-43 ("hide numbers" view) | 2.52, 4.53 |
 | One-thumb review in the Unit editor (journey intro; E34, E35) | 2.50 |
+
+**Totals:** 105 stories (52 in WF-2, 53 in WF-4) and 366 acceptance lines (298 runtime, 37 system, 31 module).
+
+## Lens verdict (2026-10-01)
+
+**fail**: 27 defects.
+
+An independent verifier checked this file against `way/personas/_lens-verifier-brief.md` and changed nothing above. `way/vocabulary.md` (delta D2) was treated as binding vocabulary. `research.md` was read as context only, because it is verified separately. No outside source was opened, so no request went anywhere.
+
+What passed:
+- **Ids (check 7).** All 101 ids follow `eater-<WF>.<n>`. They run 2.1–2.51 and 4.1–4.50 with no gap.
+- **Counts.** The §7 totals are exact: 101 stories (51 + 50) and 340 acceptance lines (/r 279, /s 32, /m 29).
+- **Runtime lines.** Every story has at least one /r line.
+- **Story traces.** Every story has a trace line to the map, the FRD or D2.
+- **Refuted findings.** No refuted or doubtful cycle-1 finding is cited. The ten cycle-1 ids used (C22, C32, F20, F27, P15, P34, R2, R7, R22, R40) all stand in `r1-refute-a.md` and `r1-refute-b.md`, and P15 is used as narrowed (ar-EG only).
+- **Arithmetic.** The fixture numbers recompute:
+  - Cheese spoon 27.0 kcal (never 30.75) and Cheese bite 47.0 kcal.
+  - Talbina 480 kcal over 384 g = 1.25 kcal/g, giving 20, 300 and 360 kcal; version 2 gives 21.1 kcal per spoon.
+  - Tea with milk 64.6 kcal, Honey spoon 43.2 kcal, Laban cup 150 kcal and Saqai date 33.0 kcal.
+  - AT-01's mean is 10.242857 g, and its single weights sum to 71.7 g.
+  - The oat biscuit's 4/4/9 value is 95 kcal, and AT-08's piece is 50 kcal.
+- **Most of Complete.** The WF-2 and WF-4 map steps and done-when lines, FR-009…FR-039, FRD §4–§6 and the FRD §14 screen states all have stories, except for the gaps below. The rows of the §7 AT table are true for the ATs they list.
+
+### Observable
+
+1. **The fixtures disagree with the eater's other two journey files, so one seed cannot pass all three.** These are the same synthetic eaters and the same Units:
+   - Cheese bite: 47.0 kcal here; "46 kcal | 2.5 / 4.5 / 2.0" in `wf3-wf6.md`; "1.7 | 4.3 | 2.6 | 47.4" in `wf5-wf7-wf8.md`. Its Arabic name is «لقمة جبنة» here, and «قرصة جبنة» in both other files and for Mona in `research.md`.
+   - Laban cup: 150 kcal here, "152 kcal" in wf3-wf6 and "121.0" in wf5-wf7-wf8.
+   - Tea with milk: 64.6 kcal here and "60 kcal" in wf3-wf6.
+   - Bread bite 8 g: 20.0 kcal here and "21.0" in wf5-wf7-wf8.
+   - Tuna toast bite: "6.8 g tuna + 10 g toast" here and "6.8 g tuna + 8 g bread" in wf5-wf7-wf8.
+
+   Lines such as 2.38's "the total 47 kcal", 4.12's "141 kcal" and 2.14's "250 ml · 150 kcal" fail against the other files' seed.
+2. **eater-2.8, line 1: the seed contradicts the fixture.** The line says "the test seed has only 'Tuna in water, drained'". The fixture table lists "Tuna in oil, drained" among the approved Foods "in the test seed", and 2.23 needs that Food.
+3. **eater-2.15, lines 1–2: Laban cup cannot be a grams Unit.** The line says "a scale photo for Laban cup whose display reads '152 ml' while the Unit is in grams". The fixture defines Laban cup as "250 ml Laban drink", and that Food is listed per 100 ml only. The expected "152 g · declared" also breaks 2.14's rule for grams of a Food listed only per ml ("Save unit is disabled"; `SOURCE_BASIS_UNKNOWN`). The line also leaves "she" unnamed, while Laban cup is Faisal's (2.14).
+4. **eater-2.22, line 1, against eater-2.25, line 1: Cheese spoon both has bread and has none.** 2.22 marks "Egg bite, Cheese spoon and Foul spoon as 'eaten by dipping'" and expects each to read "Includes 8 g bread". 2.25 expects "Cheese spoon · without bread · 27 kcal" for the same eater, and FR-024 keeps the filling unaltered.
+5. **eater-2.26, line 4: no account holds these rules.** The line expects "the defaults are quantities (50 ml milk, 8.4 g sugar, 3 g ghee per fried egg)". Line 1 entered the milk and sugar as parts of Mona's Tea with milk Unit, not as Food rules. The ghee rule is Faisal's (line 3). The line names no account.
+6. **eater-2.48, line 3: the server cannot reject this Save.** The line says "the server rejects the queued Save with `SOURCE_BASIS_UNKNOWN`". The queued Unit is Honey spoon, 14.2 g of a per-100 g Food, so the real server accepts it. The line needs a Unit that fails, such as 2.14's yogurt in ml.
+7. **eater-4.13, lines 1–2: the numbers have no fixture.** The lines expect "Amount 180–320 g" and "520–910 kcal". No kabsa rice Food is in the seed. The two ends imply 2.89 and 2.84 kcal/g, so they cannot come from one record.
+8. **Other fixture gaps.**
+   - 2.7, line 1: "Bread, baladi · Bread, shami · Toast and so on" is an open list, and Bread, shami and Toast are not in the seed.
+   - 4.18, line 1: "a line whose Food has protein unknown". No seed Food has an unknown macro.
+   - 4.12, line 1: Foul spoon is shown as "measured", but no fixture defines it.
+   - 2.27, line 1: "offers 'Use a serving template' when an approved one exists". No Given creates one.
+9. **eater-4.16, line 2, against eater-2.9 (/s) and eater-2.42: Faisal's own Unit should win.** Faisal saved Laban cup in 2.14. 2.9 says "his own approved record wins" over the Gulf Alias. Yet 4.16 expects "Laban drink · 1 cup" with "Gulf: yogurt drink", and no "Your unit".
+10. **eater-4.6, line 1: the copy is untrue, and the state has no name.** The line reads "an Analysis is Processing … Then that Analysis stops and reads 'Not sent — AI is off in your settings'". An Analysis in Processing has already been uploaded. The line does not say what happens to the uploaded photo and the server-side Analysis, or which D2 state "stops" leads to.
+11. **Vague lines.**
+    - 4.50, line 4: "the Undo banner after Approve stays until VoiceOver has read it and the eater can reach it" gives no time.
+    - 4.20, line 1: "with a large stepper" gives no size.
+12. **eater-2.42 (/s): the line cannot fail.** The line reads "Given the approver retires the Gulf Alias «لبن», When Mona logs her Unit 'laban'". Mona's dialect is EG, so the Gulf Alias never affected her resolution. A test that can fail would retire the EG Alias «لبن» → Milk, whole.
+
+### Traced
+
+13. **eater-4.30, line 2: a command with no verb logs at once.** The line allows it "unless one-tap logging is on and Egg is an approved Unit". FRD §2.3 allows one-tap logging only for "An explicit command referencing unambiguous approved units". The story's own title promises "nothing logged by default".
+14. **eater-2.33: Talbina spoon moves to Recipe version 2 without a new Unit version.** The line reads "When Talbina spoon is resolved for a new log, Then it uses version 2". FR-010 ties a Unit to "a specific … recipe version", and FR-014 makes every edit a new version. For the same kind of change, 2.36 asks the eater and then makes a new Unit version. Conflict 6 covers rule versions only.
+15. **The shared-story ids point at the wrong stories.** The admin and support lenses renumbered their stories after this file cited them:
+    - admin-10.25 (cited in 4.12 for "every Analysis stamped") is now "Change the Canary share". The stamp story is admin-10.28.
+    - admin-10.26 (cited in 2.51 for "Registry changes never rewrite history") is now "Move to Rollout". The history story is admin-10.29.
+    - admin-10.30 (cited in 4.47) is now "Two admins editing at once". The manual-logging story is admin-10.33.
+    - admin-10.31 (cited in 4.49) is now the kill switch for one task. The nothing-sent-later story is admin-10.34.
+    - admin-10.36 (cited in 4.48) is now "The switch works at phone width". The eater-facing limit story is admin-10.40.
+    - admin-10.38 (cited in 4.44) is now "Set per-user daily AI quotas". "Only new AI work counts toward a quota" is admin-10.43.
+    - admin-10.48 (cited in 4.42 for "quality by language") is now "A daily budget warns, then turns the kill switch on by itself". Acceptance by language is admin-10.53.
+    - support-9.14, 9.15 and 9.16 (cited in 4.47 and 4.48) are now privacy-request and role stories. The support lens moved its AI stories to support-4.1, support-4.2 and support-10.24.
+16. **§5 Conflicts misses three disagreements with other lenses.**
+    - 2.35 (/s): a private Unit save raises an Energy mismatch item for the approver. approver-10.13 raises that item only on a Label submission, which needs its own Consent (4.37; approver Conflict 4).
+    - 4.17 (/s): Faisal's typed «تمر خلاص» reaches the review queue at once. Approver Conflict 5 shows eater-typed text only after "at least 5 distinct eaters used the same normalised text in the last 28 days".
+    - 4.3 (/s): the Consent method is "in the app, at first photo". The shared story auditor-9.2 knows only "onboarding" or "Settings".
+
+### Complete
+
+17. **FRD §7.1, FRD §16.3 and the map row "Eater → AI analyzer" are only partly covered.**
+    - No line checks the validated result's fields `analysis_id`, `candidate_food_ids[]`, `evidence_refs[]` and "field-level uncertainty states".
+    - No line feeds in a mock output that fails the schema ("schema-constrained output, server validation").
+    - No line shows the resolver's number replacing a number from the model ("a trusted resolver shall obtain the actual numeric record").
+    - Two pipeline steps have no line: §16.3 step 1 ("file type, and size") and step 4 ("numerical plausibility").
+
+    The coverage rows "FRD §7.1 … | 4.12, 4.23" and "FRD §16.3 validation pipeline … | 4.21, 4.38, 4.45, 4.46" claim more than these stories prove.
+18. **FR-025: only the first step of the resolver order is tested.** 2.9 (/s) shows the eater's own record beating an Alias and an analogue. FR-025 requires the order "label/manufacturer data > authoritative food database > calculated recipe > clearly labeled analogue" ("in that order of applicability"), and no line tests it. The coverage row overclaims.
+19. **AT-32: manual logging is only offered, never done.** AT-32 says "Recent units and manual logging still work". In 4.47, "Enter an amount" is only a button, and no line logs a manual amount during the outage. 4.48 line 3 logs a typed amount under a quota, not during an outage.
+20. **The map's consent row has no microphone Consent.** The interaction row reads "give separate consents (… mic; photos …) | Consent records (version, time, method)". 4.5 covers only the iOS prompt, while auditor-9.1 lists a "Microphone" purpose.
+
+### Sourced
+
+21. **§5 Conflict 13 misstates E39.** It says "Saudi eaters are about half of iPhone use in their market (E39)". E39 says iPhone is about half of mobile use in Saudi Arabia ("iOS 51.6 %").
+
+### Vocabulary
+
+22. **Some Analysis states are not in D2, and Conflict 10 does not raise them.** A photo stays on the phone after "Not now" (4.3), "Cancel" (4.11), the daily limit (4.48) or a Consent withdrawal mid-run (4.6, "stops"). None of these has a D2 state, and Pending means "captured offline, not sent". 4.49 also shows a Pending Analysis as "Ready to analyse", a second name next to Pending and Ready for review.
+23. **"serving template" (2.27, from FR-022) collides with Template.** The map defines Template as "a saved meal", so one word names two things. Conflict 10 does not raise it.
+24. **One field has two names.** 2.4 uses `unit_kind: "custom"`, and 2.17 uses `kind` set to `composite`. The second also puts the Composite entity among FR-009's kinds of amount.
+25. **Some places are in neither D2's Places nor §1 ¶4.** They are "quick-add control" (7 uses), the capture modes Meal · Unit · Label · Recipe, "correction preview" and "Source details". All are FRD words, but D2 says a word not in either list "is added by a dated delta first", and Conflict 10 does not list them.
+
+### Experience and the coverage table
+
+26. **The coverage table is untrue in two places.**
+    - The row "EX-33–EX-39 … | 2.50, 4.50":
+      - EX-34 (text contrast ≥4.5:1 in light and dark) has no acceptance line anywhere in the file, though the WF-4 moment includes "sun on the screen".
+      - EX-37 (≥44 pt targets, a visible button for every swipe) has no line in 2.50 or 4.50; only 2.4 checks 44 pt.
+      - EX-35 is met in 4.17, not in the two stories listed.
+      - The WF-2 header promises "the review one-handed", but no Unit editor line checks thumb reach.
+    - The AT table leaves out AT-15 (cited by 2.35) and AT-10 (cited by 4.21).
+27. **The "hide numbers" view (EX-43) is not honoured on these screens.** The map lists it as a user setting (§1 ¶6, R37). Every line on the Unit editor and Analysis review shows kcal, and no story covers an eater who has the view on. `wf3-wf6.md` covers it for Today.

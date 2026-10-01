@@ -1286,3 +1286,83 @@ The new story is numbered **10.41** and placed after 10.13, so no existing id mo
 | 11 | age refusal on the server here, on the device in the eater lens | **moved to §7 B M10**, noting which lines of 9.9 change if the eater lens holds |
 | 12 | Consent text ids, methods and Health purposes | **moved to §7 B M11.** The methods inside this lens are now fixture values (item 3) |
 | 13 | renumbering broke references, and fix round 1 said it could not | fix round 1's sentence is corrected in place ("other files do reference these ids"). The eater lens's stale references and its extra shared-story marks are listed in **§7 B M13**. 10.41 was appended so that no id moved in this round |
+
+## Lens verdict — re-verify 2 (2026-10-01)
+
+**fail**: 2 defects, both new in fix round 2. Re-verify defects 1–5 are fixed. Defects 6–13 are now in §7 B.
+
+A third independent verifier re-ran `way/personas/_lens-verifier-brief.md`, with its addendum, on this file after fix round 2 (commit 462ac11). `way/vocabulary.md` (D2) was binding, and nothing above was changed. The check covered three things:
+- the re-verify's defects 1–5;
+- where defects 6–13 now sit;
+- only the lines fix round 2 changed (the diff f9c6e30..462ac11), including the new auditor-10.41.
+
+The other lenses were read as they stood at about 06:15Z, which puts the support lens after its fix round 2 (06:09Z).
+
+What passed:
+- **Counts.** §8 is exact: 59 stories (41 + 18) and 121 acceptance lines (/m 10 · /s 15 · /r 96). Every story has a /r line.
+- **Ids.** auditor-10.41 follows `auditor-<WF>.<n>`, and no existing id moved.
+- **Pointers.** No "Conflicts, item n" pointer is left. Every §7 pointer in the body lands on the right item: A1, A2, A3, A4, A6, A8, A14, M8 and M12. No admin story id remains outside §7 B.
+- **Sources.** E1 was re-opened on 2026-10-01 with a generic User-Agent, and no owner identifier was sent. Its definition of Sensitive Personal Data ends "… and in all cases, data relating to children is considered to be sensitive data." The Implications of `r1-rules-trends.md` hold "Governance work before launch …" with the bullet "Records of processing.", and `blueprint.md` never mentions records of processing.
+- **Arithmetic.**
+  - 14 days from 2026-09-10T12:04Z is 2026-09-24T12:04Z.
+  - The export's "Consents 7" equals events 10–16.
+  - Fixture Y is separate, so the seeded counts in 10.2, 10.14, 10.34 and 10.35 still hold.
+- **Traced.** 10.41 traces to the map row "Support → eater diary | read within the Grant | Grant (active) | time box, read-only, every read audited, auto-expiry".
+
+### Re-verify defects 1–5: fixed or not
+
+| # | status | the line that shows it |
+|---|---|---|
+| 1 | fixed | 10.41 /r: "`staff_mona` requests Day 2026-10-03 and then My Units under `grant_7a02` Then: both API calls return 403 `FORBIDDEN` with no diary data". 10.14 adds the rule "diary reads allowed outside a Grant's Days or areas 0". (The code is defect 1 below.) |
+| 2 | fixed | 10.9 /s: "the Support agent with 403 `GRANT_REQUIRED`, recorded as `grant.read_refused`; every other role with 403 `FORBIDDEN`, recorded as `access.refused`". 9.8 /s: "a Support agent with no Grant gets 403 `GRANT_REQUIRED` … (the same outcome as 10.9)"; "the Nutrition approver, Platform admin and Auditor each get 403 `FORBIDDEN`, and one `access.refused` event is written". The two now agree |
+| 3 | fixed | `job_exp_4402`: "categories Entries 212 · Units 9 · Recipes 2 · Targets 1 · Reports 11 (10 day, 1 period) · Consents 7; file 184 KB; link and file kept 14 days, to 2026-09-24T12:04:00Z (`assumption`; §7 M12); downloaded once, 2026-09-10T12:10:00Z". `job_del_2201`: "steps: private records deleted 06:10:00Z · … · processor confirmation received 2026-09-16T06:00:00Z". Event 39: "Settings → Privacy · app 1.0.2". Event 40: "`meal_photo@v7` · 'prompt v12 asks about oil and ghee'". `acct_d40e17`: "former sign-in email `d40e17.synthetic@example.com`". Events 9–16, 37 and 44 now each carry a method and an app version |
+| 4 | fixed | §1.1 "Capacity (adults)": "E1 definitions (Sensitive Personal Data): 'in all cases, data relating to children is considered to be sensitive data'". This matches E1 word for word |
+| 5 | fixed | §7 A8: "The map does not mention records of processing. The pre-launch governance list in the Implications of `way/research/r1-rules-trends.md` does: 'Governance work before launch … Records of processing.'" |
+
+### Re-verify defects 6–13: now in §7 B
+
+| # | where it is now |
+|---|---|
+| 6 | M1 (`grant_31f0` read times), M2 (`grant_31f9`), M3 (`grant_40aa`), M4 (reason label), M5 (licence on «فول مدمس — EG») |
+| 7 | M6 (event names, and the 8-event count). The stale claim that the support and admin lenses predate D2 is gone. A14 now points to M6 |
+| 8 | M7. The body cites the admin rules by description. admin-10.62 and admin-10.64 still hold those rules |
+| 9 | M8 |
+| 10 | M9 |
+| 11 | M10 |
+| 12 | M11 |
+| 13 | M13. Fix round 1's sentence now reads "*(Corrected in fix round 2: other files do reference these ids …)*" |
+
+### Defects
+
+**Vocabulary (D2)**
+
+1. **auditor-10.41 (/r and /s) and §7 A16: `FORBIDDEN` is used for a read that the role may make but the Grant does not cover.**
+   - D2 defines the code as "`FORBIDDEN` (role lacks the permission)".
+   - The Support agent role holds the Grant-gated read permission. 10.9 shows this: a Support agent with no Grant gets `GRANT_REQUIRED`, and only roles without the permission get `FORBIDDEN`.
+   - So this lens answers "no Grant covers this read" with `GRANT_REQUIRED` in 10.9 but with `FORBIDDEN` in 10.41. One cause gets two codes, and `FORBIDDEN` gets two meanings.
+   - A16 admits "Out-of-scope reads have no D2 code of their own", but it rules out a new code without saying which D2 meaning applies.
+   - The support lens's verifier judged the same choice a D2 defect (support verdict, item 7).
+   - 9.8's new /s line gives the same reason, "because media is in no Grant area". There, `FORBIDDEN` holds up on the role alone, since no D2 role may open raw evidence.
+
+**Observable**
+
+2. **auditor-10.14 (new rule line) and auditor-10.41 /m: the seeded value 0 for "diary reads allowed outside a Grant's Days or areas" cannot be checked.**
+   - The 10.41 /m line says: "On the seeded Audit trail the rule shows 0 in Anomalies (10.14)".
+   - Event 56 reads "grant.read · grant_31f0 · Entry en_9921". It gives no Day, and no fixture row gives `en_9921`'s Day, so it cannot be checked against `grant_31f0`'s Days 09-28 to 09-30.
+   - Every other Allowed read names a Day inside its Grant (events 24, 55 and 71) or an area with no Day (events 57 and 66).
+   - Event 56 or the fixtures need the Entry's Day. The support lens puts `en_9921` on Day 2026-09-29.
+
+**Noted, not counted.** 9.2 says "(event 39 shows app 1.0.2, the second iPhone)". No fixture names a second device, but the value a verifier observes, app 1.0.2, is in event 39's row.
+
+### Cross-lens (for the model phase join; uncounted)
+
+- **Out-of-scope reads.**
+  - The support lens's fix round 2 (06:09Z) changed support-10.12 to "403 `GRANT_REQUIRED` (no Grant covers this read)", with `grant.read_denied` (support K11). Its fixture is `grant_7d01` (E4, Days 2026-09-29 to 2026-09-30).
+  - This lens uses `FORBIDDEN`, `grant.read_refused` and `grant_7a02`.
+  - A16's "as the support lens does" is no longer true, and §7 B has no row for this.
+- **`CASE-1201`.** Fixture Y's case reference is also the support lens's deletion-escalation case (support-9.11: "she escalates with case `CASE-1201`").
+- **`acct_9c41e2`.**
+  - The test-clock note says the id shares only its name with the support lens. Yet the eater-accounts row still reads "`acct_9c41e2` (E1 in the support lens; …)".
+  - Support E1's Consents ("Send photos, voice and text to Google's AI" Given; "Health: read workouts" Given) differ from events 10–16, 37, 39 and 44 here.
+  - §7 B has no row for this.
+- **Cancelling a Requested Grant.** Fix round 2 dropped the old item "A Support agent cancelling their own unanswered request. D2 has no state for it." without a note. The question is still open as support K10, which proposes the delta "Requested → Ended (by the support agent)".
