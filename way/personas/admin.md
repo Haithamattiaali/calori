@@ -153,7 +153,7 @@ Moments that decide their trust. These are inferred from the sources above, `ass
 
 - **G1 · Current and correct.** Every AI task runs a frozen, evaluated model id, prompt version and schema version. A new model reaches eaters only after offline evaluation, Shadow and Canary, and before the old one retires (§16.1, §16.4).
 - **G2 · Harm stops at once.** A kill switch or a roll back takes effect within the chosen propagation time without a release. Manual, recent-Unit, Template and cached logging never depend on AI (§7.2, §16.4, NFR-05).
-- **G3 · Cost is bounded and visible.** Per-user daily quotas, a daily budget, and estimated cost per Saved Unit and per confirmed meal (§16.5 "cost per accepted unit and confirmed meal", §23.3).
+- **G3 · Cost is bounded and visible.** Per-user daily quotas, a daily AI spend cap, and estimated cost per Saved Unit and per confirmed meal (§16.5 "cost per accepted unit and confirmed meal", §23.3).
 - **G4 · Least privilege.** No role can read a diary; only an eater-approved Grant opens one (FR-081, NFR-12, map §3).
 - **G5 · Quality is seen without seeing people.** Acceptance by Evidence type, validation failures and failed jobs, with no identifiers and no small groups (FR-080).
 - **G6 · Privacy jobs finish on time.** Failed exports, deletions and retention purges are retried safely or escalated before their deadline (WF-9, FR-078, NFR-13, AT-29).
@@ -169,7 +169,7 @@ Moments that decide their trust. These are inferred from the sources above, `ass
   - `meal` · **Meal**
   - `label` · **Label**
   - `scale` · **Scale**
-  - `recipe` · **Recipe**
+  - `ingredients` · **Ingredients**: reads a recipe's ingredients and cooked yield from text or a photo. It is not called "Recipe", because map ¶4 gives **Recipe** to the eater's own versioned Recipe and D2 gives **Recipes** to the console section of Tier B records.
   - `text` · **Text** (intent from typed text or a transcript)
   - `voice` · **Voice** (transcription)
 - **Registry version:** one immutable configuration of one task (map §3). On screen it is "Meal version 7"; in the API it is `meal@v7`.
@@ -180,7 +180,7 @@ Moments that decide their trust. These are inferred from the sources above, `ass
   - When a newer version reaches Rollout, the one it replaces is shown as "previous Rollout version". It is the roll-back target.
 - **Kill switch** (vocabulary D2): one per task, **On** or **Off**. When On, AI requests for that task fail fast with `AI_UNAVAILABLE` and nothing is queued to send later. The screen reads "Kill switch On" or "Kill switch Off". Nothing is called "paused".
 - **Console sections** (vocabulary D2), as this persona uses them:
-  - **Registry**: Registry versions, the models list, the prompt editor, the regression set, the kill switch, quotas and the daily budget.
+  - **Registry**: Registry versions, the models list, the prompt editor, the regression set, the kill switch, quotas and the daily AI spend cap.
   - **Metrics**: quality figures, estimated cost and prices.
   - **Jobs**.
   - **Roles**: permissions → roles → users, the blueprint §0 line 3 chain.
@@ -230,6 +230,9 @@ As platform admin, I see failed deletion jobs at the top of **Jobs** with the da
 - Given that job, When `admin.a` clicks "Retry" and it completes, Then:
   - the row leaves the failed list;
   - when `auditor.a` opens **Audit trail**, filtered to deletion completion records, exactly one completion record exists for that job, with no identifiers. `/r`
+- Given a second failed deletion job with 12 days left, When **Jobs** opens, Then:
+  - it is listed among the other failed jobs by age, not pinned above them;
+  - it reads "Deletion · 12 days left · due 13 Oct 2026". Only jobs with 7 days or fewer left are pinned (§3). `/r`
 
 #### admin-9.2 · Retry a failed export once, and get one export
 As platform admin, I retry a failed export under its original job id, so that the eater receives exactly one export. WF-9, FR-075, §18.2, FR-043; AT-10. *Shared: Support agent.*
@@ -298,7 +301,7 @@ As platform admin, I open **Registry** and see every AI task with its Rollout ve
   - "Kill switch Off";
   - "Retirement: none announced · short-term model, at least 45 days' notice".
 
-  Six rows are shown: Meal, Label, Scale, Recipe, Text, Voice. `/r`
+  Six rows are shown: Meal, Label, Scale, Ingredients, Text, Voice. `/r`
 - Given the same state, When `GET /v1/admin/registry` is called with `admin.a`'s token, Then it returns six tasks, each with its Rollout version id (for example `meal@v6`), any newer version and its state, the share, the kill-switch state and a revision number. `/r`
 - Given a fresh deployment with no newer versions, When **Registry** loads, Then:
   - every row shows its seeded Rollout version;
@@ -358,6 +361,12 @@ As platform admin, I see the days to retirement for every model in Rollout or in
   - the **Scale** row reads "Model retires in 19 days (20 Oct 2026)";
   - a banner at the top names Scale and offers "Propose a version". `/r`
 - Given a model with no retirement announced, When **Registry** loads, Then it shows no countdown and no banner. `/r`
+- Given `label` is in Rollout on a model whose retirement the models list gives as 75 days away, When **Registry** loads, Then:
+  - the **Label** row reads "Model retires in 75 days";
+  - the banner at the top of **Registry** names Label. A model 91 days away shows the countdown with no banner (warning at 90 days, §3). `/r`
+- Given a model whose retirement is 25 days away, When `admin.a` proposes a new Label version on it, Then:
+  - the model field reads "This model retires in 25 days. Choose one with at least 30 days left.";
+  - `POST /v1/admin/registry/label/versions` returns 422 `VALIDATION_ERROR` with `field: "model_id"` (block at 30 days, §3). `/r`
 
 #### admin-10.7 · Floating aliases, preview models and unknown ids are refused
 As platform admin, I can choose only stable model ids that are in the models list on **Registry**, so that "frozen" means frozen. §16.1 ("do not use a 'latest' alias"); A4, P4.
@@ -383,6 +392,9 @@ As platform admin, I propose a new Registry version for one task from a listed m
 - Given `meal` already has a version in Shadow or Canary, When another version is proposed, Then:
   - it is saved as Proposed;
   - "Move to Shadow" stays disabled with "One version at a time per task: version 7 is in Canary" (A11). `/r`
+- Given `admin.a` has filled half the Propose form for `meal` without saving, When they close the tab and reopen **Registry › Meal** in the same browser, Then:
+  - the form offers "Restore your unsaved Meal version" with the typed values;
+  - nothing was sent to the server, and no Proposed version exists for those values. `/r`
 
 #### admin-10.9 · Write a prompt version
 As platform admin, I write a new prompt version as immutable text with a visible difference from the last one, so that every Analysis can be traced to the exact words the model was given. §16.4.
@@ -429,7 +441,9 @@ As platform admin, I keep the AI provider's data settings in one place, enforced
 As platform admin, I keep the regression set the brief describes and see how far it is from the launch minimum, so that a "pass" means something. §16.4 ("a regression set of food photos, scale readings, bilingual labels, Arabic voice commands, ingredient variants, and adversarial instructions"), NFR-10 ("At least 200 consented target-cuisine test cases and 100 bilingual labels at launch").
 - Given the regression set holds 300 synthetic cases (40 of them bilingual labels) and 0 consented cases, When the regression set on **Registry** opens, Then:
   - it shows a count for each of the six kinds in §16.4;
-  - it reads "Below the launch minimum: consented target-cuisine cases 0 of 200 · bilingual labels 40 of 100 · synthetic cases don't count toward the minimum". `/r`
+  - it reads "Below the launch minimum: consented target-cuisine cases 0 of 200 (synthetic cases don't count here) · bilingual labels 40 of 100".
+
+  NFR-10 attaches "consented" to the target-cuisine cases only, so synthetic bilingual labels count toward the 100. `/r`
 - Given `admin.a` adds a synthetic scale-reading case with an input image, an expected reading of "71.7 g" and an expected Evidence of measured (AT-01's fixture), When it is saved, Then the scale-reading count rises by one and the case shows its expected result. `/r`
 - Given a new case without an expected result, When it is saved, Then the form reads "Add the expected result" and nothing is saved. `/r`
 - Given the set is below the launch minimum, When any evaluation report opens, Then it carries the same "Below the launch minimum" line at the top. `/r`
@@ -504,6 +518,10 @@ As platform admin, I read Shadow against Rollout on a few attributable numbers w
   - schema-valid rate, validation-pass rate, food agreement, p95 latency, error rate and estimated cost per Analysis;
   - "Needs 60 more requests and 8 more eaters before Canary". `/r`
 - Given 200 requests from 30 eaters with every number within its limit, When the page refreshes, Then it reads "Ready for Canary" and "Move to Canary" is enabled. `/r`
+- Given 200 requests from 30 eaters where version 7's validation-pass rate is 91 % against 99 % for version 6 (limit: 2 points), When **Registry › Meal** opens, Then:
+  - it reads "Not ready for Canary: validation-pass rate 91 % against 99 % (allowed gap 2 points)";
+  - "Move to Canary" is disabled;
+  - "Roll back version 7" is offered (10.27). `/r`
 - Given the comparison, When numbers are aggregated, Then no interval is longer than the time the version has been in Shadow (A11). `/m`
 
 #### admin-10.21 · Shadow respects Consent and the kill switch
@@ -533,16 +551,18 @@ As platform admin, I move the version to a share of eaters, each held in their g
 As platform admin, I compare the Canary group with its control on acceptance by Evidence type, validation failures, unavailability and latency, so that the decision rests on what eaters actually approved. §16.4, NFR-03, NFR-09; A3, A11. *Shared: Nutrition approver (reads acceptance on **Metrics**).*
 - Given the Canary and control groups each have at least 200 Analyses from at least 30 eaters, When **Registry › Meal** opens, Then each group shows:
   - one row per Evidence type, with the shares of items approved unchanged, approved with edits and discarded;
-  - the validation failure rate, the rate of `AI_UNAVAILABLE` and p95 latency against the 12 s target. `/r`
+  - the validation failure rate, the rate of `AI_UNAVAILABLE`, the error rate, p95 latency against the 12 s target, and estimated cost per Analysis.
+
+  These are the six Canary checks (§3). `/r`
 - Given either group is below the minimum sample, When the page opens, Then each check reads "Not enough data yet (84 of 200 Analyses)" instead of a percentage. `/r`
 
 #### admin-10.24 · A failing check rolls the Canary back by itself
 As platform admin, I want the Canary rolled back automatically when a check fails or the sample stays too small, with the reason shown, so that a bad version stops even when I am not watching. §16.4 ("rollback"), map §3 ("config live / rolled back"); A13, A17.
 - Given Canary Meal version 7 at 10 %, When the mock returns schema-invalid output for version 7 on 30 % of calls and the minimum sample is met, Then:
-  - within 10 s, new requests from Canary eaters are stamped `meal@v6`;
+  - within 10 s, every new Analysis from a Canary eater is stamped `meal@v6`, read through `GET /v1/analyses/{id}`;
   - **Registry › Meal** reads "Rolled back · version 7 · validation failures 30 % against 1 % in control";
   - the same reason is in **Audit trail** and in a banner on every console section until dismissed. `/r`
-- Given the Canary has not reached the minimum sample by the end of its set duration, When that duration ends, Then:
+- Given the Canary has not reached the minimum sample by the end of its 24-hour duration (§3), When that duration ends, Then:
   - **Registry › Meal** reads "Rolled back · version 7 · too few Analyses to judge (84 of 200)";
   - **Audit trail** shows the same. `/r`
 
@@ -552,9 +572,10 @@ As platform admin, I raise or lower the Canary share while each eater keeps thei
   - read through `GET /v1/analyses/{id}`, every eater whose Analyses were stamped `meal@v7` before still gets `meal@v7`;
   - more eaters are added;
   - **Audit trail** shows "5 % → 20 %". `/r`
-- Given Canary at 20 %, When the share is set to 0 % and later to 10 %, Then:
+- Given Canary at 20 %, When the share is set to 0 % and later to 10 %, Then, read through `GET /v1/analyses/{id}`:
   - while at 0 %, every new Analysis is stamped `meal@v6`;
-  - at 10 %, the eaters who had `meal@v7` before return to it (read through `GET /v1/analyses/{id}`). `/r`
+  - at 10 %, every eater whose new Analyses are stamped `meal@v7` was in the earlier 20 % group;
+  - no eater outside that group is drawn (A7). `/r`
 
 #### G · Rollout and roll back
 
@@ -564,12 +585,13 @@ As platform admin, I move a passing Canary to every eater with one specific conf
   - a confirmation reads "Meal version 7 goes to every eater. Version 6 stays ready to roll back in one step.";
   - its focused default button is "Cancel" and its action button is "Move version 7 to Rollout". `/r`
 - Given confirmation, When it completes, Then:
-  - **Registry** reads "Rollout: version 7" and "Previous Rollout version: 6 (roll-back target)";
-  - the Canary and control groups are released. `/r`
+  - **Registry** reads "Rollout: version 7" and "Roll-back target: version 6";
+  - the Canary panel on **Registry › Meal** is gone;
+  - for 20 synthetic eaters from the former control and unassigned groups, each new Analysis is stamped `meal@v7`, read through `GET /v1/analyses/{id}`. `/r`
 - Given Meal version 7 is Rolled back, When `POST /v1/admin/registry/meal/versions/7/state` asks for Rollout, Then it returns 422 `VALIDATION_ERROR` "Version 7 was rolled back. Propose a new version." `/r`
 
-#### admin-10.27 · Roll back in one step
-As platform admin, I return a task to its previous Rollout version in one action that takes effect within the propagation time, so that a bad version stops at once and manual logging never notices. WF-10 done-when, §16.4, map §3; A8, A15.
+#### admin-10.27 · Roll back in one step, from Shadow, Canary or Rollout
+As platform admin, I take a version out of Shadow, Canary or Rollout in one action that takes effect within the propagation time. A task in Rollout returns to its roll-back target. This way a bad version stops at once and manual logging never notices. WF-10 done-when, §16.4, map §3; A8, A15.
 - Given Meal version 7 in Rollout with roll-back target version 6, When `admin.a` clicks "Roll back to version 6", Then:
   - the confirmation's focused default is "Cancel" and its action button is "Roll back to version 6";
   - after confirming, within 10 s every new `POST /v1/analyses` for `meal` returns an Analysis stamped `meal@v6`. `/r`
@@ -577,6 +599,12 @@ As platform admin, I return a task to its previous Rollout version in one action
   - that Analysis completes stamped `meal@v7`;
   - the next one is stamped `meal@v6`. `/r`
 - Given the roll back, When `eater-synth-012` logs a recent Unit with `POST /v1/consumption` during it, Then the Entry is Confirmed and the Day revision rises by one. `/r`
+- Given Meal version 7 in Canary at 10 %, When `admin.a` clicks "Roll back version 7" on **Registry › Meal** and confirms (focused default "Cancel"), Then:
+  - **Registry › Meal** reads "Rolled back · version 7 · by admin.a";
+  - within 10 s, every new Analysis from the former Canary eaters is stamped `meal@v6`, read through `GET /v1/analyses/{id}`. `/r`
+- Given Meal version 7 in Shadow, When it is rolled back the same way, Then:
+  - **Registry › Meal** reads "Rolled back · version 7 · by admin.a";
+  - the Shadow request count stops rising, and the provider mock's request log shows no further call to version 7. `/r` `/s`
 
 #### admin-10.28 · Every Analysis carries its full configuration
 As platform admin, I need every Analysis stamped with the model id, prompt version, extraction schema version, nutrition algorithm version, source versions and the actual processing location, so that any result can be traced and reproduced. §16.4 ("Store model ID, prompt version, extraction schema version, nutrition algorithm version, and source versions with each analysis"), §15.3 ("log the actual processing configuration"), §17 AIAnalysis. *Shared: Eater (reads their own Analysis).*
@@ -618,7 +646,7 @@ As platform admin, I turn the kill switch on for one task without a release, so 
 #### admin-10.32 · Turn the kill switch on for every task
 As platform admin, I can turn the kill switch on for every task at once, so that a provider-wide or cost emergency has one control. §16.4; A14, A16.
 - Given **Registry**, When "Turn kill switch on for all tasks" is chosen in its sheet, Then:
-  - the sheet listed Meal, Label, Scale, Recipe, Text and Voice by name, with "Cancel" as its focused default;
+  - the sheet listed Meal, Label, Scale, Ingredients, Text and Voice by name, with "Cancel" as its focused default;
   - after confirming, every row reads "Kill switch On";
   - every `POST /v1/analyses` returns `AI_UNAVAILABLE` within 10 s. `/r`
 - Given the kill switch On for every task, When any console section opens, Then a banner reads "Kill switch On for all tasks since 22:14 · Turn it off". `/r`
@@ -629,8 +657,9 @@ As platform admin, I can rely on the kill switch never blocking food logging, so
   - each returns a Confirmed Entry and a new Day revision;
   - `GET /v1/reports/day` reconciles. `/r`
 - Given the kill switch On for every task, When the eater opens **Capture & Plan** in the iOS simulator, Then:
-  - photo and voice capture show that analysis is off;
-  - **My Units**, Templates and a typed amount stay available. `/r`
+  - a note reads "Photo and voice analysis is off for now. You can log from My Units, a Template or a typed amount." (proposed copy; the eater lens owns the final words);
+  - the shutter and microphone buttons are disabled;
+  - the **My Units**, Templates and typed-amount buttons are enabled. `/r`
 - Given an Analysis that is Ready for review when the kill switch is turned on, When the eater approves it, Then:
   - the approval commits through `POST /v1/consumption`, because the switch stops model calls and not approvals;
   - the review screen did not change under the eater (A10). `/r`
@@ -645,7 +674,8 @@ As platform admin, I need an AI request made while the kill switch is On to fail
   - the provider mock's request log shows no call for it;
   - the server holds no queued request for it. `/r` `/s`
 - Given the kill switch is Off, When the eater taps "Try again" on that Analysis, Then:
-  - it goes Processing and then Ready for review;
+  - a new Analysis is created for the same photo and goes Processing, then Ready for review;
+  - the first one stays Failed, because Failed is an end state in D2;
   - nothing is added to the Day until the eater approves. `/r`
 
 #### admin-10.35 · Turn the kill switch off again
@@ -665,6 +695,9 @@ As platform admin on call, I reach the kill switch at phone width and see only w
   - the row reads "Not sent: no connection. Try again." with a Try again button, and keeps reading "Kill switch Off";
   - when the connection returns, nothing is sent until `admin.a` presses Try again. `/r`
 - Given a confirmed switch, When the page is reloaded, Then the state shown comes from `GET /v1/admin/registry`. `/r`
+- Given any action button on **Registry**, When it is clicked, Then a browser performance trace shows:
+  - its pressed state and "Sending…" within 100 ms of the click (§3);
+  - "Sending…" until the server answers. `/r`
 
 #### admin-10.37 · The switch stands apart from everything else
 As platform admin, I need the kill switch to outrank every state, survive restarts and work even when the Registry cannot be changed, so that it is there when needed. §16.4, NFR-05; A14, A15, A16.
@@ -677,13 +710,14 @@ As platform admin, I need the kill switch to outrank every state, survive restar
 #### I · Quotas and cost
 
 #### admin-10.38 · Set per-user daily AI quotas
-As platform admin, I set soft and hard daily limits per kind of task, separately for signed-in accounts and anonymous sessions, so that one person cannot exhaust the shared project quota or the budget. §16.5, §23.3 ("soft/hard service quotas"), FR-001, map §6 (Registry: per-user daily AI quotas); A4, A20.
+As platform admin, I set soft and hard daily limits per kind of task, separately for signed-in accounts and anonymous sessions, so that one person cannot exhaust the shared project quota or the AI spend cap. §16.5, §23.3 ("soft/hard service quotas"), FR-001, map §6 (Registry: per-user daily AI quotas); A4, A20.
 - Given the quotas panel on **Registry**, When `admin.a` saves:
-  - image tasks (Meal, Label, Scale, Recipe) at soft 15 and hard 25;
+  - image tasks (Meal, Label, Scale, Ingredients) at soft 15 and hard 25;
   - Text and Voice at soft 60 and hard 100;
   - anonymous sessions at hard 3 for image tasks and hard 10 for Text and Voice,
 
   Then "Quotas version 4" is in use, and **Audit trail** shows before and after. `/r`
+- Given a fresh deployment, When the quotas panel on **Registry** first opens, Then it reads "Quotas version 1" with the seeded limits in §3. Nothing has to be set before AI works. `/r`
 - Given a hard limit below its soft limit, a negative number or a fraction, When it is typed, Then the field shows the problem and `PUT /v1/admin/quotas` returns 422 `VALIDATION_ERROR`. `/r`
 
 #### admin-10.39 · Roll back a quotas version
@@ -722,9 +756,13 @@ As platform admin, I use the soft limit to see how many eaters a tighter hard li
 #### admin-10.43 · Only new AI work counts toward a quota
 As platform admin, I need a quota to count only fresh AI work, so that eaters are not charged for retries or repeat logs. §16.5 ("A confirmed repeated unit uses no new nutrition inference"; "rejected analyses and retries must also count toward operating cost"), §18.2, FR-043; AT-10.
 - Given `eater-synth-042` logs the confirmed repeated Unit "cheese bite" by voice, resolved without new inference (§2.3), When `GET /v1/admin/quotas/usage` is read, Then the image count is unchanged. `/r`
-- Given the same `POST /v1/analyses` command delivered three times with one command id (AT-10 pattern), When usage and cost are read, Then:
-  - the quota counted one Analysis;
-  - the estimated cost on **Metrics** includes every provider call made. `/r`
+- Given a fresh test database, When the same `POST /v1/analyses` command is delivered three times with one command id (AT-10 pattern), Then:
+  - the quota counts one Analysis;
+  - the provider mock's request log shows one call, because the repeats replay the stored result. `/r` `/s`
+- Given a fresh test database and the mock set to time out once, When one `meal` command runs, its bounded retry succeeds on the second call (each call 1,000 input and 500 output tokens at the 2026 prices), and `GET /v1/admin/metrics/cost?task=meal` is read, Then:
+  - the quota counts one Analysis;
+  - the cost view on **Metrics** reads "Provider calls 2 · estimated $0.0053";
+  - the API returns `provider_calls: 2` and `estimated_cost: 0.00525`. `/r`
 - Given an Analysis that the eater discarded, When usage is read, Then it counts toward both the quota and the cost. `/r`
 
 #### admin-10.44 · The quota day follows the eater's diary day
@@ -761,14 +799,14 @@ As platform admin, I read the estimated cost per Saved Unit (the brief's "accept
 - Given an Analysis's usage metadata, When it is priced, Then input, output, thinking and cached tokens are each priced at their own rate. `/m`
 - Given no Analyses in the period, When the page opens, Then it reads "No AI use in this period", not "$0.00 per meal". `/r`
 
-#### admin-10.48 · A daily budget warns, then turns the kill switch on by itself
-As platform admin, I set a daily soft budget that warns and a hard budget that turns the kill switch on for every task, so that a bug or abuse cannot run up a surprise bill. §16.5, §23.3; A4.
-- Given a daily budget of soft $40 and hard $60 (UTC day), When the estimated cost passes $40, Then a banner and a **Audit trail** entry read "AI spend today $40.12 of $60". `/r`
+#### admin-10.48 · A daily AI spend cap warns, then turns the kill switch on by itself
+As platform admin, I set a daily AI spend alert level that warns and an AI spend cap that turns the kill switch on for every task, so that a bug or abuse cannot run up a surprise bill. §16.5, §23.3; A4.
+- Given a daily AI spend alert level of $40 and a cap of $60 (UTC day), When the estimated cost passes $40, Then a banner on **Registry** and an **Audit trail** entry read "AI spend today $40.12 of $60". `/r`
 - Given the estimated cost passes $60, When the next `POST /v1/analyses` arrives, Then:
-  - **Registry** reads "Kill switch On for all tasks · budget reached 21:47 UTC";
+  - **Registry** reads "Kill switch On for all tasks · AI spend cap reached 21:47 UTC";
   - the call returns `AI_UNAVAILABLE`;
   - `POST /v1/consumption` keeps working. `/r`
-- Given the budget was reached, When the UTC day rolls over or `admin.a` raises the hard budget, Then the kill switch stays On until an admin turns it off, and the banner says so. `/r`
+- Given the cap was reached, When the UTC day rolls over or `admin.a` raises the cap, Then the kill switch stays On until an admin turns it off, and the banner says so. `/r`
 
 #### J · Metrics (quality)
 
@@ -795,7 +833,7 @@ As platform admin, I cannot open a single eater's Analysis, photo or transcript 
 
 #### admin-10.52 · Validation failures and clarification counts per version
 As platform admin, I see the typed validation failures and clarification counts per version, so that I can find a prompt that confuses the model. §16.3, §18.2, FR-035.
-- Given 28 days of data, When the validation panel on **Metrics** opens for Recipe, Then it shows:
+- Given 28 days of data, When the validation panel on **Metrics** opens for Ingredients, Then it shows:
   - counts of mass-balance errors, unknown source basis, ambiguous Unit and incomplete macros per version;
   - the share of Analyses that needed 0, 1 or 2 clarification questions. `/r`
 - Given a version with no failures, When the page opens, Then it reads "No validation failures in this period". `/r`
@@ -1054,9 +1092,9 @@ Every question in `care.md` "The questions" is answered below, or marked not app
    - Esc closes any sheet (10.71).
 2. **Titles name the place**, never the brand.
 3. **Platform conventions.** Web conventions apply: links look like links, buttons look like buttons, and Esc cancels.
-4. **One word per thing.** §3 sets the names: Proposed, Shadow, Canary, Rollout, Rolled back; Kill switch On and Off; Meal, Label, Scale, Recipe, Text, Voice. Each colour has one meaning:
+4. **One word per thing.** §3 sets the names: Proposed, Shadow, Canary, Rollout, Rolled back; Kill switch On and Off; Meal, Label, Scale, Ingredients, Text, Voice. Each colour has one meaning:
    - red for Kill switch On and failures;
-   - amber for warnings such as retirement, budget and re-check;
+   - amber for warnings such as retirement, the AI spend alert and re-check;
    - neutral for everything else,
 
    and every colour is always paired with words.
@@ -1072,7 +1110,7 @@ Every question in `care.md` "The questions" is answered below, or marked not app
 11. **Key status where people look.** These banners show on every section:
     - "Kill switch On for all tasks" (10.32);
     - a roll back (10.24);
-    - budget (10.48);
+    - the AI spend cap (10.48);
     - re-check due (10.12);
     - retirement (10.6).
 
@@ -1080,9 +1118,9 @@ Every question in `care.md` "The questions" is answered below, or marked not app
 1. **Every action answers what happened, what is happening now and what comes next:**
    - status while it runs ("Evaluating · 34 of 300");
    - confirmation only after the server confirms (10.36);
-   - a warning before trouble (retirement, soft budget);
+   - a warning before trouble (retirement, the AI spend alert level);
    - an error next to its field (10.11).
-2. **Loudness matches importance.** Quiet bars for offline and soft limits. Banners for Kill switch On, roll back, budget and retirement. No alert for routine Canary progress.
+2. **Loudness matches importance.** Quiet bars for offline and soft limits. Banners for Kill switch On, roll back, the AI spend cap and retirement. No alert for routine Canary progress.
 3. **Response at the instant of touch.** Every button shows its pressed state within 100 ms (§3), then "Sending…" until the server answers.
 4. **Changing your mind mid-way.** Esc or Cancel closes any confirmation before it acts, and a running evaluation can be cancelled (10.15). A sent switch is undone with the opposite switch.
 5. **Animation:** n/a. The console uses no animation beyond the pressed state and placeholders.
@@ -1161,7 +1199,7 @@ Every question in `care.md` "The questions" is answered below, or marked not app
 
 1. **New words beyond map ¶4.** One name each is proposed in §3, with Arabic in the string catalogue:
    - the version states Proposed, Shadow, Canary, Rollout, Rolled back;
-   - the task names Meal, Label, Scale, Recipe, Text, Voice;
+   - the task names Meal, Label, Scale, Ingredients, Text, Voice. The brief's recipe analysis is named **Ingredients**, not "Recipe", so that it does not clash with the map's Recipe or D2's Recipes;
    - the panel words "models list", "prompt editor", "regression set" (the brief's §16.4 term), "quotas panel", "prices panel" and "launch gates" (Settings, per D2);
    - "quota", "Canary check";
    - the evaluation-run states "Evaluating", "Cancelled" and "Finished" (10.15).
@@ -1169,7 +1207,7 @@ Every question in `care.md` "The questions" is answered below, or marked not app
    Vocabulary D2 already fixes the sections, the version states and the kill-switch states. This lens uses D2's sections (Registry, Metrics, Jobs, Roles, Audit trail, Settings) and its version states (Proposed → Shadow → Canary → Rollout · Rolled back). The words left above need a dated delta, or a replacement.
 2. **Which day a quota uses** (10.44).
    - I reset at the eater's diary-day boundary; a UTC day is simpler to bill.
-   - The budget (10.48) stays on the UTC day.
+   - The AI spend cap (10.48) stays on the UTC day.
    - The eater lens may decide otherwise.
 3. **Who sees failed jobs with identity.**
    - FR-080 puts failed jobs in the console, and map §2 gives support "failed jobs and account state".
@@ -1184,7 +1222,7 @@ Every question in `care.md` "The questions" is answered below, or marked not app
    - Firebase suggests setting the model location in configuration (A4).
    - Residency belongs to the owner and counsel (map §1.7; P11 as corrected).
    - I keep it read-only.
-8. **The budget turns the kill switch on for every task** (10.48). The eater lens may prefer a gentler order: image tasks first, Text kept on.
+8. **The AI spend cap turns the kill switch on for every task** (10.48). The eater lens may prefer a gentler order: image tasks first, Text kept on.
 9. **Staff and eater accounts:** settled by vocabulary D2 ("a staff account is never an eater account"). Round 0 had this as a separate story with no source. It is now one acceptance line in admin-10.61, traced to D2.
 10. **The Nutrition approver's access to Metrics** (10.49). The approver lens may want per-Food breakdowns, and these must keep the small-group rule (10.50).
 11. **Who holds "View consented evaluation cases"** (10.14). No seeded role holds it. Viewing raw evidence needs a custom role (§19.2 "restricted roles"). The approver and auditor lenses may claim it.
