@@ -743,7 +743,7 @@ As the Auditor, I see that no staff member opened an eater's meal photo or audio
 - /r Given event 78 When `staff_hana` filters Events by `access.refused` and object "Analysis photo" Then one row reads "staff_ali · Analysis an_7781 photo · acct_9c41e2 · FORBIDDEN · 2026-10-03T15:05:00Z". No image appears in the console, and Anomalies "raw evidence opened by staff" is 0.
 - /s Given a fresh emulator When a raw photo or audio of any Analysis is requested Then:
   - a Support agent with no Grant gets 403 `FORBIDDEN`, because no role holds the raw-evidence permission, and one `access.refused` event is written (the media rule of 10.9);
-  - a Support agent with an Active Grant gets 403 `FORBIDDEN`, because no role holds the raw-evidence permission (D2: the role lacks the permission), and one `grant.read_refused` event is written (the event name as in 10.41);
+  - a Support agent with an Active Grant gets 403 `FORBIDDEN`, because no role holds the raw-evidence permission (D2: the role lacks the permission), and one `access.refused` event is written (the media rule of 10.9);
   - the Nutrition approver, Platform admin and Auditor each get 403 `FORBIDDEN`, and one `access.refused` event is written.
 
 **auditor-9.9 · The 18+ confirmation and the age gate** *(map interaction row 1; WF-1 done-when "Under 18: no account"; R16, R22)*
@@ -1481,3 +1481,63 @@ No `FORBIDDEN` is left in 10.41.
 
 ## Third fix by the session (2026-10-01), after final check 2
 One rule for media on every line: no role holds the raw-evidence permission, so every media request from any staff role — with or without a Grant — is 403 `FORBIDDEN`, recorded as `access.refused` (9.8 /s bullet 1 and 10.9 /s now say so); `GRANT_REQUIRED` stays for diary and report reads the Support agent role may make but no Active Grant covers (§7 A16). All media lines checked by the session: 9.8 /r, 9.8 /s bullets 1–3, 10.9 /s.
+
+
+## Lens verdict — closing (2026-10-01)
+
+**fail**: 1 defect. Final check 2's defect 1 is fixed: 9.8 /s bullet 1 and 10.9 /s now give `FORBIDDEN` for a media read by a Support agent with no Grant. But the session's note claims one media rule ("recorded as `access.refused`", with or without a Grant), and the same fix leaves 9.8 /s bullet 2 writing `grant.read_refused`. So the file now gives two event names for one cause.
+
+An independent verifier ran `way/personas/_lens-verifier-brief.md`, with its addendum, as a scoped closing check on this file at commit e6fbda8 ("auditor third session fix (one media rule)"). The working tree was clean. `way/vocabulary.md` was binding: "`FORBIDDEN` (role lacks the permission)" and "`GRANT_REQUIRED`". Delta D3 touches none of the lines checked.
+
+The scope was the diff 35d1532..e6fbda8. It changes three body lines (10.9 /s, and 9.8 /s bullets 1 and 2) and appends the fix note. Each changed line was read against 9.8 /r, 9.8 /s bullet 3, 10.9 /r, 10.13 /s, 10.14, 10.41, and §7 A11 and A16 (A11 and A16 are unchanged in this diff). Nothing else was re-audited. No acceptance line was added or removed, so §8's 59 stories and 121 lines still hold.
+
+### Final-check-2 defect: fixed or not
+
+| # | status | the changed line |
+|---|---|---|
+| 1 | **fixed** | 9.8 /s bullet 1: "a Support agent with no Grant gets 403 `FORBIDDEN`, because no role holds the raw-evidence permission, and one `access.refused` event is written (the media rule of 10.9)". 10.9 /s: "on media endpoints every role, the Support agent included, gets 403 `FORBIDDEN`, recorded as `access.refused`, because no role holds the raw-evidence permission (§7 A11)". The old "(the same outcome as 10.9)" is gone. All three lines named in the final check (9.8 bullet 1, 9.8 bullet 2, 10.9's media endpoints) now give one code |
+
+### Every media line now
+
+| line | code | event |
+|---|---|---|
+| 9.8 /r (event 78, `staff_ali`) | `FORBIDDEN` | `access.refused` |
+| 9.8 /s bullet 1 (Support agent, no Grant) | `FORBIDDEN` | `access.refused` |
+| 9.8 /s bullet 2 (Support agent, Active Grant) | `FORBIDDEN` | **`grant.read_refused`** |
+| 9.8 /s bullet 3 (approver, admin, Auditor) | `FORBIDDEN` | `access.refused` |
+| 10.9 /s, media endpoints (every role, no Grant) | `FORBIDDEN` | `access.refused` |
+
+What passes in the changed lines:
+- **The code.** A media read gets `FORBIDDEN` from every role, with or without a Grant. That matches:
+  - D2;
+  - 9.8's header ("D2 roles hold no such permission");
+  - A11 ("D2 has no role with that permission");
+  - A16 ("`FORBIDDEN` stays only for a missing role permission").
+- **10.9's diary and report endpoints are unchanged.** The Support agent gets `GRANT_REQUIRED` with `grant.read_refused`; every other role gets `FORBIDDEN` with `access.refused`. This still matches 10.9 /r (events 76 and 77). A16's "as in 10.9" now reads cleanly, because 10.9 gives `GRANT_REQUIRED` only on diary and report endpoints.
+
+### Defects
+
+**Vocabulary (one name per thing), Observable**
+
+1. **auditor-9.8 /s, bullet 2: a media refusal under an Active Grant still writes `grant.read_refused`, which breaks the fix's one media rule.**
+   - The session's note says: "every media request from any staff role — with or without a Grant — is 403 `FORBIDDEN`, recorded as `access.refused`". It also says: "All media lines checked by the session: 9.8 /r, 9.8 /s bullets 1–3, 10.9 /s".
+   - Bullet 2, changed in this fix, says: "a Support agent with an Active Grant gets 403 `FORBIDDEN` … and one `grant.read_refused` event is written (the event name as in 10.41)".
+   - Bullet 1, changed in the same fix, moved the no-Grant case from `grant.read_refused` to `access.refused`. Before this fix, both Support agent bullets wrote `grant.read_refused`. Now one cause, the missing raw-evidence permission, writes two event names. Which one depends on a Grant, and by A11 and the note a Grant plays no part in a media read.
+   - **What a verifier would see.** 9.8 /r finds raw-evidence attempts by filtering Events on `access.refused` and object "Analysis photo". A Support agent's attempt under an Active Grant would not appear under that filter, although 9.8 promises "every attempt was refused". 10.14's information line would also count that attempt under "Refused reads", while event 78 sits under "other refusals".
+   - "(the event name as in 10.41)" is true of the name, but the cases differ. 10.41's refusals are reads that a Grant could cover (A16); a media read is not one.
+   - **Fix: choose one.**
+     - (a) Bullet 2 writes `access.refused` and drops the parenthesis, as the note says.
+     - (b) Keep `grant.read_refused` for any refusal under a Grant token (the 10.13 /s pattern: `FORBIDDEN` with `grant.write_refused`). Then state that rule in §7 A11 or A16, correct the note, and widen 9.8 /r's filter to include it.
+
+### Cross-lens (for the model phase join; uncounted)
+
+- **A direct media read.** The support lens gives no code or event for a direct media read. The shared event catalogue should fix `FORBIDDEN` for it, with the event name that defect 1 settles.
+- **Out-of-scope reads.** This lens names the event `grant.read_refused`; the support lens names it `grant.read_denied` (§7 B M6). The fixtures also differ: `grant_7a02` here, `grant_7d01` there, and §7 B has no row for that.
+- **Carried from earlier verdicts, still without a §7 B row:**
+  - `CASE-1201`;
+  - the eater-accounts row "`acct_9c41e2` (E1 in the support lens; …)";
+  - cancelling a Requested Grant (support K10).
+
+
+## Fourth fix by the session (2026-10-01), after the closing check
+9.8 /s bullet 2 now records `access.refused` like every other media refusal, so one cause has one code (`FORBIDDEN`) and one event (`access.refused`), and 9.8 /r's filter and 10.14's "other refusals" count it.

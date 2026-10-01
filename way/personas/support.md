@@ -26,7 +26,7 @@ Read first: `way/blueprint.md` §0–§1, `way/vocabulary.md` (delta D2 — bind
 |---|---|---|
 | Grant | Requested · Approved · Active · Expired · Ended (by the Support agent) · Withdrawn (by the eater) · Declined · Unanswered | vocabulary D2. Approved is recorded at the eater's tap, and the Grant becomes Active in the same transaction, because the time box starts at approval (SR1: "starts immediately post-approval if not specified"). So the console and the app show Active, and Approved appears only in the Audit trail |
 | Privacy job (export, deletion, Consent withdrawal) and each of its stages | Requested · Running · Completed · Failed (retried with the same id); a stage that does not apply reads "Not applicable" | vocabulary D2 |
-| Consent | Given · Withdrawn (with version, time, method) | vocabulary D2 |
+| Consent | Not given → Given · Withdrawn (with version, time, method) | vocabulary D2 |
 | Analysis | Failed (the only state shown in the Failed Analyses tab) | vocabulary D2 |
 | Entry | Pending · Confirmed · Corrected · Voided · Restored | vocabulary D2 |
 | Day | Provisional · Complete · Partial · Unlogged | vocabulary D2 |
@@ -1518,3 +1518,61 @@ These parts hold:
 1. One rule in §0 for an eater's app language: quoted eater copy is the English catalogue text; on an Arabic app (E1) the same key shows Arabic text with Arabic-Indic digits, observed by catalogue key — this covers 9.2 "Copy", 10.6's badge, 10.10 and 10.17 and every other E1 line at once.
 2. §0.2 states how events map to requests: opening an account panel is one request (panel + first tab) writing one `support.account_viewed`; opening another tab writes one `support.jobs_viewed`. So 9.18's 09:00 look-up (+ panel) and 09:02 Sync tab give exactly three events.
 Also: "Grant history" in 10.25's Shared line; the §11 row for 10.25 moved to story order.
+
+
+## Lens verdict — closing (2026-10-01)
+
+**pass**: 0 defects. Both defects of the final verdict are fixed. Both of its small slips are addressed. The changed lines break none of the stories they touch.
+
+An independent verifier ran `way/personas/_lens-verifier-brief.md`, with its addendum, as a scoped closing check at commit c0ed7a6. `way/vocabulary.md` was binding (D2, D3). The scope was the diff 1958132..c0ed7a6 (commits 384051e and c0ed7a6):
+- §0's new rule for eater-app language;
+- §0.2's new paragraph on how events map to requests;
+- 10.25's Shared line;
+- the moved §11 row;
+- the fix note.
+
+The language rule was read against 9.2, 10.6, 10.10, 10.17 and §11's 10.17 row. The event mapping was read against 9.2, 9.4, 9.5, 9.8, 9.18, 9.19, 9.21 and 4.3. Unchanged material was not audited again. The counts were recounted and hold: 52 stories and 190 acceptance lines (149 `/r`, 35 `/s`, 6 `/m`), with 26 "Shared:" lines and 26 §11 rows.
+
+### The 2 final-verdict defects
+
+1. **Fixed.** §0 now reads: "Copy quoted for an eater's app is the English string-catalogue text. On an eater whose app is in Arabic (E1 and every fixture marked Arabic in §0.3) the same catalogue key shows its Arabic text with Arabic-Indic digits; a verifier observes such a line by its catalogue key in that language. Where a story also gives the Arabic text, the Arabic text is the one on screen."
+   - **9.2.** The later line's "with "Copy"" now names the key whose Arabic form the first line gives as «نسخ». The story no longer has two texts for one control.
+   - **10.6.** The badge "1" shows «١». "Active · ends 14:20" already carries «١٤:٢٠».
+   - **10.10.** "Connect to answer this request" is observed in Arabic by its key.
+   - **10.17 and its §11 row.** "Expired · 14:20" shows in its Arabic form with «١٤:٢٠». 11:20 UTC is 14:20 in Riyadh, which matches G1.
+   - **E6.** It is the only other fixture marked Arabic, and no story quotes E6's app copy, so the rule changes no other line.
+   - The rule agrees with D2: "Arabic labels come from the string catalogue, one per English word".
+2. **Fixed.** §0.2 now reads: "one `/v1/support/*` request writes exactly one event. Opening an account panel is one request (`GET /v1/support/accounts/{id}`) that returns the panel together with its first tab and writes one `support.account_viewed`; opening any other tab (Sync, Analyses, Privacy jobs, Activity) is one request that writes one `support.jobs_viewed`."
+   - **9.18 now counts exactly three events:**
+     - the look-up at 09:00 (`GET /v1/support/accounts?support_code=…`, as in 9.2) writes `support.lookup`;
+     - opening the panel writes `support.account_viewed`;
+     - the Sync tab at 09:02, which the paragraph names as an "other tab", writes `support.jobs_viewed`.
+   - The count no longer depends on what the jobs column loads at 09:00.
+   - **The paragraph agrees with the stories it touches:**
+     - 9.18 /s: "exactly one Audit trail event";
+     - 9.21: a 503 from the Privacy jobs API leaves the rest of the panel usable, so that tab has its own request;
+     - 4.3: a 503 from the failed-jobs API on each tab;
+     - 9.8 /s: `…/privacy-jobs`.
+
+### The 2 small slips of the final verdict
+
+- **Fixed.** The §11 row for support-10.25 now follows support-10.24, in story order.
+- **Fixed.** 10.25's Shared line now says "Grant history", the name §0.2, 10.23 and 10.25's own line use.
+
+### Small slips (not counted)
+
+- **§0.2's "its first tab" names no tab.** The parenthesis lists all four tabs (Sync, Analyses, Privacy jobs, Activity) as "other" tabs. 9.18 still holds, because Sync is on that list. What is unstated is which tab opens with the panel without writing a `support.jobs_viewed`.
+  - Fix: name that tab and drop it from the list, or say that the jobs column waits until a tab is chosen.
+  - If the first tab is Privacy jobs, also check 9.21, which gives that tab its own request.
+- **"Analyses" in §0.2.** Everywhere else the tab is "Failed Analyses" (§0.1, 4.3, 10.24, §13).
+- **10.25's path skips the Grants screen.** It reads "Settings → Privacy → Grant history", but elsewhere the lens says "Settings → Privacy → Grants" (10.6–10.10, 10.17). "Settings → Privacy → Grants → Grant history", citing eater-9.25 as 10.15 does, would be exact.
+- **Seen in passing, outside this scope.** Two unchanged lines predate delta D3 (Consent: Not given → Given · Withdrawn):
+  - §0.1's Consent row, "Given · Withdrawn";
+  - 9.4's "Consents, each Given or Withdrawn".
+
+  They were not audited here. They are left for the model phase or the next pass.
+
+### Cross-lens (for the model phase join; not counted)
+
+- **Eater-app language.** The final verdict listed lines in `way/personas/eater/wf1-wf9.md` that expect English text on E1's Arabic app. They were not re-checked here. This lens's §0 rule reads quoted English as catalogue keys, and the eater lens can adopt the same rule at the join.
+- The earlier cross-lens items still stand as listed.

@@ -1042,3 +1042,50 @@ The changed line against 3.17–3.19: no conflict.
 ## Second fix by the session (2026-10-01), after the final check
 1. eater-3.40: "Not now" keeps the Consent Not given; "Turn on" then denying every iOS type keeps the Consent Given and shows "Apple Health access is off — Open Health settings" — the app's Consent never goes back to Not given, and it stays separate from the iOS permission (as wf1-wf9.md does).
 2. "How to read" lists Consent as Not given → Given · Withdrawn (D2, D3) (1 place).
+
+
+## Lens verdict — closing (2026-10-01)
+
+**pass**: 0 defects. Both defects of the final verdict are fixed. The changed lines agree with D3 and with the Health lines they touch.
+
+The verifier did not write this lens or its fixes. This was a scoped closing check of commit `958d584`, using `way/vocabulary.md` (binding), including delta D3: Consent = "Not given → Given · Withdrawn". The changed lines are the "How to read" States line and eater-3.40's old line 2, which is now split into two `/r` lines.
+
+They were read against:
+- 3.40's other lines;
+- eater-3.39, which writes to Health once the iOS sheet allows it;
+- WF-6's Health lines in section H;
+- P30 and R7 (`way/research/r1-platforms.md`, `r1-rules-trends.md`; both stand in `r1-refute-b.md`).
+
+Unchanged material was not audited again. The story count, 69, is unchanged. 3.40 gains one `/r` line, and the file keeps no line total that would need updating.
+
+### The 2 final-verdict defects
+
+1. **Fixed.** eater-3.40 now reads:
+   - "Given Sam taps "Not now", When he logs 3 cheese bites, Then the Entry is logged as usual, nothing is written to Health, and Settings → Privacy shows "Health: write dietary energy" as Not given."
+   - "Given Sam tapped "Turn on" (the Consent is Given) but denies every type in the iOS sheet, When he logs 3 cheese bites, Then the Entry is logged as usual, nothing is written to Health, and Settings → Privacy shows "Health: write dietary energy" as Given with the note "Apple Health access is off — Open Health settings" (the app's Consent and the iOS permission are separate, as in wf1-wf9.md)."
+
+   Why this fixes it:
+   - **D3's order now holds.**
+     - "Not now" means the eater has not decided, so the Consent stays Not given.
+     - "Turn on" gives the Consent (line 1), and it stays Given whatever the iOS sheet answers.
+     - Nothing moves back to Not given.
+   - **The Health lines agree.** Lines 1–3 now follow one rule. Line 3, which switches the Consent off, still starts from Given, and the `/s` line is unchanged. The rule also agrees with lines that already kept the iOS write permission apart from the Consent:
+     - 3.39: "gave the Consent … and allowed Dietary Energy, Protein, Carbohydrates and Total Fat in the iOS sheet";
+     - section H: "the Consent "Health: write dietary energy" is Withdrawn or iOS denied writing … nothing is written to Health".
+   - **The app can know.** The note says that writing is off. P30 limits what the app cannot see to read access only: "HealthKit permissions are granted per type, separately for read and write. The app cannot tell whether read access was denied". R7 says the same ("The app cannot tell when the user has denied read access"). So the line claims nothing about write access that the app cannot know.
+   - **It can be observed.** On the simulator a verifier denies every type in the iOS sheet, logs, and checks Settings → Privacy. The simulator's Health app shows no new sample.
+2. **Fixed.** "How to read" now lists "Consent **Not given → Given · Withdrawn** (D2, D3)". This is D3's wording exactly.
+
+### Not counted
+
+- **The note's button "Open Health settings" has no stated target.** The line does not say what it opens, so a verifier cannot check that part. `wf5-wf7-wf8.md` has a similar button ("a button that opens the Health settings"). The model phase should name one target for both.
+
+### Cross-lens (for the model phase join, uncounted)
+
+- **One Health Consent rule: now joined.** The final verdict's item is settled. This file and `wf1-wf9.md` both keep the app's Consent apart from the iOS permission.
+- **The copy for "iOS access is off" differs by case:**
+  - this file, for a denied write: "Apple Health access is off — Open Health settings";
+  - `wf1-wf9.md`, for a read, where a denial cannot be known: "No data from Apple Health yet";
+  - `wf5-wf7-wf8.md`: "Check Health access".
+
+  The strings should be settled at the join.

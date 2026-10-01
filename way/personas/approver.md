@@ -1,6 +1,6 @@
 # Persona lens — Nutrition approver (WF-10)
 
-Written 2026-10-01 by the approver lens, from `way/personas/_lens-brief.md`; fix round 1 the same day (see the foot of the file). Read first: `way/blueprint.md` §0–§1, `way/vocabulary.md` (delta D2, binding), `way/brief/frd-v1.0.md`, `way/research/r1-*.md` with both refutations, `care.md`, `way/lessons.md`. Findings that refuters mark refuted or doubtful are not cited (R34, F10, F18, F31, C6, C8, C26, C27, C39, C47, C50, C54, and the dropped sub-claims), and neither are research *implications* that lean on them. Cycle-1 findings are cited by id (C, F, P, R); this lens adds **AP1–AP13** (research cycle 2, every source opened in this run on 2026-10-01 with a generic User-Agent).
+Written 2026-10-01 by the approver lens, from `way/personas/_lens-brief.md`; fix round 1 the same day (see the foot of the file). Read first: `way/blueprint.md` §0–§1, `way/vocabulary.md` (delta D2, binding), `way/brief/frd-v1.0.md`, `way/research/r1-*.md` with both refutations, `care.md`, `way/lessons.md`. Findings that refuters mark refuted or doubtful are not cited (R34, F10, F18, F31, C6, C8, C26, C27, C39, C47, C50, C54, and the dropped sub-claims), and neither are research *implications* that lean on them. Cycle-1 findings are cited by id (C, F, P, R); this lens adds **AP1–AP14** (research cycle 2, every source opened in this run on 2026-10-01 with a generic User-Agent).
 
 **Data.** Every example record, count, staff id and barcode is **synthetic**. Givens with counts or history use the **seeded synthetic dataset** loaded into the served product. External services run behind their mock adapters (§0 line 6). A Given that the product's own checks would block today is a **seeded legacy record**, and the story says so.
 
@@ -1154,7 +1154,7 @@ Checked by a second lens verifier against `_lens-verifier-brief.md`, `_lens-brie
 
 ## Fix round 2 (2026-10-01)
 
-Fixed in the file itself, with `way/vocabulary.md` (D2) re-read against every changed line. New stories 10.69 and 10.70 sit after 10.68 in step F. The file now has 70 stories and 226 acceptance lines (191 `/r`, 19 `/s`, 19 `/m`); every story has a `/r` line and a Trace line.
+Fixed in the file itself, with `way/vocabulary.md` (D2) re-read against every changed line. New stories 10.69 and 10.70 sit after 10.68 in step F. The file now has 70 stories and 226 acceptance lines (192 `/r`, 18 `/s`, 18 `/m`); every story has a `/r` line and a Trace line.
 
 1. **10.33** (earlier defect 5) now runs on a named record, the Tier B recipe record "كشري · Koshari (EG)".
    - The cited-factor path shows "≈140 kcal/100 g (estimate) · heuristic low/high scenario 131–151", from the source's factor range 0.51–0.59, with the yield assumption.
@@ -1408,3 +1408,69 @@ Not counted (`way/lessons.md`, 2026-10-01).
 
 ## Third fix by the session (2026-10-01), after final check 2
 10.24's marker rule covers every USDA derivation: "Analytical" → measured; any other derivation (Calculated, Summed, …) → estimate with the release's derivation shown; sugars (Summed) is named as an example. The record is registered as source AP14 with its link and what it shows; the totals line reads 228.
+
+
+## Lens verdict — closing (2026-10-01)
+
+**pass**: 0 defects. Final 2's one defect is fixed, and the source is now registered as AP14 and was re-opened. The totals line's number is right, but its breakdown is not; that is not counted, as in final 2.
+
+An independent verifier ran `_lens-verifier-brief.md`, with its addendum, as a scoped closing check at commit 0b323b0. `way/vocabulary.md` was binding (D2, D3). The scope was the diff 384051e..0b323b0:
+- §1.1 AP14, which is new;
+- 10.24 line 3;
+- the totals line;
+- the fix note.
+
+Each changed line was read against FR-012, FR-026 and FR-027, against 10.24 lines 1, 2 and 4, against 10.21, and against §6's value basis. Unchanged material was not audited again.
+
+**The source was opened.** https://fdc.nal.usda.gov/portal-data/external/321358 was fetched once on 2026-10-01, with a generic User-Agent and no identifiers. It returned HTTP 200, JSON: `"description": "Hummus, commercial"`, `"foodType": "Foundation"`, `"currentFood": true`. The derivations it gives:
+- **`"A"` "Analytical"**: "Total lipid (fat)" 17.1 g, "Fiber, total dietary" 5.4 g and "Iron, Fe" 2.41 mg, with the other analysed sugars, minerals and vitamins.
+- **`"NC"` "Calculated"** (source "Calculated or imputed"):
+  - "Protein" 7.35 g, with the conversion factor "Protein From Nitrogen" 6.25;
+  - "Carbohydrate, by difference" 14.9 g;
+  - "Energy (Atwater General Factors)" 243;
+  - "Energy (Atwater Specific Factors)" 229;
+  - "Vitamin A, RAE".
+- **`"AS"` "Summed"** (source "Analytical or derived from analytical"):
+  - "Sugars, Total" 0.34 g;
+  - "Total fat (NLEA)" 16.1 g;
+  - "Carbohydrate, by summation";
+  - "Fatty acids, total saturated" 2.22 g and the other fatty-acid totals.
+
+Every claim in AP14 holds against this record. No owner identifier was sent anywhere.
+
+### The final-2 defect
+
+| # | status | the changed line |
+|---|---|---|
+| 1 | **fixed** | 10.24 line 3: "each value carries the marker that follows the release's own derivation for that nutrient: "Analytical" → "measured" (e.g. total fat, total dietary fibre, iron); every other derivation ("Calculated", "Summed" and any other) → "estimate", with the release's derivation shown beside it (e.g. protein and carbohydrate by difference "Calculated", sugars total 0.34 g "Summed") (AP14)". |
+
+What this fix does, and how it fits the other lines:
+- **Every value on the row now has one marker.** The values left out before are now "estimate": "Total fat (NLEA)", carbohydrate by summation, the fatty-acid totals and Vitamin A RAE. Sugars at 0.34 g "Summed" matches the record.
+- **Only FR-012's words are used**, the same as §6's "measured · declared · estimate".
+- **A verifier can tell the two fat values apart.** Each value shows its derivation, so "Total lipid (fat)" 17.1 g reads as "measured" and "Total fat (NLEA)" 16.1 g as "estimate".
+- **It agrees with the other lines it touches:**
+  - 10.24 line 2: a marker beside each value;
+  - 10.24 line 4: label-verified is blocked by an estimate, which concerns label Foods, not Tier A rows;
+  - 10.21: a below-LOQ value is stored as "below LOQ (<0.03)", so an analysed below-LOQ value shows "<0.03 · measured", not a measured zero.
+- **The Falafel sentence is unchanged.**
+
+### Final 2's not-counted items
+
+- **The new source outside §1.1: fixed.** §1.1 now holds: "**AP14 · USDA FoodData Central record FDC 321358 "Hummus, commercial" (Foundation Foods) gives a derivation per nutrient.** `opened` · https://fdc.nal.usda.gov/portal-data/external/321358 · 2026-10-01 · …".
+- **The totals line: partly fixed.** It now reads "Totals: 70 stories, 228 acceptance lines (191 runtime, 19 system, 19 module)".
+  - The recount of the story section gives 70 stories and 228 lines: 192 `/r`, 18 `/s` and 18 `/m`. So 70 and 228 are right.
+  - The breakdown was not updated: 191 + 19 + 19 = 229. It should read "(192 runtime, 18 system, 18 module)".
+  - Not counted, because none of the brief's seven checks covers totals.
+
+### Not counted
+
+- **The file's line 3 still says "this lens adds AP1–AP13".** With AP14 added, it should read AP1–AP14.
+- **"total fat" in AP14 and in 10.24 means the record's "Total lipid (fat)"**, which is Analytical. The record also has "Total fat (NLEA)", which is Summed. Using the record's own name would stop a reader from taking the NLEA value as "measured". On screen there is no doubt, because the line shows each value's derivation.
+- **The line maps "Summed" to "estimate" without giving a reason.** FDC's source text for Summed reads "Analytical or derived from analytical". The mapping follows the same logic as "Calculated", which final 2 accepted: protein, for example, is calculated from analysed nitrogen, and only directly analysed values are "measured". A short reason in the line would help the approver and the model phase.
+
+### Cross-lens (for the model phase join)
+
+These are carried from final 2 unchanged and were not re-checked:
+- the new credit offer has no eater story;
+- the Target history strings differ;
+- the Targets API path differs (`GET /v1/targets/current` here, `GET /v1/targets` in the eater lens).
