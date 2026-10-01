@@ -1282,3 +1282,70 @@ After two fix rounds, 4 defects remained (re-verify 2). Cause in one sentence: r
 3. 10.24: label-verified only when every stored value came from the label; an estimated sugars value blocks it.
 4. 10.24: Foundation Foods analysed nutrients are "measured"; carbohydrate by difference and energy by Atwater factors are "calculated from measured values" (AP1).
 Note: the totals line counts 226 acceptance lines, not 229 (three legend lines were counted).
+
+## Lens verdict — final (2026-10-01)
+
+**fail** — 5 defects. Of re-verify 2's 4 defects, 2 are fixed and 2 are only partly fixed; the changed lines also bring 2 new faults.
+
+Checked by a fourth lens verifier against `_lens-verifier-brief.md` with its addendum, `way/vocabulary.md` (D2, binding), map §1 ¶4 (`way/blueprint.md`), FRD §12.2, FR-012, FR-026 (and FR-027, which 10.24 cites), and AP1 as recorded in §1.1. The scope is the four defects and the lines the session changed (`git diff ca352e6 c337487 -- way/personas/approver.md`): 10.24 lines 3–4, 10.69 lines 3, 6 and 7, and the totals line. Unchanged material was not audited again. Eater stories were read only where a changed line meets them: eater-1.40, eater-1.42, eater-7.18 and eater-8.23.
+- **AP1 was not opened again.** One fetch of the public AP1 page was tried, carrying no identifiers, and the egress proxy blocked it (fdc.nal.usda.gov). AP1's quotes in §1.1 are the source used. No owner identifier was sent anywhere.
+- **Nothing else changed.** No story was added or renumbered, the Trace lines are as before, and every quoted screen string in the changed lines is free of FR, NFR, AT, R, F, AP and EA ids. The credit arithmetic (50 % of 400 = 200; of 800, capped, = 300) is unchanged.
+
+### The 4 re-verify 2 defects
+
+| # | status | the line that shows it |
+|---|---|---|
+| 1 | partly fixed | 10.69 "When an eater on the simulator switches Settings → Activity to activity-adjusted mode, Then the switch shows "Count 50 % of eligible exercise, up to 300 kcal a day" and takes effect only after the eater taps "Approve" (brief §12.2: "a visible user-approved credit factor and cap"); before approval Today shows no exercise credit"; "Given credit 50 % up to 300 kcal In effect and approved by the eater". The first approval now matches §12.2. Re-verify 2's second point is still open: what a new Policy credit value does for an eater who approved the old one. See defect 1. |
+| 2 | fixed | 10.69 "after the eater approves the Target, Settings → Goals → Target history shows that Target with "Activity × 1.2 · Policy v1", and `GET /v1/targets/current` returns `activity_multiplier: 1.2` and `policy_version: 1`". The API half can be observed over HTTP. The place it names is a new fault (defect 2). |
+| 3 | fixed | 10.24 "Given the biscuits Food with every value typed from the label and sugars left "unknown" (no estimate added), When it is approved after its preview, Then its Evidence in Foods reads "label-verified" (FR-026). Given the same Food after sugars 4 g "estimate" is added, Then Approve is blocked beside sugars with "An estimated value can't carry label-verified — remove it or leave it unknown"". The Evidence now claims only what the record holds. This agrees with FR-012's estimate marker (line 2), FR-026 and FR-027's "Missing and zero values must remain distinct". |
+| 4 | partly fixed | 10.24 "Foods marks its analysed nutrients (protein, fat, fibre, sugars, minerals) "measured" and its carbohydrate (by difference) and energy (Atwater factors) "calculated from measured values", each with its method shown beside it (AP1)". Carbohydrate and energy are no longer called measured, which agrees with AP1's "carbohydrate by difference" and "Metabolizable Energy (Atwater General Factor)". Two of re-verify 2's points are still open: the row is unnamed, and below-LOQ values are not excepted. The new marker is also a new word. See defects 3, 4 and 5. |
+
+### Defects
+
+**Complete**
+
+1. **10.69 against FRD §12.2 ("Apply a visible user-approved credit factor and cap"): a Policy change to the credit.** The fix adds the eater's first approval only. The session's note says the same: "the eater approves the credit factor and cap before activity-adjusted mode takes effect". The one preview line in 10.69 covers the multiplier alone: "New Targets use × 1.3 from the effective-from; approved Targets are not changed".
+   - 10.58's rule is "a new Policy version never rewrites approved Targets". But 10.69 never says the eater's approved credit factor and cap belong to the Target. Its Target history line records "Activity × 1.2 · Policy v1" and no credit.
+   - So no line says whether an eater who approved 50 % / 300 kcal keeps it when a new credit Policy comes into effect, or is asked to approve again.
+   - To fix it, do either of these:
+     - add the credit's Approve preview in Policy, as the multiplier has;
+     - say that the approved credit is stored on the Target, so that 10.58 covers it.
+
+**Vocabulary**
+
+2. **10.69, third line: "Settings → Goals → Target history".**
+   - The map puts target history in WF-8: "WF-8 Reports and progress — … target history".
+   - D2's Settings → Goals has no Target history part, and §6 and §7 do not raise one.
+   - The line therefore gives the map's WF-8 thing a second place, in Settings. A verifier who opens Settings → Goals may find nothing there.
+   - To fix it, either use the WF-8 place or raise this place in §6 and §7.
+3. **10.24, third line: "calculated from measured values" is a fourth value basis.**
+   - §6 fixes the set: "**Value basis** (FR-012's words): **measured · declared · estimate**". §7.8 asks the delta for those three only.
+   - The same thing now has a name that is not in the list.
+   - To fix it, either add the word to §6 and §7.8 as a proposed value, or say it in FR-012's words with the method beside it.
+
+**Observable**
+
+4. **10.24, third line, still names no Foundation Foods row:** "Given a Tier A row from USDA Foundation Foods (AP1 …)".
+   - Re-verify 2 asked to "name the row by its FDC id", and that is not done.
+   - Without a row, a verifier cannot check in Foods which values carry which marker.
+   - Nor can they check which of AP1's two energy values is shown: "Atwater General Factor … 2047" or "Atwater Specific Factor … 2048".
+
+**Sourced**
+
+5. **10.24, third line: "analysed nutrients (protein, fat, fibre, sugars, minerals) "measured"".**
+   - AP1's quoted lines say only that Foundation Foods carry metadata on "analytical approaches used". They do not say which nutrients are analysed, and the list has no `assumption` label.
+   - AP1 also says that below-LOQ "component values are stored as 0". 10.21's `/m` line stores those as "below LOQ (<0.03)", not as a measured zero. The new line marks all minerals "measured" with no exception for them. Re-verify 2 raised this, and the fix left it.
+
+### Not counted
+
+- **The totals line is still wrong.** It reads "226 acceptance lines (191 runtime, 19 system, 19 module)". The story section now holds **227 (191 `/r`, 18 `/s`, 18 `/m`)**: 10.69 gained one `/r` line in this fix, and 191 + 19 + 19 makes 229, not 226. Fix round 2's note now carries the same figures. None of the seven checks covers this.
+
+### Cross-lens (for the model phase join)
+
+Not counted (`way/lessons.md`, 2026-10-01).
+- **Whether the eater may edit the credit.** eater-7.18 shows "Credit 50 % of eligible Activity" and "Cap 300 kcal a day", "each editable, with "Approve"", under Settings → Activity → Activity mode. 10.69 shows one fixed sentence, "Count 50 % of eligible exercise, up to 300 kcal a day", with Approve. Join these by deciding two things:
+  - whether the Policy value is a default that the eater may edit, and if so within what Policy bounds, or the only value;
+  - which screen strings to use.
+- **Where the approved credit lives.** eater-7.18 says "a new Target version stores the mode, base, credit factor, cap and effective date". If 10.69 adopts that, 10.58's rule closes defect 1.
+- **The Targets API.** 10.69 reads `GET /v1/targets/current`, with `activity_multiplier: 1.2` and `policy_version: 1`. eater-1.42 reads `GET /v1/targets`, with "multiplier 1.2" inside the input snapshot and "`policy_version` v1", and the eater lens marks that path *(proposed)*. The approver's §6 does not list it.
+- **The Target history place.** eater-8.23 uses "Progress → Target history"; 10.69 uses "Settings → Goals → Target history". The part that goes against the map is counted as defect 2.
