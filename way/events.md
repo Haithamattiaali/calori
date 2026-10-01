@@ -93,7 +93,8 @@ Job records (the stages of a Privacy job, retention runs, Anomalies evaluations)
 | `policy.version.proposed` | a Nutrition approver saves a Proposed version | `POST /v1/admin/policy/versions` | `version`, `based_on`, changed values | approver-10.49–10.61; auditor-10.18 |
 | `policy.version.approved` | a version is approved | `POST /v1/admin/policy/versions/{v}/approve` | `proposer`, `approver`, `sole_holder` (true when the role had one holder), `reason`, `effective_from` | approver-10.57; auditor-10.18 |
 | `policy.version.in_effect` | `effective_from` arrives | system | `supersedes` | auditor-10.19; seed events 24, 266 |
-| `wording.published` | a consent text, the Grant request wording or the tracking-only guidance is published | `POST /v1/admin/wording` | `key`, `version`, languages | auditor-9.3, 10.4; seed event 145 |
+| `wording.proposed` | a new Wording version is stored as Proposed (J153) | `POST /v1/admin/wording/proposals` | `key`, `version`, languages, `asks_again` | admin-10.73 |
+| `wording.published` | a consent text, the Grant request wording or the tracking-only guidance is published | `POST /v1/admin/wording` | `key`, `version`, languages, `asks_again` (J154) | auditor-9.3, 10.4; seed event 145 |
 | `launch_gate.signed` | the nutrition-policy review or the privacy review is signed | `POST /v1/admin/launch-gates/{gate}/sign` | `gate`, `signer`, `version_reviewed` | approver-10.62; seed event 144 |
 | `launch_gate.recorded` | the credential is loaded, a restore test runs, provider data settings are recorded, the dependency audit runs | system or `POST /v1/admin/launch-gates/{gate}` | `gate`, `result` | admin-10.12, 10.65–10.67 |
 
@@ -128,7 +129,7 @@ Job records (the stages of a Privacy job, retention runs, Anomalies evaluations)
 | `audit_trail.exported` | an extract is exported | `POST /v1/admin/audit-trail/exports` | `filters`, `rows`, `sha256` | auditor-9.16, 9.17, 10.35 |
 | `audit_trail.verified` | the hash chain is checked (by the Auditor or the automated check) | `POST /v1/admin/audit-trail/verify` | `range`, `result`, `first_break` | auditor-10.15 |
 | `audit_trail.review_noted` | the Auditor appends a review note (J17) | `POST /v1/admin/audit-trail/review-notes` | `period`, `scope`, `finding`, `note` (≤ 500 characters, no eater identifier) | auditor (A-3) |
-| `audit_trail.retention_run` | events older than 5 years are removed | the retention job | `removed_through_seq`, `anchor_hash` | auditor (J18) |
+| `audit_trail.retention_run` | events older than 5 years are removed | the retention job | `removed_through_seq`, `anchor_hash`, `roles_held_at_anchor` (J157) | auditor (J18) |
 
 ---
 
@@ -152,7 +153,7 @@ Job records (the stages of a Privacy job, retention runs, Anomalies evaluations)
 | `activity.confirmed` · `activity.corrected` · `activity.linked` · `activity.voided` · `activity.restored` | an Activity is added (imported or by hand), corrected, linked to a matching import, voided, restored | `POST /v1/activity`, `/corrections`, `/link`, `/void`, `/restore` | `provider_record_id`, `origin`, `interval`, `energy_basis`, `kcal`, `import_revision`, `override` | e578 7.10–7.15 |
 | `weight.recorded` · `weight.excluded` | a weight is imported or typed; the eater excludes an unusual one from the trend | `POST /v1/weights`; `PATCH /v1/weights/{id}` | `kg`, `source`, `outlier_state` | e578 8.19–8.22 |
 | `health.sample_written` · `health.sample_rewritten` · `health.sample_deleted` | the confirming iPhone reports its Apple Health write (J123) | the app's sync | `entry_id`, `sample_id`, `device_id` | e36 3.39, 3.40, 6.24 |
-| `target.version.approved` | a Target version is approved | `POST /v1/targets` | `source`, `input_snapshot`, `policy_version`, `effective_from`, `activity_mode`, `credit_factor`, `credit_cap_kcal`, `over_deficit_cap` | e19 1.42; e578 7.18, 8.23; approver-10.69 |
+| `target.version.approved` | a Target version is approved | `POST /v1/targets` · `POST /v1/targets/activity-credit-offer/approve` (J156) | `source`, `input_snapshot`, `policy_version`, `effective_from`, `activity_mode`, `credit_factor`, `credit_cap_kcal`, `over_deficit_cap` | e19 1.42; e578 7.18, 8.23; approver-10.69 |
 | `target.suggestion.created` · `target.suggestion.accepted` · `target.suggestion.kept` | a Suggested Target (P1) is offered, accepted or declined | `GET /v1/targets/suggestions`, `/accept` | `change_kcal`, `reason`, `review_period` | e578 8.31 |
 | `safety_mode.set` | the safety screen sets a mode (never the answers) | `PUT /v1/me/safety-mode` | `mode`, `screen_version` | e19 1.16–1.21 |
 | `settings.changed` | a setting changes (language, numerals, dialect, units, boundary with `effective_from`, Ramadan days, one-tap logging, Hide numbers, first day of week) | `PATCH /v1/me/settings` | `key`, `old`, `new`, `effective_from` | e36 3.28–3.30; e19 1.x |

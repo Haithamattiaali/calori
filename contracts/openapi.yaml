@@ -1421,6 +1421,100 @@ paths:
         '404': {$ref: '#/components/responses/NotFound'}
         '422': {$ref: '#/components/responses/Unprocessable'}
         '503': {$ref: '#/components/responses/Unavailable'}
+  /v1/admin/grant-settings/versions:
+    get:
+      operationId: listGrantSettingsVersions
+      summary: Settings › Grant settings — every version with its state
+      tags: [grants]
+      description: 'Every Grant settings version with its state (In use · Replaced · Rolled back, J155), newest first; read-only for the Auditor.'
+      x-module: grants
+      x-events: []
+      x-stories: [admin-10.72]
+      security:
+      - staffSession: []
+      x-error-codes:
+        '401': [UNAUTHENTICATED]
+        '403': [FORBIDDEN]
+        '503': [SERVICE_UNAVAILABLE]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [versions]
+                properties:
+                  versions:
+                    type: array
+                    items: {$ref: '#/components/schemas/GrantSettingsVersion'}
+        '401': {$ref: '#/components/responses/Unauthenticated'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '503': {$ref: '#/components/responses/Unavailable'}
+  /v1/admin/wording/versions:
+    get:
+      operationId: listWordings
+      summary: Settings › Wordings — every Wording version with its state
+      tags: [privacy]
+      description: 'Every version of every Wording family (consent texts, `grant-req-n`, `guidance-n`) with its state (Proposed · Published · Superseded, J153) and `asks_again` (J154).'
+      x-module: privacy
+      x-events: []
+      x-stories: [admin-10.73, auditor-9.3]
+      security:
+      - staffSession: []
+      parameters:
+      - {name: family, in: query, required: false, schema: {type: string}, description: 'e.g. c-ai'}
+      x-error-codes:
+        '401': [UNAUTHENTICATED]
+        '403': [FORBIDDEN]
+        '503': [SERVICE_UNAVAILABLE]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [versions]
+                properties:
+                  versions:
+                    type: array
+                    items: {$ref: '#/components/schemas/Wording'}
+        '401': {$ref: '#/components/responses/Unauthenticated'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '503': {$ref: '#/components/responses/Unavailable'}
+  /v1/admin/wording/proposals:
+    post:
+      operationId: proposeWording
+      summary: Propose a Wording version (state Proposed)
+      tags: [privacy]
+      description: 'Stores a new version of a Wording family in state Proposed, with its English and Arabic text and `asks_again`; nothing changes for eaters until it is published through `POST /v1/admin/wording` (J153). Needs Publish wording (J40).'
+      x-module: privacy
+      x-events: [wording.proposed, access.refused]
+      x-stories: [admin-10.73]
+      security:
+      - staffSession: []
+        csrf: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/PublishWording'}
+      x-error-codes:
+        '401': [UNAUTHENTICATED]
+        '403': [FORBIDDEN]
+        '422': [VALIDATION_ERROR]
+        '503': [SERVICE_UNAVAILABLE]
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Wording'}
+        '401': {$ref: '#/components/responses/Unauthenticated'}
+        '403': {$ref: '#/components/responses/Forbidden'}
+        '422': {$ref: '#/components/responses/Unprocessable'}
+        '503': {$ref: '#/components/responses/Unavailable'}
   /v1/admin/grant-settings:
     get:
       operationId: getGrantSettings
@@ -1826,7 +1920,7 @@ paths:
                     - {gate: ai_credential, result: AI provider credential set, recorded_at: '2026-10-01T05:02:00Z'}
                     - {gate: dependency_audit, result: no known vulnerabilities, recorded_at: '2026-10-01T00:00:00Z'}
                     - {gate: restore_test, result: No restore test for this build yet}
-                    - {gate: privacy_review, result: signed, signer: R. Haddad, version_reviewed: c-ai-4, recorded_at: '2026-09-24T07:30:00Z'}
+                    - {gate: privacy_review, result: signed, signer: R. Haddad, version_reviewed: c-ai-4, recorded_at: '2026-09-24T07:55:00Z'}
                     - {gate: nutrition_policy_review, result: not yet signed}
                     - {gate: provider_data_settings, result: recorded, recorded_at: '2026-09-01T00:00:00Z', next_check_due: '2026-11-30'}
                     - {gate: launch_dishes, result: Approved 12 of 50}
@@ -9611,9 +9705,9 @@ components:
         eater_language: {$ref: '#/components/schemas/Language'}
         eater_time_zone: {$ref: '#/components/schemas/TimeZone'}
         grant_settings_version: {type: integer, description: The Grant settings version it was requested under; a later version
-            never changes it (admin-10.76)., minimum: 1}
+            never changes it (admin-10.72)., minimum: 1}
         requested_at: {$ref: '#/components/schemas/Instant'}
-        request_closes_at: {$ref: '#/components/schemas/Instant', description: + 72 h (J2).}
+        request_closes_at: {$ref: '#/components/schemas/Instant', description: 'The request time plus the request window of the Grant settings version it was requested under (J2, J155).'}
         approved_at: {$ref: '#/components/schemas/Instant'}
         active_from: {$ref: '#/components/schemas/Instant'}
         expires_at: {$ref: '#/components/schemas/Instant', description: 'Half-open box [active_from, expires_at) (J1).'}

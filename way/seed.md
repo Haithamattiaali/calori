@@ -188,6 +188,7 @@ durations 1 h (default) · 4 h · 24 h · at most 14 Days per Grant, none after 
 | `diary-1` | 1 | 2026-08-01 | Diary processing |
 | `c-ai-3` | 3 | 2026-07-25 (before the trail) | AI Consent until 2026-09-24 |
 | `c-ai-4` | 4 | 2026-09-24T08:00Z (event 145, after the privacy review, event 144) | AI Consent; adds the unkept Shadow-copy sentence (J27) |
+| `c-ai-5` | 5 | **Proposed** 2026-09-30T10:00:00Z by `staff_ali`, `asks_again: false`; its privacy review is not signed at the default clock (J153, J154) | counsel's residency sentence (synthetic wording); published only in admin-10.73 |
 | `health-1` | 1 | 2026-08-01 | the four Health purposes |
 | `mic-1` · `photos-1` | 1 | 2026-08-01 | Microphone · Photos |
 | `research-1` | 1 | 2026-08-01 | Optional research |

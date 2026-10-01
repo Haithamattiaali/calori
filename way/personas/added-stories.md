@@ -1,117 +1,314 @@
 # Stories added at the model phase (delta D5, 2026-10-01)
 
-The model phase (`way/model.md` §2.7) found six behaviours the join decided (`way/join.md`) with no story (gaps G1–G6). Each story below follows the lens brief (Given / When / Then naming the data and the screen or interface; at least one `/r` line), uses `way/vocabulary.md` (D2–D4), `way/seed.md` and `way/events.md`, and is read with the model phase.
+The model phase (`way/model.md` §2.7) found six behaviours the join decided (`way/join.md`) with no story (gaps G1–G6). Each story below follows the lens brief: Given / When / Then naming the data and the screen or interface, and at least one `/r` line. The stories use:
+- `way/vocabulary.md` (D2–D6);
+- `way/join.md`, including §22 (J149–J157, delta D6);
+- `way/seed.md` and `way/events.md`;
+- `contracts/openapi.yaml`, for every route, field and example value.
 
-**Ids** continue each persona's numbering after its last story: the admin lens ends at admin-10.71 (`personas/admin.md`), the auditor lens at auditor-10.41 (`personas/auditor.md`), the eater's WF-5 at eater-5.44 and WF-7 at eater-7.24 (`personas/eater/wf5-wf7-wf8.md`). The new ids are admin-10.72, auditor-10.42, auditor-10.43, eater-5.45, eater-7.25 and admin-10.73.
+**Ids** continue each persona's numbering after its last story:
+- the admin lens ends at admin-10.71 (`personas/admin.md`);
+- the auditor lens ends at auditor-10.41 (`personas/auditor.md`);
+- the eater's WF-5 ends at eater-5.44 and WF-7 at eater-7.24 (`personas/eater/wf5-wf7-wf8.md`).
+
+The new ids are admin-10.72, auditor-10.42, auditor-10.43, eater-5.45, eater-7.25 and admin-10.73.
 
 **Start clocks.** Every story names its start clock. The loader writes only the seed records at or before it (`join.md` J52, `seed.md` §0). A Given that needs a record the seed does not hold at that clock adds it through the public API or the test endpoints (J51), and says so. Moving the test clock forward inside a story loads no further seed records.
 
-**Readers.** Each line names who reads what, and that reader holds the permission (`seed.md` §3). Console times follow J147: "HH:MM your time (HH:MM UTC)". App copy in quotes is the string catalogue's English key; an eater whose app is in Arabic sees the Arabic text of that key with their digit setting (J146).
+**Readers.** Each line names who reads what, and that reader holds the permission (`seed.md` §3). Console times follow J147: "HH:MM your time (HH:MM UTC)". App copy in quotes is the string catalogue's English key. An eater whose app is in Arabic sees the Arabic text of that key with their digit setting (J146).
 
-**Assumptions** are marked `assumption (D6-An)` and listed with their defaults under "Proposed for D6" after the stories. Words the vocabulary still lacks are under "Conflicts for the model phase".
+**Wire values** follow the contract:
+- numbers are strings (`"1400"`, `"0.4"`), and `credit_factor` is a decimal fraction (J149, J156);
+- durations are ISO 8601 (`PT4H`);
+- states are lower-case (`saved`, `in_use`, `published`).
+
+The nine defaults first proposed here as D6-A1…A9 are now decisions (J149, with J151 widening A7). Each line cites the J item it rests on. The few points D6 still leaves open are under "Open items for the model phase".
 
 ---
 
 ## admin-10.72 · Change the Grant settings; a Grant already sent keeps its own
-As the Platform admin, I change the Grant durations and the request window in one versioned place, with a reason, so that support access rules change on purpose and never under a Grant already sent. · Trace: J2, FR-081, `seed.md` §4.6, model E20 (`grant_settings_version`), E21, §3 `grants` (`save_settings`, `GET|PUT /v1/admin/grant-settings`), events.md §2.9 `grant_settings.version.saved`, support-10.2 and 10.3 (the form and its duration check) · gap G1
+As the Platform admin, I change the Grant durations and the request window in one versioned place, with a reason, so that support access rules change on purpose and never under a Grant already sent.
 
-**Start clock 2026-10-01T10:21:00Z.** Loaded: Grant settings version 1 In use (seed §4.6, event 21: durations 1 h (default) · 4 h · 24 h; request window 72 h); `grant_31f0` (E1 `acct_9c41e2`, `staff_mona`, 1 h) Active since 10:20:00Z, `expires_at` 11:20:00Z (event 198); `grant_40aa` (`acct_3f88a1`, `staff_omar`, 4 h) Requested at 10:09:00Z, closing 2026-10-04T10:09:00Z (event 197); no Requested Grant on E10 (`acct_f1e0c3`). The save below happens at 10:22:00Z on the test clock.
+Trace: J2, J149 (bounds), J155 (Replaced), FR-081, `seed.md` §4.6, model E20 (`grant_settings_version`) and E21, §3 `grants`, `contracts/openapi.yaml` `getGrantSettings` / `saveGrantSettings` / `getGrant` / `requestGrant`, events.md §2.9 `grant_settings.version.saved`, support-10.2 and 10.3 · gap G1
 
-- `/r` Given that start, When `staff_ali` (Ali N., Platform admin, holds "Change Grant settings"; console zone Africa/Cairo) opens **Settings › Grant settings**, removes 24 h from the durations, sets the request window to 48 h, enters the reason "No case has needed more than 4 h, and eaters answer within 2 days" and saves at 10:22:00Z, Then the page reads "Grant settings version 2 · In use · saved by Ali N. · 13:22 your time (10:22 UTC)" with durations "1 h (default) · 4 h" and request window 48 h; and `staff_hana` (Hana Q., Auditor) sees in **Audit trail › Events** one new `grant_settings.version.saved` with actor `staff_ali` (role Platform admin), object version 2, outcome Done and detail before → after "durations 1 h (default) · 4 h · 24 h → 1 h (default) · 4 h; request window 72 h → 48 h" with that `reason`.
-- `/r` Given version 2 In use, When `staff_hana` (Auditor, holds "Read Grants (all)") calls `GET /v1/admin/grants/grant_31f0` and `GET /v1/admin/grants/grant_40aa`, Then `grant_31f0` returns `state: "active"`, `grant_settings_version: 1` and `expires_at: "2026-10-01T11:20:00Z"`, and `grant_40aa` returns `state: "requested"`, `grant_settings_version: 1`, a duration of 4 hours and `request_closes_at: "2026-10-04T10:09:00Z"` (72 h, not 48 h); and `staff_mona`'s Grant panel for `grant_31f0` still reads "Active · read-only · ends 12:20 your time (11:20 UTC) · 14:20 eater's time" (support-10.6; her console zone is Europe/Dublin).
-- `/r` Given version 2 In use, When `staff_mona` (Mona K., Support agent) opens **Grants › Grant form** for E10 (`acct_f1e0c3`), Then the duration offers 1 hour (selected) and 4 hours, and nothing longer; When she sends the reason "A day report total looks wrong", Day 2026-09-30, the area "Entries and day reports", 4 hours and the case reference `CASE-1262` (typed in this story) at 10:23:00Z, Then the Grant panel reads "Requested · waiting for the eater · the request closes 2026-10-03 11:23 your time (10:23 UTC) · 13:23 eater's time", and `POST /v1/grants` returned 201 with `state: "requested"`, `grant_settings_version: 2` and `request_closes_at: "2026-10-03T10:23:00Z"`.
-- `/r` Given version 2 In use, When the same request for E10 is sent to `POST /v1/grants` with a 24-hour duration instead, Then it returns 422 `VALIDATION_ERROR`, field `duration`, listing the allowed values 1 h and 4 h (support-10.3's check, read against version 2), and no Grant is created.
-- `/r` Given version 1 In use, When `staff_ali` changes a value on **Settings › Grant settings** and saves with the reason empty, Then Save reads "Add a short reason" (admin-10.68's copy), `PUT /v1/admin/grant-settings` returns 422 `VALIDATION_ERROR` naming `reason`, and the page still reads "Grant settings version 1 · In use" (J2: changed only with a reason).
-- `/r` Given version 1 In use, When `staff_ali` saves with every duration removed, or with a 48-hour duration added, Then the durations field reads "Keep at least one duration, each from 1 to 24 hours", `PUT /v1/admin/grant-settings` returns 422 `VALIDATION_ERROR` naming `durations`, and nothing is saved — `assumption (D6-A1)`.
-- `/r` Given version 2 In use, When `staff_hana` (Auditor) opens **Settings › Grant settings**, Then she reads version 2's values with no edit or Save control (J2: read-only for the Auditor); and When `PUT /v1/admin/grant-settings` is called with the token of `staff_mona` (Support agent, without "Change Grant settings"), Then it returns 403 `FORBIDDEN`, `staff_hana` sees one `access.refused` naming `staff_mona` with `path` `/v1/admin/grant-settings` and `permission_missing` naming "Change Grant settings", and version 2 stays In use.
+**Start clock 2026-10-01T10:21:00Z.** Loaded:
+- Grant settings version 1 In use (seed §4.6, event 21): durations 1 h (default) · 4 h · 24 h, request window 72 h.
+- `grant_31f0` (E1 `acct_9c41e2`, `staff_mona`, 1 h): Active since 10:20:00Z, `expires_at` 11:20:00Z (event 198).
+- `grant_40aa` (`acct_3f88a1`, `staff_omar`, 4 h): Requested at 10:09:00Z, closing 2026-10-04T10:09:00Z (event 197).
+- No Requested Grant on E10 (`acct_f1e0c3`).
+
+The save below happens at 10:22:00Z on the test clock.
+
+- `/r` **The save.**
+  - Given that start, When `staff_ali` (Ali N., Platform admin, holds "Change Grant settings"; console zone Africa/Cairo) opens **Settings › Grant settings**, removes 24 h from the durations, sets the request window to 48 h, enters the reason "No case has needed more than 4 h, and eaters answer within 2 days" and saves at 10:22:00Z.
+  - Then the page reads "Grant settings version 2 · In use · saved by Ali N. · 13:22 your time (10:22 UTC)" with durations "1 h (default) · 4 h" and request window 48 h.
+  - The page's version list reads "Version 1 · Replaced" (J155).
+  - `PUT /v1/admin/grant-settings` (`expected_version: 1`, `durations: ["PT1H", "PT4H"]`, `default_duration: "PT1H"`, `request_window: "PT48H"`, the reason) returned 200 with `version: 2` and `state: "in_use"`, and `GET /v1/admin/grant-settings` now returns the same.
+  - `staff_hana` (Hana Q., Auditor) sees in **Audit trail › Events** one new `grant_settings.version.saved`: actor `staff_ali` (role Platform admin), object version 2, outcome Done, detail before → after "durations 1 h (default) · 4 h · 24 h → 1 h (default) · 4 h; request window 72 h → 48 h" with that `reason`.
+- `/r` **Grants already sent keep version 1.**
+  - Given version 2 In use, When `staff_hana` (Auditor, holds "Read Grants (all)") calls `GET /v1/admin/grants/grant_31f0` and `GET /v1/admin/grants/grant_40aa`.
+  - Then `grant_31f0` returns `state: "active"`, `grant_settings_version: 1` and `expires_at: "2026-10-01T11:20:00Z"`.
+  - `grant_40aa` returns `state: "requested"`, `grant_settings_version: 1`, `duration: "PT4H"` and `request_closes_at: "2026-10-04T10:09:00Z"` (72 h, not 48 h).
+  - `staff_mona`'s Grant panel for `grant_31f0` still reads "Active · read-only · ends 12:20 your time (11:20 UTC) · 14:20 eater's time" (support-10.6; her console zone is Europe/Dublin).
+- `/r` **A new request uses version 2.**
+  - Given version 2 In use, When `staff_mona` (Mona K., Support agent) opens **Grants › Grant form** for E10 (`acct_f1e0c3`), Then the duration offers 1 hour (selected) and 4 hours, and nothing longer.
+  - When she sends the reason "A day report total looks wrong", Day 2026-09-30, the area "Entries and day reports", 4 hours and the case reference `CASE-1262` (typed in this story) at 10:23:00Z,
+  - Then the Grant panel reads "Requested · waiting for the eater · the request closes 2026-10-03 11:23 your time (10:23 UTC) · 13:23 eater's time".
+  - `POST /v1/grants` returned 201 with `state: "requested"`, `duration: "PT4H"`, `grant_settings_version: 2` and `request_closes_at: "2026-10-03T10:23:00Z"`.
+- `/r` Given version 2 In use, When the same request for E10 is sent to `POST /v1/grants` with `duration: "PT24H"` instead, Then it returns 422 `VALIDATION_ERROR`, field `duration`, listing the allowed values 1 h and 4 h (support-10.3's check, read against version 2), and no Grant is created.
+- `/r` Given version 1 In use, When `staff_ali` changes a value on **Settings › Grant settings** and saves with the reason empty, Then:
+  - Save reads "Add a short reason";
+  - `PUT /v1/admin/grant-settings` returns 422 `VALIDATION_ERROR` naming `reason`;
+  - the page still reads "Grant settings version 1 · In use" (J2: changed only with a reason).
+- `/r` Given version 1 In use, When `staff_ali` saves with every duration removed, or with a 48-hour duration added, Then the durations field reads "Keep at least one duration, each from 1 to 24 hours", `PUT /v1/admin/grant-settings` returns 422 `VALIDATION_ERROR` naming `durations`, and nothing is saved (J149, from support A4 and SR4).
+- `/r` **Who may change it.**
+  - Given version 2 In use, When `staff_hana` (Auditor) opens **Settings › Grant settings**, Then she reads version 2's values and version 1 as Replaced, with no edit or Save control (J2: read-only for the Auditor).
+  - When `PUT /v1/admin/grant-settings` is called with the token of `staff_mona` (Support agent, without "Change Grant settings"), Then it returns 403 `FORBIDDEN`.
+  - `staff_hana` sees one `access.refused` naming `staff_mona`, with `path` `/v1/admin/grant-settings` and `permission_missing` naming "Change Grant settings".
+  - `GET /v1/admin/grant-settings` still returns `version: 2`.
 
 ## auditor-10.42 · Leave a review note on the Audit trail
-As the Auditor, I add a review note saying what I reviewed, for which period and what I found, so that the next reviewer and a regulator see what was checked and why. · Trace: J17, FR-081, events.md §2.10 `audit_trail.review_noted`, model §1 row 10F.10, §3 `audit.add_review_note` (`POST /v1/admin/audit-trail/review-notes`), `seed.md` §3 ("Add a review note") · gap G2
+As the Auditor, I add a review note saying what I reviewed, for which period and what I found, so that the next reviewer and a regulator see what was checked and why.
 
-**Start clock 2026-10-05T09:00:00Z** (the Auditor's default, seed §2): events 1–266 loaded, chain 1–266 intact; `staff_hana` (Hana Q., Auditor: "Read the whole Audit trail", "Add a review note"; console zone Asia/Riyadh). `grant_31f0`'s life is events 196, 198, 199, 200, 201, 205, 206 and 207 (auditor-10.3, J57).
+Trace: J17, J149 (finding values, the identifier check), FR-081, events.md §2.10 `audit_trail.review_noted`, model §1 row 10F.10, §3 `audit.add_review_note`, `contracts/openapi.yaml` `addReviewNote` (`ReviewNote`) and `verifyAuditTrail`, `seed.md` §3 ("Add a review note") · gap G2
 
-- `/r` Given `staff_hana` has filtered **Audit trail › Events** to `grant_31f0`, When she chooses "Add review note" and enters what was reviewed "grant_31f0 · events 196, 198–201, 205–207", the period 1 Oct 2026 in her zone (2026-09-30T21:00:00Z to 2026-10-01T21:00:00Z), the finding "No issue found" (`assumption (D6-A2)`) and the note "Checked against case CASE-1182: 3 reads inside the Grant's Days and areas; 2 reads refused after it expired; no write attempted." and saves, Then a new `audit_trail.review_noted` row shows actor Hana Q. (role Auditor), outcome Done, its time as "HH:MM your time (HH:MM UTC)", and detail `scope`, `period`, `finding` and `note` exactly as entered, with no other detail key (J14).
-- `/s` Given that save, When the trail is read, Then the new event's `seq` is one more than the newest event before it, its `prev_hash` equals that event's `hash`, events 196–207 keep their stored `hash`, and `POST /v1/admin/audit-trail/verify` by `staff_hana` writes `audit_trail.verified` with `range` from 1 to the new event, `result` intact and no `first_break`.
-- `/r` Given a note of 501 characters, When `staff_hana` saves it, Then the note field reads "Up to 500 characters, with no eater details", `POST /v1/admin/audit-trail/review-notes` returns 422 `VALIDATION_ERROR` naming `note`, and no `audit_trail.review_noted` is added (J17: ≤ 500 characters).
-- `/r` Given the note, or what was reviewed, contains an account id such as `acct_9c41e2` or an email address, When she saves it, Then that field reads "Up to 500 characters, with no eater details", the call returns 422 `VALIDATION_ERROR` naming that field, and nothing is added (J17: no eater identifiers; the check is `assumption (D6-A3)`).
-- `/r` Given no finding is chosen, When she saves, Then the finding field reads "Required", the call returns 422 `VALIDATION_ERROR` naming `finding`, and nothing is added (J17: a note holds what was reviewed, the period and the finding).
-- `/r` Given `staff_ali` (Ali N., Platform admin, without "Add a review note"), When `POST /v1/admin/audit-trail/review-notes` is called with his token, Then it returns 403 `FORBIDDEN`, and `staff_hana` sees one `access.refused` naming `staff_ali` with `path` `/v1/admin/audit-trail/review-notes` and `permission_missing` naming "Add a review note", and no `audit_trail.review_noted` by him.
+**Start clock 2026-10-05T09:00:00Z** (the Auditor's default, seed §2). Events 1–266 are loaded and the chain 1–266 is intact. `staff_hana` (Hana Q., Auditor: "Read the whole Audit trail", "Add a review note"; console zone Asia/Riyadh). `grant_31f0`'s life is events 196, 198, 199, 200, 201, 205, 206 and 207 (auditor-10.3, J57).
+
+- `/r` **A note is added.**
+  - Given `staff_hana` has filtered **Audit trail › Events** to `grant_31f0`, When she chooses "Add review note", enters the values below and saves:
+    - what was reviewed: "grant_31f0 · events 196, 198–201, 205–207";
+    - the period: 1 Oct 2026 in her zone;
+    - the finding: "No issue found";
+    - the note: "Checked against case CASE-1182: 3 reads inside the Grant's Days and areas; 2 reads refused after it expired; no write attempted."
+  - Then `POST /v1/admin/audit-trail/review-notes` returned 201 with `actor` {`kind: staff`, `id: staff_hana`, `role: Auditor`}, `action: audit_trail.review_noted` and `outcome: done`.
+  - The detail holds `scope` "grant_31f0 · events 196, 198–201, 205–207", `period` {`from: "2026-09-30T21:00:00Z"`, `to: "2026-10-01T21:00:00Z"`}, `finding: "no_issue"` (J149) and the `note` exactly as entered, with no other detail key (J14).
+  - The new row shows Hana Q., Done and its time as "HH:MM your time (HH:MM UTC)".
+- `/s` Given that save, When the trail is read, Then:
+  - the new event's `seq` is one more than the newest event before it;
+  - its `prev_hash` equals that event's `hash`;
+  - events 196–207 keep their stored `hash`;
+  - `POST /v1/admin/audit-trail/verify` by `staff_hana` returns `result: "intact"`, with `from_seq: 1` and `to_seq` the new event, and writes `audit_trail.verified`.
+- `/r` Given a note of 501 characters, When `staff_hana` saves it, Then the note field reads "Up to 500 characters, with no eater details", the call returns 422 `VALIDATION_ERROR` with `field: "note"`, and no `audit_trail.review_noted` is added (J17).
+- `/r` Given the note, or what was reviewed, contains an account id such as `acct_9c41e2` or an email address, When she saves it, Then that field reads "Up to 500 characters, with no eater details", the call returns 422 `VALIDATION_ERROR` naming that field (`note` or `scope`), and nothing is added (J17; the check is J149).
+- `/r` Given no finding is chosen, When she saves, Then the finding field reads "Required", the call returns 422 `VALIDATION_ERROR` with `field: "finding"`, and nothing is added (J17, J149).
+- `/r` Given `staff_ali` (Ali N., Platform admin, without "Add a review note"), When `POST /v1/admin/audit-trail/review-notes` is called with his token, Then:
+  - it returns 403 `FORBIDDEN`;
+  - `staff_hana` sees one `access.refused` naming `staff_ali`, with `path` `/v1/admin/audit-trail/review-notes` and `permission_missing` naming "Add a review note";
+  - there is no `audit_trail.review_noted` by him.
 
 ## auditor-10.43 · Events older than 5 years leave on schedule, and the chain still checks
-As the Auditor, I see that the retention run removed the events older than 5 years and recorded where the chain now starts, so that the trail is kept as long as decided and no longer, and still proves itself. · Trace: J18, FR-082 ("retention verification"), events.md §1 (Retention) and §2.10 `audit_trail.retention_run`, model §1 row 10F.11, E66, E69 (`audit_retention`), §3 `audit.run_retention` · gap G3
+As the Auditor, I see that the retention run removed the events older than 5 years and recorded where the chain now starts and who held which role, so that the trail is kept as long as decided and no longer, and still proves itself.
 
-**Start clock 2026-10-05T09:00:00Z** (the Auditor's default, seed §2): events 1–266 loaded, chain 1–266 intact. The test clock is then moved (`PUT /v1/test/clock`, J51) to **2031-08-02T00:00:00Z**; no further seed record loads (J52). At that time events 1–24 (2026-08-01T06:00:00Z to 2026-08-01T21:00:00Z) are more than 5 years old, and event 25 (`age.confirmed`, 2026-08-03T18:20:00Z) and every later event are not. Any run after 2031-08-01T21:00:00Z and not after 2031-08-03T18:20:00Z gives the same result. The reader is `staff_hana` (Hana Q., Auditor).
+Trace: J18, J149 (the hourly run, `removed_through_seq`, `anchor_hash`), J157 (`roles_held_at_anchor`), FR-082 ("retention verification"), events.md §1 (Retention) and §2.10 `audit_trail.retention_run`, model §1 row 10F.11, E66, E68, E69 (`audit_retention`), `contracts/openapi.yaml` `RetentionRunDetail`, `listAuditTrailEvents`, `verifyAuditTrail`, `getAuditSummary`, `getAnomalies` · gap G3
 
-- `/r` Given the clock at 2031-08-02T00:00:00Z, When the hourly Audit trail retention run completes (`assumption (D6-A4)`) and `staff_hana` opens **Audit trail › Events**, Then the oldest event listed is 25, no event 1–24 is listed, and one new `audit_trail.retention_run` row shows actor system, outcome Done and detail `removed_through_seq: 24` and `anchor_hash` equal to event 25's `prev_hash` (`assumption (D6-A4)` for the anchor).
-- `/r` Given that run, When `staff_hana` selects Verify chain, Then it ends "Intact · events 25–" followed by the newest event's number, and `audit_trail.verified` records `range` from 25 to that event, `result` intact and no `first_break`.
-- `/s` Given that run, When the store is read, Then it holds no event with `seq` ≤ 24; events 25–266 keep their stored `prev_hash` and `hash`; `SHA-256(anchor_hash ‖ canonical(event 25))` equals event 25's stored `hash`; the `audit_trail.retention_run` event's `prev_hash` is the `hash` of the event before it; and the run wrote exactly one `audit_trail.retention_run`.
+**Start clock 2026-10-05T09:00:00Z** (the Auditor's default, seed §2). Events 1–266 are loaded and the chain 1–266 is intact. The test clock is then moved (`PUT /v1/test/clock`, J51) to **2031-08-02T00:00:00Z**; no further seed record loads (J52).
+
+At that time:
+- Events 1–24 (2026-08-01T06:00:00Z to 2026-08-01T21:00:00Z) are more than 5 years old. They include the `role.assigned` events 1–6 of `staff_ali`, `staff_mona`, `staff_omar`, `staff_dina`, `staff_hana` and `staff_lee`.
+- Event 25 (`age.confirmed`, 2026-08-03T18:20:00Z) and every later event are not.
+- Any hourly run after 2031-08-01T21:00:00Z and not after 2031-08-03T18:20:00Z gives the same result.
+
+The reader is `staff_hana` (Hana Q., Auditor).
+
+- `/r` **The run.**
+  - Given the clock at 2031-08-02T00:00:00Z, When the hourly Audit trail retention run completes (J149) and `staff_hana` opens **Audit trail › Events**.
+  - Then the oldest event listed is 25, and no event 1–24 is listed.
+  - One new `audit_trail.retention_run` row shows actor system (`system:audit_retention`, surface job), outcome Done and detail `removed_through_seq: 24`.
+  - Its `anchor_hash` equals event 25's `prev_hash` (J149).
+  - Its `roles_held_at_anchor` lists exactly `staff_ali` [Platform admin], `staff_mona` [Support agent], `staff_omar` [Support agent], `staff_dina` [Nutrition approver], `staff_hana` [Auditor] and `staff_lee` [Support agent] (J157). These are the roles held at the anchor. `staff_tariq`, `staff_yara`, `staff_rana`, `staff_badr` and `staff_sod_seed` held no role then.
+- `/r` **The chain and the Summary.**
+  - Given that run, When `staff_hana` selects Verify chain, Then it ends "Intact · events 25–" followed by the newest event's number.
+  - `POST /v1/admin/audit-trail/verify` returns `result: "intact"`, `from_seq: 25` and no `first_break`, and writes `audit_trail.verified`.
+  - **Audit trail › Summary** for 2031-08-01T00:00:00Z to 2031-08-03T00:00:00Z (`GET /v1/admin/audit-trail/summary`) shows `last_retention_run` with `detail.removed_through_seq: 24` and `chain_check: "passed"`.
+- `/r` **Anomalies.**
+  - Given that run, When `staff_hana` opens **Audit trail › Anomalies** after its next evaluation (`last_evaluated_at` later than the run).
+  - Then "roles held with no assignment event" still counts 1, with `record_ids` [`staff_sod_seed`]. The six roles in `roles_held_at_anchor` count as assigned, though their `role.assigned` events 1–6 are gone (J157).
+- `/s` Given that run, When the store is read, Then:
+  - it holds no event with `seq` ≤ 24;
+  - events 25–266 keep their stored `prev_hash` and `hash`;
+  - `SHA-256(anchor_hash ‖ canonical(event 25))` equals event 25's stored `hash`;
+  - the `audit_trail.retention_run` event's `prev_hash` is the `hash` of the event before it;
+  - the run wrote exactly one `audit_trail.retention_run`.
 
 ## eater-5.45 · A Saved Plan I never confirmed expires at the end of its Day
-As the Eater, I find last night's unconfirmed Plan marked as not logged, with a way to plan again, so that an old Plan is never logged by mistake. · Trace: J130, FR-045, FRD §17 MealPlan (`expiry`), FRD §8.1 (the diary-day boundary), model §1 row 5.14, E56 (`expired_at`), events.md §3 `plan.expired` · gap G4
+As the Eater, I find last night's unconfirmed Plan marked as not logged, with a way to plan again, so that an old Plan is never logged by mistake. A meal I confirmed in time still counts, even if it arrives late.
 
-**Start clock 2026-10-01T18:30:00Z** (21:30 Riyadh; seed §2's clock for Faisal's kabsa stories): Faisal (`acct_e9a002`, Asia/Riyadh, diary-day boundary 03:00, Arabic app with Western digits, Fixed mode, Target 2,040) has Day 2026-10-01 at 1,400 kcal (seed §12.2). The seed holds no Plan, so the Given adds one through the public API: eater-5.14's request — `POST /v1/meal-plans` with the chips kabsa rice spoon and chicken piece (Available 3), salad and laban under Exclude, Calorie aim about 400 (±10 %), Calorie ceiling 500 and Carbohydrate maximum 30 % — returns the Proposed Plan 4 rice + 2 chicken (397.6 kcal), and Faisal saves it at 21:30 with «حفظ الخطة» (`POST /v1/meal-plans/{id}/save`, eater-5.28). He never confirms it. The Plan card lives on **Today** (eater-5.28, 5.30, 5.35).
+Trace: J130, J149 (card, "Plan again", the 409), J150, J151, J152, FR-045, FR-047, FRD §8.1 and §8.3, FRD §17 MealPlan (`expiry`), model §1 row 5.14, E56 (`expired_at`), events.md §3 `plan.expired` · `plan.confirmed`, `contracts/openapi.yaml` `listMealPlans` (`include_expired`), `getMealPlan`, `consume` (`made_at`, `source_plan_id`) · gap G4
 
-- `/r` Given the Saved Plan and the clock moved to 2026-10-01T23:59:00Z (02:59 Riyadh, still Day 2026-10-01), When Faisal opens **Today**, Then the Plan card still offers «أكلت كما في الخطة», «تغيير الكميات» and «لم تُؤكل»; When the clock is then moved to 2026-10-02T05:00:00Z (08:00 Riyadh, Day 2026-10-02) and he opens Today, Then the card shows the Arabic text of "From 1 Oct · not logged" with "Plan again" (J146, Western digits) and offers none of those three buttons — `assumption (D6-A5)`.
-- `/r` Given the clock at 2026-10-02T05:00:00Z, When `GET /v1/meal-plans/{id}` is called with Faisal's token, Then it returns `state: "saved"`, `diary_day_id: "2026-10-01"`, `expired_at: "2026-10-02T00:00:00Z"` (03:00 Riyadh, the end of its Day) and no `entry_ids`; and `GET /v1/reports/day?diary_day_id=2026-10-01` still returns `consumed_kcal` 1,400.
-- `/s` Given the same, When Faisal's `plan_events` are read, Then exactly one `plan.expired` exists for the Plan, with `account_id` `acct_e9a002`, payload `state: saved`, `selected_versions` naming kabsa rice spoon version 1 and chicken piece version 1, and no entry ids; and no `entry.confirmed` carries the Plan's id as `source_plan_id`.
-- `/r` Given the expired card, When Faisal taps "Plan again", Then **Meal planner** opens for Day 2026-10-02 with the chips kabsa rice spoon and chicken piece (Available 3), salad and laban under Exclude, the Calorie aim about 400 («360–440»), the ceiling «لا يزيد عن 500 سعرة» and Carbohydrate maximum 30 %, and `GET /v1/meal-plans?state=proposed` returns no Plan — `assumption (D6-A6)`; When he taps «حساب الكميات», Then a new Plan returns with `state: "proposed"`, `diary_day_id: "2026-10-02"` and 4 rice + 2 chicken (397.6 kcal), and the expired Plan still reads `state: "saved"`.
-- `/r` Given the expired Plan, When `POST /v1/consumption` is sent with Faisal's token, a new command id, the Plan's own counts and versions and `source_plan_id` set to its id, Then it returns 409 `VALIDATION_ERROR` with `reason: plan_expired` and the Plan's current state (`assumption (D6-A7)`), no Entry is created, and `GET /v1/reports/day` returns `consumed_kcal` 1,400 for 2026-10-01 and 0 for 2026-10-02 with both Day revisions unchanged.
+**Start clock 2026-10-01T18:30:00Z** (21:30 Riyadh; seed §2's clock for Faisal's kabsa stories). Faisal (`acct_e9a002`) is on Asia/Riyadh with a diary-day boundary of 03:00, an Arabic app with Western digits, Fixed mode and Target 2,040. His Day 2026-10-01 is at 1,400 kcal (seed §12.2).
+
+The seed holds no Plan, so the Given adds one through the public API:
+- eater-5.14's request to `POST /v1/meal-plans`: chips kabsa rice spoon and chicken piece (`available_count: "3"`), salad and laban under Exclude, Calorie aim about 400 (±10 %), Calorie ceiling 500 and Carbohydrate maximum 30 %;
+- it returns the Proposed Plan 4 rice + 2 chicken (397.6 kcal), with `selected_versions` [`uv_faisal_kabsa_rice_spoon_v1`, `uv_faisal_chicken_piece_v1`];
+- Faisal saves it at 21:30 with «حفظ الخطة» (`POST /v1/meal-plans/{id}/save`, eater-5.28).
+
+He never confirms it, except in the J151 line below. The Plan card lives on **Today** (J152).
+
+- `/r` **Expiry at the boundary.**
+  - Given the Saved Plan and the clock moved to 2026-10-01T23:59:00Z (02:59 Riyadh, still Day 2026-10-01), When Faisal opens **Today**, Then the Plan card still offers «أكلت كما في الخطة», «تغيير الكميات» and «لم تُؤكل».
+  - When the clock is then moved to 2026-10-02T05:00:00Z (08:00 Riyadh, Day 2026-10-02) and he opens Today, Then the card shows the Arabic text of "From 1 Oct · not logged" with "Plan again" (J146, Western digits). It offers none of those three buttons (J149, J150).
+- `/r` **The API at 2026-10-02T05:00:00Z.**
+  - `GET /v1/meal-plans/{id}` with Faisal's token returns `state: "saved"`, `diary_day_id: "2026-10-01"`, `expired_at: "2026-10-02T00:00:00Z"` (03:00 Riyadh, the end of its Day) and no `entry_ids` (J150).
+  - `GET /v1/meal-plans?state=saved` returns no Plan, and `GET /v1/meal-plans?state=saved&include_expired=true` lists this Plan with its `expired_at` (J150).
+  - `GET /v1/reports/day?diary_day_id=2026-10-01` still returns `consumed_kcal: "1400"`.
+- `/s` Given the same, When Faisal's `plan_events` are read, Then:
+  - exactly one `plan.expired` exists for the Plan, with `account_id` `acct_e9a002`, payload `state: saved`, `selected_versions` [`uv_faisal_kabsa_rice_spoon_v1`, `uv_faisal_chicken_piece_v1`] and no entry ids;
+  - no `entry.confirmed` carries the Plan's id as `source_plan_id`.
+- `/r` **"Plan again".**
+  - Given the expired card, When Faisal taps "Plan again", Then **Meal planner** opens for Day 2026-10-02 with:
+    - the chips kabsa rice spoon and chicken piece (Available 3);
+    - salad and laban under Exclude;
+    - the Calorie aim about 400 («360–440»), the ceiling «لا يزيد عن 500 سعرة» and Carbohydrate maximum 30 %.
+  - `GET /v1/meal-plans?state=proposed` returns no Plan (J149).
+  - When he taps «حساب الكميات», Then a new Plan returns with `state: "proposed"`, `diary_day_id: "2026-10-02"` and 4 rice + 2 chicken (397.6 kcal), and the expired Plan still reads `state: "saved"`.
+- `/r` **A confirmation made after expiry is refused.**
+  - Given the expired Plan, When `POST /v1/consumption` is sent with Faisal's token, a new command id, `made_at: "2026-10-02T05:00:00Z"` (after `expired_at`), `confirmed_as: "ate_as_planned"`, the Plan's own counts and versions, and `source_plan_id` set to its id,
+  - Then it returns 409 `VALIDATION_ERROR` with `reason: "plan_expired"`, `state: "saved"` and `field: "source_plan_id"` (J149), and no Entry is created.
+  - `GET /v1/reports/day` returns `consumed_kcal: "1400"` for 2026-10-01 and `"0"` for 2026-10-02, with both `day_revision` values unchanged.
+- `/r` **A confirmation made before expiry and delivered after it is accepted** (J151).
+  - Given instead that the simulator is in airplane mode and, at 2026-10-01T23:50:00Z (02:50 Riyadh, Day 2026-10-01), Faisal taps «أكلت كما في الخطة» on the Plan card. The consume command waits in the outbox with `made_at: "2026-10-01T23:50:00Z"`, `diary_day_id: "2026-10-01"` and `source_plan_id`.
+  - When the network returns at 2026-10-02T05:00:00Z, after `expired_at`, and the command is delivered,
+  - Then `POST /v1/consumption` returns 201 with two Entries (kabsa rice spoon × 4, chicken piece × 2) on Day 2026-10-01.
+  - `GET /v1/reports/day?diary_day_id=2026-10-01` returns `consumed_kcal: "1797.6"` (1,400 + 397.6) with `day_revision` one higher.
+  - `GET /v1/meal-plans/{id}` returns `state: "confirmed"`, `confirmed_as: "ate_as_planned"` and both `entry_ids`.
+  - A second delivery of the same `command_id` returns the original answer with `replayed: true` and adds nothing.
 
 ## eater-7.25 · A new activity credit is offered, never applied by itself
-As the Eater in Activity-adjusted mode, I am told when the Policy's activity credit changes and I choose whether to take it, so that my food budget never changes without my say. · Trace: J103, FRD §12.2 ("Apply a visible user-approved credit factor and cap"), FR-058, FR-071, J104, J105, J106, J107, approver-10.69, eater-7.18, 7.19, model §1 row 7.8, E62, events.md §3 `target.version.approved` · gap G5
+As the Eater in Activity-adjusted mode, I am told when the Policy's activity credit changes and I choose whether to take it, so that my food budget never changes without my say.
 
-**Start clock 2026-10-06T08:00:00Z** (09:00 London, Day 2026-10-06): the whole seed through event 266 — Policy v2 In effect since 2026-10-05T00:00:00+03:00 with the Activity-adjusted credit of v1, factor 50 % and cap 300 kcal a day (seed §4.1, §4.2); Sam (`acct_e9a003`, Europe/London, boundary 00:00, English) in Fixed mode on `tv_sam_1` (1,870, Entered by you); Sam's simulator Health store holds no workout after 2026-10-01. The Given adds, through the public API and the test endpoints (J51, J52):
-- **(a)** at 09:05 London on 6 Oct, Sam approves Activity-adjusted mode with Policy v2's credit, 50 % and 300 kcal a day (eater-7.18's Approve; `POST /v1/targets`), which gives Target version `tv_sam_2` (base 1,710, J104; `policy_version: 2`);
-- **(b)** `staff_yara` (Yara M., Nutrition approver) proposes Policy version 3 based on v2 with one change, the Activity-adjusted credit factor 40 % and cap 250 kcal a day (`POST /v1/admin/policy/versions`), and `staff_dina` (Dina R., Nutrition approver) approves it with a reason and effective-from 2026-10-07T00:00:00+03:00 (`POST /v1/admin/policy/versions/3/approve`);
-- **(c)** the clock is moved to 2026-10-07T08:00:00Z (09:00 London, Day 2026-10-07), after Policy v3 comes In effect at 2026-10-06T21:00:00Z;
-- **(d)** an outdoor run 07:00–07:40 London on 7 Oct, 400 kcal active energy, is written to Sam's simulator Health store through the HealthKit mock and imported when the app opens.
+Trace: J103, J156, J149 (the number form), FRD §12.2 ("Apply a visible user-approved credit factor and cap"), FR-058, FR-071, J104, J105, J106, J107, approver-10.69, eater-7.18, 7.19, model §1 row 7.8, E62, events.md §3 `target.version.approved`, `contracts/openapi.yaml` `getActivityCreditOffer`, `approveActivityCreditOffer`, `getCurrentTarget`, `getDayReport` (`target.activity_credit_kcal`) · gap G5
 
-- `/r` Given (a) only, When Sam opens **Settings → Activity → Activity mode** on 6 Oct, Then it reads "Your credit: 50 % up to 300 kcal" and shows no offer (Policy v2 offers the same credit, J103); Given (a)–(d), When he opens it on 7 Oct, Then it reads "Your credit: 50 % up to 300 kcal" and "New activity credit available: 40 % up to 250 kcal — Review", and **Today** reads "Food Target: Activity-adjusted" and "Target today 1,910 (1,710 + 200 Activity credit)" (400 × 50 % = 200 ≤ 300; eater-7.19's form).
-- `/r` Given (a)–(d), When `GET /v1/targets/current` is called with Sam's token, Then it returns `tv_sam_2` with `activity_mode: "activity_adjusted"`, `credit_factor: 0.5` (`assumption (D6-A8)` for the number form), `credit_cap_kcal: 300` and `policy_version: 2`: the new Policy rewrote nothing (J107, model E62).
-- `/r` Given (a)–(d), When he taps Review, Then the preview reads "Base food Target 1,710", "Credit 40 % of eligible Activity" and "Cap 250 kcal a day" with "Approve" and "Cancel" (eater-7.18's form); When he taps Approve, Then Today reads "Target today 1,870 (1,710 + 160 Activity credit)" (400 × 40 % = 160 ≤ 250), Settings → Activity → Activity mode reads "Your credit: 40 % up to 250 kcal" with no offer, and **Progress → Target history** has a new top row for 1,870 from 7 Oct, "Entered by you", whose details read "Activity-adjusted · credit 40 % up to 250 kcal" and "Activity × 1.2 · Policy v3" (J106).
-- `/s` Given that approval, When Sam's `target_events` are read, Then one new `target.version.approved` carries `source: entered`, `policy_version: 3`, `activity_mode: activity_adjusted`, `credit_factor: 0.4` and `credit_cap: 250`; `GET /v1/targets` lists `tv_sam_3`, `tv_sam_2` and `tv_sam_1`, newest first; and `tv_sam_2` still holds `credit_factor: 0.5` and `credit_cap_kcal: 300`.
-- `/r` Given (a)–(d), When he taps Review and then Cancel, Then Settings → Activity → Activity mode still reads "Your credit: 50 % up to 300 kcal" with the offer line, Today still reads "Target today 1,910 (1,710 + 200 Activity credit)", Progress → Target history has no new row, and `GET /v1/targets/current` still returns `tv_sam_2`.
-- `/r` Given the Review preview, When he raises the credit to 45 % or the cap to 260 kcal, Then that field reads "Up to 40 %" or "Up to 250 kcal" and Approve is disabled; and `POST /v1/targets` with `credit_factor: 0.45` returns 422 `VALIDATION_ERROR` naming `credit_factor` (J103: the Policy's factor and cap are the upper bound; the eater may lower either, never raise).
+**Start clock 2026-10-06T08:00:00Z** (09:00 London, Day 2026-10-06). The whole seed through event 266 is loaded:
+- Policy v2 has been In effect since 2026-10-05T00:00:00+03:00, with v1's Activity-adjusted credit: factor 50 % and cap 300 kcal a day (seed §4.1, §4.2).
+- Sam (`acct_e9a003`, Europe/London, boundary 00:00, English) is in Fixed mode on `tv_sam_1` (1,870, Entered by you).
+- Sam's simulator Health store holds no workout after 2026-10-01.
+
+The Given adds, through the public API and the test endpoints (J51, J52):
+- **(a)** At 09:05 London on 6 Oct, Sam approves Activity-adjusted mode with Policy v2's credit, 50 % and 300 kcal a day (eater-7.18's Approve; `POST /v1/targets`). This gives Target version `tv_sam_2`: base 1,710 (J104), `policy_version: 2`, `credit_factor: "0.5"`, `credit_cap_kcal: "300"`.
+- **(b)** `staff_yara` (Yara M., Nutrition approver) proposes Policy version 3 with `POST /v1/admin/policy/versions`: `based_on: 2`, `values.activity_adjusted_credit` {`credit_factor: "0.4"`, `credit_cap_kcal: "250"`} and every other value as v2. `staff_dina` (Dina R., Nutrition approver) approves it with a reason and `effective_from: "2026-10-06T21:00:00Z"`, which is 2026-10-07T00:00:00+03:00 (`POST /v1/admin/policy/versions/3/approve`).
+- **(c)** The clock is moved to 2026-10-07T08:00:00Z (09:00 London, Day 2026-10-07), after Policy v3 comes In effect.
+- **(d)** An outdoor run 07:00–07:40 London on 7 Oct, 400 kcal active energy, is written to Sam's simulator Health store through the HealthKit mock and imported when the app opens.
+
+- `/r` **The offer appears only when the credit differs.**
+  - Given (a) only, When Sam opens **Settings → Activity → Activity mode** on 6 Oct, Then it reads "Your credit: 50 % up to 300 kcal" and shows no offer. `GET /v1/targets/activity-credit-offer` returns no `offer`, because Policy v2 offers the same credit (J103, J156).
+  - Given (a)–(d), When he opens it on 7 Oct, Then it reads "Your credit: 50 % up to 300 kcal" and "New activity credit available: 40 % up to 250 kcal — Review".
+  - `GET /v1/targets/activity-credit-offer` returns `offer` {`policy_version: 3`, `credit_factor: "0.4"`, `credit_cap_kcal: "250"`, `current` {`target_version_id: "tv_sam_2"`, `credit_factor: "0.5"`, `credit_cap_kcal: "300"`, `policy_version: 2`}}.
+  - **Today** reads "Food Target: Activity-adjusted" and "Target today 1,910 (1,710 + 200 Activity credit)" (400 × 50 % = 200 ≤ 300; eater-7.19's form).
+  - `GET /v1/reports/day?diary_day_id=2026-10-07` returns `target.target_version_id: "tv_sam_2"` and `target.activity_credit_kcal: "200"`.
+- `/r` Given (a)–(d), When `GET /v1/targets/current` is called with Sam's token, Then `target` is `tv_sam_2` with `activity_mode: "activity_adjusted"`, `credit_factor: "0.5"`, `credit_cap_kcal: "300"` and `policy_version: 2`. The new Policy rewrote nothing (J107, model E62).
+- `/r` **Approving the offer.**
+  - Given (a)–(d), When he taps Review, Then the preview reads "Base food Target 1,710", "Credit 40 % of eligible Activity" and "Cap 250 kcal a day", with "Approve" and "Cancel" (eater-7.18's form).
+  - When he taps Approve, Then the app sends `POST /v1/targets/activity-credit-offer/approve` {`policy_version: 3`, `credit_factor: "0.4"`, `credit_cap_kcal: "250"`}, which returns 201 with `target_version_id: "tv_sam_3"`, `source: "entered"`, `activity_mode: "activity_adjusted"`, `credit_factor: "0.4"`, `credit_cap_kcal: "250"` and `policy_version: 3` (J156).
+  - Today reads "Target today 1,870 (1,710 + 160 Activity credit)" (400 × 40 % = 160 ≤ 250), and the Day report returns `target.activity_credit_kcal: "160"`.
+  - Settings → Activity → Activity mode reads "Your credit: 40 % up to 250 kcal" with no offer, and `GET /v1/targets/activity-credit-offer` returns no `offer`.
+  - **Progress → Target history** has a new top row for 1,870 from 7 Oct, "Entered by you". Its details read "Activity-adjusted · credit 40 % up to 250 kcal" and "Activity × 1.2 · Policy v3" (J106).
+- `/s` Given that approval, When Sam's `target_events` are read, Then:
+  - one new `target.version.approved` carries `source: entered`, `policy_version: 3`, `activity_mode: activity_adjusted`, `credit_factor: "0.4"` and `credit_cap_kcal: "250"` (J156: one field name everywhere);
+  - `GET /v1/targets` lists `tv_sam_3`, `tv_sam_2` and `tv_sam_1`, newest first;
+  - `tv_sam_2` still holds `credit_factor: "0.5"` and `credit_cap_kcal: "300"`.
+- `/r` Given (a)–(d), When he taps Review and then Cancel, Then:
+  - Settings → Activity → Activity mode still reads "Your credit: 50 % up to 300 kcal" with the offer line;
+  - Today still reads "Target today 1,910 (1,710 + 200 Activity credit)";
+  - Progress → Target history has no new row;
+  - `GET /v1/targets/current` still returns `tv_sam_2`, and `GET /v1/targets/activity-credit-offer` still returns the offer.
+- `/r` Given the Review preview, When he raises the credit to 45 % or the cap to 260 kcal, Then:
+  - that field reads "Up to 40 %" or "Up to 250 kcal", and Approve is disabled;
+  - `POST /v1/targets/activity-credit-offer/approve` with `credit_factor: "0.45"` returns 422 `VALIDATION_ERROR` with `field: "credit_factor"`;
+  - no Target version is created (J103: the Policy's factor and cap are the upper bound; the eater may lower either, never raise).
 
 ## admin-10.73 · Publish a consent Wording after its privacy review is signed
-As the Platform admin, I publish counsel's reviewed consent text as a new Wording version, only after its privacy review is signed, so that every eater who decides from now on reads the reviewed words, and every Consent already given keeps the version it was given under. · Trace: J26, J40, J23, J24, J32 (`c-ai-5` is counsel's residency wording), FR-076, FR-082, model E11, E12 (`review_gate`), E42, §3 `privacy.publish_wording` (`POST /v1/admin/wording`) and `gates.sign` (`POST /v1/admin/launch-gates/{gate}/sign`), events.md §2.5 and §2.7 · gap G6
+As the Platform admin, I publish counsel's reviewed consent text as a new Wording version only after its privacy review is signed, and I mark whether eaters are asked again. Every eater who decides from now on reads the reviewed words. A Consent already given keeps its own version unless I mark the new text to ask again.
 
-**Start clock 2026-10-01T09:00:00Z** (the Platform admin's default, seed §2): Wordings as seed §4.7 — `c-ai-4` in force for the AI Consent since 2026-09-24T08:00Z (event 145), `c-ai-5` not published; **Settings › launch gates** holds the privacy review of `c-ai-4` only (signed 2026-09-24 by counsel R. Haddad (synthetic), event 144). The test supplies counsel's `c-ai-5` English and Arabic texts (synthetic; they change only the residency sentence of `c-ai-4`, J32).
+Trace: J26, J40, J149 (the 409), J153, J154, J23, J24, J32 (`c-ai-5` is counsel's residency wording), FR-076, FR-082, model E11, E12, E42, §3 `privacy.publish_wording` and `gates.sign`, `contracts/openapi.yaml` `publishWording` (`PublishWording`, `Wording`), `getWording`, `signLaunchGate`, `listConsents` (`PurposeConsent`), `createAnalysis`, events.md §2.5 and §2.7 · gap G6
 
-- `/r` Given that start, When `staff_ali` (Ali N., Platform admin: "Publish wording", "Sign launch gates") tries to publish `c-ai-5` on **Settings › launch gates**, Then Publish is disabled with "Sign the privacy review of c-ai-5 first", and `POST /v1/admin/wording` with key `c-ai-5` returns 409 `VALIDATION_ERROR` with `reason: privacy_review_not_signed` (the rule is J26; the answer's form is `assumption (D6-A9)`); nothing is published, and `staff_hana` (Hana Q., Auditor) finds no `wording.published` for `c-ai-5` in **Audit trail › Events**.
-- `/r` Given that start, When `staff_ali` records on Settings › launch gates the privacy review of `c-ai-5` signed by counsel R. Haddad (synthetic) and then publishes `c-ai-5`, Then the gate reads "Privacy review signed by counsel R. Haddad (synthetic) on 2026-10-01" for `c-ai-5` (J26), and `staff_hana` sees in Audit trail › Events `launch_gate.signed` (actor `staff_ali`, role Platform admin; detail `gate: privacy_review`, `signer` counsel R. Haddad (synthetic), `version_reviewed: c-ai-5`; outcome Done) followed by `wording.published` (actor `staff_ali`; detail `key: c-ai-5`, `version: 5` and the languages English and Arabic, with no other detail key; outcome Done).
-- `/s` Given that publish, When the Wording store is read, Then `c-ai-5` holds `published_by: staff_ali`, a `published_at` and a `review_gate` naming the privacy review signed for `c-ai-5` (model E12), and the stored English and Arabic texts of `c-ai-4` and `c-ai-3` are byte for byte unchanged.
-- `/r` Given `c-ai-5` published, When `GET /v1/me/consents` is called with Faisal's token (`acct_e9a002`; AI Consent Given under `c-ai-3`, seed §5.1, event 78), Then `ai_processing` still reads Given with `text_version: "c-ai-3"` and `made_at: "2026-08-25T15:02:10Z"`, and opening **Capture & Plan** shows him no Consent sheet (the seed's precedent: Consents given under `c-ai-3` stayed in force after `c-ai-4` was published; see Conflicts, item 5).
-- `/r` Given `c-ai-5` published, When Nadia (`acct_e9a005`, English app, AI Consent Not given) first sends typed words for analysis on **Capture & Plan**, Then the sheet's words match `c-ai-5`'s stored English text exactly, with "Give consent" and "Not now" (eater-4.3); When she taps "Give consent", Then `GET /v1/me/consents` returns `ai_processing` Given with `text_version: "c-ai-5"`, `method: "first_need_sheet"` and `context` Capture & Plan (J24), and `staff_hana` sees one `consent.given` with `purpose: ai_processing`, `text_version: c-ai-5` and `method: first_need_sheet`.
-- `/r` Given the privacy review of `c-ai-5` signed and `c-ai-5` not yet published, When `POST /v1/admin/wording` with key `c-ai-5` is called with the token of `staff_mona` (Mona K., Support agent: no "Publish wording") or of `staff_dina` (Dina R., Nutrition approver: "Publish wording" for `guidance-1` only, J40), Then each returns 403 `FORBIDDEN`, `staff_hana` sees one `access.refused` per call naming the caller with `path` `/v1/admin/wording`, and no `wording.published` is written.
+**Start clock 2026-10-01T09:00:00Z** (the Platform admin's default, seed §2). Loaded:
+- **Settings › Wordings** (J153) shows family `c-ai`: `c-ai-4` Published since 2026-09-24T08:00Z (event 145) and `c-ai-3` Superseded.
+- **Settings › launch gates** holds the privacy review of `c-ai-4` only (signed 2026-09-24 by counsel R. Haddad (synthetic), event 144).
+- Seed §4.7 holds no `c-ai-5` row, so the test supplies counsel's `c-ai-5` English and Arabic texts. They are synthetic and change only the residency sentence of `c-ai-4` (J32).
+- `staff_ali` (Ali N., Platform admin) holds "Publish wording" and "Sign launch gates". `staff_hana` (Hana Q., Auditor) reads the events.
+
+- `/r` **Publishing before the review is signed is refused.**
+  - Given that start, When `staff_ali` enters `c-ai-5`'s texts on **Settings › Wordings** with "Ask eaters again" off, Then Publish is disabled with "Sign the privacy review of c-ai-5 first."
+  - `POST /v1/admin/wording` {`text_version: "c-ai-5"`, `en`, `ar`, `asks_again: false`} returns 409 `VALIDATION_ERROR` with `reason: "privacy_review_not_signed"`, `state: "not_signed"` and `field: "text_version"` (J26, J149).
+  - Nothing is published: `GET /v1/wording?text_version=c-ai-4` still returns `state: "published"`, and `staff_hana` finds no `wording.published` for `c-ai-5` in **Audit trail › Events**.
+- `/r` **Sign, then publish.**
+  - Given that start, When `staff_ali` signs on Settings › launch gates the privacy review of `c-ai-5` (`POST /v1/admin/launch-gates/privacy_review/sign` with `version_reviewed: "c-ai-5"` and `signer_name: "R. Haddad"`),
+  - Then the gate reads "Privacy review signed by R. Haddad on 2026-10-01" for `c-ai-5` (J26).
+  - When he then publishes `c-ai-5` on Settings › Wordings with "Ask eaters again" off, Then `POST /v1/admin/wording` returns 201 with `state: "published"`, `asks_again: false`, `published_by: "staff_ali"` and `review_gate: "privacy_review"`.
+  - Settings › Wordings lists `c-ai-5` Published and `c-ai-4` Superseded (J153).
+  - `staff_hana` sees in Audit trail › Events:
+    - `launch_gate.signed`: actor `staff_ali`, role Platform admin; detail `gate: privacy_review`, `signer` R. Haddad, `version_reviewed: c-ai-5`; outcome Done;
+    - followed by `wording.published`: actor `staff_ali`; detail `key: c-ai-5`, `version: 5`, the languages English and Arabic, and `asks_again: false` (J154: recorded in the Audit trail); outcome Done.
+- `/s` Given that publish, When `GET /v1/wording?text_version=c-ai-3&text_version=c-ai-4&text_version=c-ai-5` is read, Then:
+  - it returns `state` `superseded`, `superseded` and `published`;
+  - `c-ai-5` has `asks_again: false`;
+  - the stored English and Arabic texts of `c-ai-3` and `c-ai-4` are byte for byte unchanged (model E12).
+- `/r` **An earlier Consent keeps its version** (J154).
+  - Given `c-ai-5` published with `asks_again: false`, When `GET /v1/me/consents` is called with Faisal's token (`acct_e9a002`; AI Consent Given under `c-ai-3`, seed §5.1, event 78),
+  - Then `ai_processing` reads `state: "given"`, `record.text_version: "c-ai-3"`, `record.made_at: "2026-08-25T15:02:10Z"`, `text_version_in_force: "c-ai-5"` and `asks_again: false`.
+  - When he next sends typed words for analysis on **Capture & Plan**, Then no Consent sheet appears, and `POST /v1/analyses` returns 201: Consents given under earlier versions stay valid under their own version.
+- `/r` **A new decision uses the new text.**
+  - Given `c-ai-5` published, When Nadia (`acct_e9a005`, English app, AI Consent Not given) first sends typed words for analysis on **Capture & Plan**, Then the sheet's words match `c-ai-5`'s stored English text exactly, with "Give consent" and "Not now" (eater-4.3).
+  - When she taps "Give consent", Then `GET /v1/me/consents` returns `ai_processing` with `state: "given"`, `record.text_version: "c-ai-5"`, `record.method: "first_need_sheet"` and `record.context` Capture & Plan (J24).
+  - `staff_hana` sees one `consent.given` with `purpose: ai_processing`, `text_version: c-ai-5` and `method: first_need_sheet`.
+- `/r` **A version marked to ask again blocks the purpose** (J154).
+  - Given `c-ai-5` published as above, `staff_ali` signs the privacy review of `c-ai-6` (a synthetic text with a changed purpose, supplied by the test) and publishes `c-ai-6` with "Ask eaters again" on. `wording.published` carries `asks_again: true`, and `c-ai-5` becomes Superseded.
+  - When `GET /v1/me/consents` is called with Faisal's token, Then `ai_processing` reads `state: "given"`, `record.text_version: "c-ai-3"`, `text_version_in_force: "c-ai-6"` and `asks_again: true`.
+  - When he next sends typed words on Capture & Plan, Then the Consent sheet shows `c-ai-6`'s stored Arabic text exactly, with the Arabic catalogue text of "Give consent" and "Not now" (J146).
+  - `POST /v1/analyses` with his token returns 403 `CONSENT_REQUIRED`, and the analyzer mock receives no request.
+  - When he taps "Give consent", Then `GET /v1/me/consents` returns `record.text_version: "c-ai-6"` and `asks_again: false`, and his next `POST /v1/analyses` returns 201.
+  - `staff_hana` sees a new `consent.given` with `text_version: c-ai-6`, while event 78 (his `c-ai-3` decision) is unchanged.
+- `/r` **Who may publish.**
+  - Given the privacy review of `c-ai-5` signed and `c-ai-5` not yet published, When `POST /v1/admin/wording` with `text_version: "c-ai-5"` is called with the token of either:
+    - `staff_mona` (Mona K., Support agent: no "Publish wording"); or
+    - `staff_dina` (Dina R., Nutrition approver: "Publish wording" for `guidance-1` only, J40),
+  - Then each returns 403 `FORBIDDEN`, and `staff_hana` sees one `access.refused` per call naming the caller with `path` `/v1/admin/wording`.
+  - No `wording.published` is written, and `c-ai-4` stays Published.
 
 ---
 
-## Proposed for D6 (assumptions, each with its default)
+## Decided by D6 (`join.md` §22) — formerly "Proposed for D6"
 
-Nothing in `join.md`, `seed.md` or the FRD decides these. Each is used only by the lines that cite it, and each default can be replaced by a dated delta D6.
+- D6-A1 (Grant settings bounds) → **J149**, adopted as written.
+- D6-A2 (review-note fields and finding values) → **J149**, adopted as written.
+- D6-A3 (the no-eater-identifier check) → **J149**, adopted as written.
+- D6-A4 (hourly Audit trail retention run, `removed_through_seq`, `anchor_hash`) → **J149**, widened by **J157** (`roles_held_at_anchor`).
+- D6-A5 (the expired Plan's card on Today with "Plan again" only) → **J149**, with **J150**: no new state, copy "not logged".
+- D6-A6 ("Plan again" refills Meal planner without solving) → **J149**, adopted as written.
+- D6-A7 (409 `reason: plan_expired`) → **J149** for a confirmation made after expiry, widened by **J151**: one made before is accepted later onto the Plan's Day.
+- D6-A8 (`credit_factor` as a decimal fraction) → **J149** and **J156**.
+- D6-A9 (409 `reason: privacy_review_not_signed`) → **J149**, adopted as written.
 
-- **D6-A1 · Grant settings bounds** (admin-10.72). A Grant settings version keeps at least one duration and exactly one default, and each duration is from 1 to 24 hours. Default message: "Keep at least one duration, each from 1 to 24 hours". Basis: support lens A4 and finding SR4 (Microsoft Entra PIM activation "can be from one to 24 hours"). Version 1's 1 h · 4 h · 24 h stays valid. No bound is proposed for the other Grant settings values, because no story changes them.
-- **D6-A2 · Review-note finding values** (auditor-10.42). `finding` ∈ `no_issue` · `issue_found` · `needs_follow_up`, shown "No issue found · Issue found · Needs follow-up". `period` is a from–to pair of instants, entered in the Auditor's zone. `scope` (what was reviewed), `period` and `finding` are required; `note` is free text of up to 500 characters (J17).
-- **D6-A3 · The "no eater identifiers" check** (auditor-10.42). `scope` and `note` are refused when they contain text that matches an account id (`acct_` + 6 hex, `acct_anon_` + 4 hex) or an email address. A name cannot be detected, so the form states the rule beside the field. Grant ids, case references and event numbers are allowed.
-- **D6-A4 · The Audit trail retention run** (auditor-10.43). The job (E69 kind `audit_retention`) runs hourly at minute 00, like the media retention run of J143. It removes every event whose `occurred_at` plus 5 years is before the run's time. `removed_through_seq` is the highest removed `seq`. `anchor_hash` is the `prev_hash` of the first kept event (the `hash` of the last removed one), so the chain check starts from it. The summary event is appended to the chain like any other event.
-- **D6-A5 · Where an expired Plan shows** (eater-5.45). After its Day ends, the Plan's card shows on Today during the next Day with "From <Day> · not logged" and "Plan again" only — no "Ate as planned", "Change amounts" or "Not eaten". It then leaves Today. The Plan stays readable through `GET /v1/meal-plans/{id}`.
-- **D6-A6 · What "Plan again" does** (eater-5.45). It opens Meal planner for the current Day, filled from the expired Plan's request: its foods, Available counts, exclusions and every limit, including a Calorie aim the eater typed. Nothing is solved, and no Plan or Entry is made, until "Find counts".
-- **D6-A7 · Confirming an expired Plan** (eater-5.45). A consume command made after the Plan's `expired_at` that names it in `source_plan_id` is refused with 409 `VALIDATION_ERROR`, `reason: plan_expired` and the Plan's current state in the body (J35's form for a conflict with no code of its own). Nothing is written. A confirmation made offline before `expired_at` and delivered later is not decided here (Conflicts, item 3).
-- **D6-A8 · The credit factor's number form** (eater-7.25). `credit_factor` travels as a decimal fraction (0.5 for 50 %, 0.4 for 40 %), as `nutrition_core.activity_adjusted_budget` takes a fraction. Screens show per cent.
-- **D6-A9 · Publishing before the privacy review is signed** (admin-10.73). J26 and model §3 `privacy.publish_wording` decide the rule. The answer is 409 `VALIDATION_ERROR` with `reason: privacy_review_not_signed` and the gate's current state (J35's form). The console disables Publish with "Sign the privacy review of <key> first".
+## Conflicts from round 1 — decided by D6
 
-## Conflicts for the model phase
+1. A Saved Plan after its Day → **J150**: it stays Saved with `expired_at`; `?state=saved` lists unexpired Plans, and `&include_expired=true` lists all.
+2. The Plan card's place → **J152**: Today.
+3. Late confirmations and expiry → **J151**: made before `expired_at`, the confirmation is accepted once onto the Plan's Day; made after, it is refused. eater-5.35 holds through its 12:00 Ramadan boundary.
+4. Wording states and place → **J153**: Proposed → Published · Superseded, on Settings › Wordings.
+5. Asking again after a new Wording → **J154**: `asks_again`, set by the publisher.
+6. A replaced Grant settings version → **J155**: Replaced.
+7. The credit-offer route → **J156**: `GET /v1/targets/activity-credit-offer` and `POST /v1/targets/activity-credit-offer/approve`.
+8. `credit_cap` vs `credit_cap_kcal` → **J156**: `credit_cap_kcal` everywhere.
+9. Retention and the "roles held with no assignment event" rule → **J157**: `roles_held_at_anchor`.
 
-1. **A Saved Plan after its Day has no state word** (eater-5.45). D2 and D4 give the Plan no state after Saved short of Confirmed or Not eaten. Model E56 and §1 row 5.14 keep `state: saved` and set `expired_at` ("no state change"), and `plan.expired` records it. eater-5.45 reads it that way and avoids a state word in copy ("not logged"). The model phase should confirm "Saved, with `expired_at`", or name a state by a dated delta, and say what `GET /v1/meal-plans?state=saved` lists.
-2. **The Plan card's place** (eater-5.45; the verdict's cross-lens item). e578 puts the Saved Plan card on Today (eater-5.20, 5.28, 5.30, 5.35). eater-5.45 follows it, so no story reads a Plan card on Capture & Plan.
-3. **Late confirmations and expiry** (eater-5.45, eater-5.35). (a) If "Ate as planned" is tapped offline before the boundary and delivered after `expired_at`, should it be accepted on the Plan's Day (FRD §8.3 outbox; compare J122 for late Analyses) or refused? D6-A7 refuses only a command made after expiry. (b) eater-5.35 ("Confirm the next morning, onto the right Day") still holds, because its Ramadan Day runs to the 12:00 boundary (J116), so 08:10 the next morning is inside the Plan's Day. With a 03:00 or 00:00 boundary, the same next-morning tap comes after expiry, and under D6-A5 the eater logs last night's meal from the Day picker instead. The model phase should confirm this, or let an expired card still log onto its own Day.
-4. **Wording has no states and no console place** (admin-10.73). D2, D4 and model E12 give Wording no state: a version is immutable, with `published_at`. D4's console places name no Wording page. admin-10.73 publishes from **Settings › launch gates** (the privacy review row), because J26 ties publishing to that gate. The model phase should confirm this or add a place by delta.
-5. **Does a new consent Wording ask again?** (admin-10.73). No join item decides whether eaters who consented under an older version are asked again. The seed's precedent says no: Mona, Faisal and Sam kept AI Consents under `c-ai-3` after `c-ai-4` (seed §5.1, §4.7), and J27 only narrows Shadow copies to `c-ai-4` or later. admin-10.73 checks only that existing records keep their version and that new decisions use the newest text. A rule ("ask again when the purpose text changes") needs a join item.
-6. **A replaced Grant settings version has no state word** (admin-10.72). D4 gives Grant settings versions (and Quotas versions) In use · Rolled back. A version replaced by a newer save, not rolled back, has no word. admin-10.72 does not name version 1's state after the save.
-7. **The route that carries the activity credit offer** (eater-7.25). J103 puts the offer on Settings → Activity → Activity mode, but model §3 `targets` names no field or route that tells the app a newer Policy offers a different credit. eater-7.25 observes it on screen only. For example, `GET /v1/targets/current` could carry `credit_offer {credit_factor, credit_cap_kcal, policy_version}`.
-8. **`credit_cap` vs `credit_cap_kcal`** (eater-7.25). events.md §3 names the `target.version.approved` payload field `credit_cap`. Model E62 and `nutrition_core` name it `credit_cap_kcal`, and J50 asks energy fields to carry `_kcal`. eater-7.25 uses each source's own name. One name should be chosen.
-9. **Retention and the Anomalies rule "roles held with no assignment event"** (auditor-10.43). Once retention removes events 1–6 (the 2026-08-01 `role.assigned` events of `staff_ali`, `staff_mona`, `staff_omar`, `staff_dina`, `staff_hana` and `staff_lee`), that rule (J41) would count every role still held from 2026. The rule should read Role assignments (E8 keeps `assigned_at`, `assigned_by`) or the retention summary, not only the trail.
+## Open items for the model phase (after D6)
+
+1. **A Proposed Wording cannot be created or read.**
+   - J153 gives Wording the state Proposed, but `contracts/openapi.yaml` stores a Wording only on publish (`POST /v1/admin/wording`).
+   - Seed §4.7 has no `c-ai-5` row, although J154 speaks of "the seed's `c-ai-5`".
+   - admin-10.73 therefore reads Published and Superseded, but cannot read `c-ai-5` as Proposed. The fix is a seeded Proposed `c-ai-5` with its time, or an operation that stores a Proposed version.
+2. **Version 1's Replaced state has no API read.**
+   - `GET /v1/admin/grant-settings` returns only the version in use.
+   - admin-10.72 therefore reads version 1 as Replaced on Settings › Grant settings only. A `version` parameter or a versions list would let the API show it.
+3. **`events.md` lags §22.**
+   - §2.7 `wording.published` has no `asks_again` (J154).
+   - §2.10 `audit_trail.retention_run` has no `roles_held_at_anchor` (J157).
+   - §3 `target.version.approved` names only `POST /v1/targets` as its request (J156 adds `POST /v1/targets/activity-credit-offer/approve`).
+   - The stories follow §22 and the contract.
+4. **Contract slips.**
+   - `Grant.grant_settings_version` cites "admin-10.76" (read admin-10.72).
+   - `Grant.request_closes_at` says "+ 72 h" (it is the version's request window).
+   - The launch-gates example dates the `c-ai-4` privacy review 2026-09-24T07:30:00Z, but seed event 144 is at 07:55:00Z.
 
 ---
 
@@ -287,3 +484,53 @@ All six stories were rewritten above. Each defect is fixed where it started: in 
   - E21's states lack Replaced (J155).
   - No module names the console place Settings › Wordings (J153).
 - **`seed.md` §4.7 has no `c-ai-5` row.** J154 says "The seed's `c-ai-5` has `asks_again: false`". admin-10.73 has the test supply the texts. The model phase should say whether `c-ai-5` is a seeded Proposed Wording, and at what time.
+
+## Fix round 2 (2026-10-01)
+
+The stories now carry the session's decisions in `join.md` §22 (J149–J157, delta D6; vocabulary D6). They were also checked against `contracts/openapi.yaml`: every route, field name, wire value (numbers as strings, ISO durations, lower-case states) and error body matches an operation, schema or example there. Each of the 12 re-verify defects is fixed where it started.
+
+**Counts after the fix:** 6 stories, 36 acceptance lines.
+
+| story | lines |
+|---|---|
+| admin-10.72 | 7 |
+| auditor-10.42 | 6 |
+| auditor-10.43 | 4 |
+| eater-5.45 | 6 |
+| eater-7.25 | 6 |
+| admin-10.73 | 7 |
+
+"Proposed for D6" and the round-1 Conflicts are replaced by one line each, citing the J item that decided them. Four open items remain, all for the model phase and none for the owner.
+
+| # | defect | fix |
+|---|---|---|
+| 1 | admin-10.72 did not carry J155 | `/r` 1 now reads "Version 1 · Replaced" on Settings › Grant settings, and `PUT`/`GET /v1/admin/grant-settings` return `version: 2`, `state: "in_use"`. `/r` 7 shows the Auditor version 1 as Replaced. The contract's GET returns only the version in use, so version 1's state has no API read; that gap is Open item 2. |
+| 2 | auditor-10.43 did not carry J157 | `/r` 1 checks `roles_held_at_anchor`: exactly six holders (`staff_ali` Platform admin; `staff_mona`, `staff_omar` and `staff_lee` Support agent; `staff_dina` Nutrition approver; `staff_hana` Auditor), matching the contract example. It also names the staff who held no role then. A new `/r` checks that Audit trail › Anomalies "roles held with no assignment event" still counts 1 (`staff_sod_seed`) after the run. Round-1 conflict 9 now cites J157. |
+| 3 | eater-5.45 `/r` 5 named no `made_at` | The refused command carries `made_at: "2026-10-02T05:00:00Z"`, after `expired_at`. The answer is the contract's body: 409 `VALIDATION_ERROR`, `reason: "plan_expired"`, `state: "saved"`, `field: "source_plan_id"` (J149). |
+| 4 | J151's accepted late confirmation had no line | A new `/r`: "Ate as planned" is tapped offline at 2026-10-01T23:50:00Z (02:50 Riyadh) with `made_at` before `expired_at`, and delivered at 05:00:00Z. It is accepted once onto Day 2026-10-01: `consumed_kcal: "1797.6"` (1,400 + 397.6), `day_revision` one higher, the Plan `confirmed` and `ate_as_planned` with both `entry_ids`, and a repeat delivery `replayed: true` adds nothing. |
+| 5 | J150's list had no line | `/r` 2 checks that `GET /v1/meal-plans?state=saved` returns no Plan and that `&include_expired=true` lists this Plan with its `expired_at`. |
+| 6 | eater-7.25 used `credit_cap` and `credit_cap_kcal` | One name, `credit_cap_kcal`, everywhere (J156), with contract values `credit_factor: "0.4"` and `credit_cap_kcal: "250"`. The `/s` line's `target.version.approved` payload uses it too. |
+| 7 | J156's routes were not used | `/r` 1 calls `GET /v1/targets/activity-credit-offer` twice. On 6 Oct, with Given (a) only, it returns no `offer`. On 7 Oct it returns the offer {3, "0.4", "250", current `tv_sam_2` "0.5"/"300"/2}. Approve sends `POST /v1/targets/activity-credit-offer/approve`, which returns 201 `tv_sam_3`, after which the offer is gone. Cancel leaves the offer in place. The raise check sends `credit_factor: "0.45"` to the approve route and gets 422 `field: "credit_factor"`. Today's credit is also read from the Day report as `target.activity_credit_kcal` "200" and "160". |
+| 8 | admin-10.73 published from the wrong place | Publishing, and the disabled Publish with "Sign the privacy review of c-ai-5 first.", happen on **Settings › Wordings** (J153). Signing stays on Settings › launch gates (J26). |
+| 9 | admin-10.73 used no Wording states | The Given reads `c-ai-4` Published and `c-ai-3` Superseded. After the publish, Settings › Wordings and `GET /v1/wording` read `c-ai-5` Published and `c-ai-4` Superseded (the `/s` line reads all three states), and the asks-again line makes `c-ai-5` Superseded by `c-ai-6`. `c-ai-5` cannot be read as Proposed: the seed has no `c-ai-5` row, and the contract stores a Wording only on publish. That is Open item 1, which the model phase must close. |
+| 10 | `asks_again` was missing, and its key was forbidden | The publish sends `asks_again: false` and the answer carries it. The `/s` line reads `c-ai-5` with `asks_again: false`. `wording.published` now checks `asks_again: false` in its detail (J154: "recorded in the Audit trail"), so the "no other detail key" clause is gone. Faisal's line traces to J154 and reads `text_version_in_force: "c-ai-5"` and `asks_again: false` from `PurposeConsent`; a 201 analysis shows that nothing blocks him. |
+| 11 | J154's `asks_again: true` path had no line | A new `/r`: `c-ai-6`, a synthetic text with a changed purpose, is signed and published with `asks_again: true`. Faisal's `ai_processing` reads `asks_again: true` with his record still `c-ai-3`. His next typed words show the sheet with `c-ai-6`'s Arabic text, and `POST /v1/analyses` returns 403 `CONSENT_REQUIRED` with no analyzer call. "Give consent" records `c-ai-6`, and the next analysis returns 201. Event 78 is unchanged. |
+| 12 | "Proposed for D6" and Conflicts were stale; vocabulary was cited as "D2–D4" | Both sections are replaced by "Decided by D6" (A1–A9, each with its J item) and "Conflicts from round 1 — decided by D6" (items 1–9, each with its J item). Every `assumption (D6-An)` label in the story lines now cites J149, J151 or J156. The header cites `way/vocabulary.md` (D2–D6), §22 and the contract. |
+
+**Contract alignment beyond the defects:**
+- admin-10.72 uses `PT1H`/`PT4H`/`PT24H`/`PT48H`, `expected_version` and the contract's durations message.
+- auditor-10.42 uses `finding: "no_issue"`, `period` {`from`, `to`} and `ChainCheck` (`result: "intact"`, `from_seq`).
+- auditor-10.43 uses the actor `system:audit_retention` and the Summary's `last_retention_run.chain_check: "passed"`, as the contract's `x-stories` for `getAuditSummary` expects.
+- eater-5.45 uses the Unit version ids `uv_faisal_kabsa_rice_spoon_v1` and `uv_faisal_chicken_piece_v1` and `consumed_kcal` as strings.
+- admin-10.73 uses `SignGate` (`version_reviewed`, `signer_name`), so the signer reads "R. Haddad", and `PublishWording` (`text_version`, `en`, `ar`, `asks_again`).
+
+**Found while fixing** (Open items 3 and 4, not counted):
+- `events.md` lags §22 on `wording.published` (`asks_again`), `audit_trail.retention_run` (`roles_held_at_anchor`) and `target.version.approved` (its request route).
+- The contract has three slips: a stale "admin-10.76" on `Grant.grant_settings_version`, "+ 72 h" on `Grant.request_closes_at`, and the launch-gates example's 07:30 time for the `c-ai-4` privacy review against seed event 144 at 07:55.
+
+## Open items closed by the session (2026-10-01)
+1. A Proposed Wording can be created and read: `POST /v1/admin/wording/proposals` (event `wording.proposed`) and `GET /v1/admin/wording/versions`; the seed holds `c-ai-5` as **Proposed** (seed §4.7, `asks_again: false`).
+2. Every Grant settings version with its state is readable through `GET /v1/admin/grant-settings/versions`.
+3. `events.md`: `wording.published` carries `asks_again`; `audit_trail.retention_run` carries `roles_held_at_anchor`; `target.version.approved` names the activity-credit-offer route.
+4. Contract slips fixed: `grant_settings_version` cites admin-10.72; `request_closes_at` reads the request window of its Grant settings version; the `c-ai-4` privacy review is recorded at 07:55 (seed event 144).
+The contract still validates (OpenAPI 3.1, 149 paths).
