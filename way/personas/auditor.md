@@ -1371,3 +1371,50 @@ What passed:
 After two fix rounds, 2 defects remained (re-verify 2). Cause in one sentence: a new story took its error code from the neighbouring lens instead of from D2's meaning. The session fixed both:
 1. auditor-10.41 (4 places) and the media line in journey 9 answer a read outside an Active Grant's Days or areas with 403 `GRANT_REQUIRED`, as 10.9 does; §7 A16 states the rule; `FORBIDDEN` is only for a missing role permission (D2).
 2. Seeded event 56 names its Day (2026-09-29), inside `grant_31f0`'s Days 09-28 to 09-30, so 10.14's "0 reads outside a Grant's Days or areas" can be checked on the seeded trail.
+
+## Lens verdict — final (2026-10-01)
+
+**fail**: 2 defects. Re-verify 2's defect 2 (event 56) is fixed. Its defect 1 is only partly fixed, and the fix added a new defect in 9.8.
+
+A fourth independent verifier ran `way/personas/_lens-verifier-brief.md`, with its addendum, as a final scoped check on this file at commit 7a8ba30 ("auditor: session fixes 2 remaining defects"). The file has not changed since. `way/vocabulary.md` was binding. During the check it gained delta D3 (Consent "Not given"), which touches none of the lines checked here. The check covered only the lines the session changed (the diff 55d7480..7a8ba30), each read against the stories it touches: 10.9, 10.14 and 10.41. Nothing else was re-audited.
+
+### Re-verify 2 defects: fixed or not
+
+| # | status | the changed line |
+|---|---|---|
+| 1 | **partly fixed** | 10.41 /r: "both API calls return 403 `GRANT_REQUIRED` with no diary data". 10.41 /s: "the second returns 403 `GRANT_REQUIRED` and writes one `grant.read_refused` with detail "outside Days"". §7 A16: "**Out-of-scope reads use `GRANT_REQUIRED`.** A read the Support agent role may make but no Active Grant covers (outside its Days or areas) is answered `GRANT_REQUIRED`, as in 10.9; `FORBIDDEN` stays only for a missing role permission (D2)." These match D2 and 10.9's /s ("the Support agent with 403 `GRANT_REQUIRED`, recorded as `grant.read_refused`"). But 10.41's two console rows were not changed (defect 1 below) |
+| 2 | **fixed** | Event 56: "grant.read · grant_31f0 · Entry en_9921 (Day 2026-09-29) · Allowed". Day 2026-09-29 is inside `grant_31f0`'s days 09-28–09-30 (event 52), and an Entry belongs to "Entries and day reports", which `grant_31f0` covers. All six Allowed reads now name a Day inside their Grant (24, 55, 56, 71) or an area the Grant holds with no Day (57, 66). So 10.14's "diary reads allowed outside a Grant's Days or areas 0", and 10.41 /m's "On the seeded Audit trail the rule shows 0 in Anomalies (10.14)", can now be checked. 10.3's timeline ("Read (10:26:30Z)"), the derived "Allowed reads: 6" and 10.14's "Refused reads 5 · refused writes 1 · other refusals 3" are unaffected |
+
+What else passed in the changed lines:
+- **Counts.** No acceptance line was added or removed. §8's 59 stories and 121 lines still hold.
+- **Cross-lens.** A16 no longer claims "as the support lens does". On the API code, this lens and support-10.12 now agree.
+
+### Defects
+
+**Vocabulary (D2), Observable**
+
+1. **auditor-10.41 /r: the console rows still say `FORBIDDEN`.**
+   - The session's diagnosis says "auditor-10.41 (4 places)". Before the fix, 10.41 held `FORBIDDEN` in four places. Only two changed: the /r API bullet and the /s line.
+   - The /r line's second bullet is unchanged: "on **Grants → grant_7a02**, `staff_hana` sees two rows, "Read refused · outside the Grant · Day 2026-10-03 not in Days (2026-10-04) · FORBIDDEN" and "Read refused · outside the Grant · area My Units not in Entries and day reports · FORBIDDEN"".
+   - So one /r line has the API return `GRANT_REQUIRED` while the console shows `FORBIDDEN` for the same two refusals. A verifier in the browser would see the code that A16 now rules out ("`FORBIDDEN` stays only for a missing role permission").
+   - Both rows need `GRANT_REQUIRED`.
+
+2. **auditor-9.8 /s, second bullet (changed in this fix): `GRANT_REQUIRED` for a read that no role may make.**
+   - The changed line: "a Support agent with an Active Grant gets 403 `GRANT_REQUIRED`, because media is in no Grant area, and one `grant.read_refused` event is written (as in 10.41)".
+   - 9.8's own header says "D2 roles hold no such permission". §7 A11 says "D2 has no role with that permission, so 9.8 treats every attempt as refused". So the Support agent role lacks the raw-evidence permission, and D2 defines that case as "`FORBIDDEN` (role lacks the permission)".
+   - A16, changed in the same fix, keeps `GRANT_REQUIRED` for "a read the Support agent role may make but no Active Grant covers". A media read is not one: the line's own reason, "media is in no Grant area", means no Grant could ever cover it. So the changed 9.8 line breaks the changed A16.
+   - "(as in 10.41)" does not hold. 10.41's refused reads (Day 2026-10-03, My Units) are Days and areas a Grant can cover. Media is not.
+   - Re-verify 2 had judged `FORBIDDEN` correct on this exact line: "There, `FORBIDDEN` holds up on the role alone, since no D2 role may open raw evidence". It listed no defect there. The fix went beyond the defect it was fixing.
+   - The fix must choose one reading:
+     - (a) the Support agent role lacks the media permission, so media gets `FORBIDDEN` with an Active Grant;
+     - (b) the role holds a Grant-gated media permission, and the 9.8 header and A11 change.
+   - Under (a), two lines carry the same question: 9.8's unchanged first bullet ("a Support agent with no Grant gets 403 `GRANT_REQUIRED`") and 10.9 /s's "every diary, report and media endpoint". Re-verify 2 accepted both, so they are not counted here. Whichever reading is chosen must apply to all three lines.
+
+### Cross-lens (for the model phase join; uncounted)
+
+- **Out-of-scope reads.** The code now agrees with support-10.12 (`GRANT_REQUIRED`). The event name still differs: this lens uses `grant.read_refused`, the support lens `grant.read_denied` (already §7 B M6). So does the fixture: this lens uses `grant_7a02`, day 2026-10-04; support uses `grant_7d01`, Days 2026-09-29 to 2026-09-30. §7 B has no row for the fixture.
+- **A media request under an Active Grant.** support-10.14 refuses a Grant *request* whose areas include media (422 `VALIDATION_ERROR`). It gives no code for a direct media read under an Active Grant, so the shared event catalogue should fix one, in line with defect 2's choice.
+- **Carried from re-verify 2, still without a §7 B row:**
+  - `CASE-1201` is fixture Y's case here and support-9.11's deletion escalation there;
+  - the eater-accounts row still reads "`acct_9c41e2` (E1 in the support lens; …)", although the two lenses' Consents differ;
+  - cancelling a Requested Grant (support K10).
