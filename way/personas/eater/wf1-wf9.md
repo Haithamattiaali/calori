@@ -1121,3 +1121,85 @@ Every reference inside the file uses the new ids.
 - New conflicts: C-23 (where the tracking-only guidance shows, against approver-10.53), C-24 (where an anonymous session's Entries live, against admin-10.41) and C-25 (raw-evidence access, auditor-9.8 against admin-10.14).
 - C-6 and C-7 are marked resolved by approver-10.69 and approver-10.70.
 - Other files still cite this file's old ids. They are: `support.md` (9.14, 9.17, 9.22–9.26, 9.29), `auditor.md` (9.7, 9.11, 9.12, 9.16, 9.25, 9.28), `eater/wf3-wf6.md` (9.2–9.4, unchanged) and `eater/wf2-wf4.md` (1.3, 1.6, unchanged). The renumbering map above translates each; this round edited no other file.
+
+## Lens verdict — re-verify (2026-10-01)
+
+**fail** — 4 defects. One is a round-1 fix that delta D3 has since overtaken; three are new, in lines fix round 1 changed.
+
+Checked:
+- each of the 22 round-1 defects against the current text;
+- only the lines fix round 1 changed (a story-by-story diff against the verdict commit, through the renumbering map), against the map, the FRD (FR-002, FR-075–FR-082, AT-29, §3.2, §3.3, §11.3, §19.2), `vocabulary.md` with delta D3, and the stories they cite in `support.md`, `auditor.md`, `approver.md`, `admin.md` and the eater's other files.
+
+What holds:
+- Every cross-lens id in the body names the story it means, and every internal `eater-n.n` reference lands on the intended story.
+- The set of research ids (C, F, P, R, E, EX) is unchanged by the round.
+- The arithmetic in changed lines recomputes. That covers Hala's 5/10/15 % and 5/10 % choices and gaps; Huda's 1,300 · 1,230 · 1,200 and 12.2 %; her own maintenance, 1,275 → 1,280; Sam's 464.8 kcal (19.9 %); the 1,709.78 base; 1,910 and 710; 670; and every UTC and local time.
+- The counts line is true: 90 stories (56 · 24 · 10) and 296 lines (`/m` 23 · `/s` 79 · `/r` 194). Every story has a `/r` line.
+
+### Round-1 defects: fixed or not
+
+| # | verdict | the line now |
+|---|---|---|
+| 1 | fixed | eater-10.9 "the Grant reads "Expired · 14:20" with its three reads in its history" and "403 `GRANT_NOT_ACTIVE` with state Expired"; eater-10.10 "the Grant reads "Ended by the Support agent · 16:33"" |
+| 2 | fixed | eater-1.28 "exactly three choices show, with 15 % preselected (approver-10.68)" and "two choices show, with 10 % preselected"; Policy v1 "loss default 15 % with the choices 5 %, 10 % and 15 %; gain default +10 % with the choices 5 % and 10 %" |
+| 3 | fixed | eater-1.1 "Why we ask: Sips & Bytes is for adults, and your age helps estimate your resting energy."; 1.10 "Why we ask: age, height and weight estimate your resting energy."; 1.13 "Your time zone decides which Day a meal belongs to. Your region sets food names and digits." |
+| 4 | fixed (at rest deferred, and said so) | eater-9.11 "the app has no App Transport Security exception (no `NSAllowsArbitraryLoads`), and a request to the API over plain `http://` is refused, never served"; "the check on a hosted project waits for the dropped ship rows" |
+| 5 | fixed | eater-9.5 "the row reads "Withdrawn · 10:12", with the line "iPhone Settings still allows the microphone — turn it off there too if you like""; "it reads "Camera and photos are off in your settings"" |
+| 6 | fixed | eater-9.6 "the case is gone and `GET /v1/admin/regression-set/cases/{n}` returns 404 `NOT_FOUND`"; eater-9.8 "the row reads "Withdrawn · your photos were removed from the test cases"" |
+| 7 | fixed | eater-9.2 "SE6's emulator seed (… 1 prepared export) … storage and queues hold none of them"; "Your earlier export was deleted when you withdrew a Consent. Prepare a new one." |
+| 8 | fixed | eater-1.32 "This is a bigger gap than Sips & Bytes proposes (up to 350 kcal for you). Your own number is kept." and "`over_deficit_cap` true"; C-22 |
+| 9 | fixed | eater-9.13 "every record has only the fields request id, route, status, duration, model version, cost and validation code — none named age, height, weight, rmr, maintenance, target, macro, safety, purpose or consent" |
+| 10 | fixed | Coverage "WF-10 done-when … 10.9 (expiry)"; new rows for FR-080, FR-081, FR-082 and FRD §19.1, §19.2, §19.3; the counts line recounts true |
+| 11 | fixed | eater-1.50 "Shared: eater + platform admin (admin-10.38, admin-10.41)"; 9.16 "(support-9.9)"; 9.18 "support-9.10, support-9.13 … auditor-9.10, auditor-9.11"; 9.21 "(support-9.12)"; 9.12 "auditor (auditor-9.15)"; 9.14 "support-9.8 … auditor-9.14" |
+| 12 | fixed | eater-10.4 "SE10's `grant_40ab` was Requested on 27 Sep 2026 at 13:05 Cairo (10:05 UTC)" |
+| 13 | fixed | eater-1.1 "Shared: eater + auditor (auditor-9.2, auditor-9.9)" and "422 `AGE_REQUIREMENT`"; eater-1.2 "exactly one request was sent, `POST /v1/age-gate` with the age as its only field" and "one `age.refused` event exists with no account id, device id or other identifier" |
+| 14 | fixed | Each named Then clause now names its data:<br>• 1.19 "the Entry appears on Today, My Units lists their Units, Progress shows the week's consumed kcal and coverage … and the export reaches Completed"<br>• 1.49 "Day 2026-09-30 shows 7 Entries, Day 2026-10-01 shows 5"<br>• 9.9 "the deletion screen of eater-9.18 opens"<br>• 1.50 "a recent Unit tapped on Today still adds an Entry"<br>• 1.41 "and the Entry appears"<br>• 1.7 "the Add button's centre lies within the middle two-thirds of the screen height"<br>• 1.4 "says "They are processed by Google outside Egypt and Saudi Arabia""<br>• 1.17 "Onboarding · Safety screen shows, in place of its questions, the tracking-only guidance text of the Policy in effect, word for word" |
+| 15 | fixed | eater-9.9 "the API's only outbound adapters are Gemini, USDA FoodData Central, Firebase/Google Cloud and Apple's Sign in with Apple token revocation" |
+| 16 | fixed | "## Onboarding screens *(proposed — the map and vocabulary.md name none; conflict C-19)*"; "the **account line** *(proposed)*"; 1.43 "Progress → Target history lists one version"; C-19 lists the rest |
+| 17 | half fixed | The export half is fixed: eater-9.16 "Download no longer available since 27 Sep — prepare a new export". The Consent half is not: "Not given" became "Never given", and delta D3 has since made that the wrong word (defect 1 below) |
+| 18 | fixed | eater-9.20 "3 Pending Entries will be deleted too"; eater-9.6 "reaches your account when you're online" |
+| 19 | fixed | eater-1.39 ""Fixed mode" is selected"; 1.42 ""Food Target: Fixed""; 1.46 ""Food Target: Activity-adjusted"" |
+| 20 | fixed | eater-1.3 "Health, the microphone and photos (camera and photo library) are asked the first time you use them."; 1.6 "the iPhone's camera prompt appears only after "Give consent""; 9.1 lists Photos once |
+| 21 | fixed | "Accounts reused from the support lens are prefixed **SE** (SE1 = the support lens's E1, and so on)" |
+| 22 | fixed | "Grant stories trace to WF-10, so they carry journey number 10 (`eater-10.n`)"; eater-10.1 to eater-10.10 |
+
+### Defects
+
+1. **Vocabulary — "Never given" is not D3's "Not given" (round-1 defect 17, overtaken).**
+   - vocabulary.md now reads: "Consent | Not given → Given · Withdrawn … "Not given" is the state before the eater has decided (delta D3)".
+   - This file still says it is not a state. How to read: "A Consent purpose with no record at all is shown as "Never given" — a display label this lens proposes, not a Consent state (conflict C-20)". Its state list reads "Consent Given/Withdrawn".
+   - The screens use the other word:
+     - eater-1.3: "Optional research reads "Never given", and Diary processing reads "Never given · your diary is only on this iPhone"";
+     - eater-1.6: "the Photos row reads "Never given"";
+     - eater-9.1: "or "Never given" when no Consent exists" and "the other rows read "Never given", never blank";
+     - eater-9.8: ""Optional research" reads "Never given"".
+   - C-20 says "vocabulary.md's Consent states are Given and Withdrawn … A delta should fix one display label". D3 answered that, so C-20 is stale.
+   - The eater's own eater-3.40 already says "Not given".
+2. **Observable — eater-9.5 (new).** "and the "Add words" field and "Log from My Units" still work." names no data and no result. It is the same class as round-1 defect 14 ("the Unit mode still works"), which eater-1.50 fixed with "a recent Unit tapped on Today still adds an Entry".
+3. **Observable — eater-9.13's two `/r` lines disagree (new).**
+   - The first: "every record has only the fields request id, route, status, duration, model version, cost and validation code".
+   - The second, for the AI Consent withdrawal: "it shows the route and status only".
+   - A record with a request id and a duration fails the second line; one without them fails the first.
+4. **Observable — where Today's "Set a Target" goes is stated three ways (changed lines).**
+   - eater-1.8: "with a "Set a Target" link to Settings → Goals (eater-3.2)".
+   - The onboarding table has Onboarding · Profile reached from ""Set a Target" on Today; Settings → Goals" — two separate entry points.
+   - eater-1.45: "When Hala taps "Set a Target", Then Onboarding · Profile opens".
+   - eater-1.44: ""Set a Target" resumes at Onboarding · Macros".
+   - A verifier tapping the link cannot tell whether Settings → Goals or the Target flow should open.
+
+### Cross-lens (for the model phase join; uncounted)
+
+- **Old ids in other files.** These files still cite this file's ids from before the renumbering; the map in "Fix round 1" translates each:
+  - `support.md` cites eater-9.14 (now 9.16), 9.17 (9.19), 9.21 (10.1), 9.22 (10.2), 9.23 (10.3), 9.24 (10.4), 9.25 (10.7), 9.26 (10.8), 9.27 (10.5) and 9.29 (9.23).
+  - `auditor.md` §7 B rows M1, M11 and M13 cite eater-9.3, 9.7, 9.11, 9.12, 9.16, 9.25 and 9.28. They also describe this file's pre-fix state: "c-diary-1", "write dietary energy", no "read active energy", method "in-app sheet · Capture".
+- **SE8's former email.** eater-9.21 signs up a new account with `lina.synthetic@example.com` on 2026-10-01. On the same seed, support-9.12 expects that email to give "No account matches this email", and support §0.3 says it "exists only in this table".
+- **The Health write Consent.**
+  - This file names it "Health: write food" (auditor-9.1). It also cites "WF-3's "Write meals to Apple Health"" in Settings → Activity (eater-9.4).
+  - `eater/wf3-wf6.md` uses "Health: write dietary energy" in Settings → Privacy. It says that name replaced "Write meals to Apple Health", and that it follows this file's naming.
+- **Own-Target source.** eater-1.32 uses "typed by you" (`typed_by_eater`) and points to eater-8.23. eater-8.23's sources are "Estimated by the app", "Entered by you", "Clinician-provided" and "Accepted suggestion".
+- **The Activity-adjusted base.**
+  - eater-1.40 computes 1,709.78 from 1,870 / 2,334.8 and labels the gap "−20 %"; eater-1.32 shows the same gap as 19.9 %.
+  - eater-7.18 computes "your 20 % = 1,707.84".
+  - Both files show 1,710.
+- **Wrong story cited.** eater-1.41 says "eater-3.39 asks after the first Confirmed Entry". The story that asks is eater-3.40.
+- **The Photos purpose name.** The Consent purposes fixture says "as the auditor lens lists them (auditor-9.1): … Photos (camera and photo library)". auditor-9.1 lists "Photos".

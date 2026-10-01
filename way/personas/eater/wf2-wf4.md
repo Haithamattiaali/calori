@@ -717,7 +717,7 @@ As the Eater, "start a new day" opens a new Day and leaves the old one as it was
 #### eater-4.30 · Unclear intent: one question, nothing logged by default
 As the Eater, when it isn't clear what I mean, I am asked once and nothing is logged by default, so that a stray photo never becomes a meal. · FR-039, FR-035, FR-045, FRD §2.3 (one-tap only for "An explicit command referencing unambiguous approved units")
 - `/r` Given a photo with no words and no choice made, When Mona taps "Done", Then one question asks "Log it, plan with it, save as a unit, or just estimate?", and **Today** is unchanged.
-- `/r` Given Mona's egg bite and one-tap logging on in **Settings → Food rules**, When she types "eggs 3" with no verb, Then **Analysis review** reads "egg bite × 3 · not logged yet" with Approve, and nothing is logged without the tap — a sentence with no verb is not an explicit command.
+- `/r` Given Mona has two saved Units whose names match "egg" — "egg bite" (with its 8 g bread) and "boiled egg" (one whole egg, no bread) — and one-tap logging on in **Settings → Food rules**, When she types "eggs 3", Then **Analysis review** asks one question, "Which one?", listing both Units, and nothing is logged until she picks one and taps Log; picking "boiled egg" logs boiled egg × 3 with no bread added (FRD §5.1, FR-022). An ambiguous word asks first even with one-tap logging on (as eater-4.44 and eater-2.43).
 
 ### G · A shared table
 
@@ -789,7 +789,7 @@ As the Eater, I speak Arabic, English or both in one sentence and see the transc
 #### eater-4.40 · Numbers, pairs, halves and unit words survive
 As the Eater, «لقمتين», «رغيف ونص», "18" and «١٨» mean exactly what I said, and a spoon stays a spoon, so that voice and text never change my amounts. · FR-036 ("Preserve numbers and unit words"), FRD §14.1 ("spoken fractions"), FRD §5.1 · E30, E43
 - `/m` Given the parser, When it reads «لقمتين», «معلقتين عسل», «رغيفين», «نص رغيف», «رغيف ونص», «ربع كوباية», "one and a half cups", «١٨», "18", «تلات» and «ثلاث», Then it returns 2 bites, 2 honey spoons, 2 loaves, 0.5 loaf, 1.5 loaves, 0.25 cup, 1.5 cups, 18, 18, 3 and 3.
-- `/r` Given Mona says «معلقتين عسل ورغيف ونص», When **Analysis review** opens, Then it reads "honey spoon × 2" and "baladi loaf × 1.5" — spoons and loaves, never bites.
+- `/r` Given Mona has saved the Units "honey spoon" and "baladi loaf", When she says «معلقتين عسل ورغيف ونص» and **Analysis review** opens, Then it reads "honey spoon × 2" and "baladi loaf × 1.5" — spoons and loaves, never bites.
 - `/r` Given Faisal (Western digits) says «ثلاث تمرات سكري», When **Analysis review** opens, Then the transcript keeps his words and the chip reads "Sukkari date × 3 · your unit · 72 kcal" with a Western 3.
 
 #### eater-4.41 · My food is never quietly turned into another food
@@ -1249,3 +1249,87 @@ Each defect of the verdict above, fixed at its root. After the fixes, every chan
 - 4.44 follows eater-3.14 for the Text Kill switch.
 - 4.47 follows admin-10.33 for the Meal Kill switch, with the shutter disabled; §5 conflict 19 notes admin-10.34's other reading.
 - 4.25 opens the Start new day confirmation (eater-3.32).
+
+## Lens verdict — re-verify (2026-10-01)
+
+**fail**: 3 defects. All 27 earlier defects are fixed. All 3 defects are new, and each one comes from a line that fix round 1 changed.
+
+A second lens verifier checked this file against `way/personas/_lens-verifier-brief.md` and its addendum, with `way/vocabulary.md` (delta D2) as binding. It also checked `way/blueprint.md` §0–§1, `way/brief/frd-v1.0.md`, `way/personas/eater/research.md` (context), `approver.md`, `admin.md`, `support.md`, `auditor.md`, `wf1-wf9.md`, `wf3-wf6.md` and `wf5-wf7-wf8.md`. Nothing above this section was changed. No outside source was opened, and no request was sent anywhere.
+
+What passed:
+- **Counts.** The §7 totals are exact: 105 stories (52 + 53) and 366 acceptance lines (/r 298, /s 37, /m 31).
+- **Ids and runtime lines.** Ids run 2.1–2.52 and 4.1–4.53 with no gap or repeat. Every story has a /r line.
+- **New seed arithmetic.** The new seed recomputes:
+  - White cheese 5.4 g at 231.5 kcal per 100 g plus 1.5 g oil gives 26.0 kcal (1.8 / 0.5 / 1.9). Adding 8 g Bread, baladi gives 46.0 kcal (2.5 / 4.5 / 2.0).
+  - Laban 250 ml at 60.8 kcal per 100 ml gives 152 kcal (8 / 12 / 8).
+  - Milk tea is 30 + 30 = 60 kcal.
+  - Sukkari date 8 g gives 24 kcal.
+  - Kabsa rice 180–320 g at 170 kcal per 100 g gives 306–544 kcal.
+  - 5 × 42.4 + 2 × 114 = 440 kcal.
+  - Yogurt 180 g gives 110 kcal, and 40 g bread gives 100 kcal.
+  - The Days give 1,098 + 15 = 1,113 kcal and 1,098 + 60 = 1,158 kcal. Mona's 30 Sep Day matches `wf3-wf6.md` §2.3 (6 Entries, including bread bite × 6 and talbina spoon × 15).
+- **Shared ids.** Every new admin and support id was found at the cited story. Every E and EX id cited exists in `research.md`. The one newly cited cycle-1 finding, R37, stands in `r1-refute-b.md`.
+
+### The 27 earlier defects
+
+| # | status | the line that shows it |
+|---|---|---|
+| 1 | fixed | Fixtures: "The Saved Units of Mona, Faisal and Sam below carry **the same names and values as `wf3-wf6.md` §2.2**". Row "Mona \| cheese bite · قرصة جبنة \| … \| 46.0 \| 2.5 / 4.5 / 2.0". 2.14: "250 ml · 152 kcal". 2.38: "the total 46 kcal". 4.12: "cheese bite × 3 · your unit · 138 kcal". The tuna bite is "Tuna in oil, drained 6.8 g + Bread, baladi 8 g". §5 conflict 15 lists every `wf5-wf7-wf8.md` value that differs, and each one matches that file's §0.2. |
+| 2 | fixed | 2.8: "Given Faisal has no tuna record of his own and the reference holds only "Tuna, canned in water, drained"". Seed: "no "in oil" record exists in the reference". Mona's tuna is "Tuna in oil, drained" from her can's label, among the own records. |
+| 3 | fixed | 2.15: "Given Mona builds yogurt cup «علبة زبادي» from Yogurt, plain (per 100 g) in grams, When her scale photo's display reads "180 ml"". Then "it reads "180 g · declared" (her statement, not a measurement) and the Unit can be saved at 110 kcal". |
+| 4 | fixed | 2.22: "marks egg bite as "eaten by dipping" … and cheese spoon still reads "without bread · 26 kcal"". 2.25: ""cheese spoon · without bread · 26 kcal"". |
+| 5 | fixed | 2.26: "Given those rules, When `GET /v1/rules` (*proposed*) is called with Faisal's token, Then it returns them as quantities: added sugar 0 g for laban, ghee 3 g per fried egg." Line 1 now reads Mona's existing glass of milk tea. |
+| 6 | fixed | 2.48: "Given that while device A was offline Mona saved a different "honey spoon" on device B, When A's queued Save runs, Then it returns 422 `VALIDATION_ERROR` on `label`". This matches 2.2's duplicate-name rule. |
+| 7 | fixed | 4.13: "it reads "306–544 kcal (heuristic low–high)" (Kabsa rice, 170 kcal per 100 g)". The seed now has the row "Kabsa rice \| 170". |
+| 8 | fixed | 2.7: "shows exactly Bread, baladi · Bread, shami · Toast, white", and all three are seed rows. 4.18: "the chip resolves to Molasses, sugarcane (protein not printed)". 4.12: ""glass of milk tea × 1 · your unit · 60 kcal"". 2.27: "Given Mona has a Saved Composite "two eggs breakfast" (Egg, boiled × 2 + bread bite × 5)". |
+| 9 | fixed | 4.16: "Given Faisal (Gulf) types «كوب لبن» … "cup of laban · your unit · 152 kcal" (his own Unit wins, 2.42) and no question". The dialect-only line now uses Khalid. |
+| 10 | fixed | 4.6: "that Analysis becomes Failed with "Stopped: AI is off in your settings. The photo was removed from the server."" The /s line reads "the uploaded photo of the Failed Analysis is gone from storage, the analyzer mock receives no further request". |
+| 11 | fixed | 4.50: "When VoiceOver is off, Then it stays 8 s (a fixture value to be re-chosen on the served screen, care group 3); with VoiceOver on, it stays until the eater acts". 4.20: "a count stepper whose − and + each measure at least 44×44 pt and sit in the middle band of the screen" (middle band as research E35 uses it). |
+| 12 | fixed | 2.42 (/s): "Given the approver retires the EG Alias «لبن» → Milk, whole, When Mona types «كوباية لبن», Then it resolves to her glass of milk Unit version 1". This can fail if retiring the Alias touches an eater's own Unit (approver-10.46). |
+| 13 | fixed | 4.30: "nothing is logged without the tap — a sentence with no verb is not an explicit command". The rewrite made two new defects, 1 and 2 below. |
+| 14 | fixed | 2.33: ""Use it" saves talbina spoon version 2 (16 g of talbina version 2 · 21.1 kcal)". The /s line reads "version 1 references talbina version 1 and version 2 references talbina version 2". |
+| 15 | fixed | 4.12 cites admin-10.28 and 2.51 cites admin-10.29. 4.47 cites admin-10.33, admin-10.34, support-4.1 and support-10.24. 4.49 cites admin-10.34. 4.48 cites admin-10.40, admin-10.44 and support-4.2. 4.44 cites admin-10.43, and 4.42 cites admin-10.53. Each id is the story it is cited for in `admin.md` and `support.md`, and the §4 table matches. |
+| 16 | fixed | 2.35 (/s): "no Energy mismatch flag names it (approver-10.13 raises it on a Label submission)". 4.17 (/s): "a de-identified Estimated analogue flag appears only once at least 5 distinct eaters used that text in 28 days (approver Conflict 5)". 4.3 (/s): the method "in-app sheet · first use". §5 conflicts 16, 17 and 18 record the open parts. |
+| 17 | fixed | 4.51 reads "`analysis_id`, `intent` "consume", and for each item `candidate_food_ids[]`, … `evidence_refs[]` and an uncertainty state for each of those fields". 4.52 covers four checks: "a 25 MB image or with a PDF file … 422 `VALIDATION_ERROR`"; "missing `quantity_unit` … retries once … marks the Analysis Failed"; ""kcal: 90" … no model-supplied number appears"; and "2,400 g of rice … "This amount looks wrong — check it"". The coverage rows are split by §16.3 step. |
+| 18 | fixed | 2.9 (/m): "matching candidates in all five tiers … When the resolver runs five times, removing the winning tier each time, Then it picks them in exactly that order". That is FR-025's order, with the user's own approved record first. |
+| 19 | fixed | 4.47: "When she taps "Enter an amount", picks Bread, baladi and enters 40 g, Then a Confirmed Entry of 100 kcal is added and the Day rises by 100 kcal". |
+| 20 | fixed | 4.5: "a sheet gives one sentence on why the Microphone Consent is needed … the iOS microphone prompt appears only after "Give consent"". The /s line reads "one Consent for purpose "Microphone" is Given". |
+| 21 | fixed | §5 conflict 13: "iPhone is about half of mobile use in Saudi Arabia (E39: iOS 51.6 % in September 2026)". This matches research.md E39 ("Saudi Arabia iOS 51.6%"). |
+| 22 | fixed | 4.3: "no Analysis is created, nothing is uploaded, the photo is not kept". 4.11: "the Analysis is Discarded". 4.48: "the Analysis is Failed". 4.49: ""Pending · tap to analyse"". §5 conflict 10: "No Analysis state covers "captured, waiting for a Consent or for the daily limit"". |
+| 23 | fixed | 2.27: "or I pick a Composite I saved for it … offers "Use two eggs breakfast (5 bread bites)"". §5 conflict 10: ""Serving template" … would collide with **Template**". |
+| 24 | fixed | 2.17: "`unit_kind` is "spoonful", `structure` is "composite"". 2.4: `unit_kind: "custom"`. §6: "`unit_kind` is the kind of amount …; `structure` is simple · composite · recipe. One field per meaning." No `kind` field is left. |
+| 25 | fixed | How to read: "FRD words used as written, pending a dated delta (§5 conflict 10): the **quick-add control** …". §5 conflict 10 lists the quick-add control, the capture modes, the count stepper, the correction preview, Source details and Label submission. Each of these words is in the FRD (§2.1, §2.6, §14, FR-046). |
+| 26 | fixed | The EX table has one row each for EX-33 to EX-39. 2.50: "Save unit and the count steppers sit in the lower two-thirds of the screen, and every control measures at least 44×44 pt"; "contrast is at least 4.5:1"; "also a visible "Remove" button". 4.50: "every control measures at least 44×44 pt"; "each badge carries its word, not only a colour". The AT table: "AT-10 … \| 2.38, 4.21" and "AT-15 … \| 2.35". |
+| 27 | fixed | 2.52: "Given **Settings → Goals → "Hide numbers"** is on for Mona … no kcal, macro grams or shares show anywhere on the Review step". 4.53: "no kcal, range, macro or share appears; Approve works". Both have an /s line showing the data unchanged, and both use the same setting as eater-3.42. |
+
+### Defects (new, in lines fix round 1 changed)
+
+1. **eater-4.30, line 2, against eater-4.44, line 2: a sentence with no verb both waits for a tap and logs at once.**
+   - 4.30 has one-tap logging on and reads: "When she types "eggs 3" with no verb, Then … nothing is logged without the tap — a sentence with no verb is not an explicit command".
+   - 4.44 line 2 also has one-tap logging on. Sam types "the same" as in line 1, "3 cheese bites and a cup of laban", which has no verb. The line expects "both log at once with one Undo banner naming both", and the story's own title line promises the same.
+   - FRD §2.3's example has a verb: "Add three cheese bites and a cup of laban."
+   - One rule must hold in both lines.
+2. **eater-4.30, line 2: the typed "eggs" becomes "egg bite".**
+   - The line expects "eggs 3" to read "egg bite × 3". The line before the fix read "Egg × 3".
+   - Mona's egg bite is a 12 g bite eaten by dipping, and it includes 8 g of bread (seed; 2.22). Reading three eggs as three egg bites turns a whole egg into a bite. FRD §5.1 forbids this: "The app shall not translate "spoon" into "bite" simply because both relate to the same food". It also breaks 2.28 (/m).
+   - The reading also proposes three bread bites from an egg count. FR-022 says: "Never infer the number of bread bites used to eat a whole egg from the egg count".
+   - It also stops the line from testing the verb rule. A word that could mean two things is held anyway (eater-2.43), so the line passes whether or not the verb rule is built. The typed words must name the Unit exactly.
+3. **eater-4.40, line 2: Mona has no honey spoon in the new seed.**
+   - The line expects «معلقتين عسل ورغيف ونص» to read "honey spoon × 2".
+   - The shared seed's rows for Mona have no honey spoon. The fixture list before the fix had "Honey spoon \| spoonful \| 14.2 g", and the rewrite dropped it.
+   - Unlike 2.28 line 3 ("Given Mona's … honey spoon 14.2 g"), this Given does not create one.
+   - Against the seed, a correct build asks "which spoon" (2.28, line 3), so the line fails. Fix item 1's claim "Every Given now names an account whose seed holds it" is not true here.
+
+### Cross-lens (for the model phase join), uncounted
+
+- §5 conflict 18 is out of date. auditor-9.2 now lists the method "in-app sheet at first need". This file (4.3 /s) and eater-1.6 record "in-app sheet · first use". The join picks one wording.
+- 4.3 names the place "Onboarding · Consents (eater-1.3)". D2 has no onboarding places. `wf1-wf9.md` proposes them (its conflict C-19).
+- eater-3.6 in `wf3-wf6.md` also logs the verbless "three cheese bites and a cup of laban" at once under one-tap logging. Whatever reading settles defect 1 must reach that story too.
+- 2.9's recipe-over-analogue line needs the Tier A analogue "Fava beans, cooked" (FDC 2707367) from approver-10.39. The Reference Foods table here does not list it, so it belongs in the one seed file.
+- Faisal's Day boundary is 03:00 here and in `wf3-wf6.md`, but 05:00 with the Ramadan option in `wf5-wf7-wf8.md`. §5 conflict 15 does not list this. That conflict already covers the differing Unit values.
+- The smallest simulator is the iPhone 17e here and the iPhone 16e in `wf3-wf6.md`.
+
+
+## Fix by the session (2026-10-01), after the re-verify
+1–2. eater-4.30 line 2 no longer invents a "no verb" rule: it shows the real rule shared with eater-4.44 and eater-2.43 — an ambiguous word asks first even with one-tap logging on. The fixture gives Mona two egg Units ("egg bite" with bread, "boiled egg" whole), so "eggs 3" is ambiguous; choosing the whole egg adds no bread (FRD §5.1, FR-022), and the line can fail if one-tap logs it at once.
+3. eater-4.40 line 2's Given creates Mona's "honey spoon" and "baladi loaf" Units.
