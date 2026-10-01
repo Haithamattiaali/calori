@@ -11,7 +11,7 @@ Builds on `way/personas/eater/research.md`: its findings **E1–E44** and experi
 - **Layers.** Every acceptance line is tagged: `/m` module (one function's test: the nutrition core, the count parser, the Day assigner), `/s` system (components together: client outbox + API + ledger + Day projection, HealthKit writer), `/r` runtime — observed in the served product: the **iOS simulator** (smallest iPhone 16e/17e and largest Pro Max, P34; screenshots kept by XCUITest, P36), the **API over HTTP**, or the simulator's **Health** and **Shortcuts** apps. Every story has at least one `/r` line.
 - **Places** are the map's and D2's: tabs **Today · Capture & Plan · My Units · Progress**; screens **Analysis review**, **Unit editor**, **Meal planner**, **Meal review**, **Settings** (Goals, Food rules, Activity, Units & language, Privacy, Export). The **meal report** and **day report** are the map's words (§1 interaction table; FR-069). Seven names this file needs are in neither D2's Places nor §1 ¶4, so each is marked *(proposed)* at its first use and listed in Conflicts item 15 for a dated delta: four taken from the FRD — the **quick-add** control (FRD §2.1), the **count stepper** (FRD §14), the **correction preview** (FRD §2.6), the Day's **timeline** (FR-046) — and three of this file's own: **Day picker**, **Entry details**, the **Templates** list in My Units.
 - **Consents** are named as the eater's WF-1/WF-9 file names them in Settings → Privacy: "Send photos, voice and text to Google's AI (Gemini)", "Health: write dietary energy", "Microphone".
-- **States** are D2's: Entry **Pending → Confirmed**, **Corrected**, **Voided → Restored**; Day **Provisional · Complete · Partial · Unlogged**; Analysis **Processing → Needs answers → Ready for review → Approved · Discarded · Failed**, **Pending** offline; Unit **Draft → Saved (version n) → Archived**; Plan **Saved → Confirmed · Not eaten**; Food **Approved → Superseded · Retired**; Consent **Given · Withdrawn**; Kill switch **On/Off**.
+- **States** are D2's: Entry **Pending → Confirmed**, **Corrected**, **Voided → Restored**; Day **Provisional · Complete · Partial · Unlogged**; Analysis **Processing → Needs answers → Ready for review → Approved · Discarded · Failed**, **Pending** offline; Unit **Draft → Saved (version n) → Archived**; Plan **Saved → Confirmed · Not eaten**; Food **Approved → Superseded · Retired**; Consent **Not given → Given · Withdrawn** (D2, D3); Kill switch **On/Off**.
 - **API.** FRD §18 endpoints as written: `POST /v1/consumption`, `POST /v1/consumption/{id}/corrections` (quantity, Unit or diary Day), `POST /v1/consumption/{id}/void`, `GET /v1/reports/day`, `GET /v1/reports/period`, `POST /v1/analyses`, `POST /v1/units/{id}/versions`. *(Proposed)*, not in FRD §18: `POST /v1/consumption/{id}/restore`, `GET /v1/consumption/{id}/history`, `/v1/templates`, `POST /v1/days`, `PATCH /v1/me/settings`. Errors only from D2: `UNIT_AMBIGUOUS`, `STALE_REVISION`, `AI_UNAVAILABLE`, `RATE_LIMITED`, `VALIDATION_ERROR`, `UNAUTHENTICATED`, `NOT_FOUND` (also for another eater's ids, never revealing that they exist), `CONSENT_REQUIRED`. Error codes never appear on an eater's screen.
 - **Arabic.** Arabic text in acceptance is the eater's own data (Unit names, typed or spoken words) and digits. Button and label wording in Arabic comes from the string catalogue (one Arabic label per English word, D2) and is referred to here by its English word, e.g. "the Log button in Arabic".
 - **Synthetic.** Every eater, Unit, number and Day below is synthetic. Nutrition values are calibration fixtures in the FRD's sense (§5.2, §21), not verified product labels.
@@ -399,7 +399,8 @@ As the Eater, I find what I log in Apple Health as one food with its energy and 
 #### eater-3.40 · Health is asked once, when it matters; saying no keeps logging
 As the Eater, I'm offered the Consent "Health: write dietary energy" as a quiet card after my first Confirmed Entry, so that I decide when it means something, and logging works the same if I say no. · FR-076 ("Refusal must preserve unaffected functions"), FRD §3.2 ("Goals, permissions, and health connections are separate choices"), map §6 ("Health write on/off"), map row Consent ("each Health type") · EX-26, P30, R7
 - `/r` Given Settings → Privacy shows "Health: write dietary energy" as Not given (Sam skipped it in onboarding), When his first Entry turns Confirmed, Then Today shows a card "Add your meals to Apple Health?" with "Turn on" and "Not now" inside the timeline (no pop-up), and "Turn on" gives that Consent (as eater-9.3 allows at the moment of need) and opens the iOS sheet listing only the four nutrition types to write.
-- `/r` Given Sam taps "Not now" or denies every type in the iOS sheet, When he logs 3 cheese bites, Then the Entry is logged as usual, nothing is written to Health, and Settings → Privacy shows "Health: write dietary energy" as Not given.
+- `/r` Given Sam taps "Not now", When he logs 3 cheese bites, Then the Entry is logged as usual, nothing is written to Health, and Settings → Privacy shows "Health: write dietary energy" as Not given.
+- `/r` Given Sam tapped "Turn on" (the Consent is Given) but denies every type in the iOS sheet, When he logs 3 cheese bites, Then the Entry is logged as usual, nothing is written to Health, and Settings → Privacy shows "Health: write dietary energy" as Given with the note "Apple Health access is off — Open Health settings" (the app's Consent and the iOS permission are separate, as in wf1-wf9.md).
 - `/r` Given the Consent "Health: write dietary energy" is Given, When Sam switches it off in Settings → Privacy, Then the choice "Keep what's already in Health" (default) or "Remove what Sips & Bytes wrote to Health" appears (eater-9.4); after "Keep…", When he logs 3 cheese bites, Then no new sample is written and the earlier samples stay in the Health app.
 - `/s` Given the Consent "Health: write dietary energy" is Given, When 20 Entries are written, Then the recorded requests to the API and to the analyzer adapter hold no value read from Health (R7; map rule "Health data never sent").
 
@@ -994,3 +995,50 @@ These parts hold:
 ## Fix by the session (2026-10-01)
 1–2. eater-3.18's empty "Copy this Day" now offers the next step ("Pick another Day", opening the Day picker) and calls the Day's contents "an Activity and one Voided Entry" — an Activity is not an Entry.
 3. "Not given" is now a Consent state in `way/vocabulary.md` (delta D3: Consent = Not given → Given · Withdrawn), because a purpose the eater has not yet decided is a real state the screens must show; eater-3.40's lines stand as written.
+
+
+## Lens verdict — final (2026-10-01)
+
+**fail**: 2 defects.
+
+The verifier did not write this lens or its fixes. This was a scoped check of commit `5fea33a` (`git diff a2cb4c1 5fea33a`), not a new audit. It checked the 3 defects of the re-verify verdict against the session's fix, using `way/vocabulary.md` with delta D3 (binding: Consent = "Not given → Given · Withdrawn (each change with version, time, method)", where "Not given" is "the state before the eater has decided"). Blueprint §1 line 135 also records D3. It checked the one changed line against eater-3.17, 3.18 and 3.19 only.
+
+### The 3 re-verify defects
+
+1. **Fixed.** eater-3.18's empty "Copy this Day" now offers a next step. The changed line reads: "Then quick-add reads "No food to copy from this Day" with one button, "Pick another Day", which opens the Day picker; it shows no Log button, and today's timeline is unchanged". That answers care group 4: "does it say what to do next with the button to do it?"
+2. **Fixed.** The same line no longer calls an Activity an Entry: "Given a Day whose timeline holds only an Activity and one Voided Entry (no Confirmed Entry)". The claim that an Activity sits in the Day's timeline agrees with FRD §14's Today row ("chronological food and activity entries").
+3. **Partly fixed.** "Not given" is now a Consent state in `way/vocabulary.md` (D3), so the word in eater-3.40 is allowed. Two problems remain (defects 1 and 2 below):
+   - one path in 3.40 reaches Not given in a way that D3's order does not allow;
+   - the file's own state list still gives Consent the two D2 states only.
+
+The changed line against 3.17–3.19: no conflict.
+- **3.18.** The empty case is exactly the case where 3.18's first line has nothing to copy ("every Confirmed food Entry of that Day … neither the Activity nor the Voided Entry is copied").
+- **3.17.** The line does not touch 3.17's rules (current Unit versions; an Archived Unit's line skipped).
+- **3.19.** The line follows 3.19's empty Templates screen: a message and one button ("Go to Today").
+- **Vocabulary.** "Day picker", "quick-add" and "timeline" are proposed words, listed in "How to read" and marked at first use.
+- **Observability.** The line is `/r` and can be observed in the simulator.
+
+### Defects
+
+1. **eater-3.40, the "denies every type in the iOS sheet" path goes from Given back to Not given · vocabulary (D3's order).**
+   - Line 1: "and "Turn on" gives that Consent (as eater-9.3 allows at the moment of need) and opens the iOS sheet listing only the four nutrition types to write."
+   - Line 2: "Given Sam taps "Not now" or denies every type in the iOS sheet, When he logs 3 cheese bites, Then … Settings → Privacy shows "Health: write dietary energy" as Not given."
+   - The "Not now" path fits D3, because the eater has not decided yet.
+   - The deny path does not fit D3:
+     - Sam reaches the iOS sheet only by tapping "Turn on", which line 1 says gives the Consent. The Consent is therefore Given, and the row then shows Not given.
+     - D3 has no move from Given back to Not given; its states run "Not given → Given · Withdrawn".
+     - Denying every type is a decision, so it is not "the state before the eater has decided".
+     - No recorded change (version, time, method) covers the move.
+   - The two lines must agree on one rule. Either the deny path shows Withdrawn, or line 1 says the Consent becomes Given only when the iOS sheet grants at least one type.
+2. **"How to read", the States line still gives Consent the two D2 states · vocabulary (the rest of re-verify defect 3).**
+   - The line reads: "**States** are D2's: … Consent **Given · Withdrawn**".
+   - The re-verify verdict quoted this line as part of defect 3, and the session left it as it was.
+   - The file's own list of Consent states therefore leaves out the state that 3.40 shows ("as Not given"), and the list cites D2 only. A reader who uses this list as the state list for the model phase gets two states where D3 has three.
+
+### Cross-lens (for the model phase join, uncounted)
+- `wf1-wf9.md` keeps an app Consent apart from the iOS permission: ""Health: read workouts" is Given in the app but iOS returns no workouts". 3.40's line 2 instead ties the app Consent's state to the answer in the iOS sheet. The model phase should settle one rule for Health Consents.
+
+
+## Second fix by the session (2026-10-01), after the final check
+1. eater-3.40: "Not now" keeps the Consent Not given; "Turn on" then denying every iOS type keeps the Consent Given and shows "Apple Health access is off — Open Health settings" — the app's Consent never goes back to Not given, and it stays separate from the iOS permission (as wf1-wf9.md does).
+2. "How to read" lists Consent as Not given → Given · Withdrawn (D2, D3) (1 place).
