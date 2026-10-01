@@ -397,7 +397,7 @@ As the Auditor, I see that no staff member read a diary without a Grant, so that
   - 15:00:00Z `staff_omar` "Read refused · no Grant · GRANT_REQUIRED";
   - 15:01:00Z `staff_ali` "Refused · FORBIDDEN".
   - Anomalies shows "Diary reads allowed without a Grant: 0".
-- /s Given the NFR-07 negative-test suite on a fresh emulator When it calls every diary, report and media endpoint with each staff role and no Grant Then every call is refused: the Support agent with 403 `GRANT_REQUIRED`, recorded as `grant.read_refused`; every other role with 403 `FORBIDDEN`, recorded as `access.refused`. Each refusal writes exactly one event.
+- /s Given the NFR-07 negative-test suite on a fresh emulator When it calls every diary, report and media endpoint with each staff role and no Grant Then every call is refused: on diary and report endpoints the Support agent gets 403 `GRANT_REQUIRED`, recorded as `grant.read_refused`, and every other role 403 `FORBIDDEN`, recorded as `access.refused`; on media endpoints every role, the Support agent included, gets 403 `FORBIDDEN`, recorded as `access.refused`, because no role holds the raw-evidence permission (§7 A11). Each refusal writes exactly one event.
 - /m Given the rule "allowed staff diary reads without an Active Grant" and a synthetic Audit trail containing one Allowed `grant.read` whose Grant was Expired When evaluated Then it returns that event id.
 
 **auditor-10.10 · An unanswered request ends as Unanswered**
@@ -742,8 +742,8 @@ As the Auditor, I see what the app recorded about Health access and what it cann
 As the Auditor, I see that no staff member opened an eater's meal photo or audio, and that every attempt was refused, so that raw evidence stays private.
 - /r Given event 78 When `staff_hana` filters Events by `access.refused` and object "Analysis photo" Then one row reads "staff_ali · Analysis an_7781 photo · acct_9c41e2 · FORBIDDEN · 2026-10-03T15:05:00Z". No image appears in the console, and Anomalies "raw evidence opened by staff" is 0.
 - /s Given a fresh emulator When a raw photo or audio of any Analysis is requested Then:
-  - a Support agent with no Grant gets 403 `GRANT_REQUIRED`, and one `grant.read_refused` event is written (the same outcome as 10.9);
-  - a Support agent with an Active Grant gets 403 `FORBIDDEN`, because no role holds the raw-evidence permission (D2: the role lacks the permission), and one `grant.read_refused` event is written (as in 10.41);
+  - a Support agent with no Grant gets 403 `FORBIDDEN`, because no role holds the raw-evidence permission, and one `access.refused` event is written (the media rule of 10.9);
+  - a Support agent with an Active Grant gets 403 `FORBIDDEN`, because no role holds the raw-evidence permission (D2: the role lacks the permission), and one `grant.read_refused` event is written (the event name as in 10.41);
   - the Nutrition approver, Platform admin and Auditor each get 403 `FORBIDDEN`, and one `access.refused` event is written.
 
 **auditor-9.9 · The 18+ confirmation and the age gate** *(map interaction row 1; WF-1 done-when "Under 18: no account"; R16, R22)*
@@ -1422,3 +1422,62 @@ What else passed in the changed lines:
 ## Second fix by the session (2026-10-01), after the final check
 1. auditor-10.41's /r console lines now read `GRANT_REQUIRED` too (2 more places; the first fix missed un-backticked codes), so the console and the API agree.
 2. The journey-9 media line is restored to `FORBIDDEN` with its reason: no role holds the raw-evidence permission (9.8's header, §7 A11), which is D2's meaning of `FORBIDDEN`. `GRANT_REQUIRED` stays for reads the Support agent role may make but no Active Grant covers (§7 A16).
+
+## Lens verdict — final 2 (2026-10-01)
+
+**fail**: 1 defect. The final check's defect 1 (the 10.41 console rows) is fixed. Its defect 2 is only partly fixed: the changed 9.8 line now matches D2, §7 A16 and A11, but the bullet above it still gives the other code for the same read.
+
+A fifth independent verifier ran `way/personas/_lens-verifier-brief.md`, with its addendum, as a scoped check on this file at commit 35d1532 ("auditor: second session fix after final check"). The working tree was clean. `way/vocabulary.md` was binding: "`FORBIDDEN` (role lacks the permission)" and "`GRANT_REQUIRED`". The check covered only:
+- every error code now in auditor-10.41;
+- the journey-9 media lines (auditor-9.8);
+- whether §7 A16 and A11 agree with them.
+
+Nothing else was re-audited. The diff 8c4ce00..35d1532 changes three body lines (the two 10.41 console rows and 9.8 /s bullet 2) and adds no acceptance line, so §8's 59 stories and 121 lines still hold.
+
+### Every error code now in the checked lines
+
+| line | code, quoted |
+|---|---|
+| 10.41 /r, API | "both API calls return 403 `GRANT_REQUIRED` with no diary data" |
+| 10.41 /r, console row 1 | "Read refused · outside the Grant · Day 2026-10-03 not in Days (2026-10-04) · GRANT_REQUIRED" |
+| 10.41 /r, console row 2 | "Read refused · outside the Grant · area My Units not in Entries and day reports · GRANT_REQUIRED" |
+| 10.41 /s | "the first returns 200 and writes one `grant.read` (Allowed), and the second returns 403 `GRANT_REQUIRED` and writes one `grant.read_refused` with detail "outside Days"" |
+| 10.41 /m | no code |
+| 9.8 /r (event 78) | "staff_ali · Analysis an_7781 photo · acct_9c41e2 · FORBIDDEN · 2026-10-03T15:05:00Z" (`staff_ali` is the Platform admin) |
+| 9.8 /s, bullet 1 | "a Support agent with no Grant gets 403 `GRANT_REQUIRED`, and one `grant.read_refused` event is written (the same outcome as 10.9)" |
+| 9.8 /s, bullet 2 | "a Support agent with an Active Grant gets 403 `FORBIDDEN`, because no role holds the raw-evidence permission (D2: the role lacks the permission), and one `grant.read_refused` event is written (as in 10.41)" |
+| 9.8 /s, bullet 3 | "the Nutrition approver, Platform admin and Auditor each get 403 `FORBIDDEN`, and one `access.refused` event is written" |
+
+No `FORBIDDEN` is left in 10.41.
+
+### Final-check defects: fixed or not
+
+| # | status | the line that shows it |
+|---|---|---|
+| 1 | **fixed** | Both 10.41 console rows now end "· GRANT_REQUIRED". So the API bullet, both console rows and the /s line give one code for the two out-of-scope reads. This agrees with §7 A16: "A read the Support agent role may make but no Active Grant covers (outside its Days or areas) is answered `GRANT_REQUIRED`, as in 10.9". It also agrees with A16's `detail` rule: the /s line's event carries detail "outside Days", and the rows read "outside the Grant · Day …" and "outside the Grant · area …" |
+| 2 | **partly fixed** | 9.8 /s bullet 2 is now `FORBIDDEN`, and its reason matches D2's meaning, 9.8's header ("D2 roles hold no such permission"), §7 A11 ("D2 has no role with that permission, so 9.8 treats every attempt as refused") and A16 ("`FORBIDDEN` stays only for a missing role permission"). This picks the final check's reading (a). That check also said: "Whichever reading is chosen must apply to all three lines". Bullet 1 was not changed (defect 1 below) |
+
+### Defects
+
+**Vocabulary (D2), Observable**
+
+1. **auditor-9.8 /s, bullet 1: a Support agent with no Grant still gets `GRANT_REQUIRED` for raw evidence, which the chosen reading rules out.**
+   - Bullet 1: "a Support agent with no Grant gets 403 `GRANT_REQUIRED` … (the same outcome as 10.9)".
+   - Bullet 2, in the same /s line, gives the reason for `FORBIDDEN`: "no role holds the raw-evidence permission (D2: the role lacks the permission)". The Support agent role lacks that permission with or without a Grant.
+   - §7 A16 keeps `GRANT_REQUIRED` for "a read the Support agent role may make but no Active Grant covers". A media read is not one. The session's own note says the same: "`GRANT_REQUIRED` stays for reads the Support agent role may make but no Active Grant covers".
+   - A11 says "D2 has no role with that permission". `GRANT_REQUIRED` tells the caller that a Grant would let the read through, which A11 denies.
+   - So for one role and one endpoint, a verifier sees `GRANT_REQUIRED` with no Grant and `FORBIDDEN` with an Active Grant. One cause, a missing role permission, gets two codes.
+   - The fix needs bullet 1 to read 403 `FORBIDDEN`, and "(the same outcome as 10.9)" must then go or change.
+   - 10.9 /s carries the same question: "every diary, report and media endpoint … the Support agent with 403 `GRANT_REQUIRED`". A16's "as in 10.9" cites it. 10.9 is outside the lines this check covered, but the final check named it as one of the "three lines". So it is listed here as part of this defect, not counted on its own. Its media endpoints need the same code as 9.8.
+
+**Noted, not counted.** Bullet 2's "(as in 10.41)" now holds only for the event name (`grant.read_refused`), not for the code: 10.41 returns `GRANT_REQUIRED`. A reader may take the parenthesis as the whole outcome. Writing `grant.read_refused` under a Grant token next to `FORBIDDEN` has a precedent in 10.13 /s (`FORBIDDEN`, `grant.write_refused`).
+
+### Cross-lens (for the model phase join; uncounted)
+
+- **A direct media read.** support-10.14 refuses a Grant *request* whose areas include media (422 `VALIDATION_ERROR`). The support lens gives no code for a direct media read, with or without a Grant. The shared event catalogue should fix `FORBIDDEN` for it under this lens's reading (a), and settle which event name it writes.
+- **Out-of-scope reads.** The code agrees with support-10.12 (`GRANT_REQUIRED`). The event name still differs: `grant.read_refused` here, `grant.read_denied` there (§7 B M6). So does the fixture: `grant_7a02` (day 2026-10-04) here, `grant_7d01` (Days 2026-09-29 to 2026-09-30) there. §7 B still has no row for the fixture.
+- **Carried from earlier verdicts, still without a §7 B row:** `CASE-1201`; the eater-accounts row "`acct_9c41e2` (E1 in the support lens; …)"; cancelling a Requested Grant (support K10).
+
+
+## Third fix by the session (2026-10-01), after final check 2
+One rule for media on every line: no role holds the raw-evidence permission, so every media request from any staff role — with or without a Grant — is 403 `FORBIDDEN`, recorded as `access.refused` (9.8 /s bullet 1 and 10.9 /s now say so); `GRANT_REQUIRED` stays for diary and report reads the Support agent role may make but no Active Grant covers (§7 A16). All media lines checked by the session: 9.8 /r, 9.8 /s bullets 1–3, 10.9 /s.
