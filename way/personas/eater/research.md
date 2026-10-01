@@ -624,3 +624,22 @@ None found within checks 4–6.
 1. EX-46 no longer lists fixed meal slots among the no's; it says the question stays open for the model phase (Conflict 2).
 2. EX-62 includes `GRANT_NOT_ACTIVE`, which the eater meets on their side of WF-10.
 3. EX-51's Pending help reads "saved on this phone, not yet confirmed", matching D2 (not yet accepted by the server).
+
+## Lens verdict — final (2026-10-01)
+
+**pass**: 0 defects. All 3 re-verify defects are fixed. Scope: checks 4 (Sourced), 5 (Vocabulary) and 6 (Experience) of `_lens-verifier-brief.md` and its addendum, with `way/vocabulary.md` (D2) binding. The checks cover only the three lines the session changed (commit 37ba298 → 04af3c4): EX-46 (line 299), EX-51 (line 320) and EX-62 (line 351). Those lines were read against the WF-10 row (line 260), EX-08 (lines 304–312), EX-53, the §5a rows 1.2, 2.5, 4.4, 4.11 and 5.2, Conflict 2 (line 451), Conflict 6 (line 455), D2 and FRD §8.3. Verifier: an independent agent. Unchanged material was not re-audited. The changed lines cite no new outside source, so nothing was re-opened, and no outside service was contacted. Nothing in this file was fixed.
+
+### The 3 re-verify defects
+
+| # | status | quoted line |
+|---|---|---|
+| 1 | fixed | EX-46: "… no full-screen interruptions in the logging path (C21); no advertising based on diary data (FR-079). Whether Today groups Entries in fixed meal slots stays open for the model phase (Conflict 2; E1, E11, E12)." Fixed slots are no longer listed among the no's. This now matches Conflict 2: "The model must name the meal grouping once … and say whether it is fixed slots or time-based." §5a row 1.2 ("the no's in EX-46") still points to the right place. E1's unchanged "Templates and "copy a meal" must not assume three fixed slots" rules out only the three-slot form, so it does not decide Conflict 2. |
+| 2 | fixed | EX-62: "Each error the eater can reach — … `POLICY_FLOOR`, `NOT_FOUND`, `GRANT_NOT_ACTIVE` (vocabulary D2) — has one fixed message in both languages that says why the command cannot work now and what to do". This covers both of the eater's WF-10 cases: tapping Approve on a request left Unanswered (line 260; Conflict 6: "becomes Unanswered and gives no access (`GRANT_NOT_ACTIVE`)"), and tapping Withdraw on a Grant that is already Expired or Ended. EX-08's "errors the eater can meet: each error code in EX-62 has one fixed message" now includes it, and §5a row 4.11 ("EX-22, EX-62") answers care 4.11. |
+| 3 | fixed | EX-51: "Pending reads as "Pending — saved on this phone, not yet confirmed" (D2: queued on the device, not yet accepted by the server)". The gloss is D2's own sentence. "Not yet confirmed" names the next Entry state, as in D2 ("Pending → Confirmed"), EX-53 ("a sync moves Pending → Confirmed quietly") and FRD §8.3 ("The client distinguishes pending from confirmed totals"). It is therefore also true for an Entry that has been sent and is waiting for an answer, and for one the server answered with a conflict. |
+
+### Observation (uncounted)
+- **"Confirm" is also the eater's own verb.** The file uses it for Meal review ("confirm what I actually ate from a Plan", line 297), for EX-40's transcript ("confirmed as chips") and in EX-23 ("confirm the basis"). Offline, right after the eater taps "Ate as planned", the new Entries would read "not yet confirmed". The meaning matches D2, and the wording is left to the served screen (EX-51 → EX-55). That try should check that eaters do not read the line as a step they still have to take.
+
+### Cross-lens (for the model phase join, uncounted)
+
+None found within checks 4–6.
