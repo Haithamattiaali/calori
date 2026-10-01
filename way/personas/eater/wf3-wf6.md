@@ -104,7 +104,7 @@ As the Eater, I open Today and see which Day I am on, its time zone when it diff
 - `/r` Given Sam's Thu 1 Oct (290 kcal, Target 1,870), When Today opens on the iPhone 16e simulator, Then the header reads "Thu 1 Oct", the largest number reads "1,580" labelled "kcal remaining", the line under it reads "290 consumed of 1,870", and the timeline lists "3 cheese bites" and "1 cup of laban", each food name before its kcal.
 - `/r` Given Faisal's Day Thu 1 Oct was captured in Asia/Riyadh and the simulator's zone is then set to Europe/London, When Today opens, Then the header reads "Thu 1 Oct · Riyadh time"; with the device back in Asia/Riyadh the header names no zone.
 - `/r` Given Sam was viewing Tue 29 Sep on Today two minutes ago, When the app is killed and relaunched, Then Today reopens on Tue 29 Sep with "Back to today" shown, and the first screenshot already shows that Day's Entries — never the empty Today.
-- `/s` Given `GET /v1/reports/day?diary_day_id=2026-10-01` for Sam, Then it returns consumed_kcal 290, target_kcal 1870 and remaining_kcal 1580 — the figures Today shows.
+- `/s` Given Sam's Thu 1 Oct, When `GET /v1/reports/day?diary_day_id=2026-10-01` is called with his token, Then it returns consumed_kcal 290, target_kcal 1870 and remaining_kcal 1580 — the figures Today shows.
 
 #### eater-3.2 · An empty Today says what to do next, even before a Target
 As the Eater, I see on an empty Day what to do next, with the buttons to do it, even before I have set a Target, so that my first log needs no setup. · FRD §3.2, FR-001, FRD §14 Today ("Empty"), map WF-1 ("Tracking works before a target exists") · EX-03, EX-19, E17
@@ -122,11 +122,11 @@ As the Eater, I tap a recent Unit on Today and then Log, with the count I used l
 - `/s` Given the accepted Entry, When it is read from the ledger, Then it holds entry_id, user_id, eaten_at in UTC, time zone "Europe/London", diary_day_id, the component snapshot (5.4 g cheese, 1.5 g oil, 8 g bread per bite), quantity 3, the source versions and the command_id (FR-040).
 
 #### eater-3.4 · Set the count with one thumb, in my digits
-As the Eater, I change the count with large − and + buttons or type it, including halves and Arabic-Indic digits, so that I can log "two and a half" with the hand that is not holding bread. · FR-009, FRD §14.1 ("both Arabic-Indic and Western numerals, decimal input"), NFR-08 · EX-17, EX-37, EX-39, E34, E35, E36, E41
+As the Eater, I change the count with large − and + buttons or type it, including halves and Arabic-Indic digits, so that I can log "two and a half" with the hand that is not holding bread. · FR-009, FRD §14.1 ("both Arabic-Indic and Western numerals, decimal input"), NFR-08 · EX-17, EX-37, EX-39, E5, E34, E35, E36, E41
 - `/r` Given the count stepper for "cheese bite" open at 3, When the eater taps − once and + twice, Then the count reads 4 and the button reads "Log 4 cheese bites"; − and + each measure at least 44×44 pt and sit in the middle band of the screen.
 - `/r` Given Mona's numerals are Arabic-Indic, When she types «٢٫٥» in the count field for «قرصة جبنة», Then the field shows «٢٫٥», the Log button (in Arabic) names «٢٫٥», and the Entry stores quantity 2.5; typing "2.5" on a Western keypad stores the same 2.5.
 - `/r` Given the count field is emptied or set to 0, When the eater looks at Log, Then Log is disabled and "Enter how many" shows beside the field; the keypad offers no minus sign.
-- `/r` Given a request over HTTP to `POST /v1/consumption` with count 0 or −2, Then it returns `VALIDATION_ERROR` naming the count, and the Day's revision is unchanged.
+- `/r` Given Sam's Day, When a request over HTTP to `POST /v1/consumption` carries count 0 or −2, Then it returns `VALIDATION_ERROR` naming the count, and the Day's revision is unchanged.
 
 #### eater-3.5 · Undo exactly what I logged
 As the Eater, I tap Undo on the banner that names what I just logged, so that a slip of the thumb ("4, not 3") is reversed without touching anything else. · WF-3 done-when ("Undo removes exactly one entry"), FR-046 ("Undo for recent supported mutations"), map WF-3 ("one-tap with Undo") · EX-13, EX-24, EX-38, C10
@@ -145,15 +145,15 @@ As the Eater, I can turn on one-tap logging so that a tap on a recent Unit, or a
 #### eater-3.7 · The same Unit gives the same number on every Day
 As the Eater, I get identical calories for the same Unit version on any Day, computed by the server from my Saved Unit — never from an AI re-estimate or a number my phone sends — so that my totals cannot drift. · FRD §2.3 ("No additional AI nutrition estimate"), FRD §18.1 ("The client cannot submit its own aggregate calories"), FRD §16.5, FR-040 · EX-14, E15, E16, E22 · **Shared: Eater · Platform admin**
 - `/r` Given "cheese bite" version 1, When Sam logs 3 on Tue 29 Sep and 3 on Thu 1 Oct, Then both Entries in the timeline read "138 kcal", and their Entry details read P 7.5 g, C 13.5 g, F 6.0 g.
-- `/r` Given a request over HTTP to `POST /v1/consumption` for 3 cheese bites that also carries "kcal": 10, Then the accepted Entry reads 138 kcal: the client's number is ignored, never stored.
+- `/r` Given Sam's Day, When a request over HTTP to `POST /v1/consumption` for 3 cheese bites also carries "kcal": 10, Then the accepted Entry reads 138 kcal: the client's number is ignored, never stored.
 - `/s` Given the analyzer adapter's call counter, When a recent-Unit tap, a Template log and a copied meal are committed, Then the counter is unchanged (FRD §16.5: "A confirmed repeated unit uses no new nutrition inference").
 - `/s` Given the Platform admin moves the text-intent Registry version to Rollout, When Sam's Days 29 Sep and 1 Oct are read again with `GET /v1/reports/day`, Then every Entry and total is identical (FR-031; the admin lens's rollout story).
 
 #### eater-3.8 · An Archived or foreign Unit never logs silently
 As the Eater, I am told plainly when a Unit I logged offline was Archived on my other iPhone, and nobody else's Unit can ever be logged into my Day, so that nothing is counted against a definition I removed or do not own. · FRD §7.1 ("validate existence and ownership of every referenced unit"), FRD §18.2, NFR-07, FRD §14 My Units ("archived unit") · EX-23
 - `/r` Given Sam Archived "tuna spoon" on iPhone B, When iPhone A syncs, Then the "tuna spoon" tile leaves A's recent Units on Today and My Units lists it under "Archived".
-- `/r` Given iPhone A logged "2 tuna spoons" offline before that sync, When the command reaches the server, Then the Entry is kept as eaten and its Entry details note "This unit is Archived" with a "Restore unit" button — nothing is dropped silently (a proposal; Conflicts item 16).
-- `/r` Given Mona's token and Sam's unit_version_id in a request over HTTP to `POST /v1/consumption`, Then it returns `UNIT_NOT_FOUND` exactly as for an id that never existed, and no Entry is created (NFR-07).
+- `/r` Given iPhone A logged "2 tuna spoons" offline before that sync, When the command reaches the server, Then the Entry is kept as eaten and its Entry details note "This unit is Archived" with a "Unarchive unit" button — nothing is dropped silently (a proposal; Conflicts item 16).
+- `/r` Given Mona's token, When a request over HTTP to `POST /v1/consumption` names Sam's unit_version_id, Then it returns `UNIT_NOT_FOUND` exactly as for an id that never existed, and no Entry is created (NFR-07).
 
 ### C · Say or type it
 
@@ -168,7 +168,7 @@ As the Eater, I type "three cheese bites and a cup of laban" in quick-add and se
 As the Eater, I type or say my food the way I talk — «تلات قرص جبنة», «معلقتين», «نص رغيف», "ضيف ٣ cheese bites و cup laban" — so that my words and either digit form land on my own Units, and my dialect decides what «لبن» means. · FR-036, FR-015, FRD §5.1 (rule precedence), FRD §14.1 ("spoken fractions, and local food names"), map row "alias by dialect" · E30, E42, E43, E44, F27, EX-39, EX-40, research conflict 3 · **Shared: Eater · Nutrition approver**
 - `/r` Given Mona's Saved Units «قرصة جبنة», «معلقة فول» and «رغيف بلدي», When she types «تلات قرص جبنة ومعلقتين فول ونص رغيف» in quick-add, Then the chips read «٣ × قرصة جبنة», «٢ × معلقة فول» and «٠٫٥ × رغيف بلدي», in Arabic-Indic digits, laid out right to left.
 - `/r` Given Faisal's Saved Units «لقمة جبن» (English Alias "cheese bite") and «كوب لبن» (Alias "cup laban"), When he types "ضيف ٣ cheese bites و cup laban", Then the chips read "3 × لقمة جبن" and "1 × كوب لبن" in Western digits, each count kept beside its food name.
-- `/r` Given Mona's Saved Unit «كوباية لبن» (milk) and Faisal's «كوب لبن» (yogurt drink), When each types their own word, Then each chip names that eater's own Unit; given Sam has no laban Unit and types «لبن», Then the chip shows the Food the Nutrition approver's Alias gives for Sam's dialect setting, with its Evidence badge, and waits for a tap — the eater's own Unit always wins over a dialect Alias (FRD §5.1).
+- `/r` Given Mona's Saved Unit «كوباية لبن» (milk) and Faisal's «كوب لبن» (yogurt drink), When each types their own word, Then each chip names that eater's own Unit; given a fixture eater with dialect Gulf and no laban Unit types «كوب لبن», Then the chip shows the Food the Nutrition approver's Gulf Alias gives (a yogurt drink, F27) with its Evidence badge, and waits for a tap — the eater's own Unit always wins over a dialect Alias (FRD §5.1).
 - `/m` Given the count parser, When it reads "18", «١٨», "three", «تلات», «ثلاث», «معلقتين», «رغيفين», «نص» and «ربع», Then it returns 18, 18, 3, 3, 3, 2, 2, 0.5 and 0.25.
 - `/r` Given Mona added the Latin-script Alias "ful" to «معلقة فول», When she types "2 ful", Then the chip reads «٢ × معلقة فول» (E44).
 
@@ -184,7 +184,7 @@ As the Eater, I am asked to choose when a word matches two of my Units or none, 
 - `/r` Given Mona's Saved Units «معلقة فول» and «معلقة فول بالزيت», When she types «٣ معالق فول», Then the Analysis Needs answers: one chip asks which of the two Units she means and Log stays disabled until she picks one.
 - `/r` Given Sam has no kunafa Unit, When he types "2 kunafa and 3 cheese bites", Then the kunafa chip reads "kunafa · not one of your units" with "Find the food" (Capture & Plan, WF-4), "Make a unit" (Unit editor) and "Calories only" (eater-3.15), while "3 × cheese bite" can be logged on its own.
 - `/r` Given an Analysis with three unclear words, When the chips appear, Then at most two questions are asked in this pass and the third word offers manual entry (FR-035).
-- `/s` Given `POST /v1/analyses` for "2 kunafa", Then the Analysis returns required_questions for the unmatched item, the response for a two-Unit match carries `UNIT_AMBIGUOUS`, and no Entry is committed (FRD §7.1).
+- `/s` Given Sam's Saved Units, When `POST /v1/analyses` is called with "2 kunafa", Then the Analysis returns required_questions for the unmatched item, the response for a two-Unit match carries `UNIT_AMBIGUOUS`, and no Entry is committed (FRD §7.1).
 
 #### eater-3.13 · My words decide whether anything is logged
 As the Eater, I can type "calculate and save my bite", "how many calories in 2 cheese bites?", "plan my dinner", "how much is left?", "add another 3 spoons", "18 not 15" or "start a new day" in the same quick-add box, so that each does what I meant and only eating, correcting or removing ever changes my Day. · FR-039 (estimate, calibrate, plan, consume, correct, remove, report, start a new day), AT-13, FRD §4.3, FRD §8.2, FR-045 · EX-14
@@ -196,9 +196,9 @@ As the Eater, I can type "calculate and save my bite", "how many calories in 2 c
 
 #### eater-3.14 · AI off, used up or not allowed: my Units still log
 As the Eater, I can still log from my recent Units, Templates and typed Unit names when sentence understanding is unavailable — Kill switch On, daily AI quota used up, or my Consent for Google's AI Withdrawn — and one line tells me why, so that logging never stops. · FRD §7.2, AT-32, NFR-05, FRD §16.4 ("A kill switch must preserve manual and cached logging"), FRD §16.5, FR-076, D2 Registry ("Kill switch … fail fast with AI_UNAVAILABLE") · EX-22, R3, research conflict 9 · **Shared: Eater · Platform admin**
-- `/r` Given the text-intent Kill switch is On, When Sam types "3 cheese bites" in quick-add, Then one line reads "Sentences can't be read right now — pick from your units", the recent Units whose names match the typed words ("cheese bite") are listed with count steppers, and tapping it and Log records 3 cheese bites.
+- `/r` Given the text-intent Kill switch is On, When Sam types "3 cheese bites" in quick-add, Then one line reads "Sentences can't be read right now — pick from your units", the recent Units whose names match the typed words ("cheese bite") are listed with count steppers, and tapping "cheese bite" and then Log records 3 cheese bites.
 - `/r` Given Sam's daily AI quota is used up (`RATE_LIMITED` with a reset time), When he types a sentence, Then the line names the reset time ("Sentences are back at 00:00"), and recent Units, Templates and copied meals still log; a recent-Unit tap never uses the quota (FRD §16.5).
-- `/r` Given Mona's Consent for Google's AI is Withdrawn, When she opens quick-add, Then the microphone and sentence reading are off with "Off by your choice · Settings → Privacy", and recent Units, Templates, copy and calories-only log as usual; a request over HTTP to `POST /v1/analyses` with her token returns `CONSENT_REQUIRED`.
+- `/r` Given Mona's Consent for Google's AI is Withdrawn, When she opens quick-add, Then the microphone and sentence reading are off with "Off by your choice · Settings → Privacy", and recent Units, Templates, copy and Calories only log as usual; a request over HTTP to `POST /v1/analyses` with her token returns `CONSENT_REQUIRED`.
 - `/s` Given the analyzer adapter mock times out on every call, When 50 recent-Unit logs are made, Then all 50 are Confirmed and none waited on the analyzer (NFR-05).
 
 ### D · Calories only
@@ -208,7 +208,7 @@ As the Eater, I add "kunafa slice, 350 kcal" as a calorie-only Entry from quick-
 - `/r` Given Sam's Day at 290 kcal with full macros, When he opens quick-add → "Calories only", enters "kunafa slice" and 350, and taps Log, Then the timeline shows "kunafa slice · 350 kcal · user-defined", Today reads "640 consumed", and the macro bars read "Macros known for 45 % of kcal" (AT-16).
 - `/r` Given that Entry, When its Entry details open, Then protein, carbohydrate and fat read "Unknown" — never 0 g — and no grams are shown.
 - `/r` Given the calories field is empty, negative or not a number, When Log is viewed, Then Log is disabled with "Enter the calories" beside the field.
-- `/s` Given the calorie-only command over `POST /v1/consumption`, Then the stored Entry's Evidence is user-defined, its macros are null (not 0), and `GET /v1/reports/day` returns macros_complete false.
+- `/s` Given the kunafa slice, When the calorie-only command is sent to `POST /v1/consumption`, Then the stored Entry's Evidence is user-defined, its macros are null (not 0), and `GET /v1/reports/day` returns macros_complete false.
 
 ### E · Repeat a meal, a Day or a Template
 
@@ -222,12 +222,12 @@ As the Eater, I copy a meal from yesterday or any earlier Day into today, so tha
 #### eater-3.17 · A copy uses my Units as they are now, and says what changed
 As the Eater, I see when a Unit in the meal I copy has changed since that Day, so that the copy uses my current definition and I know why its number differs from last time. · FR-014, FRD §17 EatingUnitVersion ("Latest approved version is used for new logs only") · E15, E21, EX-14
 - `/r` Given Sam's "bread bite" went from version 1 (8 g, 20 kcal) to version 2 (9 g, 22.5 kcal) on 30 Sep, and his 29 Sep Breakfast holds "6 bread bites" (120 kcal on version 1), When he copies that Breakfast to 1 Oct, Then quick-add notes before Log "bread bite changed since 29 Sep: 8 g → 9 g", the new Entry reads "6 bread bites · 135 kcal", and 29 Sep still reads 120 kcal.
-- `/r` Given the copied meal holds "2 tuna spoons" and "tuna spoon" is Archived, When quick-add lists the meal's items, Then that line reads "tuna spoon is Archived — skipped" with "Restore unit", and the other items can still be logged.
+- `/r` Given the copied meal holds "2 tuna spoons" and "tuna spoon" is Archived, When quick-add lists the meal's items, Then that line reads "tuna spoon is Archived — skipped" with "Unarchive unit", and the other items can still be logged.
 - `/r` Given the source meal holds an Entry with Evidence "estimated analogue", When it is copied, Then the copy keeps the badge "estimated analogue" — a copy never upgrades Evidence.
 
 #### eater-3.18 · Copy a whole Day
 As the Eater, I copy a whole earlier Day's food into today and can leave a meal out, so that a routine Ramadan day or work day is logged at once. · map row "copy a meal or day", FR-045 · C23 ("not including imported activity"), E11, E12, EX-02, EX-41
-- `/r` Given Faisal's Mon 8 Feb 2027 holds food Entries in three meals, an Activity "walk 30 min" and one Voided Entry, When on Tue 9 Feb he picks 8 Feb in the Day picker → "Copy this Day" and taps Log, Then today receives every effective food Entry under the same meal names, and neither the Activity nor the Voided Entry is copied.
+- `/r` Given Faisal's Mon 8 Feb 2027 holds food Entries in three meals, an Activity "walk 30 min" and one Voided Entry, When on Tue 9 Feb he picks 8 Feb in the Day picker → "Copy this Day" and taps Log, Then today receives every Confirmed food Entry of that Day under the same meal names, and neither the Activity nor the Voided Entry is copied.
 - `/r` Given "Copy this Day", When quick-add lists the Day's meals, Then it shows each meal with its kcal and a tick per meal, all ticked; unticking one meal leaves it out of the copy.
 - `/r` Given Faisal copies the same Day again two minutes later, When he taps Log, Then the near-duplicate note appears (eater-3.24) and nothing is thrown away.
 
@@ -236,7 +236,7 @@ As the Eater, I save a meal I eat often as a named Template, so that next time i
 - `/r` Given Mona's Wed 30 Sep Breakfast, When she opens the Breakfast menu → "Save as Template", names it «فطار عادي» and taps Save, Then the Templates list *(proposed)* in My Units shows «فطار عادي · ٣ عناصر · ٣١٨» and quick-add shows it under Templates.
 - `/r` Given the Template was saved, When Today and `GET /v1/reports/day` for 1 Oct are read, Then nothing was logged by saving.
 - `/r` Given the name is empty or every item was removed, When Save is viewed, Then Save is disabled with "Give it a name" or "Add at least one item" beside the field; given the name «فطار عادي» already exists, Then "A Template with this name exists — choose another name" appears and nothing is overwritten.
-- `/s` Given `POST /v1/templates` *(proposed)*, Then the Template stores Unit ids and counts — no Unit versions and no calories — so its numbers come from the Units when it is logged.
+- `/s` Given «فطار عادي», When it is saved through `POST /v1/templates` *(proposed)* and read back, Then the Template stores Unit ids and counts — no Unit versions and no calories — so its numbers come from the Units when it is logged.
 
 #### eater-3.20 · Log a Template, changing counts first if I want
 As the Eater, I log a Template from quick-add and can change a count or leave an item out before Log, so that "usual breakfast, but two cheese bites today" is still two taps. · FRD §2.1, map WF-3 ("log a Template"), FR-014 · C5, EX-02, EX-17
@@ -250,8 +250,8 @@ As the Eater, I log a Template from quick-add and can change a count or leave an
 #### eater-3.21 · Log with Siri or the Shortcuts action
 As the Eater, I say "Log cheese bite in Sips & Bytes" or run the "Log a Unit" action, so that I can log without opening the app, through the same command the app uses. · map WF-3 ("Siri or a widget"), map row "one idempotent consume command for every surface", FR-040 · P22, P23, C55, EX-13
 - `/r` Given Sam's Unit "cheese bite" (last count 3) and the App Shortcut phrase "Log cheese bite in Sips & Bytes" (the app name plus one parameter, the Unit, P22), When the "Log a Unit" App Intent runs from the simulator's Shortcuts app with Unit = cheese bite and no count, Then it logs 3 and the result snippet reads "Logged 3 cheese bites · 1,442 kcal remaining" with an Undo button (UndoableIntent and SnippetIntent, iOS 26, P23).
-- `/r` Given the same action run with Count = 2, Then the snippet reads "Logged 2 cheese bites", and Today lists the Entry when the app is opened.
-- `/r` Given Undo is tapped on the snippet, Then the Entry is Voided (reason undo) and Today no longer lists it.
+- `/r` Given the same action, When it runs with Count = 2, Then the snippet reads "Logged 2 cheese bites", and Today lists the Entry when the app is opened.
+- `/r` Given that snippet, When Undo is tapped on it, Then the Entry is Voided (reason undo) and Today no longer lists it.
 - `/r` Given the simulator is offline, When the intent runs, Then the snippet reads "Logged 3 cheese bites · waiting to send", and Today shows the Entry as Pending (eater-3.25).
 - Note: no source confirms App Shortcut phrases with Siri in Arabic (P22, r1-refute-b open point 3) — `assumption`. Arabic acceptance for this path runs through the Shortcuts action; typed and tapped logging never depend on Siri.
 
@@ -260,7 +260,7 @@ As the Eater, I tap a recent Unit on the Home Screen widget, so that a glass of 
 - `/r` Given the Sips & Bytes widget on the simulator's Home Screen shows Sam's three most recent Units, When he taps "cup of laban", Then the app does not open, the widget shows "Logged 1 cup of laban · Undo", and Today, once opened, lists the Entry.
 - `/r` Given the simulator is locked, When the Lock Screen widget's button is tapped, Then nothing is logged until the device is unlocked (P24), and the Lock Screen widget shows no food names or kcal — only "Sips & Bytes · Log" (C55: "an innocuous summary").
 - `/r` Given Settings → Privacy → "Show kcal remaining on widgets" is turned on, When the Home Screen widget refreshes after that log, Then it shows "1,428 kcal remaining"; given Settings → Goals → "Hide numbers" is on, Then the widget shows no numbers at all.
-- `/r` Given the widget's Undo is tapped, Then the Entry is Voided and the widget returns to its tiles.
+- `/r` Given the widget shows "Logged 1 cup of laban · Undo", When Undo is tapped on it, Then the Entry is Voided and the widget returns to its tiles.
 
 #### eater-3.23 · Every surface sends one idempotent command
 As the Eater, I can trust that a tap, the chips, a Template, a copy, Siri and the widget all record food the same way, so that a retry or a double delivery never doubles my food. · map row "one idempotent consume command for every surface", FR-040, FR-043 ("Retried commands and duplicate delivery must not add food twice"), AT-10, FRD §18, NFR-06
@@ -273,15 +273,15 @@ As the Eater, I can trust that a tap, the chips, a Template, a copy, Siri and th
 #### eater-3.24 · A near-duplicate gets a quiet note, never a discard
 As the Eater, I see a quiet note when I log the same thing again within minutes, with "Keep both" and "Undo this one", so that a real second helping is never thrown away and a double tap is easy to fix. · FR-043 ("Near-duplicate human commands should show a warning rather than being automatically discarded") · EX-24, EX-35
 - `/r` Given Sam logged "3 cheese bites" at 08:41, When he logs "3 cheese bites" again at 08:43, Then both Entries are in the timeline and the banner reads "You logged 3 cheese bites at 08:41 · Keep both · Undo this one" — no dialog.
-- `/r` Given he taps "Undo this one", Then only the 08:43 Entry is Voided; given he taps "Keep both" or ignores the note, Then both stay counted and Today reads 276 kcal for the two.
+- `/r` Given that note, When he taps "Undo this one", Then only the 08:43 Entry is Voided; When instead he taps "Keep both" or ignores the note, Then both stay counted and Today reads 276 kcal for the two.
 - `/s` Given two commands with different command_ids and the same items 2 minutes apart, When both reach `POST /v1/consumption`, Then both are Confirmed; the note's window (10 minutes here) is a value chosen in the served product (`assumption`; Conflicts item 5).
-- `/r` Given the same 3 cheese bites at 08:41 and again at 12:30, Then no note appears.
+- `/r` Given 3 cheese bites logged at 08:41, When the same is logged at 12:30, Then no note appears.
 
 ### H · Offline and slow
 
 #### eater-3.25 · Log with no signal; Pending is shown, not hidden
 As the Eater, I keep logging with no signal and see each new Entry marked Pending and the Pending kcal shown apart from the Confirmed figure, so that I know what the server has accepted without being interrupted. · FRD §8.3 ("The client distinguishes pending from confirmed totals"), FRD §7.2, NFR-06, D2 Entry ("the day total shows Pending separately"), FRD §14 Today ("offline pending") · EX-12, EX-21, E19, E29, E38, C15, C35
-- `/r` Given Mona online with Breakfast 318 kcal Confirmed on Thu 1 Oct, When the simulator goes offline and she logs «١ × كوباية شاي بلبن» and «٢ × تمرة سكري», Then both Entries show Pending with a clock symbol and the word, the headline reads «١٬٤٤٤» kcal remaining with «١٠٨ في الانتظار» (108 Pending) beside it and the Confirmed figure «١٬٥٥٢» under it, and no alert appears.
+- `/r` Given Mona online with Breakfast 318 kcal Confirmed on Thu 1 Oct, When the simulator goes offline and she logs «١ × كوباية شاي بلبن» and «٢ × تمرة سكري», Then both Entries show Pending with a clock symbol and the word, the headline reads «١٬٤٤٤» kcal remaining with the Pending figure «١٠٨» beside it and the Confirmed figure «١٬٥٥٢» under it (labels in Arabic), and no alert appears.
 - `/r` Given offline, When she opens My Units, the Templates list and any of the last 30 Days, Then each opens from the device with a quiet "Offline — showing saved data" line (NFR-06: at least 30 days cached).
 - `/s` Given the two offline logs, When the outbox is read, Then each command is stored durably with its UUID command_id and expected revision, survives an app kill, and is listed once (FRD §8.3).
 - `/r` Given offline, When she types a sentence in quick-add, Then the line "Sentences need a connection — pick from your units" appears, her matching recent Units are offered, and nothing is logged from the sentence later on its own (FRD §7.2).
@@ -312,7 +312,7 @@ As the Eater, I set my Day to end at 03:00 so that a sandwich at 00:20 counts on
 As the Eater, I switch on a Ramadan option so that iftar, the late family meal and suhoor fall on one Day, under my own meal names. · FRD §8.1, FR-044, map §6 ("diary-day boundary") · E1, E11, E12, E13, EX-05, EX-20, research conflict 2
 - `/r` Given Faisal turns on Settings → Units & language → "Ramadan days" (boundary 12:00; the hour is an `assumption` for the model phase), When he logs iftar at 18:02 on Mon 8 Feb 2027, the family meal at 21:30 and suhoor at 03:40 on 9 Feb, Then all three meals are on Day Mon 8 Feb and its day report sums them.
 - `/r` Given those meals, When Today shows them, Then they carry Faisal's meal names (iftar and suhoor in Arabic, and the name he typed for the 21:30 meal), not fixed Breakfast/Lunch/Dinner slots.
-- `/r` Given Faisal turns "Ramadan days" off on 10 Mar 2027, Then new Entries follow his 03:00 boundary from the next Day, and February's Days keep their Entries.
+- `/r` Given "Ramadan days" is on, When Faisal turns it off on 10 Mar 2027, Then new Entries follow his 03:00 boundary from the next Day, and February's Days keep their Entries.
 
 #### eater-3.30 · Changing the boundary never moves my past
 As the Eater, I can change my boundary at any time and it applies only from my next Day, so that last week's totals never shift. · FRD §8.1 ("A manual day switch is not an instruction to reinterpret all past events"; "stable diary-day assignment"), FR-047 · EX-14, research conflict 1
@@ -330,24 +330,24 @@ As the Eater, I fly from Riyadh to London and my Entries stay on their Days with
 #### eater-3.32 · "Start new day" never deletes
 As the Eater, I can tap or say "Start new day" after a late night, so that new Entries go to the next Day while every earlier Day stays exactly as it was. · FR-044 ("creates or selects a diary day; it never deletes previous days. The selected day and time zone remain visible"), FR-039, AT-14, FRD §8.1 · EX-07
 - `/r` Given Mona at 02:00 on 1 Oct is still on Day Wed 30 Sep (boundary 03:00, 1,098 kcal), When she taps the Day picker → "Start new day" and confirms, Then Today shows Thu 1 Oct, empty, with Wed 30 Sep and its 1,098 kcal one tap away in the Day picker, and nothing on 30 Sep changed.
-- `/r` Given she types «ابدأ يوم جديد» instead, Then the same confirmation opens; nothing is deleted, cleared or reset.
-- `/s` Given `POST /v1/days` *(proposed)* for 2026-10-01 is sent twice, Then one Day exists, and `GET /v1/reports/day` for 2026-09-30 returns the same totals and revision as before.
+- `/r` Given the same Day, When she types «ابدأ يوم جديد» in quick-add instead, Then the same confirmation opens; nothing is deleted, cleared or reset.
+- `/s` Given Mona's Days, When `POST /v1/days` *(proposed)* for 2026-10-01 is sent twice, Then one Day exists, and `GET /v1/reports/day` for 2026-09-30 returns the same totals and revision as before.
 - `/r` Given she started 1 Oct early, When 03:00 passes, Then Today stays on Thu 1 Oct and no extra Day is created.
 
 #### eater-3.33 · Log onto a past Day from memory
 As the Eater, I pick yesterday in the Day picker and log the dinner I forgot, so that a missed meal is recorded on its Day and today stays untouched. · FR-047, FR-044, FRD §14 Today ("Selected diary date") · E24, E33, EX-07
-- `/r` Given Sam's Thu 1 Oct at 290 kcal, When he picks Wed 30 Sep in the Day picker and logs "1 cup of laban" at 21:00, Then 30 Sep's day report rises by 152 and Thu 1 Oct still reads 290 eaten.
+- `/r` Given Sam's Thu 1 Oct at 290 kcal, When he picks Wed 30 Sep in the Day picker and logs "1 cup of laban" at 21:00, Then 30 Sep's day report rises by 152 and Thu 1 Oct still reads 290 consumed.
 - `/r` Given a past Day is selected, When Today is viewed, Then the header names that Day with "Back to today", so a log never lands on another Day unnoticed.
-- `/s` Given that command, Then it carries diary_day_id 2026-09-30 and eaten_at 21:00 local on 30 Sep (the time can be changed before Log), and `GET /v1/reports/period` for 24–30 Sep includes the 152 kcal.
+- `/s` Given that log, When its command is read in the outbox, Then it carries diary_day_id 2026-09-30 and eaten_at 21:00 local on 30 Sep (the time can be changed before Log), and `GET /v1/reports/period` for 24–30 Sep includes the 152 kcal.
 
 ### J · Meal report and day report
 
 #### eater-3.34 · A meal report and a day report after every entry
 As the Eater, I see right after each log what was added and where my Day now stands — calories, macro grams, 4/4/9 kcal and shares, Target and remaining — so that the reports I used to ask a chatbot for are always there and always the same. · FR-069, FR-070, FRD §13.1, FRD §10.1, FRD §10.3, map row "Ledger → Eater: meal and day report" · EX-11, E22, E23
 - `/r` Given Sam's Day (Provisional) at 720 kcal (P 30 g, C 105 g, F 20 g) with Target 1,870 and carbohydrate ≤30 %, When he logs a lunch resolving to 480 kcal (P 42 g, C 33 g, F 20 g), Then the meal report on Today reads "Lunch added: 480 kcal" with Protein 42 g · 168 kcal · 35.0 %, Carbohydrate 33 g · 132 kcal · 27.5 %, Fat 20 g · 180 kcal · 37.5 %, and "Carbohydrate: within the 30 % maximum".
-- `/r` Given that log, Then the day report under it reads "Today: 1,200 kcal · Target 1,870 · Remaining 670" with Protein 72 g · 288 kcal · 24.0 %, Carbohydrate 138 g · 552 kcal · 46.0 %, Fat 40 g · 360 kcal · 30.0 %, and "Carbohydrate: above the 30 % maximum" in neutral wording (FRD §13.1).
+- `/r` Given that log, When the day report under the meal report is read, Then it reads "Today: 1,200 kcal · Target 1,870 · Remaining 670" with Protein 72 g · 288 kcal · 24.0 %, Carbohydrate 138 g · 552 kcal · 46.0 %, Fat 40 g · 360 kcal · 30.0 %, and "Carbohydrate: above the 30 % maximum" in neutral wording (FRD §13.1).
 - `/r` Given those share columns, When they are read, Then the heading names their basis "share of macro-derived energy (4/4/9)" (FRD §10.1).
-- `/r` Given the `POST /v1/consumption` response for that lunch over HTTP, Then its meal totals and day totals carry the same figures as the two reports.
+- `/r` Given that lunch, When the `POST /v1/consumption` response is read over HTTP, Then its meal totals and day totals carry the same figures as the two reports.
 
 #### eater-3.35 · Shares add to 100.0 % and the headline keeps the source's calories
 As the Eater, I see macro shares that always add to exactly 100.0 % and a calorie headline that keeps the label's or record's own number even when the macros say otherwise, so that I can trust both. · FRD §10.1 ("The calorie headline remains source energy"), FRD §10.2 (largest remainder; zero-energy "not applicable"; precision), AT-15, FR-030, FR-069
@@ -360,7 +360,7 @@ As the Eater, I see macro shares that always add to exactly 100.0 % and a calori
 As the Eater, I see how much of my calories has known macros when an Entry has calories only, so that my macro split is never shown as complete when it is not. · AT-16, FR-016, FRD §10.2 ("Missing macros: Mark unknown; display coverage"), FRD §14 Today ("missing macros") · EX-27
 - `/r` Given Sam's Day of 290 kcal with known macros plus the 350 kcal "kunafa slice" (user-defined), When the day report shows, Then it reads "640 kcal" and "Macros known for 290 of 640 kcal (45 %)", and the shares 21.4 %, 35.2 % and 43.4 % are labelled "of Entries with known macros".
 - `/r` Given that Day, When the protein bar on Today is read, Then it shows "15.5 g + unknown", never a figure that seems to include the kunafa.
-- `/s` Given `GET /v1/reports/day` for that Day, Then it returns consumed_kcal 640, macro_coverage_kcal 290 and macros_complete false, and attributes no protein to the kunafa Entry.
+- `/s` Given that Day, When `GET /v1/reports/day` is called, Then it returns consumed_kcal 640, macro_coverage_kcal 290 and macros_complete false, and attributes no protein to the kunafa Entry.
 
 #### eater-3.37 · Target, remaining and over — plainly, without judgment
 As the Eater, I see Target, consumed and remaining (or over) with the Evidence behind them and a range when estimates are included, in calm words, so that an ordinary over-target Day never feels like a failure. · FR-070 ("target, consumed, remaining/over, source confidence, and estimated range"), FR-071, FRD §11.4, FRD §14.2, FRD §20.1, FRD §14 Today ("over target") · EX-35, EX-42
@@ -374,17 +374,17 @@ As the Eater, I can tap any figure and see the Entries it adds up, so that a tot
 - `/r` Given Sam's Day at 1,200 kcal, When he taps the consumed figure on Today, Then the list of Entries shows each one's kcal and the sum line reads 1,200 kcal.
 - `/s` Given that Day's accepted events (creates, a Correction, a Void, a Restore), When the Day projection is rebuilt from the ledger alone, Then consumed kcal, macro grams, coverage and revision equal the stored projection exactly.
 - `/s` Given a create and its Day-projection update, When the projection write is forced to fail, Then neither is stored (one transaction) and the client keeps the Entry Pending.
-- `/r` Given a Support agent reads this Day inside an Active Grant, Then the day report figures equal the eater's own (support lens, Grant diary read).
+- `/r` Given an Active Grant for Sam, When the Support agent opens this Day's day report in the admin console, Then its figures equal the eater's own (support lens, Grant diary read).
 
 ### K · Apple Health
 
 #### eater-3.39 · Each Confirmed Entry appears in Apple Health as a food
 As the Eater, I find what I log in Apple Health as one food with its energy and macros, and it disappears when I Void it, so that my other health apps see the same diary. · map row "Ledger → HealthKit: write the entry as a food correlation … delete on void", WF-3 done-when ("appears in Apple Health and disappears on void"), FR-016 · P29, C12, C56
 - `/r` Given Sam turned on Settings → Activity → "Write meals to Apple Health" and allowed Dietary Energy, Protein, Carbohydrates and Total Fat in the iOS sheet, When "3 cheese bites" turns Confirmed, Then the simulator's Health app → Browse → Nutrition lists 138 kcal Dietary Energy from "Sips & Bytes" at the Entry's eaten time, with protein 7.5 g, carbohydrates 13.5 g and fat 6.0 g at the same time.
-- `/s` Given that write, Then it is one HealthKit food correlation holding the four samples (P29), and the Entry stores the correlation and sample ids.
+- `/s` Given that write, When the HealthKit store is queried in a system test, Then it holds one food correlation with the four samples (P29), and the Entry stores the correlation and sample ids.
 - `/r` Given the calorie-only "kunafa slice", When it is written, Then Health shows 350 kcal and no protein, carbohydrate or fat sample — unknown is never written as 0 g.
 - `/r` Given an Entry is Pending offline, When Health is viewed, Then it has no sample yet; after the Entry turns Confirmed the sample appears once (Conflicts item 4).
-- `/r` Given Sam taps Undo on that Entry, or Voids it, Then the correlation disappears from the Health app.
+- `/r` Given that Entry is in Health, When Sam taps Undo on it or Voids it, Then the correlation disappears from the Health app.
 
 #### eater-3.40 · Health is asked once, when it matters; saying no keeps logging
 As the Eater, I'm offered "Write meals to Apple Health" as a quiet card after my first Confirmed Entry, so that I decide when it means something, and logging works the same if I say no. · FR-076 ("Refusal must preserve unaffected functions"), FRD §3.2 ("Goals, permissions, and health connections are separate choices"), map §6 ("Health write on/off"), map row Consent ("each Health type") · EX-26, P30, R7
@@ -413,7 +413,7 @@ As the Eater, I can hide calorie and macro numbers and still log my Units, so th
 As the Eater, I can save a Unit, keep a Plan, take a photo or drop an Analysis without anything being added to my Day, and confirming a Plan twice still adds one meal, so that my total holds only what I ate. · FR-045 ("Planned meals, calibration photos, and abandoned drafts shall contribute zero … prevent duplicate execution"), AT-13, AT-21, FRD §4.3, FR-039 ("Only authorized consume/correct/remove commands affect the ledger")
 - `/r` Given Sam's Day at 290 kcal, When he saves a Unit from a scale photo, keeps a 600 kcal Plan Saved in Capture & Plan, and closes an Analysis so it is Discarded, Then Today still reads 290 consumed and `GET /v1/reports/day` returns consumed_kcal 290.
 - `/r` Given a Saved Plan is Confirmed with "Ate as planned" and the confirmation is resent with the same command_id, When Today is read, Then the Plan's meal appears once (AT-21; the Plan flow itself is WF-5).
-- `/s` Given the consume command from a Plan, Then it carries source_plan_id (FRD §18.1) and a second confirmation of the same Plan adds no Entry.
+- `/s` Given a Saved Plan, When its consume command is read at `POST /v1/consumption`, Then it carries source_plan_id (FRD §18.1), and a second confirmation of the same Plan adds no Entry.
 
 ---
 
@@ -439,8 +439,8 @@ Map: "correct, void, restore, move day; scope this entry or future default." Int
 As the Eater, I open an Entry from any Day's timeline and see its Unit and version, its parts, its Evidence and source, and its history, with Correct and Void beside it, so that I can check a number before I change it. · FR-046 ("itemized timeline, source details, correction history"), FR-026, FRD §14.1 ("Includes 8 g bread", "Based on your saved recipe") · EX-04, EX-37
 - `/r` Given Mona's Wed 30 Sep, When she taps «١٥ معلقة تلبينة» in Dinner, Then Entry details *(proposed)* show «معلقة تلبينة», version 1 · 16 g, the Evidence badge recipe-calculated, «٣٠٠» kcal, the time «٢١:١٠», one history row "Confirmed 21:10", and Correct and Void as visible buttons (labels in Arabic).
 - `/r` Given Sam's "3 cheese bites" Entry, When its Entry details open, Then they read "Includes 5.4 g cheese · 1.5 g oil · 8 g bread each" and "Based on your saved unit, version 1".
-- `/r` Given a swipe on an Entry row in the timeline, Then Correct and Void appear, and the same two actions are also buttons in Entry details (EX-37).
-- `/r` Given `GET /v1/consumption/{id}/history` *(proposed)* over HTTP for that Entry, Then it returns each event with operation, event_time, quantity and snapshot reference.
+- `/r` Given an Entry row in the timeline, When the eater swipes it, Then Correct and Void appear, and the same two actions are also buttons in Entry details (EX-37).
+- `/r` Given that Entry, When `GET /v1/consumption/{id}/history` *(proposed)* is called over HTTP, Then it returns each event with operation, event_time, quantity and snapshot reference.
 
 #### eater-6.2 · Say or type the correction; the app finds the Entry
 As the Eater, I type or say "18 not 15" or "those biscuits were 10 g, not 25 g", so that the app opens the affected Entry instead of making me hunt for it. · FRD §2.6 ("opens the affected entry"), FR-039 (correct), FR-035, AT-26
@@ -453,17 +453,17 @@ As the Eater, I type or say "18 not 15" or "those biscuits were 10 g, not 25 g",
 
 #### eater-6.3 · The preview shows old, new, the meal's change and the Day's change
 As the Eater, I see before confirming the old and new quantity and calories, the meal difference and the Day difference, and what the correction applies to, so that I know exactly what it will do. · FRD §2.6 ("The correction preview shows old and new quantities, meal difference, daily difference, and whether the correction applies only to this entry or also creates a future default"), AT-06, FRD §18 (corrections return "old/new/delta and affected day projections") · EX-14, EX-35
-- `/r` Given «١٥ معلقة تلبينة» (300 kcal) in Dinner on 30 Sep (Day 1,098 kcal, Target 1,870), When the correction to 18 is previewed, Then the correction preview shows old «١٥ · ٣٠٠», new «١٨ · ٣٦٠», Dinner 300 → 360 (60 more), Day 1,098 → 1,158 (60 more; 772 → 712 remaining), and "Applies to: this Entry only" selected (AT-06: 18 spoons = 360 kcal).
+- `/r` Given «١٥ معلقة تلبينة» (300 kcal) in Dinner on 30 Sep (Day 1,098 kcal, Target 1,870), When the correction to 18 is previewed, Then the correction preview shows old «١٥ · ٣٠٠», new «١٨ · ٣٦٠», Dinner 300 → 360 (60 more), Day 1,098 → 1,158 (60 more; 772 → 712 remaining), and "Applies to: this Entry only" (a change of count has no future default; a change of weight offers one, eater-6.10) (AT-06: 18 spoons = 360 kcal).
 - `/r` Given those change lines, When they are read, Then each carries a word ("more" or "less") and a sign, not colour alone.
 - `/r` Given the preview, When Mona taps Cancel or swipes it away, Then nothing changes and `GET /v1/reports/day` for 2026-09-30 returns the same revision.
-- `/s` Given `POST /v1/consumption/{id}/corrections` for that Entry, Then the response's old, new and delta and the 30 Sep Day projection equal the preview's figures.
+- `/s` Given the previewed correction, When it is sent to `POST /v1/consumption/{id}/corrections`, Then the response's old, new and delta and the 30 Sep Day projection equal the preview's figures.
 
 #### eater-6.4 · Confirming replaces the Entry; it never adds food
 As the Eater, I confirm a correction and the Entry is replaced, so that "two, not three" leaves two in my Day — not five. · AT-11, FR-041 ("effective-entry projection with an auditable event history"), FR-042, FRD §2.6 ("Confirmation replaces the effective entry; it is not another positive food addition"), FRD §8.2
 - `/r` Given Sam's Entry "3 foul spoons" (90 kcal), When he corrects it to 2 and confirms, Then the timeline lists "2 foul spoons · 60 kcal" once, the Day falls by 30 kcal, and no "3 foul spoons" Entry remains (AT-11).
-- `/r` Given that Entry's details, Then the history reads "3 · Corrected" and "2 · Confirmed" with their times — the prior value is kept.
-- `/s` Given the ledger, Then a correction event whose supersedes field names the earlier event is appended, the effective-Entry projection holds one Entry of 2, and replaying the events gives the same Day total (FR-041, FR-042).
-- `/r` Given the same correction is resent over HTTP with the same command_id, Then the Day falls by 30 once, not 60.
+- `/r` Given that Entry, When its Entry details open, Then the history reads "3 · Corrected" and "2 · Confirmed" with their times — the prior value is kept.
+- `/s` Given that correction, When the ledger is read, Then a correction event whose supersedes field names the earlier event is appended, the effective-Entry projection holds one Entry of 2, and replaying the events gives the same Day total (FR-041, FR-042).
+- `/r` Given that correction, When it is resent over HTTP with the same command_id, Then the Day falls by 30 once, not 60.
 
 #### eater-6.5 · Arabic voice «١٨ مش ١٥» does what typed "18 not 15" does
 As the Eater, I say «التلبينة كانت ١٨ مش ١٥» (or type «١٨ مو ١٥» in Gulf Arabic), so that my spoken Arabic correction does exactly what the typed English one does — and the number comes from my Unit, never from an AI re-think. · AT-26 ("Arabic '18, not 15' and mixed English-Arabic food names are transcribed and resolved as correction, not new consumption"), WF-4 done-when, FR-036, FR-039, FRD §16.2, FRD §16.5 · EX-39, E15, E29, E43, P15
@@ -475,26 +475,26 @@ As the Eater, I say «التلبينة كانت ١٨ مش ١٥» (or type «١٨
 #### eater-6.6 · "Add another 3" is new food; "make it 18" is a correction
 As the Eater, I can say "add another 3 spoons" and get a new addition, or "make it 18" and get a correction, so that more food and a fixed number are never confused. · FRD §8.2 ("'Make that 18 spoons, not 15' replaces a quantity. 'Add another 3 spoons' adds consumption … A repeated photo does not prove repeated consumption"), FR-039
 - `/r` Given Mona's «١٥ معلقة تلبينة», When she types «زوّد ٣ معالق تلبينة» and logs the chip, Then the timeline shows two Entries, 15 and 3, and the Day reads 1,158 kcal; the 15-spoon Entry is unchanged.
-- `/r` Given instead she types «خليها ١٨», Then the correction preview opens at 15 → 18.
-- `/r` Given Sam sends yesterday's plate photo again with "log this", When the Analysis is Ready for review, Then Analysis review shows "This photo was used on Wed 30 Sep" and nothing is logged until he approves — a repeated photo is not proof of eating.
+- `/r` Given the same Entry, When she types «خليها ١٨» instead, Then the correction preview opens at 15 → 18.
+- `/r` Given Sam sends yesterday's plate photo again with "log this", When the Analysis is Ready for review, Then nothing is logged until he approves in Analysis review, and Analysis review notes that the same photo was used on Wed 30 Sep (the note is a proposal) — a repeated photo is not proof of eating.
 
 #### eater-6.7 · Correct the grams, or the Unit I picked
 As the Eater, I can correct the grams of a weighed food or swap a Unit picked by mistake, so that "the biscuits were 10 g" and "it was the foul with oil" are each one correction. · FRD §2.6 (biscuits example), FRD §18 (corrections "Replace quantity, unit, or diary day"), AT-08, FR-041
 - `/r` Given Sam's Entry "plain biscuits · 25 g · 125 kcal" (label 500 kcal/100 g, label-verified), When he confirms 10 g in the correction preview, Then the preview had shown 125 → 50 kcal (75 less), and the timeline now reads "plain biscuits · 10 g · 50 kcal".
 - `/r` Given Mona's «٤ معالق فول» (120 kcal) at Breakfast on 30 Sep, When she taps "Change unit" in the correction preview and picks «معلقة فول بالزيت», Then the preview shows 120 → 180 (60 more), and after Confirm one Entry «٤ معلقة فول بالزيت» remains.
-- `/s` Given the Unit swap, Then the correction event names the new unit_version_id and the earlier snapshot stays in the history.
+- `/s` Given the Unit swap, When `GET /v1/consumption/{id}/history` *(proposed)* is read, Then the correction event names the new unit_version_id and the earlier snapshot stays in the history.
 
 #### eater-6.8 · A correction that cannot work says so beside the number
 As the Eater, I'm told beside the number when a correction makes no sense, so that I fix it instead of guessing. · FR-041, FRD §18 ("corrections also include an expected entry version"), FRD §18.2 · EX-23, care group 4
 - `/r` Given the correction preview, When the new quantity is 0, Then Confirm is disabled and the line reads "To remove this entry, use Void" with a Void button.
-- `/r` Given the new quantity equals the old one (15 → 15), Then Confirm is disabled with "No change".
+- `/r` Given the correction preview, When the new quantity equals the old one (15 → 15), Then Confirm is disabled with "No change".
 - `/r` Given the Entry is Voided, When "18 not 15" points at it, Then the line reads "This entry is Voided — Restore it first" with Restore; a request over HTTP to correct a Voided Entry returns `VALIDATION_ERROR` and changes nothing.
-- `/r` Given a request over HTTP to `POST /v1/consumption/{id}/corrections` without an expected entry version, Then it returns `VALIDATION_ERROR` and the Entry is unchanged.
+- `/r` Given «١٥ معلقة تلبينة», When a request over HTTP to `POST /v1/consumption/{id}/corrections` has no expected entry version, Then it returns `VALIDATION_ERROR` and the Entry is unchanged.
 
 #### eater-6.9 · Undo a correction
 As the Eater, I tap Undo after a correction and get the earlier quantity back, with both steps kept in the history, so that a mistaken fix is as easy to reverse as a mistaken log. · FR-046 ("Undo for recent supported mutations") · EX-24
 - `/r` Given Mona confirmed 15 → 18, When she taps Undo on the banner naming the correction, Then the Entry reads 15 again, the Day reads 1,098, and the history lists 15 Corrected, 18 Corrected, 15 Confirmed with their times.
-- `/s` Given that Undo, Then it is a new correction event back to the earlier snapshot — append-only; no earlier event is removed.
+- `/s` Given that Undo, When the Entry history is read over `GET /v1/consumption/{id}/history` *(proposed)*, Then the Undo is a new correction event back to the earlier snapshot — append-only; no earlier event is removed.
 - `/r` Given the banner has closed, When Entry details open, Then "Undo" is still offered for this most recent change.
 
 ### C · Choose the scope
@@ -505,75 +505,75 @@ As the Eater, when I correct a weight ("my bread bite is 9 g now"), I choose whe
 - `/r` Given she picks "This Entry only", When she confirms, Then today's Entry reads 6 × 9 g · 135 kcal (15 more) and My Units still shows «لقمة عيش» at 8 g, version 1.
 - `/r` Given she picks "This Entry and future logs", When she confirms, Then My Units shows «لقمة عيش» at 9 g, version 2, today's Entry reads 135 kcal, the 30 Sep Entry still reads 120 kcal on version 1, and her next «لقمة عيش» log uses 9 g (AT-12).
 - `/r` Given the future-logs choice, When the preview is read before Confirm, Then it names the Units whose bread follows this rule ("cheese bite: future logs include 9 g bread") and those keeping their own exception ("meat bite: stays 5 g", FR-020).
-- `/s` Given the future-logs choice, Then `POST /v1/units/{id}/versions` created version 2 and every earlier Entry keeps unit_version_id version 1.
+- `/s` Given the future-logs choice, When it is confirmed, Then `POST /v1/units/{id}/versions` has created version 2 and every earlier Entry keeps unit_version_id version 1.
 
 #### eater-6.11 · Apply a new measurement to past Entries I choose — only when I approve
 As the Eater, I can also apply the new measurement to past Entries I pick, seeing each Day's change first, and nothing is recalculated unless I confirm, so that "apply that to yesterday's lunch" is possible and never automatic. · AT-12 ("Selected-history correction works only after approval"), FRD §8.2 ("'Apply that measurement to today's lunch' explicitly corrects selected entries"), FR-014, FR-031, FR-047
 - `/r` Given version 2 of «لقمة عيش» exists, When Mona opens "Apply to past entries…" on the Unit in My Units, Then the Entries on version 1 are listed by Day with none ticked, and ticking one shows its Day's change (e.g. Wed 30 Sep: «٦ لقم عيش», 15 more kcal).
-- `/r` Given she ticks only 30 Sep's Lunch Entry and confirms, Then 30 Sep's day report reads 1,113 kcal, Tue 29 Sep is unchanged, and the changed Entry's history names the 9 g measurement.
-- `/r` Given she closes the list without confirming, Then no past Entry changed and every Day's revision is the same.
-- `/s` Given the confirmed batch, Then one correction event is written per ticked Entry and each affected Day's revision rises once.
+- `/r` Given that list, When she ticks only 30 Sep's Lunch Entry and confirms, Then 30 Sep's day report reads 1,113 kcal, Tue 29 Sep is unchanged, and the changed Entry's history names the 9 g measurement.
+- `/r` Given that list, When she closes it without confirming, Then no past Entry changed and every Day's revision is the same.
+- `/s` Given the confirmed batch, When the ledger is read, Then one correction event is written per ticked Entry and each affected Day's revision rises once.
 
 #### eater-6.12 · After a new default, every quick path logs the new version
 As the Eater, I tap my recent tile, a Template, Siri or the widget after changing a Unit and get the new version, so that the old value never sneaks back from a shortcut. · FR-014, FRD §17 EatingUnitVersion ("Latest approved version is used for new logs only"), map row "one idempotent consume command for every surface" · E21, EX-14
 - `/r` Given «لقمة عيش» is version 2, When Mona logs it from the recent tile, from the widget and from the Shortcuts action, and logs the Template «فطار عادي» whose cheese bites take bread by rule, Then every new Entry's details read 9 g bread.
-- `/r` Given she copies 29 Sep's Breakfast logged on version 1, Then the copy uses version 2 and says so (eater-3.17).
+- `/r` Given 29 Sep's Breakfast logged on version 1, When she copies it to today, Then the copy uses version 2 and says so (eater-3.17).
 - `/s` Given iPhone B, offline, logs «لقمة عيش» naming version 1 after iPhone A created version 2, When B syncs, Then the Entry is stored on version 1 as sent and its details offer "Use version 2" as a one-tap correction (a proposal; Conflicts item 6).
 
 #### eater-6.13 · A better source never rewrites my past by itself
 As the Eater, I keep my past Days exactly as they were when the reference data behind a Unit improves, and I choose whether to apply it to Entries I pick, so that nothing moves that I did not move. · FR-031 ("require explicit scope selection before recalculating historical entries"), FRD §1.4, FRD §17.2 ("Log events capture nutrient snapshots"), D2 Food states (Approved → Superseded) · E16, EX-14 · **Shared: Eater · Nutrition approver · Platform admin**
 - `/r` Given the Nutrition approver approves a new version of the Food behind Mona's «معلقة فول» (the old one becomes Superseded; approver-10.28), When Mona opens Progress for the week and the Day Wed 30 Sep, Then every total is unchanged.
 - `/r` Given that approval, When she opens «معلقة فول» in My Units, Then a quiet line says a newer source is available and past Entries are unchanged, with "Use for future logs" and "Apply to past entries…" (eater-6.11).
-- `/s` Given the Platform admin rolls a Registry version forward and then Rolled back, When the ledger and Day projections are compared before and after, Then they are identical.
+- `/s` Given the Platform admin moves a Registry version to Rollout and then to Rolled back, When the ledger and Day projections are compared before and after, Then they are identical.
 
 ### D · Void and Restore
 
 #### eater-6.14 · Void an Entry, with Undo instead of a warning
 As the Eater, I Void an Entry with one action and get Undo instead of "Are you sure?", so that removing a mistake is quick and reversible. · FR-041, FRD §18 (void: "Retrying does not subtract twice"), map row "delete on void" · EX-15, EX-24, C10
 - `/r` Given Sam's Entry "1 cup of laban" (152 kcal), When he taps Void in its Entry details, Then the Entry leaves the timeline with no dialog, the banner reads "Voided 1 cup of laban · Undo", and "kcal remaining" rises by 152.
-- `/r` Given the Void is resent over HTTP with the same command_id, Then the Day rises by 152 once, not 304.
-- `/r` Given Entry details, Then Correct is the first button and Void is styled as secondary — Void is never the main action.
-- `/s` Given the Void, Then a void event is appended and the Entry's earlier events stay in its history.
+- `/r` Given that Void, When it is resent over HTTP with the same command_id, Then the Day rises by 152 once, not 304.
+- `/r` Given any Entry, When its Entry details open, Then Correct is the first button and Void is styled as secondary — Void is never the main action.
+- `/s` Given that Void, When the ledger is read, Then a void event is appended and the Entry's earlier events stay in its history.
 
 #### eater-6.15 · See Voided Entries and Restore one
-As the Eater, I can see what I Voided on a Day and Restore it, so that nothing I removed is lost for good — unlike the ~30-second undo some trackers give (C10). · FR-041 ("create, correct, void, restore"), FR-046, map vocabulary "Restore"
+As the Eater, I can see what I Voided on a Day and Restore it, so that nothing I removed is lost for good — unlike a tracker whose undo lasts about 30 seconds (C10, weak: from a competitor blog). · FR-041 ("create, correct, void, restore"), FR-046, map vocabulary "Restore"
 - `/r` Given 30 Sep has one Voided Entry, When the Day's timeline is viewed, Then a collapsed line reads "Voided (1)"; opening it shows "1 cup of laban · Voided 08:52" with Restore.
-- `/r` Given Restore is tapped, Then the Entry returns to Breakfast with its 152 kcal snapshot and the Day rises by 152; resending `POST /v1/consumption/{id}/restore` *(proposed)* with the same command_id leaves it counted once.
-- `/r` Given a Restored Entry, Then its history reads Confirmed, Voided, Restored with their times.
+- `/r` Given that line, When Restore is tapped, Then the Entry returns to Breakfast with its 152 kcal snapshot and the Day rises by 152; resending `POST /v1/consumption/{id}/restore` *(proposed)* with the same command_id leaves it counted once.
+- `/r` Given that Restored Entry, When its Entry details open, Then its history reads Confirmed, Voided, Restored with their times.
 
 #### eater-6.16 · "Remove the laban" opens a Void for me to confirm
 As the Eater, I can type «احذف اللبن» or "remove the laban", so that the app finds the Entry and I confirm the Void myself. · FR-039 (remove: "Only authorized consume/correct/remove commands affect the ledger"), FRD §16.2 ("It may not … delete history")
-- `/r` Given Faisal's Day has one «كوب لبن» Entry, When he types «احذف اللبن», Then a preview shows that Entry with 152 kcal less for the meal and for the Day, and nothing changes until he taps Void.
-- `/r` Given two «كوب لبن» Entries that Day, Then one question asks which one.
-- `/s` Given the Analysis returns intent "remove", Then the analyzer changes nothing; only the app's void command, sent after Faisal's tap, changes the ledger.
+- `/r` Given Faisal's Day has one «كوب لبن» Entry, When he types «احذف اللبن», Then Entry details open on that Entry showing 152 kcal less for the meal and for the Day if Voided, and nothing changes until he taps Void.
+- `/r` Given two «كوب لبن» Entries that Day, When he types «احذف اللبن», Then one question asks which one.
+- `/s` Given the Analysis returns intent "remove", When the ledger is read before Faisal taps Void, Then the analyzer has changed nothing; only the app's void command, sent after Faisal's tap, changes the ledger.
 
 ### E · Move to another Day
 
 #### eater-6.17 · Move an Entry to the Day it belongs to
 As the Eater, I move an Entry to another Day, see both Days' change first, and both reports update, so that a meal logged on the wrong Day is fixed in one step. · FR-041 ("move-to-day"), FRD §18 (corrections replace "diary day"), FR-047, FR-071, FRD §8.1
 - `/r` Given Sam's "1 baladi loaf" (230 kcal) at 00:20 sits on Thu 1 Oct (his boundary is 00:00), When he chooses "Move to another Day" → Wed 30 Sep in Entry details, Then the preview reads "Wed 30 Sep: 230 more · Thu 1 Oct: 230 less", and after Confirm 30 Sep's day report includes it and 1 Oct's does not.
-- `/r` Given the move, Then the Entry keeps its eaten time and shows "00:20 (1 Oct)" on Day 30 Sep, unless Sam also edits the time.
-- `/s` Given the move, Then one correction event changes diary_day_id, each Day's revision rises once, and each day report uses its own Target version (FR-071).
-- `/r` Given the Day picker in the move preview, Then Days after the current Day are not offered (a proposal; Conflicts item 9).
+- `/r` Given the move, When the Entry is opened on Day 30 Sep, Then it keeps its eaten time and shows "00:20 (1 Oct)" on Day 30 Sep, unless Sam also edits the time.
+- `/s` Given the move, When the ledger is read, Then one correction event changes diary_day_id, each Day's revision rises once, and each day report uses its own Target version (FR-071).
+- `/r` Given "Move to another Day", When its Day picker opens, Then Days after the current Day are not offered (a proposal; Conflicts item 9).
 
 ### F · Late edits stay on their Day
 
 #### eater-6.18 · Correct yesterday after starting a new day; today stays apart
 As the Eater, I correct yesterday's lunch after I have started today, and only yesterday changes, so that a late fix never leaks into today. · AT-14 ("User starts a new day, then corrects yesterday's lunch. Yesterday updates; new day remains separate"), FR-044, FR-047, WF-6 done-when
 - `/r` Given Mona used Start new day at 02:00 and Today (Thu 1 Oct) shows 318 kcal, When she corrects Wed 30 Sep's Lunch «٦ لقم عيش» to 4 (120 → 80 kcal), Then 30 Sep's day report reads 1,058 kcal and Today still reads 318 kcal with the same "remaining" figure (AT-14).
-- `/r` Given the correction preview, Then its Day line names Wednesday 30 September, not today.
-- `/s` Given `GET /v1/reports/day` for 2026-10-01 before and after, Then consumed and revision are unchanged; for 2026-09-30 the revision is one higher.
+- `/r` Given that correction, When its correction preview opens, Then its Day line names Wednesday 30 September, not today.
+- `/s` Given that correction, When `GET /v1/reports/day` for 2026-10-01 is read before and after it, Then consumed and revision are unchanged; for 2026-09-30 the revision is one higher.
 
 #### eater-6.19 · Late edits reach the period views; old Targets stay
 As the Eater, I see a late correction in last week's view and an old Target unchanged, so that my history is both corrected and honest. · FR-047 ("update the relevant historical day and cumulative report"), FR-071, FR-072, FR-061 ("Never retroactively alter historical targets")
 - `/r` Given Progress → 7 days (24–30 Sep) shows Wed 30 Sep at 1,098 kcal, When the 15 → 18 talbina correction is confirmed, Then the view shows 30 Sep at 1,158 and the week's total 60 kcal higher.
 - `/r` Given Mona's Target was 1,900 until 15 Sep and 1,870 after, When she corrects an Entry on 10 Sep, Then 10 Sep's day report compares against 1,900.
-- `/s` Given `GET /v1/reports/period` for 2026-09-24 to 2026-09-30, Then it returns the corrected 30 Sep and each Day's effective Target.
+- `/s` Given that correction, When `GET /v1/reports/period` for 2026-09-24 to 2026-09-30 is called, Then it returns the corrected 30 Sep and each Day's effective Target.
 
 #### eater-6.20 · The preview names the Day and its time zone
 As the Eater, I see in the correction preview which Day and time zone the Entry belongs to, so that travel or a late boundary never makes me fix the wrong Day. · FRD §8.1, FR-044 ("The selected day and time zone remain visible") · EX-07
 - `/r` Given Faisal's lunch on Thu 1 Oct was captured in Asia/Riyadh and his device is now in Europe/London, When he opens the correction preview for it, Then it reads "Thu 1 Oct · 13:00 Riyadh time" and its change lines name that Day.
-- `/r` Given Mona's 00:20 Entry belongs to Wed 30 Sep by her 03:00 boundary, Then its preview names Wednesday 30 September and shows the time as 00:20 on 1 Oct.
+- `/r` Given Mona's 00:20 Entry belongs to Wed 30 Sep by her 03:00 boundary, When she opens its correction preview, Then it names Wednesday 30 September and shows the time as 00:20 on 1 Oct.
 
 ### G · Offline and two devices
 
@@ -581,15 +581,15 @@ As the Eater, I see in the correction preview which Day and time zone the Entry 
 As the Eater, I correct or Void an Entry with no signal and see the change marked Pending, so that a fix made offline is applied exactly once when the signal returns. · FRD §8.3 ("Each command has a UUID and expected revision"), NFR-06, AT-10, FRD §18
 - `/r` Given Mona is offline, When she corrects «١٥ معلقة تلبينة» to 18, Then the Entry reads «١٨» with the Pending mark, and the Day shows the 60 kcal change as Pending beside the Confirmed figure, which still counts 15.
 - `/r` Given the simulator reconnects, When the outbox sends the correction with expected entry version 1, Then the Entry reads 18 with no mark and `GET /v1/reports/day` for 2026-09-30 returns 1,158 once.
-- `/s` Given the app is killed during the send and resends with the same command_id, Then the correction is applied once (60 more, not 120).
+- `/s` Given that correction, When the app is killed during the send and resends with the same command_id, Then the correction is applied once (60 more, not 120).
 
 #### eater-6.22 · Two iPhones changed one Entry: I choose, it never counts twice
 As the Eater, when my two iPhones changed the same Entry while offline, I see both values side by side and choose, so that calories are never added twice and nothing is overwritten behind my back. · AT-31 ("Two devices edit the same entry offline. Server detects stale revision and offers reconciliation; calories are not added twice"), FRD §8.3, FRD §17.2, FRD §18.2 ("A 409 conflict returns the current revision") · **Shared: Eater · Support agent**
 - `/s` Given «١٥ معلقة تلبينة» at revision 1, iPhone A corrects it to 18 offline and iPhone B corrects it to 12 offline, When A syncs and then B, Then A's correction is Confirmed (revision 2) and B's returns 409 `STALE_REVISION` with revision 2 (18 spoons).
 - `/r` Given B received that 409, When Mona opens Today on B, Then the Entry says it changed on another device, and the choice shows "On your other iPhone at 21:40: 18 spoons · 360 kcal" and "On this iPhone: 12 spoons · 240 kcal", with "Keep 18" and "Use 12".
-- `/r` Given she picks "Use 12", Then a correction with expected revision 2 is sent, both iPhones show 12 (240 kcal), and Wed 30 Sep reads 1,038 kcal — the Entry counted once.
-- `/r` Given she has not chosen yet, Then the Day counts the Confirmed 18 and the Entry is marked "Needs your choice"; the Support agent's Jobs → Sync row shows the conflict without food, quantities or kcal (support lens).
-- `/s` Given both iPhones also logged new food offline, Then those consume commands are Confirmed without a conflict (eater-3.26).
+- `/r` Given that choice, When she picks "Use 12", Then a correction with expected revision 2 is sent, both iPhones show 12 (240 kcal), and Wed 30 Sep reads 1,038 kcal — the Entry counted once.
+- `/r` Given she has not chosen yet, When Today on either iPhone is read, Then the Day counts the Confirmed 18 and the Entry is marked "Needs your choice"; the Support agent's Jobs → Sync row shows the conflict without food, quantities or kcal (support lens).
+- `/s` Given both iPhones also logged new food offline, When they sync, Then those consume commands are Confirmed without a conflict (eater-3.26).
 
 #### eater-6.23 · A Void meets a Correction
 As the Eater, when one iPhone Voided an Entry and the other corrected it, I'm asked which I meant, so that the Entry neither comes back nor vanishes without me. · AT-31, FR-041, FRD §18.2
@@ -601,25 +601,25 @@ As the Eater, when one iPhone Voided an Entry and the other corrected it, I'm as
 #### eater-6.24 · Apple Health follows every Correction, Void, Restore and move
 As the Eater, I see Apple Health match my diary after I correct, Void, Restore or move an Entry, so that Health never keeps a number I fixed. · map row "Ledger → HealthKit: rewrite on correction, delete on void", WF-3 done-when, FR-047 · P29 ("Correlations are immutable", r1-refute-b), EX-26
 - `/r` Given "Write meals to Apple Health" is on and «١٥ معلقة تلبينة» was written as 300 kcal at 21:10 on 30 Sep, When the correction to 18 turns Confirmed, Then the simulator's Health app shows 360 kcal at 21:10 on 30 Sep from "Sips & Bytes" and no 300 kcal sample remains.
-- `/s` Given that correction, Then the old food correlation was deleted and a new one written (correlations cannot be edited, P29), and the Entry's stored sample ids were replaced.
-- `/r` Given the Entry is then Voided, Then its correlation disappears from the Health app; given it is Restored, Then one correlation with the restored values reappears.
-- `/r` Given an Entry is moved to another Day without changing its eaten time, Then the Health app shows it unchanged (Health has no Days); given its eaten time is changed, Then the sample appears at the new time and not at the old one.
+- `/s` Given that correction, When the HealthKit store is queried in a system test, Then the old food correlation was deleted and a new one written (correlations cannot be edited, P29), and the Entry's stored sample ids were replaced.
+- `/r` Given that Entry, When it is Voided, Then its correlation disappears from the Health app; When it is then Restored, Then one correlation with the restored values reappears.
+- `/r` Given an Entry in Health, When it is moved to another Day without changing its eaten time, Then the Health app shows it unchanged (Health has no Days); When its eaten time is changed, Then the sample appears at the new time and not at the old one.
 - `/r` Given "Write meals to Apple Health" is off or iOS denied it, When Entries are corrected, Voided or Restored, Then the ledger and Today change as usual and nothing is written to Health.
 
 ### I · History and access
 
 #### eater-6.25 · The Entry history is mine to read, and replays to the Day
 As the Eater, I can read every change to an Entry — what, when and from which device — and trust that the Day can be rebuilt from it, so that "zero unexplained discrepancies" is something I can see. · FR-041 ("auditable event history"), FR-042, FR-046, NFR-01, brief §1.5, FRD §19.2 · EX-28, EX-29 · **Shared: Eater · Support agent**
-- `/r` Given an Entry that was logged, corrected, Voided and Restored, When its Entry details → History opens, Then four rows read "15 spoons · Confirmed 21:10 · iPhone", "18 spoons · Correction 21:40", "Voided 22:05", "Restored 22:06", each with the kcal at that point.
+- `/r` Given an Entry that was logged, corrected, Voided and Restored, When its Entry details → History opens, Then it lists, with times and the device: "15 spoons · 300 kcal · Confirmed 21:10 · Corrected 21:40" and "18 spoons · 360 kcal · Confirmed 21:40 · Voided 22:05 · Restored 22:06".
 - `/s` Given only the 30 Sep events, When the Day is replayed in a test, Then its totals equal `GET /v1/reports/day` for 2026-09-30 exactly.
-- `/s` Given the operational logs written for these commands, Then they hold request ids, Entry ids, operation names and validation codes, and no food names, quantities or kcal (FRD §19.2).
-- `/r` Given a Support agent with an Active Grant opens this Day (read-only), Then they see the same history, and their correct, void and restore calls are refused (support lens).
+- `/s` Given these four commands, When the operational logs they wrote are searched, Then they hold request ids, Entry ids, operation names and validation codes, and no food names, quantities or kcal (FRD §19.2).
+- `/r` Given an Active Grant for Mona, When the Support agent opens this Day (read-only) in the admin console, Then they see the same history, and their correct, void and restore calls are refused (support lens).
 
 #### eater-6.26 · Correcting works with VoiceOver, large text and in Arabic
 As the Eater, I can correct an Entry with VoiceOver, at the largest text size and in Arabic, so that fixing history is as accessible as logging. · NFR-08, FRD §14.1, FRD §14.2 · EX-33, EX-35, EX-36, EX-39, E40, E41
 - `/r` Given VoiceOver, When the correction preview opens, Then it reads "Talbina spoon. Old: 15, 300 kcal. New: 18, 360 kcal. Dinner: 60 more. Day: 60 more. Applies to this Entry only. Confirm, button."
 - `/r` Given the largest text size in Arabic, When the correction preview opens, Then the old, new and change lines wrap without clipping, the arrow runs from the old value toward the new one in reading direction (leftward), and every number keeps its digit order.
-- `/r` Given Mona's numerals are set to Western, Then every number in the preview shows Western digits inside the Arabic layout (EX-39).
+- `/r` Given Mona's numerals are set to Western, When the correction preview opens in Arabic, Then every number in it shows Western digits inside the Arabic layout (EX-39).
 
 ---
 
@@ -655,8 +655,8 @@ Tensions with other personas or inside the model, for the model phase — never 
 12. **Retired or Superseded reference data** (6.13; approver lens conflict 7): this file only shows a quiet notice and a scoped "Apply to past entries…". Decide whether a Retired (defective) Food version warrants a stronger notice to affected eaters.
 13. **Undo's reach.** (a) Undo of a command still in the outbox: removed from the outbox (it never reached the ledger) or sent and then Voided? (b) Undo after a multi-item log (chips, copy, Template) reverses every Entry of that command — this file reads the done-when "Undo removes exactly one entry" as "exactly what was logged" (3.5, 3.9, 3.20).
 14. **Entry history vs the Audit trail.** D2 makes "Audit trail" the only name for "who did what". The eater's per-Entry ledger history (FR-041, FR-046) is a different record; this file calls it the Entry's "history". Confirm the two names.
-15. **Names this file needs that no list holds** (D2: added by a dated delta first): **Day picker** (FRD §14's "selected diary date" control), **Entry details** (FR-046's "source details, correction history"), the **Templates** list in My Units, and Settings placements: diary-day boundary and "Ramadan days" in Units & language; One-tap logging in Food rules; Hide numbers in Goals; "Write meals to Apple Health" in Activity; "Show kcal remaining on widgets" in Privacy. Endpoints *(proposed)*: restore, history, templates, days, settings.
-16. **An Archived Unit logged offline** (3.8): this file keeps the Entry (the food was eaten) and offers "Restore unit"; the alternative is to refuse it and ask the eater to log again.
+15. **Names this file needs that no list holds** (D2: added by a dated delta first): **Day picker** (FRD §14's "selected diary date" control), **Entry details** (FR-046's "source details, correction history"), the **Templates** list in My Units, **Unarchive** (taking a Unit out of Archived; "Restore" stays an Entry word), and Settings placements: diary-day boundary and "Ramadan days" in Units & language; One-tap logging in Food rules; Hide numbers in Goals; "Write meals to Apple Health" in Activity; "Show kcal remaining on widgets" in Privacy. Endpoints *(proposed)*: restore, history, templates, days, settings.
+16. **An Archived Unit logged offline** (3.8): this file keeps the Entry (the food was eaten) and offers "Unarchive unit"; the alternative is to refuse it and ask the eater to log again.
 17. **AI quota vs free repeat logging** (research conflict 9): enforced here by 3.14 — a recent-Unit, Template or copy log never uses the quota.
 
 ## 7 · Assumptions this file leaves open

@@ -6,7 +6,7 @@ Written 2026-10-01 by the eater lens, steps 2, 3 and 5 of `way/personas/_lens-br
 
 - **Each story** has a title, a **Covers** line (first the map line it traces to — workflow step, interaction row or done-when — and the FRD lines, then research ids), a **Shared** line when another persona owns it too, the story sentence, and acceptance lines.
 - **Layers.** `/m` module (unit test of pure code) · `/s` system (an API or rules test against the emulator or a running service, negative tests included) · `/r` runtime (a verifier can watch it in the served product: the iOS simulator, the API over HTTP, or the admin console in a browser). Every story has at least one `/r` line.
-- **Words.** Only the map's vocabulary (blueprint §1.4): Unit, Recipe, Food, Template, Entry, Day, Target, Analysis, Evidence, Pending, Activity, Consent, Policy, Grant. Tabs: Today · Capture & Plan · My Units · Progress. Screens: the FRD §14 screens (Today, Capture, Analysis review, My Units, Unit editor, Meal planner, Progress, Settings) and the onboarding screens named below. "The AI Consent" is short for the Consent purpose "Send photos, voice and text to Google's AI (Gemini)". "The Target flow" is Onboarding · Profile → … → Onboarding · Review.
+- **Words.** Only the map's vocabulary (blueprint §1.4) and `way/vocabulary.md` (delta D2): Unit, Recipe, Food, Template, Entry, Day, Target, Analysis, Evidence, Activity, Consent, Policy, Grant, Privacy job; roles Eater, Support agent, Nutrition approver, Platform admin, Auditor. States use vocabulary.md's names exactly — Entry Pending/Confirmed; Analysis Pending/Ready for review/Approved/Discarded; Unit Draft/Saved; Consent Given/Withdrawn ("Not given" means no Consent record exists for that purpose); Grant Requested/Active/Expired/Ended/Withdrawn/Declined/Unanswered; Privacy job Requested/Running/Completed/Failed. "Draft" is used only for a Unit. Places: tabs Today · Capture & Plan · My Units · Progress (the FRD §14 "Capture" screen is the Capture & Plan tab); screens Analysis review, Unit editor, Meal planner and Settings; Settings sections Goals, Activity, Units & language, Privacy and Export; admin console sections Grants, Jobs and Audit trail; and the onboarding screens named below. "The AI Consent" is short for the Consent purpose "Send photos, voice and text to Google's AI (Gemini)". "The Target flow" is Onboarding · Profile → … → Onboarding · Review.
 - **Copy.** Quoted text is proposed English copy. Arabic strings are proposals for the string catalogue, which fixes one Arabic label per word (EX-08). No FR, AT, Policy-version or error code ever appears in the eater's copy; codes appear only in API responses.
 
 ## Onboarding screens (named here; the map names none)
@@ -16,7 +16,7 @@ Written 2026-10-01 by the eater lens, steps 2, 3 and 5 of `way/personas/_lens-br
 | Onboarding · Age | the 18+ gate | first launch |
 | Onboarding · Under 18 | the end screen for an age under 18 | Onboarding · Age |
 | Onboarding · Consents | where the diary lives; the AI Consent; Optional research | Onboarding · Age |
-| Onboarding · Account | create an account (Sign in with Apple or email) or sign in | Onboarding · Consents; "Create account" in Settings → Account; "Set a target" in a local trial |
+| Onboarding · Account | create an account (Sign in with Apple or email) or sign in | Onboarding · Consents; "Create account" on the account line of Settings; "Set a target" in a local trial |
 | Onboarding · Profile | age, height, weight, equation version, region and units, foods I don't eat | "Set a target" on Today; Settings → Goals |
 | Onboarding · Safety screen | optional questions that choose tracking-only or protein-first | Onboarding · Profile; Settings → Goals |
 | Onboarding · Energy | resting energy, maintenance, planned exercise | Onboarding · Safety screen |
@@ -25,7 +25,7 @@ Written 2026-10-01 by the eater lens, steps 2, 3 and 5 of `way/personas/_lens-br
 | Onboarding · Activity mode | whether exercise is included; Fixed target or Activity-adjusted target; Apple Health (optional) | Onboarding · Macros |
 | Onboarding · Review | everything once, then "Approve target" | Onboarding · Activity mode |
 
-Settings sections used are those of FRD §14's Settings ("Account; goals; … privacy; export/delete"): **Settings → Account**, **Settings → Goals** (with History), **Settings → Privacy** (with **Grants**, **Export** and **Delete account**), and **Settings → Help** (support lens). Settings opens from the button at the top of Today (EX-04, E35).
+Settings sections used are vocabulary.md's: **Settings → Goals** (with its History), **Settings → Activity**, **Settings → Units & language**, **Settings → Privacy** (with the Consents, **Grants**, **Support code** and **Delete account**), and **Settings → Export**. Settings opens from the button at the top of Today (EX-04, E35). Its first line is the **account line**: either "Signed in" with the sign-in method, or "Not signed in · Your diary is only on this iPhone" with "Create account". vocabulary.md names no Account or Help section, so this lens puts no section there (conflict C-19).
 
 ## Proposed interfaces (FRD §18 style; the FRD names none for these)
 
@@ -33,9 +33,9 @@ Settings sections used are those of FRD §14's Settings ("Account; goals; … pr
 - `POST /v1/goals/versions` approves one Target, stored as a GoalPlanVersion (FRD §17), with a `command_id`. `GET /v1/goals/versions` lists the history.
 - `PUT /v1/me/safety-mode` takes `standard | tracking_only | protein_first`, the safety-screen version and the time. It never takes the answers.
 - `POST /v1/me/consents` takes purpose, action (`given | withdrawn`), text version, method, `made_at` and `command_id`. `GET /v1/me/consents` lists them.
-- `GET /v1/me/grants`, `GET /v1/me/grants/{id}/reads`, `POST /v1/grants/{id}/approve | decline | revoke` (the support lens names `POST /v1/grants/{id}/approve`).
-- The FRD's `POST /v1/privacy/export-or-delete`, plus a job read `GET /v1/privacy/jobs/{id}`.
-- Proposed typed errors: `AGE_GATE_REQUIRED`, `CONSENT_REQUIRED` (also used by the auditor lens), `TARGET_BELOW_FLOOR`, `TARGET_BELOW_HARD_STOP`, `MACROS_INCONSISTENT`, `LOCKS_INCOMPATIBLE`, `TRACKING_ONLY`. Reused as written: `RATE_LIMITED`, `STALE_REVISION` (FRD §18.2); `GRANT_DECLINED`, `GRANT_REVOKED`, `ACCOUNT_DELETION_PENDING`, `FORBIDDEN_ROLE` (support lens).
+- `GET /v1/me/grants`, `GET /v1/me/grants/{id}/reads`, `POST /v1/grants/{id}/approve | decline | withdraw` (the support lens names `POST /v1/grants/{id}/approve`).
+- The FRD's `POST /v1/privacy/export-or-delete`, plus a read of the Privacy job, `GET /v1/privacy/jobs/{id}`.
+- Errors, only from vocabulary.md: `AGE_REQUIREMENT`, `CONSENT_REQUIRED`, `POLICY_FLOOR` (with a `limit` field, `floor` or `hard_stop`), `VALIDATION_ERROR` (with `field` and `reason`, such as `macro_total`, `locks_incompatible` or `tracking_only`), `RATE_LIMITED`, `STALE_REVISION`, `UNAUTHENTICATED`, `FORBIDDEN`, `NOT_FOUND`, `GRANT_REQUIRED` and `GRANT_NOT_ACTIVE`.
 
 ## Fixtures (all synthetic; the repo is public)
 
@@ -49,7 +49,7 @@ Settings sections used are those of FRD §14's Settings ("Account; goals; … pr
 | O5 Amal | Asia/Riyadh; Arabic; age 68, 152 cm, 52 kg; "−161" |
 | T1 trial diary | On Hala's iPhone, no account: Units «قرصة جبنة» cheese bite v1 (5.4 g cheese + 1.5 g oil + 8 g bread, FRD §2.2), «شاي بلبن» tea with milk v1, «لقمة عيش» bread bite v1 (8 g); Template «فطار» (3 cheese bites + 1 tea with milk); 12 Entries, 7 on Day 2026-09-30 and 5 on Day 2026-10-01; 16 local commands in all |
 | Consent text versions | AI Consent `c-ai-4` (auditor lens fixture); Diary processing `c-diary-1`; Optional research `c-research-1` (proposed ids, never shown to the eater) |
-| Support fixtures reused | E1 `acct_9c41e2` (Arabic, Arabic-Indic digits, Asia/Riyadh, diary-day boundary 04:00, Sign in with Apple, support code `SB-7KQ2-94XM`); E2 `acct_51ab07` (English, Africa/Cairo, email sign-in; deletion requested 2026-09-15 10:00 local, reference `DEL-26-0915-K3Q8`, completed 2026-10-14); Grant `grant_31f0` requested 2026-10-01 10:05 UTC by "Mona K." (Support), reason "An entry is missing or appears twice", Days 28–30 Sep 2026, areas "Entries and day reports" and "My Units", 1 hour, case `CASE-1182`; Grant `grant_40aa` requested 2026-10-01 10:05 UTC and never answered |
+| Support fixtures reused | E1 `acct_9c41e2` (Arabic, Arabic-Indic digits, Asia/Riyadh, diary-day boundary 04:00, Sign in with Apple, support code `SB-7KQ2-94XM`); E2 `acct_51ab07` (English, Africa/Cairo, email sign-in; deletion requested 2026-09-15 10:00 local, reference `DEL-26-0915-K3Q8`, completed 2026-10-14); Grant `grant_31f0` requested 2026-10-01 10:05 UTC by "Mona K." (Support agent), reason "An entry is missing or appears twice", Days 28–30 Sep 2026, areas "Entries and day reports" and "My Units", 1 hour, case `CASE-1182`; Grant `grant_40aa` requested 2026-10-01 10:05 UTC and never answered |
 
 **Numbers from the fixtures.** Resting energy by Mifflin–St Jeor (FRD §11.1). Maintenance = resting energy × 1.2 + planned exercise (FRD §11.3). A proposal is shown and approved rounded to the nearest 10 kcal, as FRD §11.3 displays 1,867.84 as 1,870 (EA4). Every other energy figure is shown in whole kcal.
 
@@ -106,7 +106,7 @@ As the eater, I enter my age on the first screen, so that an adults-only app let
 - `/r` **Given** a fresh install on the iOS simulator in Arabic with region Egypt, **When** the app opens, **Then** Onboarding · Age is the first screen, right to left, with one field "Your age" («عمرك») and a number keypad, and nothing else is asked.
 - `/r` **Given** Hala types «٣٤» in Arabic-Indic digits, **When** she taps Continue, **Then** Onboarding · Consents opens, and when she later reaches Onboarding · Profile its age field already shows «٣٤».
 - `/r` **Given** Onboarding · Age, **When** "abc", "0" or "17.5" is entered, **Then** the field says "Enter your age in whole years", and for "150" it says "Check this number" (EA1); Continue stays disabled in each case.
-- `/s` **Given** an anonymous-session or account-creation request with no age-gate record of 18 or more, **When** it reaches the API, **Then** it returns 403 `AGE_GATE_REQUIRED` and no user record is created.
+- `/s` **Given** an anonymous-session or account-creation request with no age-gate record of 18 or more, **When** it reaches the API, **Then** it returns 403 `AGE_REQUIREMENT` and no user record is created.
 
 #### eater-1.2 · Under 18: no account, nothing kept or sent
 Covers: WF-1 done-when ("Under 18: no account"); blueprint §1.2 "Minor (hidden, excluded) … an age gate keeps them out" · R16 (Google's AI terms bar services likely to be used by under-18s), R13 (the store's 9+ rating does not keep minors out)
@@ -123,7 +123,7 @@ Shared: eater + auditor (auditor-9.1, auditor-9.4).
 As the eater, I decide separately where my diary lives, whether photos, voice and text go to Google's AI, and whether to help research, so that I agree only to what I want and can still start.
 - `/r` **Given** Onboarding · Consents on the simulator, **When** it opens, **Then** it shows three separate parts: "Your diary", with two choices — "Keep it on this iPhone for now" (the main button) and "Keep it in my account" (opens Onboarding · Account); a switch "Send photos, voice and text to Google's AI (Gemini)", off; and a switch "Optional research", off. Below them is the line "Health, camera, microphone and photos are asked the first time you use them."
 - `/r` **Given** both switches are left off, **When** "Keep it on this iPhone for now" is tapped, **Then** Today opens in the local trial and no further question is asked.
-- `/r` **Given** only the AI switch was turned on, **When** the eater later opens Settings → Privacy, **Then** the AI Consent reads "On", Optional research reads "Off · never given", and Diary processing reads "Not given · your diary is only on this iPhone".
+- `/r` **Given** only the AI switch was turned on, **When** the eater later opens Settings → Privacy, **Then** the AI Consent reads "Given", Optional research reads "Not given", and Diary processing reads "Not given · your diary is only on this iPhone".
 - `/m` **Given** the Consent record schema, **When** a record names two purposes, **Then** validation fails.
 
 #### eater-1.4 · Know what goes to Google's AI, and what never does
@@ -138,7 +138,7 @@ As the eater, I read in a few plain sentences what is sent, to whom, where, and 
 Covers: interaction row "Consent records (version, time, method)"; FR-076; FRD §8.3 (each command has a UUID) · R22 ("documented through means allowing future verification"), R31 · AT-10 pattern
 Shared: eater + auditor (auditor-9.2, auditor-9.6).
 As the eater, I know each Consent choice is kept exactly as I made it, so that I can prove what I agreed to and nobody can claim more.
-- `/r` **Given** Hala turned on the AI Consent on Onboarding · Consents at 09:12 on 1 Oct 2026 (Cairo), with no account yet, **When** she later creates an account and opens Settings → Privacy, **Then** the AI row reads "On · since 1 Oct 2026, 09:12" with "Read what you agreed to".
+- `/r` **Given** Hala turned on the AI Consent on Onboarding · Consents at 09:12 on 1 Oct 2026 (Cairo), with no account yet, **When** she later creates an account and opens Settings → Privacy, **Then** the AI row reads "Given · 1 Oct 2026, 09:12" with "Read what you agreed to".
 - `/s` **Given** the same, **When** `GET /v1/me/consents` is read, **Then** one record shows purpose `ai_processing`, action `given`, text version `c-ai-4`, method "in-app switch · onboarding", `made_at` 2026-10-01T06:12Z (device time), `received_at` (server time) and the app version.
 - `/s` **Given** the same Consent command delivered three times with one `command_id`, **When** processed, **Then** exactly one record exists.
 - `/r` **Given** the Consent was given while the iPhone was offline, **When** it reconnects, **Then** Settings → Privacy shows the original time 09:12, not the upload time.
@@ -191,7 +191,7 @@ As the eater, I see a wrong number flagged where I typed it, so that I fix it in
 - `/r` **Given** Onboarding · Profile, **When** weight "−5" or "0" is typed, **Then** the weight field says "Enter a weight above 0" and Continue is disabled.
 - `/r` **Given** height "1.60" with the unit cm, **When** typed, **Then** the field offers "Did you mean 160 cm?" with one tap to accept; nothing changes unless it is tapped.
 - `/r` **Given** weight 450 kg or height 300 cm, **When** typed, **Then** "Check this number" appears beside the field (EA2) and Continue stays disabled.
-- `/s` **Given** `POST /v1/goals/proposals` with `weight_kg: -5`, or with height given in "ml", **When** received, **Then** it returns 422 naming the field, and no proposal.
+- `/s` **Given** `POST /v1/goals/proposals` with `weight_kg: -5`, or with height given in "ml", **When** received, **Then** it returns 422 `VALIDATION_ERROR` naming the field, and no proposal.
 
 #### eater-1.12 · Choose the equation version knowing why — or skip it
 Covers: FR-002 ("Collect the physiological equation coefficient only with an explanation; never infer it from a photograph or gender presentation"); FRD §11.1 ("+5 and −161 for the male and female equation variants") · EX-31, EX-42
@@ -246,11 +246,11 @@ Shared: eater + nutrition approver (approver-10.53: pregnancy and breastfeeding 
 As a pregnant or breastfeeding eater, I keep tracking without the app setting a weight-change Target, so that I follow my clinician, not a formula.
 - `/r` **Given** "Are you pregnant?" answered "Yes" on Onboarding · Safety screen in English, **When** Continue is tapped, **Then** the guidance says in neutral words that Sips & Bytes doesn't set calorie targets during pregnancy and that logging, Units and reports all work, with one button "Continue with tracking"; the words "diet", "lose" and "restrict" do not appear.
 - `/r` **Given** "Are you breastfeeding?" answered «نعم» in Arabic, **When** Continue is tapped, **Then** the same guidance appears in Arabic, right to left.
-- `/s` **Given** either answer, **When** the mode is saved, **Then** `PUT /v1/me/safety-mode` carries `tracking_only` and no field naming pregnancy or breastfeeding, and `POST /v1/goals/versions` for that eater returns 409 `TRACKING_ONLY`.
+- `/s` **Given** either answer, **When** the mode is saved, **Then** `PUT /v1/me/safety-mode` carries `tracking_only` and no field naming pregnancy or breastfeeding, and `POST /v1/goals/versions` for that eater returns 422 `VALIDATION_ERROR` with reason `tracking_only`.
 
 #### eater-1.19 · Tracking-only is the whole app, without a weight-change Target
 Covers: WF-1 done-when (tracking-only with neutral wording); FR-008; FRD §11.4 ("retain neutral tracking and access to existing data") · E24 · EX-43, EX-44
-Shared: eater + support agent (support-10.14: a support view shows "No Target", never the mode).
+Shared: eater + support agent (support-10.14: a Support agent's view shows "No Target", never the mode).
 As an eater in tracking-only mode, I log, make Units, read reports and export like everyone else, so that the mode never feels like a lesser app or shows itself to people near me.
 - `/r` **Given** an eater in tracking-only mode, **When** Today opens, **Then** it shows consumed kcal, macro grams and "No Target", as for an eater who never set one, but without the "Set a target" card; the words "tracking only" do not appear on Today.
 - `/r` **Given** the same eater, **When** they log a recent Unit, open My Units, open Progress and prepare an export, **Then** each works as for a standard eater, and Progress shows intake and coverage with no "left" or "over".
@@ -273,7 +273,7 @@ As the eater, I know my answers about eating, pregnancy or medicine are neither 
 - `/r` **Given** Onboarding · Safety screen, **When** it opens, **Then** a line reads "Your answers stay on this iPhone. Only the result is saved: standard, tracking only or protein first."
 - `/s` **Given** any completed screen, **When** the app's requests are recorded, **Then** `PUT /v1/me/safety-mode` carries only the mode, the screen version and the time, and no request body, structured log line or crash report contains an answer (EA3).
 - `/s` **Given** the iPhone's local database after the screen, **When** inspected in a UI test, **Then** it stores the mode and no answer.
-- `/r` **Given** support opens Account state for that eater in the admin console (support-9.5), **When** they read it, **Then** neither the mode nor any answer is shown.
+- `/s` **Given** every `/v1/support/*` response about that eater (support-9.5), **When** its JSON is scanned, **Then** it holds no `mode` key and no answer.
 
 #### eater-1.22 · Retake or clear the safety screen later
 Covers: FR-008; FRD §11.4; FR-058, FR-071 (past Days keep their Target) · EX-44
@@ -343,7 +343,7 @@ As the eater whose 15 % loss would fall below the reviewed minimum, I get a Targ
 - `/r` **Given** Huda (maintenance 1,366.8), **When** she selects Lose, **Then** the Target reads "1,200 kcal a day · 167 kcal below maintenance (12.2 %)" with the line "We don't propose targets below 1,200 kcal a day, the reviewed minimum."
 - `/r` **Given** Amal (maintenance 1,162.8), **When** Onboarding · Target opens, **Then** Lose is shown unavailable with "Your maintenance is already close to the reviewed minimum of 1,200 kcal a day", and Maintain reads "1,200 kcal a day" (conflict C-1).
 - `/r` **Given** Policy v2 (floor 1,300) is live from 15 Oct 2026 (approver-10.57), **When** Huda starts a new proposal on 16 Oct, **Then** Lose reads 1,300.
-- `/s` **Given** `POST /v1/goals/versions` with Target 1,150 for Huda, **When** received, **Then** it returns 422 `TARGET_BELOW_FLOOR` with the floor and the Policy version.
+- `/s` **Given** `POST /v1/goals/versions` with Target 1,150 for Huda, **When** received, **Then** it returns 422 `POLICY_FLOOR` with `limit` "floor", the floor value and the Policy version.
 
 #### eater-1.31 · A Target below 1,000 kcal is never accepted
 Covers: interaction row "set a target … hard stop below 1,000 (R32)"; FRD §19.3 ("Dangerous restriction requests require a safe response rather than a mathematically optimized starvation plan") · R32 (NIDDK resets the last change and suggests more time, a different activity level or a different goal) · EX-42
@@ -351,7 +351,7 @@ Shared: eater + nutrition approver (approver-10.50).
 As the eater typing a very low number, I see the field reset and kinder options, so that no setting can make the app plan starvation.
 - `/r` **Given** Huda's Target field holds 1,200 on Onboarding · Target, **When** she types 900 under "Enter my own target", **Then** the field returns to 1,200 and reads "Sips & Bytes doesn't set targets below 1,000 kcal a day. You could allow more time, add activity, or choose Maintain." with Maintain offered.
 - `/r` **Given** she types 1,100, **When** entered, **Then** the value stays, the field reads "Below the reviewed minimum of 1,200 kcal a day", "Approve target" is disabled, and two buttons offer "Use 1,200" and "Track without a target".
-- `/s` **Given** `POST /v1/goals/versions` with 999 kcal and any source (self-entered or clinician), **When** received, **Then** it returns 422 `TARGET_BELOW_HARD_STOP`.
+- `/s` **Given** `POST /v1/goals/versions` with 999 kcal and any source (self-entered or clinician), **When** received, **Then** it returns 422 `POLICY_FLOOR` with `limit` "hard_stop".
 
 #### eater-1.32 · Enter my own or my clinician's Target, with its source and date
 Covers: FR-004 ("Allow a manually entered or clinician-provided calorie target … Preserve its source and effective date"); FR-058; FRD §11.3 (the 1,870 example) · EX-14
@@ -381,7 +381,7 @@ Covers: FR-006 ("If macro percentages sum to anything other than 100%, offer exp
 As the eater who typed 46 / 32 / 24, I see that it totals 102 % and choose a fix, so that no contradictory target is saved behind my back.
 - `/r` **Given** Onboarding · Macros with fat 46 %, carbohydrate 32 % and protein 24 % (AT-09), **When** typed, **Then** "Total 102 %" shows beside the fields, Continue is disabled, and two actions appear: "Use 45.10 % fat, 31.37 % carbohydrate, 23.53 % protein" and "Edit my numbers".
 - `/r` **Given** "Use 45.10 % fat …" was tapped, **When** Onboarding · Review opens, **Then** for 1,480 kcal it shows fat 45.10 % = 74 g, carbohydrate 31.37 % = 116 g and protein 23.53 % = 87 g, and nothing is active until "Approve target".
-- `/s` **Given** `POST /v1/goals/versions` with 46 / 32 / 24, **When** received, **Then** it returns 422 `MACROS_INCONSISTENT` with the total 102 and the normalised alternative, and no version is stored.
+- `/s` **Given** `POST /v1/goals/versions` with 46 / 32 / 24, **When** received, **Then** it returns 422 `VALIDATION_ERROR` with reason `macro_total`, the total 102 and the normalised alternative, and no version is stored.
 - `/m` **Given** 46 / 32 / 24, **When** normalised, **Then** 45.098…, 31.372… and 23.529…, and the displayed 45.10 / 31.37 / 23.53 total 100.00.
 
 #### eater-1.36 · Lock protein grams, and a new calorie Target leaves them alone
@@ -395,7 +395,7 @@ As the eater who locked protein at 111 g, I change my calorie Target and keep my
 Covers: FR-005 ("Resolve incompatible locks visibly"); FR-006 ("do not save contradictory targets")
 As the eater who locked all three macros in grams, I am told when they no longer fit the calorie Target and choose what to change, so that the app never picks for me.
 - `/r` **Given** Target 1,480 with protein 111 g, carbohydrate 148 g and fat 70 g all locked, **When** Onboarding · Macros shows them, **Then** it reads "Your locked macros need 1,666 kcal; your Target is 1,480 kcal" with "Unlock protein", "Unlock carbohydrate", "Unlock fat" and "Change the Target", and Continue is disabled.
-- `/s` **Given** the same locks posted to `POST /v1/goals/versions`, **When** received, **Then** it returns 422 `LOCKS_INCOMPATIBLE` with the needed 1,666 kcal and the Target 1,480.
+- `/s` **Given** the same locks posted to `POST /v1/goals/versions`, **When** received, **Then** it returns 422 `VALIDATION_ERROR` with reason `locks_incompatible`, the needed 1,666 kcal and the Target 1,480.
 - `/m` **Given** three gram locks whose 4/4/9 energy is within 5 kcal of the Target (EA8), **When** validated, **Then** they are accepted; 6 kcal apart, they are not.
 
 #### eater-1.38 · Wrong macro input is refused beside the field
@@ -403,7 +403,7 @@ Covers: FR-006 ("Reject negative values and invalid units")
 As the eater, I see a slip in a macro field flagged where I typed it, so that nothing contradictory is saved.
 - `/r` **Given** Onboarding · Macros, **When** protein "−10 %", carbohydrate "140 %" or fat "abc" is typed, **Then** that field says "Enter a share from 0 to 100 %" (or "Enter a number"), and Continue is disabled.
 - `/r` **Given** grams mode, **When** "−5" is typed, **Then** the field says "Enter 0 g or more".
-- `/s` **Given** `POST /v1/goals/versions` with a macro unit "ml", **When** received, **Then** it returns 422 naming the field.
+- `/s` **Given** `POST /v1/goals/versions` with a macro unit "ml", **When** received, **Then** it returns 422 `VALIDATION_ERROR` naming the field.
 
 ## 1I · Activity mode
 
@@ -453,8 +453,8 @@ As the eater, I end up with one Target however many times my approval is sent, s
 Covers: FR-058 ("user approval"); WF-1 step "approve" · care.md group 4 ("If someone closes a half-filled form, is their work protected?") · EX-25
 As the eater interrupted mid-flow, I come back to my answers and no Target exists until I approve, so that a closed app never sets a Target for me.
 - `/r` **Given** Hala closes the app on Onboarding · Macros, **When** she reopens it, **Then** Today shows "No Target yet", and "Set a target" resumes at Onboarding · Macros with her values filled in.
-- `/r` **Given** she taps "Start over", **When** confirmed, **Then** the draft is gone and Onboarding · Profile opens with only her age filled.
-- `/s` **Given** the abandoned draft, **When** `GET /v1/goals/versions` is read, **Then** no version exists.
+- `/r` **Given** she taps "Start over", **When** confirmed, **Then** her answers are cleared and Onboarding · Profile opens with only her age filled.
+- `/s` **Given** the abandoned answers, **When** `GET /v1/goals/versions` is read, **Then** no version exists.
 
 #### eater-1.45 · No network: the Target step says why, and logging continues
 Covers: WF-1 "Tracking works before a target exists"; FRD §8.3 (offline outbox); NFR-06 · care.md group 4 ("When a command cannot work right now, do we say why?") · E38 · EX-21
@@ -493,7 +493,7 @@ As the eater, I am told calmly when the reviewed minimum changes and decide myse
 Covers: FR-001 ("a local trial"); FRD §3.2; WF-1 "Tracking works before a target exists" · E17, E28 · EX-03
 Shared: eater + support agent (support-9.2: a local-trial eater has no support code).
 As the eater trying the app, I log and make Units without an account, so that I can judge it before giving anything.
-- `/r` **Given** Hala chose "Keep it on this iPhone for now", **When** she uses Today, My Units and Templates for two Days (T1), **Then** everything works, and Settings → Account reads "Not signed in · Your diary is only on this iPhone" with "Create account".
+- `/r` **Given** Hala chose "Keep it on this iPhone for now", **When** she uses Today, My Units and Templates for two Days (T1), **Then** everything works, and the account line of Settings reads "Not signed in · Your diary is only on this iPhone" with "Create account".
 - `/r` **Given** the local trial, **When** she taps "Set a target" on Today, **Then** Onboarding · Account opens with "Your Target and profile are kept in your account" and "Not now" (conflict C-3).
 - `/s` **Given** the local trial, **When** the API mock's record of T1 is read, **Then** no Entry, Unit, Template or Consent was sent; only public Food reference searches were (EA12).
 
@@ -501,9 +501,9 @@ As the eater trying the app, I log and make Units without an account, so that I 
 Covers: FR-001 ("Cloud AI requires authenticated or anonymous-session access, consent, and quotas"); FR-076; blueprint §1.6 Registry ("per-user daily AI quotas"); FRD §16.5 · R2 · EX-22
 Shared: eater + platform admin (admin-10.35, admin-10.36, admin-10.39).
 As a trial eater, I analyse a photo after giving the AI Consent, without an email, and am told plainly when today's limit is used up, so that I can try the AI and still log.
-- `/r` **Given** Hala in the local trial without the AI Consent, **When** she taps Meal on Capture, **Then** a sheet shows the AI Consent wording with "Give consent" and "Not now"; "Not now" returns to Capture, where the Unit mode still works.
-- `/r` **Given** she gives the Consent, **When** she takes a meal photo, **Then** an anonymous session starts without asking for an email, and Analysis review opens with the draft.
-- `/r` **Given** the anonymous-session limit of 3 photo analyses a day (admin-10.35) is used, **When** she takes a 4th photo, **Then** Capture reads "Photo analysis is used up for today. It resets at 00:00." and still offers recent Units, Templates and typed amounts (EX-22).
+- `/r` **Given** Hala in the local trial without the AI Consent, **When** she taps Meal on Capture & Plan, **Then** a sheet shows the AI Consent wording with "Give consent" and "Not now"; "Not now" returns to Capture & Plan, where the Unit mode still works.
+- `/r` **Given** she gives the Consent, **When** she takes a meal photo, **Then** an anonymous session starts without asking for an email, and Analysis review opens on the new Analysis.
+- `/r` **Given** the anonymous-session limit of 3 photo analyses a day (admin-10.35) is used, **When** she takes a 4th photo, **Then** Capture & Plan reads "Photo analysis is used up for today. It resets at 00:00." and still offers recent Units, Templates and typed amounts (EX-22).
 - `/s` **Given** the 4th call, **When** `POST /v1/analyses` is made, **Then** it returns 429 `RATE_LIMITED` with `resets_at` 2026-10-02T00:00+03:00, and `POST /v1/consumption` with a recent Unit is still accepted.
 
 #### eater-1.51 · Create an account and bring my trial diary across, once
@@ -519,12 +519,12 @@ Covers: FR-001; FR-043 ("Retried commands and duplicate delivery must not add fo
 As the eater whose move stopped halfway, I see it finish once, so that a lost signal never doubles my food.
 - `/s` **Given** T1's 16 commands, **When** the network is cut after 7 are accepted and then restored, **Then** the other 9 are sent, the first 7 come back as duplicates of accepted commands, and the server holds 3 Units, 1 Template and 12 Entries.
 - `/r` **Given** the app is force-quit mid-move and reopened, **When** Today opens, **Then** a quiet note on the Today headline reads "Moving your diary to your account — 9 left" (no alert), and when done the Days show the same totals as before.
-- `/r` **Given** the move has finished, **When** Settings → Account opens, **Then** it reads "Signed in · diary in your account", and no Entry is Pending.
+- `/r` **Given** the move has finished, **When** Settings opens, **Then** its account line reads "Signed in with Apple · diary in your account", and no Entry is Pending.
 
 #### eater-1.53 · Sign in to an account that already has data: duplicates are shown, not merged
 Covers: FR-001 ("without duplicate units or meals"); FRD §14 My Units mandatory state "duplicate candidate"; FR-014 (versions; existing logs keep theirs); FR-043 ("Near-duplicate human commands should show a warning rather than being automatically discarded")
 As an eater who tried the app on a new iPhone before signing in to my existing account, I choose what to keep, so that nothing is silently merged or thrown away.
-- `/r` **Given** Hala's account already has «قرصة جبنة» v2 (9 g bread) and her new iPhone's trial has v1 (8 g bread), **When** she signs in, **Then** My Units shows one row marked "Possible duplicate" with both versions side by side and the choices "Keep both" and "Use the account's version for new logs"; the trial Entries keep their v1 snapshot either way.
+- `/r` **Given** Hala's account already has «قرصة جبنة» v2 (9 g bread) and her new iPhone's trial has v1 (8 g bread), **When** she signs in, **Then** My Units shows one row marked "Duplicate candidate" (FRD §14) with both versions side by side and the choices "Keep both" and "Use the account's version for new logs"; the trial Entries keep their v1 snapshot either way.
 - `/r` **Given** the trial and the account each logged "3 cheese bites" at 08:40 on Day 2026-10-01, **When** the move finishes, **Then** Today shows both Entries with the note "Logged twice? 3 cheese bites at 08:40 on two devices" and a Void button on each; neither is removed automatically.
 - `/s` **Given** the move, **When** the Units are read, **Then** no Unit version was edited or deleted by it.
 
@@ -564,42 +564,42 @@ Steps, in the map's order (WF-9: "consents, export, delete account"; WF-10: "sup
 #### eater-9.1 · See all my Consents in one place
 Covers: WF-9 step "consents"; interaction row "give separate consents … per purpose, one-tap withdrawal"; FR-076 · R3, R22 · EX-07
 Shared: eater + auditor (auditor-9.1, auditor-9.2), support agent (support-9.6).
-As the eater, I see each Consent, whether it is on, since when and what it is for, so that I know exactly what I have agreed to.
-- `/r` **Given** Hala signed in, **When** she opens Settings → Privacy, **Then** it lists one row each for Diary processing; Send photos, voice and text to Google's AI (Gemini); Health: read workouts; Health: read body mass; Health: write dietary energy; Microphone; Photos; and Optional research — each with On or Off, the date of the last change, and "Read what you agreed to" (or "Read the text" if never given).
+As the eater, I see each Consent, whether it is Given or Withdrawn, since when and what it is for, so that I know exactly what I have agreed to.
+- `/r` **Given** Hala signed in, **When** she opens Settings → Privacy, **Then** it lists one row each for Diary processing; Send photos, voice and text to Google's AI (Gemini); Health: read workouts; Health: read body mass; Health: write dietary energy; Microphone; Photos; and Optional research — each with its state (Given, Withdrawn, or "Not given" when no Consent exists), the date of the last change, a switch, and "Read what you agreed to" (or "Read the text" when not given).
 - `/r` **Given** "Read what you agreed to" on the AI row, **When** opened, **Then** the exact wording she agreed to shows; if a newer wording exists, a line "A newer wording exists" offers "Read it".
-- `/r` **Given** no Consent was ever given except Diary processing, **When** Settings → Privacy opens, **Then** the other rows read "Off · never given", never blank.
+- `/r` **Given** no Consent was ever given except Diary processing, **When** Settings → Privacy opens, **Then** the other rows read "Not given", never blank.
 
 #### eater-9.2 · Withdraw the AI Consent in one tap
 Covers: interaction row ("one-tap withdrawal"); FR-076 ("Refusal must preserve unaffected functions"); AT-29 ("consent withdrawal propagate[s] to media, queues, private cached analysis, and exports"); FRD §7.2 · R3, R22 (withdrawing as easy as giving) · EX-22
 Shared: eater + auditor (auditor-9.5).
 As the eater, I switch off sending to Google's AI with one tap and see what stopped, so that my "no" works now and nothing else breaks.
-- `/r` **Given** the AI Consent is on and one photo draft is Pending in the outbox, **When** Hala taps the AI switch in Settings → Privacy at 13:05, **Then** it turns off at once with no dialog, and the row reads "Off since 13:05 · Photo, voice and sentence analysis are off. Units, Templates and typed amounts still log." and "1 photo draft that wasn't sent was removed".
-- `/r` **Given** the AI Consent is off, **When** she opens Capture, **Then** Meal, Label and voice read "Needs your Consent to send to Google's AI" with "Open Settings → Privacy", while the Unit editor and the recent Units on Today work (AT-32 pattern).
-- `/s` **Given** the withdrawal at 2026-10-01T10:05Z, **When** the app then calls `POST /v1/analyses`, **Then** it returns 403 `CONSENT_REQUIRED` and the Gemini adapter mock records 0 calls; her private cached analyses, queued uploads and the photos of unsaved drafts are gone from the emulators (the counts on auditor-9.5's effect card).
+- `/r` **Given** the AI Consent is Given and one Analysis is Pending (captured offline, not sent), **When** Hala taps the AI switch in Settings → Privacy at 13:05, **Then** it turns off at once with no dialog, and the row reads "Withdrawn · 13:05 · Photo, voice and sentence analysis are off. Units, Templates and typed amounts still log." and "1 photo that wasn't sent was removed".
+- `/r` **Given** the AI Consent is Withdrawn, **When** she opens Capture & Plan, **Then** Meal, Label and voice read "Needs your Consent to send to Google's AI" with "Open Settings → Privacy", while the Unit editor and the recent Units on Today work (AT-32 pattern).
+- `/s` **Given** the withdrawal at 2026-10-01T10:05Z, **When** the app then calls `POST /v1/analyses`, **Then** it returns 403 `CONSENT_REQUIRED` and the Gemini adapter mock records 0 calls; her private cached analyses, queued uploads and the photos of Analyses never approved are gone from the emulators (the counts on auditor-9.5's effect card).
 - `/s` **Given** a ready export of hers, **When** it is scanned after the withdrawal, **Then** it holds no photo, audio or transcript, so nothing sent under the AI Consent remains in it (AT-29, exports).
 
 #### eater-9.3 · Give a Consent again, in Settings or at the moment I need it
 Covers: FR-076; interaction row consents ("explicit, per purpose") · R22 · EX-26
 Shared: eater + auditor (auditor-9.2).
 As the eater, I turn a Consent back on when I want a feature again, so that coming back is as easy as leaving.
-- `/r` **Given** the AI Consent is off, **When** Hala taps Meal on Capture, **Then** a sheet shows the current wording with "Give consent" and "Not now", and after "Give consent" the camera opens.
-- `/r` **Given** Settings → Privacy, **When** she turns the AI switch on there, **Then** the same wording sheet shows first, and the switch turns on only after "Give consent".
-- `/s` **Given** either path, **When** `GET /v1/me/consents` is read, **Then** a new `given` record with its method ("in-app sheet · Capture" or "Settings") follows the withdrawal, and the earlier records are unchanged.
+- `/r` **Given** the AI Consent is Withdrawn, **When** Hala taps Meal on Capture & Plan, **Then** a sheet shows the current wording with "Give consent" and "Not now", and after "Give consent" the camera opens.
+- `/r` **Given** Settings → Privacy, **When** she turns the AI switch on there, **Then** the same wording sheet shows first, and the row reads "Given" only after "Give consent".
+- `/s` **Given** either path, **When** `GET /v1/me/consents` is read, **Then** a new `given` record with its method ("in-app sheet · Capture & Plan" or "Settings") follows the withdrawal, and the earlier records are unchanged.
 
 #### eater-9.4 · Withdraw a Health Consent: imports and write-back stop, and I decide what stays in Health
 Covers: interaction rows "Ledger → HealthKit … only after the Health consent" and "HealthKit → app → API"; FR-076; FR-062 (granular permission) · R7; P29, P30 · EX-27
 Shared: eater WF-7 journey (Activity), WF-3 journey (Health write-back).
 As the eater, I stop sharing with Apple Health one type at a time, so that each type stops on its own and I know what iOS still controls.
-- `/r` **Given** "Health: write dietary energy" is on, **When** Hala switches it off in Settings → Privacy, **Then** new Entries are no longer written to Health, and one choice appears: "Keep what's already in Health" (default) or "Remove what Sips & Bytes wrote to Health".
+- `/r` **Given** "Health: write dietary energy" is Given, **When** Hala switches it off in Settings → Privacy, **Then** new Entries are no longer written to Health, and one choice appears: "Keep what's already in Health" (default) or "Remove what Sips & Bytes wrote to Health".
 - `/r` **Given** "Remove what Sips & Bytes wrote to Health", **When** it finishes, **Then** the Health app on the simulator shows no dietary energy samples from Sips & Bytes, and Today's Entries are unchanged.
 - `/r` **Given** "Health: read workouts" is switched off, **When** Today opens, **Then** Activity reads "Apple Health not connected for workouts", workouts imported on past Days stay listed (conflict C-11), and the Settings row adds "iOS keeps its own setting: Health → Sharing → Apps → Sips & Bytes" (P30).
-- `/s` **Given** "Health: read workouts" is off, **When** the app comes to the foreground, **Then** no HealthKit workout query runs (UI-test spy).
+- `/s` **Given** "Health: read workouts" is Withdrawn, **When** the app comes to the foreground, **Then** no HealthKit workout query runs (UI-test spy).
 
 #### eater-9.5 · Withdraw while offline: it applies at once and is recorded once
 Covers: interaction row ("one-tap withdrawal"); FR-076; FRD §8.3 (durable outbox, UUID per command) · R22 · AT-10 pattern
 Shared: eater + auditor (auditor-9.6).
 As the eater without signal, I withdraw a Consent and it takes effect on my iPhone at once, so that "no" never waits for a network.
-- `/r` **Given** no network, **When** Hala switches off "Optional research" at 22:40, **Then** the row reads "Off since 22:40 · will sync", and nothing else changes.
+- `/r` **Given** "Optional research" is Given and there is no network, **When** Hala switches it off at 22:40, **Then** the row reads "Withdrawn · 22:40 · not yet synced", and nothing else changes.
 - `/s` **Given** the iPhone reconnects at 06:05 the next morning and the command is delivered twice, **When** processed, **Then** one withdrawal record exists, with `made_at` 22:40 (device) and `received_at` 06:05 (server).
 - `/s` **Given** the AI Consent was withdrawn offline, **When** a photo is then taken while still offline, **Then** no analysis is queued for upload and the photo is not kept.
 
@@ -607,7 +607,7 @@ As the eater without signal, I withdraw a Consent and it takes effect on my iPho
 Covers: interaction rows "give separate consents (diary processing …) … one-tap withdrawal" and "Eater → API: … delete account"; FR-076; FR-078; FR-001 (local use) · R22, R23 · EX-24
 As the eater, I withdraw my Consent to keep my diary in the account and go on using the app on this iPhone, so that I can stop the server copy without losing my diary.
 - `/r` **Given** Hala signed in, **When** she taps the Diary processing switch in Settings → Privacy, **Then** one sheet explains "Your diary stays on this iPhone. The copy in your account is deleted within 30 days and you'll be signed out." with "Withdraw and keep on this iPhone" and "Cancel" (conflict C-9).
-- `/r` **Given** "Withdraw and keep on this iPhone", **When** done, **Then** Settings → Account reads "Not signed in · Your diary is only on this iPhone", Today shows the same Entries and totals, and Settings → Privacy shows the deletion reference.
+- `/r` **Given** "Withdraw and keep on this iPhone", **When** done, **Then** the account line of Settings reads "Not signed in · Your diary is only on this iPhone", Today shows the same Entries and totals, and Settings → Privacy shows the deletion reference.
 - `/s` **Given** the withdrawal, **When** the server is read, **Then** a deletion job exists with reason "consent_withdrawn" and the same stages as eater-9.17.
 
 #### eater-9.7 · Optional research stays off unless I choose it, and nothing depends on it
@@ -615,7 +615,7 @@ Covers: interaction row consents ("optional research"); FR-079 ("model-training 
 Shared: eater + auditor (auditor-9.8), platform admin.
 As the eater, I decide on my own whether my meal photos and labels may be used to test food recognition, so that they are never used that way by default.
 - `/r` **Given** any new eater, **When** Settings → Privacy opens, **Then** "Optional research" is off, and its text says which photos and labels would be kept, who could see them, and what they are used for (testing how well food recognition works).
-- `/r` **Given** Optional research is off, **When** the eater uses Capture, Analysis review and the Meal planner, **Then** none of them asks to turn it on in order to continue.
+- `/r` **Given** Optional research is off, **When** the eater uses Capture & Plan, Analysis review and the Meal planner, **Then** none of them asks to turn it on in order to continue.
 - `/s` **Given** Optional research is off, **When** staff with the quality-review permission request a raw photo of that eater, **Then** the API returns 403 `CONSENT_REQUIRED` (auditor-9.8).
 
 #### eater-9.8 · No feature, price or advert depends on my data
@@ -635,7 +635,7 @@ As the eater, I read the privacy policy inside the app in Arabic or English, so 
 
 #### eater-9.10 · My photos are cropped, stripped of details and private
 Covers: FR-077 ("Crop to food where practical, strip EXIF, encrypt in transit/at rest, and prevent public access to private images. Use short-lived signed access where needed."); FR-038 · R8 · E6 · EX-31
-Shared: eater WF-4 journey (Capture).
+Shared: eater WF-4 journey (Capture & Plan).
 As the eater photographing a family table, I know my photo leaves without its location and stays private, so that the people around me are not exposed.
 - `/r` **Given** a meal photo taken on the simulator with GPS metadata, **When** Analysis review shows it, **Then** it shows the food crop and the line "Location and camera details were removed before upload".
 - `/s` **Given** the uploaded object in the Cloud Storage emulator, **When** read with an EXIF reader, **Then** it has no GPS, device or time tags.
