@@ -886,3 +886,70 @@ Two of research.md §6's conflicts are answered here as proposals: conflict 6 (a
 | Other lines cited | AT-10 (1.5, 1.43, 1.52, 9.5, 9.28) · AT-13 (1.9) · AT-16 (1.7) · AT-23 (1.39) · AT-32 (1.27, 9.2) · FR-071 (1.22, 1.47, 1.48) · FR-081 (9.21–9.29) · NFR-06 (1.52) · NFR-07 (9.13) · NFR-08 (1.55, 9.30) · NFR-13 (9.16) |
 
 **Counts:** 86 stories (56 in journey 1, 30 in journey 9) · 277 acceptance lines (`/m` 21 · `/s` 73 · `/r` 183).
+
+## Lens verdict (2026-10-01)
+
+**fail** — 22 defects. Checked: map §3–§5 for WF-1, WF-9 and the eater's side of WF-10; FRD FR-001…FR-008, FR-056…FR-059, FR-075…FR-079, §3, §11, §19, AT-09, AT-29 and every AT the file claims; `vocabulary.md` (D2); research.md ids and the cycle-1 ids against both refuters (no refuted or doubtful finding is cited; every C/F/P/R id used stands); every cross-lens story id against the current admin, approver, auditor and support files; the fixture arithmetic (all resting-energy, maintenance, Target, macro, kJ, lb and date figures recompute exactly); the counts line (86 stories, 277 lines, `/m` 21 · `/s` 73 · `/r` 183 — true); every story has a `/r` line.
+
+### Complete
+
+1. **Missing step — the Grant expires (WF-10 "→ it expires"; done-when "the Grant expires").** No eater line shows an Active Grant reaching Expired at the end of its time box (e.g. Settings → Privacy → Grants reading "Expired · 14:20" and the Support agent's next read refused), nor a Grant Ended by the Support agent. Only Withdrawn (9.26), Declined (9.23) and Unanswered (9.24) are shown; 9.22 stops at "Active · ends 14:20".
+2. **Missing step — FRD §3.3 "with selectable conservative ranges".** eater-1.28 offers only the fixed defaults ("Target 1,480 kcal a day · 261 kcal below maintenance (15 %)"). approver-10.48 and approver-10.68 (shared with the Eater) set loss choices 5 / 10 / 15 % and gain choices 5 / 10 %, and approver-10.68 expects the eater to be "offered" them; the Policy v1 fixture says "As the approver lens reads it (approver-10.48)" yet leaves the choices out.
+3. **Missing step — FRD §3.2 "The application shall explain why each required input matters."** eater-1.1 ("one field 'Your age' … and nothing else is asked"), 1.10 (height, weight) and 1.13 (region, time zone) have no line that shows why the input is needed; only the equation version (1.12), the safety screen (1.16) and permissions (1.6, 1.14) explain themselves.
+4. **Missing step — FR-077 "encrypt in transit/at rest".** eater-9.10 quotes it in Covers but its lines check only the crop, EXIF stripping and signed access; nothing checks encryption (e.g. no plain-HTTP upload path, storage encryption on).
+5. **Missing step — withdrawing the Microphone and Photos Consents (interaction row "each Health type; mic; photos … one-tap withdrawal").** eater-9.1 gives both rows a switch, but no story says what withdrawing either stops, or what iOS keeps, as eater-9.4 does for Health.
+6. **AT-29 — Optional research withdrawal does not propagate.** eater-9.7 says research keeps "which photos and labels would be kept"; eater-9.5 withdraws it with "nothing else changes", and no line deletes or excludes the research-kept photos and labels.
+7. **AT-29 exports, eater-9.2.** "Given a Completed export of hers, When it is scanned after the withdrawal, Then it holds no photo, audio or transcript" can never fail, since this lens puts no media in an export (C-10). support-9.7 ("1 prepared export … storage and queues hold none of them") and auditor-9.14 ("file deleted … (AI Consent withdrawn)") delete the prepared export on withdrawal; the contradiction is not in Conflicts.
+8. **Rule not covered — deficit cap on own Targets (interaction row "deficit cap within AHA's 500–750 kcal"; Policy v1 "the smaller of 15 % and 500 kcal").** eater-1.32 accepts "Target 1,870 … 465 kcal below maintenance (19.9 %)" with no cap message. No rule or conflict says whether the cap binds own or clinician Targets; C-2 covers only the floor.
+9. **FRD §19.2 (logs).** Only the safety answers are checked against logs and crash reports (eater-1.21). No line checks the WF-1 profile values ("sensitive profile values": age, height, weight, Target) or Consent choices.
+10. **The coverage table is not true.** The WF-10 row claims "expiry" for 9.21–9.28 (defect 1). The §3.2, §3.3 and FR-077 rows claim coverage the stories lack (defects 2–4). The table has no row for §19.1–§19.3 or FR-080–FR-082, though §19 is in the dispatch; FR-081 appears only under "Other lines cited".
+
+### Traced
+
+11. **Stale cross-lens ids (the other lenses were renumbered).**
+    - eater-1.50 and the shared table cite admin-10.35 and admin-10.36 for "the anonymous-session limit of 3 photo analyses a day". Those ids are now "Turn the kill switch off again" and "The switch works at phone width"; quotas are admin-10.38 and admin-10.41.
+    - The support ids are one off:
+      - eater-9.12, C-10 and C-19 cite support-9.7, now "See what a Consent withdrawal removed"; the export is support-9.8.
+      - eater-9.14 cites support-9.8 for the re-queue; that is support-9.9.
+      - eater-9.16 and 9.17 cite support-9.9 for deletion; that is support-9.10.
+      - eater-9.19 cites support-9.11 for the reference look-up; that is support-9.12.
+    - The auditor ids are wrong too:
+      - eater-9.11 cites auditor-9.14 for "retention runs"; that id is the export job, and retention runs are auditor-9.15.
+      - eater-9.12 and C-10 cite auditor-9.13 for the export; that id is "A deleted account in the Audit trail".
+      - eater-9.16 cites auditor-9.9, which is the age gate; deletion is auditor-9.10 and 9.11.
+    - C-19's "support-9.7 says Settings → Privacy → Export" is stale: support-9.8 now says "Open Settings → Export".
+12. **Fixtures — `grant_40aa` "reused" is not the support lens's record.** The support fixture is E10 (`acct_f1e0c3`): "Requested 2026-09-27 10:05 UTC → Unanswered 2026-09-30". Here it is E1: "requested 2026-10-01 10:05 UTC", at the same moment as `grant_31f0`. The support lens refuses a second request while one is waiting ("Mona K. has a request waiting for this eater … no form opens"). Not in Conflicts.
+13. **eater-1.1 and 1.2 against auditor-9.9 (the same WF-1 step).** Neither story carries a Shared line for auditor-9.9, and they contradict it. eater-1.1 returns "403 `AGE_REQUIREMENT`" where auditor-9.9 returns 422. eater-1.2 has "zero requests were sent", where auditor-9.9 expects the API to refuse age 17 and write one `age.refused` event. auditor-9.9 also shows an "Age 18+ confirmed · age-1 · onboarding age question" record; here the age confirmation gets no version, time or method, unlike the Consents in the same interaction row. Not in Conflicts.
+
+### Observable
+
+14. **Then clauses that only say "works", or that cannot be observed.**
+    - "works" with no data named: eater-1.19 "each works as for a standard eater"; 1.49 "everything works"; 9.8 "each works" (Settings → Export, Delete account); 1.50 "the Unit mode still works"; 1.41 "logging works".
+    - Vague: eater-1.7 "within one thumb's reach".
+    - Not observable in the product: eater-1.4 "in the wording counsel approves".
+    - No screen and no text named: eater-1.17 "the next screen shows the approver's guidance".
+15. **Two lines contradict each other.** eater-9.8 `/s`: "the API has no outbound adapter beyond Gemini, USDA FoodData Central and Firebase/Google Cloud". eater-9.17 `/s` requires "the Sign in with Apple adapter mock … token revocation was called once". One of the two must fail unless revocation is named as going through Firebase Auth.
+
+### Vocabulary
+
+16. **Place names not in the vocabulary, not marked (proposed) and not in Conflicts.**
+    - The eleven "Onboarding · Age … Onboarding · Review" screens ("named here; the map names none").
+    - "Settings → Goals → History".
+    - C-19 lists only the account line, the Support code and Export.
+17. **State names not in `vocabulary.md`.**
+    - Consent "Not given" (eater-1.3, 9.1, 9.7). The Consent states are Given · Withdrawn.
+    - An export that "has expired" (eater-9.14). The Privacy job states are Requested · Running · Completed · Failed, and support-9.8 says "download no longer available" for the same thing.
+    - Neither is in Conflicts.
+18. **Two names for Pending.** eater-9.18 shows "3 entries not yet synced will be deleted too" for Entries that its own Given calls "3 Pending Entries"; eater-1.45 shows "marked Pending". eater-9.5 also uses "not yet synced".
+19. **Two names for the activity mode.**
+    - This file shows "Fixed target" and "Activity-adjusted target" on Today: eater-1.46 "Target 1,480 · Fixed target".
+    - The map says "in fixed mode" (§5 WF-7), and the eater's WF-7 journey uses "Fixed mode" and "Activity-adjusted mode" (eater-7.16).
+20. **Camera or Photos.**
+    - eater-1.3 says "Health, camera, microphone and photos are asked the first time you use them", as four separate things.
+    - eater-1.6 asks for "the Photos Consent" before "the iOS camera prompt".
+    - eater-9.1 lists no Camera row.
+21. **E1 and E2 mean two things.** The file says it cites research "findings E1–E44", then reuses "E1 `acct_9c41e2`" and "E2 `acct_51ab07`" as account fixtures. eater-1.9's "· E2 ·" is the research finding; eater-9.16's "E2 signed in" is the account.
+
+### Ids
+
+22. **WF-10 stories carry journey 9.** eater-9.21–9.29 trace to WF-10 ("WF-10 done-when", "interaction row 'Support → Eater …'"), but they are numbered `eater-9.n`. The rule is journey = WF number, and the support and auditor lenses number the same steps support-10.x and auditor-10.x.
