@@ -40,7 +40,7 @@ I opened every source below in this run on **2026-10-01**, using a generic User-
 - **A7 · The control group is the same size as the exposed group. A rollout stays at or below 50 % until it goes to 100 %. A user's group is sticky.** `opened`
   https://firebase.google.com/docs/remote-config/rollouts/about (last updated 2026-10-01): "if you roll out to 2% of your users, they are added to the Enabled group and an additional 2% of your users are added to the Control group" / "any rollout you create must be exposed to less than or equal to 50% until and unless you roll out to 100%" / "Rollout group assignment is consistent across all phases of a rollout." / "if you reduce the percentage to 0% … If you later decide to increase the rollout percentage, users who were part of the previous Enabled or Control groups will return to the group they were originally assigned".
 - **A8 · Every publish creates an immutable version, and rolling back applies "immediately for all apps and users".** `opened`
-  https://firebase.google.com/docs/remote-config/templates (last updated 2026-10-01): "Each time you update parameters, Remote Config creates a new versioned Remote Config template and stores the previous template as a version that you can retrieve or roll back to" / "use those values immediately for all apps and users." / "a total limit of 300 lifetime stored versions".
+  https://firebase.google.com/docs/remote-config/templates/client (last updated 2026-10-01): "Each time you update parameters, Remote Config creates a new versioned Remote Config template and stores the previous template as a version that you can retrieve or roll back to" / "Click and confirm this only if you are sure you want to roll back to that version and use those values immediately for all apps and users." / "a total limit of 300 lifetime stored versions".
 - **A9 · Server-side Remote Config evaluates its template on every request and assigns percentage groups by a stable id. Google's own example reads an `is_ai_enabled` switch. The feature is still Preview.** `opened`
   https://firebase.google.com/docs/remote-config/server (last updated 2026-10-01): "Your server can then evaluate the template with each incoming request" / "you might set … a user ID, to ensure that each user that contacts your server is added to the proper randomized group" / `const is_ai_enabled = config.getBool('is_ai_enabled');` / "Remote Config in server environments is a Preview release." Remote Config is also absent from Google's data-residency list (R18 as corrected). Both facts support the blueprint's in-house, Remote-Config-*shaped* Registry (§0 line 6).
 - **A10 · Never switch a UI the person is using in the middle of their task, and do not depend on the network for configuration.** `opened`
@@ -163,9 +163,9 @@ Moments that decide their trust. These are inferred from the sources above, `ass
 
 ## 3 · Shared definitions for the acceptance lines
 
-**One name per thing in this lens.** The map's words are used as they are. New words are proposed in §6 for the model phase to fix.
+**One name per thing in this lens.** The map's words are used as they are. New words are listed in §7 (conflict 1) for the model phase to fix.
 
-- **AI tasks.** The code key and the English screen name are the same word. They follow the brief's capture modes (§14 "Meal, Unit, Label, Recipe") and `POST /v1/analyses` ("meal, label, scale, recipe, or text/voice transcript"):
+- **AI tasks.** The code key and the English screen name are the same word. They follow the brief's capture modes (§14 "Meal, Unit, Label, Recipe") and `POST /v1/analyses`, except that the recipe analysis is named **Ingredients** (below) ("meal, label, scale, recipe, or text/voice transcript"):
   - `meal` · **Meal**
   - `label` · **Label**
   - `scale` · **Scale**
@@ -205,7 +205,10 @@ Moments that decide their trust. These are inferred from the sources above, `ass
 | Shadow sample | 5 % | — |
 | Canary share | 5 %, maximum 50 % | A7 |
 | Minimum sample per stage and group | 200 Analyses and 30 distinct eaters | — |
-| Canary checks | about six; a dozen is A11's soft guideline, not a limit | A11 |
+| Canary checks | the six named in 10.23; a dozen is A11's soft guideline, not a limit | A11 |
+| Canary duration | 24 hours | A17's "bake-in time" |
+| Seeded quotas ("Quotas version 1") | image tasks soft 15 / hard 25; Text and Voice soft 60 / hard 100; anonymous sessions hard 3 / 10 | §23.3 |
+| Seeded AI spend cap | alert at $40, cap at $60 per UTC day | A4 |
 | Evaluation tolerance | proposed version ≥ Rollout version − 2 points per score | — |
 | Small groups | fewer than 11 distinct eaters are hidden | A26 |
 | Retirement warning / block for new Proposed versions | ≤90 days / ≤30 days | — |
@@ -766,7 +769,7 @@ As platform admin, I need a quota to count only fresh AI work, so that eaters ar
 - Given an Analysis that the eater discarded, When usage is read, Then it counts toward both the quota and the cost. `/r`
 
 #### admin-10.44 · The quota day follows the eater's diary day
-As platform admin, I reset each eater's quota at their own diary-day boundary, so that an eater with a late boundary is not reset in the middle of their evening. §8.1 ("Default diary days follow the user's configured local day boundary"), FR-044; A29 for why late boundaries occur. `assumption`: the brief does not say which day a quota uses (see §6).
+As platform admin, I reset each eater's quota at their own diary-day boundary, so that an eater with a late boundary is not reset in the middle of their evening. §8.1 ("Default diary days follow the user's configured local day boundary"), FR-044; A29 for why late boundaries occur. `assumption`: the brief does not say which day a quota uses (see §7 conflict 2).
 - Given `eater-synth-043` in Asia/Riyadh with a diary-day boundary of 04:00, who used the hard limit by 02:30, When they call `POST /v1/analyses` for `meal` at 03:59, Then it returns `RATE_LIMITED` with `resets_at` 04:00 local; at 04:00 the call returns 200. `/r`
 
 #### admin-10.45 · Keep effective-dated prices
@@ -801,7 +804,7 @@ As platform admin, I read the estimated cost per Saved Unit (the brief's "accept
 
 #### admin-10.48 · A daily AI spend cap warns, then turns the kill switch on by itself
 As platform admin, I set a daily AI spend alert level that warns and an AI spend cap that turns the kill switch on for every task, so that a bug or abuse cannot run up a surprise bill. §16.5, §23.3; A4.
-- Given a daily AI spend alert level of $40 and a cap of $60 (UTC day), When the estimated cost passes $40, Then a banner on **Registry** and an **Audit trail** entry read "AI spend today $40.12 of $60". `/r`
+- Given the seeded AI spend alert level of $40 and cap of $60 (UTC day, §3), When the estimated cost passes $40, Then a banner on **Registry** and an **Audit trail** entry read "AI spend today $40.12 of $60". `/r`
 - Given the estimated cost passes $60, When the next `POST /v1/analyses` arrives, Then:
   - **Registry** reads "Kill switch On for all tasks · AI spend cap reached 21:47 UTC";
   - the call returns `AI_UNAVAILABLE`;
@@ -866,15 +869,16 @@ As platform admin, I see every failed analysis job with its error, attempts, age
 As platform admin, I retry a failed analysis job under its original command id, and the result is only an Analysis that is Ready for review, so that a retry can never create an Entry. §18.2 ("bounded retries with the same command ID"), FR-045, FR-043; AT-10. *Shared: Support agent.*
 - Given a `meal` analysis job for `eater-synth-104` that failed with `AI_UNAVAILABLE`, When `admin.a` clicks "Retry" on **Jobs**, Then:
   - the job leaves the failed list;
-  - `eater-synth-104` has one Analysis, Ready for review, for that command id;
+  - `eater-synth-104` has one new Analysis, Ready for review, under that command id;
+  - the earlier Analysis stays Failed, because Failed is an end state in D2 (§7 conflict 12);
   - `GET /v1/reports/day` for their Day is unchanged. `/r`
 - Given the eater has withdrawn Consent or deleted their account since, When it is retried, Then the retry is refused as in admin-9.3. `/r`
 
 #### admin-10.57 · Stop retrying what cannot succeed
 As platform admin, I see when a job has used all its attempts and needs engineering, so that retries stay bounded. §18.2, NFR-12 ("bounded retries"); A28.
 - Given a job that failed 5 of 5 attempts, When **Jobs** opens, Then:
-  - the row reads "Stopped after 5 attempts · needs engineering";
-  - Retry is disabled, with that reason beside it. `/r`
+  - the row reads "Failed · 5 of 5 attempts used · needs engineering". The state stays D2's Failed; the rest is a note;
+  - Retry is disabled, with "No attempts left" beside it. `/r`
 - Given the same job, When `POST /v1/admin/jobs/{id}/retry` is called, Then it returns 422 `VALIDATION_ERROR` "No attempts left". `/r`
 
 #### L · Roles (permissions → roles → users, deny by default)
@@ -889,11 +893,17 @@ As platform admin, I read the fixed permissions in plain words on **Roles › Pe
   - "Read account state", "Request a Grant", "Read the whole Audit trail". `/r`
 - Given the list, When the row "Read a diary inside an Active Grant" is shown, Then it reads "Only through a Grant · can't be added to a role". `/r`
 
-#### admin-10.59 · The five personas' roles are seeded
-As platform admin, I find the five persona roles in place on a fresh deployment, so that the console is safe from day one. Map §2 (five personas), FR-080, FR-081, blueprint §0 line 3.
+#### admin-10.59 · The five personas' roles are seeded, and the first platform admin is set at deployment
+As platform admin, I find the five persona roles in place on a fresh deployment, and the first staff account holds Platform admin from the deployment's own settings, so that the console is safe and usable from day one. Map §2 (five personas), FR-080, FR-081, blueprint §0 line 3, blueprint §0 line 6 (settings come from the environment). `assumption`: the first platform admin is named in the deployment's environment. The brief does not say how.
 - Given a fresh deployment, When **Roles** opens, Then it lists Eater, Nutrition approver, Support agent, Platform admin and Auditor, each with its permissions and the label "Seeded · read-only". `/r`
 - Given the seeded role Eater, When it is opened, Then it reads "Given to every app account at sign-up · no console permissions". `/r`
 - Given any seeded role, When `DELETE /v1/admin/roles/{id}` or a permission change is sent, Then it returns 422 `VALIDATION_ERROR` "Seeded roles can't be changed. Copy one to make your own." `/r`
+- Given a fresh deployment whose environment names `admin.a@example.test` as the first platform admin, When `admin.a` first signs in, Then:
+  - they hold Platform admin, and **Roles › Users** lists them;
+  - the **Audit trail** reads "First platform admin set at deployment". `/r`
+- Given `admin.a` already holds Platform admin, When the deployment restarts with the environment naming `admin.b@example.test` instead, Then:
+  - `admin.b` gains no role;
+  - only an existing platform admin can assign one (10.61). `/r`
 
 #### admin-10.60 · Build a role from the permissions
 As platform admin, I create a role that starts with nothing and tick the permissions it needs, so that a new job gets exactly what it needs. Blueprint §0 line 3 (roles screen), FR-080 (role-based console); A21.
@@ -919,11 +929,13 @@ As platform admin, I see what a user gains or loses before I save, and the chang
 
 #### admin-10.62 · Duties that must stay apart are kept apart
 As platform admin, I am stopped from combining roles that must stay apart, so that support never also approves records or runs the Registry, and the auditor stays independent. FR-081 ("Separate support privileges from nutrition-approver and platform-admin privileges"); R24. `assumption`: the Auditor-with-a-writing-role block rests on R24's "separated duties".
-- Given `support.a` holds Support agent, When `admin.a` adds Platform admin or Nutrition approver, Then Save is refused with "Support agent can't be combined with Platform admin or Nutrition approver". `/r`
+- Given `support.a` holds Support agent, When `admin.a` adds Platform admin or Nutrition approver, Then:
+  - Save is refused with "Support agent can't be combined with Platform admin or Nutrition approver";
+  - `PUT /v1/admin/users/{support.a}/roles` returns 422 `VALIDATION_ERROR`. `/r`
 - Given `auditor.a` holds Auditor, When any role that can change something is added, Then Save is refused with "Auditor stays read-only". `/r`
 - Given a custom role with both "Request a Grant" and "Move versions between states", When it is saved, Then:
   - it is refused with "These permissions belong to duties that must stay apart";
-  - the server's role check refuses the same combination by API. `/r` `/m`
+  - `PUT /v1/admin/roles/{id}` with that combination returns 422 `VALIDATION_ERROR`, and the server's role check refuses it at the module level. `/r` `/m`
 
 #### admin-10.63 · No role can read a diary
 As platform admin, I can never give any role a permission to read a diary, so that diary access exists only through a Grant the eater approved. FR-081, map §3 (Grant), WF-10 done-when. *Shared: Support agent, Auditor.*
@@ -934,7 +946,7 @@ As platform admin, I can never give any role a permission to read a diary, so th
 As platform admin, I cannot change my own roles and nobody can remove the last Platform admin, so that nobody can raise their own access or lock everyone out. FR-081 (separation of privileges), map §2 (the platform admin manages roles); A24, A27. `assumption` for the last-admin rule.
 - Given `admin.a` opens their own row on **Roles › Users**, When the page renders, Then:
   - the role controls are disabled with "Another platform admin must change your roles";
-  - a self-change by API returns 403 `FORBIDDEN`. `/r`
+  - a self-change by API returns 422 `VALIDATION_ERROR` "You can't change your own roles". The caller does hold "Change roles", so this is a rule refusal; `FORBIDDEN` is only for a missing permission (D2). `/r`
 - Given:
   - `admin.a` is the only Platform admin;
   - `access.a` holds a custom role with "Change roles".
@@ -947,14 +959,18 @@ As platform admin, I cannot change my own roles and nobody can remove the last P
 
 NFR-12: "Per-user quotas, bounded retries, least privilege, secret rotation, dependency scans, backups, and tested restore". Delta D1 (blueprint §3) adds "supply chain (dependency audit, pinned versions, SBOM)" and "a backup restored once in the release proof (on the Firestore emulator while no hosting exists)". Rotation and scheduled backups in a hosted project wait with the dropped operate row (ledger). Until then the console shows the state the code can prove.
 
-#### admin-10.65 · The AI provider credential rotates without ever being shown
-As platform admin, I see that the AI provider credential is loaded and when, never its value, and a rotation needs no release, so that a leaked key is replaced fast and never spread. NFR-12 ("secret rotation"), §19.2, blueprint §0 line 6 ("secrets from the environment").
+#### admin-10.65 · The credential rotates unseen, and logs carry no secret or private data
+As platform admin, I see that the AI provider credential is loaded and when, never its value, and a rotation needs no release. Operational logs carry what is needed to follow a request and nothing private. A leaked key is then replaced fast, and neither a key nor a diary spreads through logs. NFR-12 ("secret rotation"), §19.2, blueprint §0 line 6 ("secrets from the environment").
 - Given **Settings** › launch gates, When it opens, Then:
   - it reads "AI provider credential: set · loaded 10:02 UTC";
   - no part of the value is shown;
   - `GET /v1/admin/launch-gates` returns `credential_present: true` and `loaded_at`, with no value. `/r`
 - Given the API is restarted with a new synthetic credential in its environment, When **Settings** › launch gates refreshes, Then "loaded" shows the new time, and a `meal` Analysis on the mock succeeds. `/r`
 - Given all service logs from the run, When they are searched for both credential values, Then neither is found. `/s`
+- Given `eater-synth-105` posts a synthetic meal photo that the eater then approves, When the structured log record for that request is read, Then it holds:
+  - the request id, timing, status, `registry_version` (model version), estimated cost and validation code (§19.2);
+  - the same request id on every record for that request, so one Analysis can be followed. `/s`
+- Given the same run, When all service logs and crash reports are searched for the photo's bytes (by hash), the synthetic transcript text "three cheese bites and a cup of laban", the eater's food names and their prompt text, Then none is found (§19.2: "not raw meal images, private diaries, audio … Avoid copying prompts into crash reports"). `/s`
 
 #### admin-10.66 · Dependency audit and pinned versions are visible
 As platform admin, I see the running build's dependency audit and SBOM, so that I know whether we ship a known-vulnerable package. NFR-12 ("dependency scans"), blueprint §3 D1 (supply chain).
@@ -1015,8 +1031,18 @@ As platform admin, I read times in my own time zone with the zone shown, and the
   - `GET /v1/admin/audit-trail` returns ISO 8601 UTC. `/r`
 
 #### admin-10.71 · Keyboard, screen reader, contrast and zoom
-As platform admin, I can do the whole Propose → Canary → Rollout → roll back → kill-switch flow by keyboard and screen reader, at high zoom, in light and dark, so that the console works for every admin. NFR-08 ("Screen-reader and text-scaling flows pass on every P0 journey"; the console is P0 by FR-080), blueprint §0 (console proved at desktop and ~390 px).
-- Given **Registry** at 1280 CSS px, When `admin.a` uses only Tab, Shift+Tab, Enter, Space and Esc, Then they can propose Meal version 7, move it to Canary, move it to Rollout, roll back to version 6, and turn the kill switch on and off, and:
+As platform admin, I can do the whole Propose → evaluate → Shadow → Canary → Rollout → roll back → kill-switch flow by keyboard and screen reader, at high zoom, in light and dark, so that the console works for every admin. NFR-08 ("Screen-reader and text-scaling flows pass on every P0 journey"; the console is P0 by FR-080), blueprint §0 (console proved at desktop and ~390 px).
+- Given:
+  - **Registry** at 1280 CSS px;
+  - the synthetic fixtures, which give Meal version 7 a passing regression run and fill its Shadow and Canary minimum samples from synthetic eater traffic,
+
+  When `admin.a` uses only Tab, Shift+Tab, Enter, Space and Esc, Then they can:
+  - propose Meal version 7 and run its evaluation;
+  - move it to Shadow, then to Canary, then to Rollout;
+  - roll back to version 6;
+  - turn the kill switch on and off,
+
+  and:
   - every focused control shows a visible focus ring;
   - Esc closes each confirmation without acting. `/r`
 - Given a screen reader (VoiceOver with Safari) on **Registry**, When focus reaches Meal's kill-switch control, Then:
@@ -1080,9 +1106,9 @@ Every question in `care.md` "The questions" is answered below, or marked not app
    - type-a-word confirmations.
 3. **Need first.** Every story starts from a brief or map line (§4 traces).
 4. **Common path.** Reading **Registry** and using the kill switch are the common path. Prices, permissions, the regression set and the launch gates on **Settings** sit one level deeper.
-5. **Places and things to do.** The seven sections are places in the navigation. Kill switch, Move to …, Roll back and Retry are actions placed next to what they act on.
+5. **Places and things to do.** The six sections this persona uses (Registry, Metrics, Jobs, Roles, Audit trail, Settings) are places in the navigation. Kill switch, Move to …, Roll back and Retry are actions placed next to what they act on.
 6. **Settings that need not exist.** The Shadow and Canary shares, minimum samples and propagation start from chosen defaults (§3), so nobody is asked each time.
-7. **Pop-ups.** There are only the five confirmations above. An evaluation runs inside the page with its progress shown.
+7. **Pop-ups.** There are only the five kinds of confirmation listed under "The matching style": Move to Canary, Move to Rollout, roll back, the kill switch and quotas roll back. An evaluation runs inside the page with its progress shown.
 8. **Changing an existing screen:** n/a. The console is new, with no existing users.
 
 **2 · How it is found and understood**
@@ -1103,16 +1129,22 @@ Every question in `care.md` "The questions" is answered below, or marked not app
    - errors name no requirement or finding id (10.3, 10.24, 10.62);
    - versions read "Meal version 7".
 6. **Buttons are verbs**, and multi-step flows keep the same words: "Move to Canary", "Move to Rollout", "Roll back to version 6", "Turn kill switch on for Meal", "Retry".
-7. **Defaults are right from the start.** Seeded roles, seeded Rollout versions and the starting values in §3 mean nothing needs setting first.
+7. **Defaults are right from the start.** Nothing needs setting first, because these are all seeded:
+   - the roles and the first platform admin (10.59);
+   - the Rollout versions (10.1);
+   - "Quotas version 1" (10.38) and the AI spend cap (10.48);
+   - the other starting values in §3.
 8. **No typing what the system knows.** Models, prompts and schema versions are chosen from lists. Only reasons and prices are typed.
 9. **Tappable at a glance.** Every control is a bordered button or an underlined link. Table cells that are not controls carry no hover style.
-10. **The squint test.** The eye lands on the Rollout and AI state of each row first. Retirement banners sit above the table.
-11. **Key status where people look.** These banners show on every section:
-    - "Kill switch On for all tasks" (10.32);
-    - a roll back (10.24);
-    - the AI spend cap (10.48);
-    - re-check due (10.12);
-    - retirement (10.6).
+10. **The squint test.** The eye lands first on each row's Rollout version and kill-switch state. Registry's own banners sit above its table.
+11. **Key status where people look.**
+    - On every section:
+      - "Kill switch On for all tasks", including when the AI spend cap turned it on (10.32, 10.48);
+      - an automatic roll back (10.24).
+    - At the top of **Registry** only:
+      - retirement (10.6);
+      - re-check due (10.12);
+      - the AI spend alert level (10.48).
 
 **3 · How it feels**
 1. **Every action answers what happened, what is happening now and what comes next:**
@@ -1121,12 +1153,30 @@ Every question in `care.md` "The questions" is answered below, or marked not app
    - a warning before trouble (retirement, the AI spend alert level);
    - an error next to its field (10.11).
 2. **Loudness matches importance.** Quiet bars for offline and soft limits. Banners for Kill switch On, roll back, the AI spend cap and retirement. No alert for routine Canary progress.
-3. **Response at the instant of touch.** Every button shows its pressed state within 100 ms (§3), then "Sending…" until the server answers.
+3. **Response at the instant of touch.** Every action button shows its pressed state and "Sending…" within 100 ms (§3), measured in 10.36, and keeps "Sending…" until the server answers.
 4. **Changing your mind mid-way.** Esc or Cancel closes any confirmation before it acts, and a running evaluation can be cancelled (10.15). A sent switch is undone with the opposite switch.
 5. **Animation:** n/a. The console uses no animation beyond the pressed state and placeholders.
 6. **One main action, never destructive.** On each task page the main action is the next "Move to …". Roll back and Turn kill switch on are secondary, and every confirmation defaults to Cancel.
 7. **Alignment.** All tables share one column grid and one row height. Spacing comes from tokens, never ad hoc.
-8. **Values chosen on purpose.** Every value in the §3 table is tried in the served product and its choice is recorded.
+8. **Values chosen on purpose.** Every value in the §3 table is exercised by a story and tried in the served product:
+
+   | value | story |
+   |---|---|
+   | propagation | 10.24, 10.27, 10.31 |
+   | pressed state | 10.36 |
+   | Shadow share | 10.18 |
+   | Canary share and maximum | 10.22 |
+   | minimum samples | 10.20, 10.23 |
+   | Canary checks | 10.23 |
+   | Canary duration | 10.24 |
+   | evaluation tolerance | 10.17 |
+   | small groups | 10.50 |
+   | retirement warning and block | 10.6 |
+   | job attempts | 10.57 |
+   | deletion priority | admin-9.1 |
+   | provider re-check | 10.12 |
+   | seeded quotas | 10.38 |
+   | seeded AI spend cap | 10.48 |
 9. **The first screen.** The console opens on the section and filter last used in that browser (stored per viewer). Data then loads behind table-shaped placeholders with no flash.
 
 **4 · When it goes wrong, is empty or is slow**
@@ -1143,8 +1193,13 @@ Every question in `care.md` "The questions" is answered below, or marked not app
 6. **Undo, and showing what it reversed:**
    - roll back (10.27), quotas roll back (10.39) and the kill switch turned Off (10.35) each undo the earlier action;
    - **Audit trail** shows exactly what each undid.
-7. **Warnings only before unexpected, permanent loss.** Nothing in this console deletes permanently except seeded data, which cannot be deleted at all. Confirmations are kept only for changes that hit every eater at once.
-8. **Half-filled forms.** A half-filled version is kept as Proposed (10.8). A half-filled role keeps its typed name in the browser until it is saved or discarded.
+7. **Warnings only before unexpected, permanent loss.** Nothing in this console deletes permanently; seeded roles cannot be deleted at all (10.59). Confirmations are kept for changes that reach eaters as soon as they are made, and for nothing else:
+   - Move to Canary, which reaches about 5 % of eaters (10.22);
+   - Move to Rollout (10.26);
+   - roll back (10.27);
+   - the kill switch (10.31, 10.32);
+   - quotas roll back (10.39).
+8. **Half-filled forms.** A half-filled Propose form is kept in that browser and offered back as "Restore your unsaved Meal version" (10.8). Nothing reaches the server until the form passes the checks in 10.11.
 9. **Permissions asked at the moment of need:** n/a. The console asks for no device permission. Role refusals explain themselves (10.2, 10.3).
 10. **No network.** The last data is shown with its time and a quiet bar. Changes are disabled, and the kill switch is never queued (10.1, 10.36).
 11. **When a command can't work right now, we say why:**
@@ -1157,7 +1212,7 @@ Every question in `care.md` "The questions" is answered below, or marked not app
 1. **The inside is built with care.** Every state machine, checker and suppression rule has `/m` or `/s` lines (10.10, 10.11, 10.20, 10.28, 10.50).
 2. **Nothing left to chance.** Unknown schema versions stop start-up (10.10). Missing stamps refuse the write (10.28). Missing prices block Canary (10.46).
 3. **Names match.** `meal`, `registry_version`, Analysis, Entry and Evidence are the same words in code, data, logs and on screen (§3).
-4. **Logs and personal data.** Logs carry the request id, Registry version, timing, cost and validation codes. They never carry photos, transcripts or diaries (§19.2), yet they still follow one Analysis by id.
+4. **Logs and personal data.** Logs carry the request id, Registry version, timing, cost and validation codes. They never carry photos, transcripts, diaries or prompt text (§19.2), yet they still follow one Analysis by id (10.65).
 5. **Sample data** is synthetic only (`eater-synth-*`, `*.example.test`). It includes Arabic prompt text (10.9), long model ids and 400 eaters.
 6. **Collect only what is needed:**
    - Shadow keeps numbers only (10.19);
@@ -1197,11 +1252,11 @@ Every question in `care.md` "The questions" is answered below, or marked not app
 
 ## 7 · Conflicts for the model phase
 
-1. **New words beyond map ¶4.** One name each is proposed in §3, with Arabic in the string catalogue:
-   - the version states Proposed, Shadow, Canary, Rollout, Rolled back;
+1. **New words beyond map ¶4 and D2.** One name each is proposed in §3, with Arabic in the string catalogue:
    - the task names Meal, Label, Scale, Ingredients, Text, Voice. The brief's recipe analysis is named **Ingredients**, not "Recipe", so that it does not clash with the map's Recipe or D2's Recipes;
    - the panel words "models list", "prompt editor", "regression set" (the brief's §16.4 term), "quotas panel", "prices panel" and "launch gates" (Settings, per D2);
-   - "quota", "Canary check";
+   - "quota", "Canary check", "roll-back target" (a pointer to the version a roll back returns to, 10.26–10.27);
+   - "AI spend cap" and its "alert level" (10.48). It is not called "budget", because map §4 (WF-7) and the brief (FR-066, §12.1) use "budget" for the eater's food budget;
    - the evaluation-run states "Evaluating", "Cancelled" and "Finished" (10.15).
 
    Vocabulary D2 already fixes the sections, the version states and the kill-switch states. This lens uses D2's sections (Registry, Metrics, Jobs, Roles, Audit trail, Settings) and its version states (Proposed → Shadow → Canary → Rollout · Rolled back). The words left above need a dated delta, or a replacement.
@@ -1226,14 +1281,31 @@ Every question in `care.md` "The questions" is answered below, or marked not app
 9. **Staff and eater accounts:** settled by vocabulary D2 ("a staff account is never an eater account"). Round 0 had this as a separate story with no source. It is now one acceptance line in admin-10.61, traced to D2.
 10. **The Nutrition approver's access to Metrics** (10.49). The approver lens may want per-Food breakdowns, and these must keep the small-group rule (10.50).
 11. **Who holds "View consented evaluation cases"** (10.14). No seeded role holds it. Viewing raw evidence needs a custom role (§19.2 "restricted roles"). The approver and auditor lenses may claim it.
+12. **Retrying a Failed Analysis** (10.34, 10.56).
+    - D2 lists Analysis Failed as an end state and gives "retried with the same id" only to Privacy jobs.
+    - This lens creates a *new* Analysis on retry: "Try again" makes a new Analysis from the same photo, and a job retry makes one under the same command id (§18.2). The Failed one stays Failed.
+    - D2 should confirm this, or add Failed → Processing.
+13. **A Registry version replaced by a newer Rollout** (10.26).
+    - D2's states (Proposed → Shadow → Canary → Rollout · Rolled back) have no state for the version that was in Rollout before.
+    - This lens shows it only as "Roll-back target: version 6", a pointer and not a state.
+    - A delta should name the state, for example "Replaced".
+14. **Versioned quotas** (10.38, 10.39).
+    - Map §6 puts per-user daily AI quotas in the Registry, and map §3 says "config live / rolled back".
+    - But D2's Registry version is "model id + prompt + schema per task".
+    - This lens versions quotas as "Quotas version n", with roll back. D2 should either widen "Registry version" to cover quotas or name a quotas version.
+15. **Notes on Failed jobs.** "Not retried: account deleted", "Not retried: Consent withdrawn" (admin-9.3) and "5 of 5 attempts used · needs engineering" (10.57) are notes on D2's Failed state, not new states. If the model phase wants them filterable, D2 needs reason codes for Failed.
+16. **The first platform admin** (10.59).
+    - It is named in the deployment's environment. This is an `assumption`; the brief does not say how the first staff account gets a role.
+    - The auditor lens may want that event shown in its trail, as 10.59 already writes it to the Audit trail.
 
 ## 8 · Assumptions in this file (labelled where used)
 
-- The admin API paths, the console section names, the task keys and the permission list (§3, 10.58).
+- The admin API paths, the panel words inside D2's sections, the task keys and the permission list (§3, 10.58).
 - The starting values in §3.
 - The quota day follows the diary day (10.44).
 - An Auditor cannot also hold a role that changes things (10.62).
 - One platform admin must always remain (10.64).
+- The first platform admin is named in the deployment's environment (10.59).
 - The persona's routine, place and feelings (§1.3, §5).
 - Lifecycle dates are entered by hand: I found no lifecycle API in this run (10.5).
 - Provider project settings that code cannot enforce are recorded by a person (10.12).
@@ -1264,7 +1336,7 @@ Every question in `care.md` "The questions" is answered below, or marked not app
 | §16.5, §23.3 (cost control, quotas, metering incl. rejects and retries, soft/hard quotas, no fixed prices) | 10.38–10.48 |
 | §18.2 (typed errors; 409 with current revision; bounded retries, same command id) | admin-9.2, 10.30, 10.31, 10.40, 10.56, 10.57 |
 | §19.1 (provider retention: abuse monitoring, request logging, caching, grounding, store=false) | 10.12 |
-| §19.2 (logs without raw evidence; consented, role-restricted raw evidence) | 10.14, 10.19, 10.51, 10.65 |
+| §19.2 (operational logs hold request ids, timing, status, model version, cost and validation codes, and no raw images, diaries, audio or prompts; consented, role-restricted raw evidence) | 10.14, 10.19, 10.51, 10.65 |
 | NFR-03, NFR-05 | 10.23, 10.31–10.37 |
 | NFR-07 | 10.2, 10.51, 10.63 |
 | NFR-08 | 10.71 |
@@ -1563,3 +1635,66 @@ Counts after round 1: 75 stories (admin-9: 4; admin-10: 71) and 197 acceptance l
     - Group 2.11: the retirement and re-check banners "show on every section". But 10.6 puts the retirement banner "at the top" of **Registry**, and 10.12 says "the Registry banner names it".
 
 **Ids**: no defects.
+
+## Fix round 2 (2026-10-01)
+
+All 13 new defects are fixed at their root. Both verdict sections are kept. No story was added or renumbered; new checks were added as acceptance lines on the stories they belong to. Every changed line was re-read against `way/vocabulary.md` (D2) and against the stories it touches.
+
+1. **Stale pointers.** §3 now reads "New words are listed in §7 (conflict 1)", and 10.44 reads "(see §7 conflict 2)". The new 10.56 pointer goes to §7 conflict 12, which exists.
+2. **§19.2 operational logs.** 10.65 is now "The credential rotates unseen, and logs carry no secret or private data", with two new `/s` lines:
+   - one Analysis's log records carry the request id, timing, status, `registry_version`, estimated cost and validation code, all under one request id;
+   - a search of all logs and crash reports for the photo's hash, the synthetic transcript, the food names and the prompt text finds nothing.
+
+   Care 5.4 and the §9 coverage row now point to these lines.
+3. **Roll back by hand, and Shadow numbers that fail.**
+   - 10.27 is now "Roll back in one step, from Shadow, Canary or Rollout". It has new lines for rolling back a Canary (Analyses stamped `meal@v6` through `GET /v1/analyses/{id}`) and a Shadow (no further calls to version 7 in the mock log).
+   - 10.20 has a new line: a validation-pass rate of 91 % against 99 % reads "Not ready for Canary … (allowed gap 2 points)", disables Move to Canary and offers "Roll back version 7".
+4. **The first platform admin.** 10.59 is now "… and the first platform admin is set at deployment". It traces to blueprint §0 line 6 and is labelled `assumption`. It has new lines:
+   - the environment names `admin.a@example.test`, who holds Platform admin on first sign-in, and the Audit trail reads "First platform admin set at deployment";
+   - a later environment change grants nothing.
+
+   §7 conflict 16 and §8 record this.
+5. **Lines that could not pass.**
+   - 10.25, line 2: at 10 %, every eater stamped `meal@v7` was in the earlier 20 % group, and no outside eater is drawn (A7).
+   - 10.71, line 1: now runs the full flow (propose, run evaluation, Shadow, Canary, Rollout, roll back, kill switch), with the synthetic fixtures filling the regression run and the minimum samples.
+   - 10.13, line 1: "consented target-cuisine cases 0 of 200 (synthetic cases don't count here) · bilingual labels 40 of 100". The note explains that NFR-10 attaches "consented" only to the target-cuisine cases.
+6. **Then lines now name data and an interface.**
+   - 10.26: the Canary panel is gone, and 20 former control and unassigned eaters get `meal@v7` through `GET /v1/analyses/{id}`.
+   - 10.24: "read through `GET /v1/analyses/{id}`".
+   - 10.43 is split in two:
+     - three deliveries give one quota count and one provider call in the mock log;
+     - a timeout plus a bounded retry gives the quota 1, and the cost view on Metrics reads "Provider calls 2 · estimated $0.0053" (API `provider_calls: 2`, `estimated_cost: 0.00525`).
+   - 10.33: the note text (proposed copy owned by the eater lens), with the shutter and microphone disabled and My Units, Templates and typed amount enabled.
+7. **A8 now links https://firebase.google.com/docs/remote-config/templates/client** (last updated 2026-10-01). It was re-opened in this round, and both quotes and the 300-version limit were found. The rollback quote is now given in full.
+8. **"Budget" no longer names AI spend.**
+   - It is now "AI spend cap", with an "alert level", in G3, §3, 10.38, 10.48, care 2.4, 2.11, 3.1 and 3.2, and §7 conflicts 2 and 8.
+   - §7 conflict 1 lists the new words and explains that the map and brief keep "budget" for the eater's food budget.
+   - "Budget" now appears only in quotes (A4) and in that explanation.
+9. **The AI task "Recipe" is renamed `ingredients` · **Ingredients**.**
+   - It reads a recipe's ingredients and cooked yield. The change runs through §3, 10.1, 10.32, 10.38, 10.52, care 2.4 and §7 conflict 1.
+   - The reason is stated: map ¶4's Recipe and D2's Recipes section.
+   - "Recipe" now appears only as the map's, the brief's or D2's word.
+10. **Names, states and transitions outside D2.**
+    - "Previous Rollout version" became "Roll-back target: version 6", a pointer and not a state; §7 conflict 13 asks D2 for a state.
+    - "Quotas version n" is routed in §7 conflict 14.
+    - 10.57 now reads "Failed · 5 of 5 attempts used · needs engineering", which is D2's Failed plus a note; §7 conflict 15 covers it.
+    - A retried Analysis is now a new Analysis while the Failed one stays Failed: 10.34's "Try again" and 10.56's job retry. §7 conflict 12 covers it.
+11. **One code per kind of refusal.** Every role-rule refusal returns 422 `VALIDATION_ERROR`:
+    - a self-change (10.64), with the reason stated, since the caller holds "Change roles";
+    - separation of duties (10.62, both lines);
+    - the last platform admin, an eater account and a seeded role.
+
+    `FORBIDDEN` stays only where the role lacks the permission (10.2, 10.3, 10.4, 10.60, 10.61, 10.68), as D2 defines it.
+12. **Every value in §3 is now exercised by a story.**
+    - 10.6 has new lines: a 75-day banner on Registry, no banner at 91 days, and a block at 25 days (422 `VALIDATION_ERROR`, "at least 30 days left").
+    - 10.36 has a new line: pressed state and "Sending…" within 100 ms, measured by a browser performance trace.
+    - admin-9.1 has a new line: a job with 12 days left is not pinned; only jobs with 7 days or fewer are.
+    - §3 gains rows for Canary duration (24 h, used in 10.24), seeded quotas ("Quotas version 1", with a new 10.38 fresh-deployment line) and the seeded AI spend cap (now the Given in 10.48).
+    - Care 2.7 and 3.8 list where each value is exercised.
+13. **The care answers now match the stories.**
+    - 4.8: a half-filled Propose form is kept in the browser and offered back. A new 10.8 line shows "Restore your unsaved Meal version", and nothing is sent until the checks in 10.11 pass.
+    - 4.7: confirmations are kept for changes that reach eaters at once, including Move to Canary (about 5 %).
+    - 2.11: the kill switch for all tasks, the AI spend cap and automatic roll backs show on every section; retirement, re-check and the AI spend alert show at the top of Registry only, which matches 10.6, 10.12 and 10.48.
+    - 1.5 now says six sections and names D2's.
+
+Counts after round 2: 75 stories (admin-9: 4; admin-10: 71) and 211 acceptance lines. A script check finds a `/r` line on every story, a layer mark on every acceptance line, and a map, brief, blueprint or D2 trace on every story.
