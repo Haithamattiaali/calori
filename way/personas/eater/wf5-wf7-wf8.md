@@ -1156,3 +1156,132 @@ Each counted defect is fixed in the stories themselves; the verdict above is kep
     The mark call is now `PUT /v1/days/{id}/mark` (8.13). §9.3's WF-8 conflict cell cites 8.35.
 
 Counts after this round: **103 stories** (WF-5 44, WF-7 24, WF-8 35) and **327 acceptance lines** (292 `/r`, 27 `/m`, 8 `/s`). Every story still has a trace and at least one `/r` line.
+
+
+## Lens verdict — re-verify (2026-10-01)
+
+**fail** — 6 defects: earlier defect 18 is only partly fixed, and fix round 1 brought 5 new ones.
+
+Re-verified by an agent that did not write this file. Checked against blueprint §0–§1, `way/vocabulary.md` (D2, D3), `way/brief/frd-v1.0.md`, `way/personas/_lens-verifier-brief.md` with its addendum, and `r1-refute-a.md` / `r1-refute-b.md`; `research.md` was used as context. The scope was the 22 counted defects above, the fixture arithmetic fix round 1 changed, and the lines it changed (git `a094511` → `04af3c4`). Line n means a story's nth acceptance line.
+
+### The 22 earlier defects
+
+1. **Fixed.** 8.31 line 3: "given she taps "Accept", Then Target history lists a new version effective from 2026-09-30 with source "Accepted suggestion", and the Day reports for 2026-09-03 – 09-29 keep their Target (FR-071)". Line 4: "Given one Day of 2,600 kcal yesterday and FR-060 not met, Then no suggestion appears". §9.1: "FR-061 (P1) bounded Target adjustment, explained, accepted; no retroactive change; no compensation | 8.31".
+2. **Fixed.** 8.32 line 1: "Then it reads "Carbohydrate 30 g (total, as on the label) · of which fiber 6 g · sugars 12 g", and the Day report's carbohydrate rises by 30 g, not 42". Line 3: "the meal report adds "Net carbohydrate (total carbohydrate − fiber) 24 g", always under that name".
+3. **Fixed.**
+   - 8.33 line 1: "Then all three read "Carbohydrate 45.0 % — above your carbohydrate target (30 %)" in the same words".
+   - 8.33 line 2: "Then each of the three views adds "Medium (26–50 %)", and the thresholds are always shown beside the label".
+   - 8.34 line 1: "three indicators read "Protein 72 of 117 g", "Carbohydrate 138 of 140 g" and "Fat 40 of 94 g"".
+4. **Fixed.** 5.44 line 3: "the Plan's `state` is `proposed` (never `infeasible` because of a preference), and `preference_report` has `met: false`". Line 4: "it returns 2 of one Unit, never 1 + 1".
+5. **Fixed.** 5.11 line 5: "Given «السماح بالجرامات» ("Allow grams") on … each row on Meal planner shows its grams as an editable field". Line 6: "the limits list reads "Carbohydrate 31.15 % — above your 30 % maximum" (the edit is checked like a count, 5.18)".
+6. **Fixed.** 5.1 line 3: "the chip «رز كبسة» reads «مطابقة للوحدة: ملعقة رز كبسة» ("Matched to your Unit: kabsa rice spoon") with its Recipe-calculated badge". 5.31 line 2: "Then the photo shows at the top, and each row has its source details under it".
+7. **Fixed.** 5.40 line 3: "Given the plan photo's Analysis is still Processing after 12 s (NFR-03's p95 bound; the analyzer adapter mock does not answer), Then Capture & Plan shows the progress indicator". Line 4: "either way `GET /v1/reports/day` shows no Entry from it". Line 4 has a new problem of its own (defect 5).
+8. **Fixed.** 5.19 line 3: "`POST /v1/meal-plans` returns `explanation: null`, and the AI adapter mock records no request". Line 4: "Given his daily AI quota is used, When counts are found, Then the Plan is still Proposed". 5.2 line 5: "finding counts calls no AI, and the only AI call planning can make is the optional explanation (5.19)".
+9. **Fixed.** 5.25 line 2 covers "plan my whole day at 1,100 kcal", "which is above the hard stop but below the floor". Line 4: "returns `POLICY_FLOOR` naming the floor of the Policy version In effect (1,200 kcal)". Line 5: "at 950 it returns `POLICY_FLOOR` naming the hard stop (1,000 kcal)".
+10. **Fixed.**
+    - Fixture, Sam: "1,870, **entered by Sam** (FR-004) from his own declared figures in FRD §11.3".
+    - Fixture, Mona: "estimated by the app: maintenance 2,200 − 15 % = 1,870, inside the Policy deficit cap".
+    - 8.23 line 1: "Estimated by the app: maintenance 2,200, −15 %".
+    - §7 item 21 holds the open question.
+    - The new 7.18 copy has a problem of its own (defect 4).
+11. **Fixed.** 7.13 line 2: "The method (subtract resting energy pro-rated over the interval) is `assumption` (§8)". 7.18 line 1: "The 50 % and 300 kcal are fixture values, not sourced defaults (`assumption`, §8)". Both are in §8.
+12. **Fixed as stated.** 7.4 line 4: "How often HealthKit delivers active energy is HealthKit's choice; P30 says only that some types arrive at most hourly." This matches r1-refute-b P30. The rewritten line has a new problem (defect 3).
+13. **Fixed as stated.** 5.14 line 1: "a typed Calorie aim about 450 (±10 %), Calorie ceiling 500 and Carbohydrate maximum 30 %". 5.5 line 2: "Then Calorie aim moves to «حوالي 500» … and "Find counts" stays enabled". The new aim brings a fixture problem (defect 2).
+14. **Fixed.**
+    - 5.7 line 3: «يُرجى إدخال رقم أكبر من صفر» ("Enter a number above 0").
+    - 8.20 line 3: «يُرجى إدخال وزن بين ٢٠ و٣٠٠ كجم».
+    - 8.29 line 2: "a sheet reads "This file includes calories, grams and weights, even with Hide numbers on." with "Export" and "Cancel"".
+    - 5.30 line 3: "two simulators (iPhone 17e and the largest iPhone, profile §0)".
+15. **Fixed.** 5.29 line 3: «تراجع: خطة الكبسة (4 ملاعق رز، قطعتا دجاج)». 5.33 line 1: «الباقي: ملعقة رز 1».
+16. **Fixed.** §0.1: "the Activity sheet is *proposed* and needs a delta (§7 item 22)". §7 item 22: "(The saved Plans list of round 0 is gone: a Saved Plan lives on Today, 5.28 and 5.35.)". No other mention of that list remains.
+17. **Fixed for every name the first verdict listed.** §7 item 23: "Every row of §6 (the labels, the API calls, the fields and the `activity_coverage.state` values `data`, `no_data` and `not_connected`)". Names new in round 1 are not covered (defect 6).
+18. **Not fully fixed** (defect 1). The fixed parts:
+    - §0.1: "Calorie aim (about, with a tolerance; a Plan-level aim, never the Target)";
+    - 8.1 line 1: "within your carbohydrate target (30 %, share of macro-derived energy, 4/4/9)".
+19. **Fixed.**
+    - 5.10 line 4: "(a foul spoon = 20 g foul + 8 g bread = 28 g)";
+    - 5.12 line 1: "3 foul spoons show 138 kcal, not 75";
+    - 5.21 line 1: "foul spoon (57.39 %)".
+
+    "foul bite" occurs nowhere.
+20. **Fixed.**
+    - 5.40 title: "AI unavailable, timed out or my daily AI quota used".
+    - 5.40 line 1: «قراءة الصور غير متاحة الآن. …» ("Photo reading is unavailable right now. …").
+    - §5: "the AI Kill switch and the daily AI quota never block planning from Units".
+
+    No "AI limit" and no "paused" remain.
+21. **Fixed.**
+    - §0: "**Gender-neutral Arabic.** Arabic buttons use verbal nouns".
+    - Examples: 8.24 line 1 «تصدير الفترة»; 8.20 line 2 «إبقاء» ("Keep") and «استبعاد من الاتجاه»; 5.25 line 2 «… يمكن تخطيط وجبة واحدة أو مراجعة الهدف.»
+    - Every quoted Arabic string was scanned, and none addresses the eater as male or female. The only imperative left is the eater's own typed input «خطط يومي كله …» (5.25 line 2).
+22. **Fixed.** 8.35 line 1: «تم التحديث من هاتف آخر» ("Updated on another phone"). Line 4: "the call returns 409 `STALE_REVISION` with revision 14". §9.3: "| conflict | 5.30, 5.37, 5.38 | 7.7, 7.11 | 8.35 |".
+
+### Fixture arithmetic the round changed (exact fractions)
+
+Every figure below checks; only 5.14 does not (defect 2).
+
+- **5.11:** 4 rice spoons + 5/3 chicken piece gives P 28.6, C 28.0, F 14.8 g and 1798/5 = 359.6 kcal. 112 / 359.6 = 31.15 %; 1.67 pieces; the total reads 360.
+- **5.44, the shares:** 12 count sets meet ceiling 500, carbohydrate ≤ 30 % and chicken ≤ 3. 4 + 2 alone is 2.4 kcal from 400. On the shares it is 3.3 points from 70 %, tied only with 2 + 1 (198.8 kcal).
+- **5.44, the ties:** 5 + 2 gives 71.4 % rice and 31.82 % carbohydrate. 2 × 38.2 = 76.4.
+- **7.13:** 175 − 1,779 × 30 / 1,440 = 137.9375; the credit is 68.97, shown as 69.
+- **7.18 and Sam's fixture:** 2,134.8 × 0.8 = 1,707.84, shown as 1,710; 2,334.8 × 0.8 = 1,867.84.
+- **Mona:** 2,200 × 0.85 = 1,870. The deficit of 330 equals min(15 % = 330, 500).
+- **8.31:** −160 is bounded to −100, giving 1,650. 09-03 – 09-30 is 28 days.
+- **8.32:** 4·4 + 30·4 + 6·9 = 190; net carbohydrate is 24 g.
+- **8.33:** 40 + 180 + 180 = 400 kcal; 180 / 400 = 45.0 %.
+- **8.34:** 116.875, 140.25 and 93.5 g, shown as 117, 140 and 94.
+- **8.35:** 2 × 38.2 = 76.4, shown as 76.
+
+**Counts.** 103 stories and 327 lines (292 `/r`, 27 `/m`, 8 `/s`). By journey: WF-5 44 stories and 162 lines, WF-7 24 and 71, WF-8 35 and 94. Ids are in sequence, and every story has a `/r` line.
+
+### Defects
+
+1. **Earlier defect 18 is not fully fixed: "target" still names Meal planner's aim.** Fix round 1 says "Meal planner's limit is now **Calorie aim** everywhere", but four places still say "target":
+   - the WF-5 step table, row B: "calorie target or ceiling";
+   - 5.26 line 1: "Calorie aim is empty with … ; no negative target appears";
+   - §7 item 10: "This file uses what is left of the Target as a hidden target." (5.43 line 2 now says "its hidden Calorie aim");
+   - §8, first item: "The calorie-target tolerance default (±10 % in 5.5)".
+2. **eater-5.14: the aim fix 13 added leaves out the plan the story names.**
+   - 5.5 line 3 shows "about 450" at ±10 % as «405–495».
+   - 5.14 line 2 still says "4 rice + 2 chicken (397.6 kcal, 28.17 %) is a valid answer". Line 3's example is "Calorie ceiling 500 kcal — 397.6 · met" under "fits all your limits". 397.6 is outside 405–495.
+   - **Recomputed with exact fractions** over every count set (rice; chicken ≤ 3; salad; laban; E_source ≤ 500; 4C ≤ 0.30 × E_macro): 201 sets are feasible, 93 of them lie inside 405–495, and 103 are nearer 450 than 4 + 2 is.
+   - FRD §9.1 minimizes deviation from the aim. The answer is therefore 2 rice + 2 chicken + 1 salad + 1 laban = 450.0 kcal (C 26.5 g, 23.56 %), at zero deviation.
+   - So the done-when request as now written cannot produce "the kabsa result rice 4 + chicken 2". 5.18 line 1 builds on that result, and so do 5.28–5.37 (640 → 242).
+3. **eater-7.4 line 4: the expected time cannot be predicted.**
+   - The line says "a new active-energy sample is added to Health on the simulator at 08:30, When HealthKit delivers it, Then Today's Activity row reads "Synced 08:30"".
+   - The same line says "How often HealthKit delivers active energy is HealthKit's choice". FRD §12.3 adds "not guaranteed continuous background delivery".
+   - "Synced" shows when the import ran (7.4 line 1), so "08:30" holds only if delivery is immediate.
+4. **eater-7.18 line 2: the on-screen cap misstates the rule.**
+   - The copy reads: "Targets the app estimates stay within 15 % or 500 kcal."
+   - The same line, the Policy fixture and approver-10.48 give "the smaller of 15 % and 500 kcal". "15 % or 500 kcal" reads as either bound.
+   - At any maintenance above 3,333 kcal, 15 % is more than 500 kcal.
+5. **Lines added in round 1 that cannot be observed as written.**
+   - 5.5 line 2 says "an aim the eater typed is never moved and gets the error in the third line below". The error is in the story's line 4, two lines below. The third line below is the `/m` 500.04 kcal check.
+   - 5.40 line 4: "Capture & Plan shows a quiet note to open it". The note has no text.
+   - 8.32 line 4: "Given an Entry whose source states carbohydrate excluding fiber, When its detail opens from the Day report, Then it names that convention". It gives no wording and no fixture Entry.
+6. **Names new in round 1 are missing from §6, so §7 item 23 ("Every row of §6") does not cover them.**
+   - 8.31 line 5 adds the fields `change_kcal`, `reason` and `review_period`.
+   - 8.13 line 3 and 8.35 lines 3–4 send a `mark` body (`mark: "complete"` / `"partial"`). §6 lists only the path.
+   - "Accept" sits in the row headed "(EN / AR, one Arabic label per English word, gender-neutral)" with no Arabic label. 8.31's "Keep 1,750" is not listed.
+   - The new "settings labels" row gives Arabic for "Allow halves" and "Allow grams", but none for "Show net carbohydrate", "Low / Medium / High labels" or "first day of week".
+
+### Cross-lens (for the model phase join; not counted)
+
+- **§5 shared ids still point at unrelated stories,** as in the first verdict:
+  - eater-5.40 → admin-10.30 is "Two admins editing at once". The kill switch is admin-10.31 and admin-10.33, and the quota is admin-10.40. admin-10.36, "The switch works at phone width, and is never queued or faked", is related.
+  - eater-8.8 → admin-10.26 is "Move to Rollout, …". The history story is admin-10.29.
+  - eater-7.2 and eater-7.9 → support-9.19 is "Work fast at a desk, and still at phone width". The import story is support-7.1.
+- **No Registry task writes plan explanations.** The admin lens's tasks are `meal`, `label`, `scale`, `recipe`, `text` and `voice` (5.19 line 2; §7 item 19).
+- **The approver's Policy has no rule for entered or clinician-provided Targets.** None covers a Target below the floor or above the deficit cap (5.25 line 5; Sam's own 20 %; §7 items 20 and 21). approver-10.48's cap now equals this file's fixture.
+- **Shared Unit seed values differ between eater files.** This file against `wf2-wf4.md` (Saved Units) and `wf3-wf6.md` §2.2:
+
+  | Unit | this file (kcal · P/C/F) | other eater files (kcal · P/C/F) |
+  |---|---|---|
+  | cheese bite | 47.4 · 1.7/4.3/2.6 | 46.0 · 2.5/4.5/2.0 |
+  | bread bite (8 g) | 21.0 · 0.7/4.1/0.2 | 20.0 · 0.7/4.0/0.1 |
+  | foul spoon | 46.0 with its bread bite (filling 25.0) · 2.2/6.6/1.2 | 30 · 2.0/4.0/0.7 |
+  | laban cup | 121.0 · 8/11/5 | 152 · 8/12/8 (250 ml) |
+  | 5.4 g cheese + 1.5 g oil | "cheese without bread / جبنة من غير عيش", 26.4 · 1.0/0.2/2.4 | "cheese spoon / معلقة جبنة" in `wf2-wf4.md`, 26.0 · 1.8/0.5/1.9 |
+
+  The kabsa rice spoon (42.4) and the chicken piece (114.0) match.
+- **The "paused" clash of the first verdict** is resolved on this lens's side.
