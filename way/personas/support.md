@@ -1448,3 +1448,63 @@ After two fix rounds, 4 defects remained (re-verify 2). Cause in one sentence: r
 2. §10 quotes "28 Sep is outside this Grant" as 10.12 now produces.
 3. support-9.2 and 10.6 observe E1's Arabic app in Arabic (Arabic text with Arabic-Indic digits, the English catalogue text given for reference).
 4. The seed says the 09:00 look-up opens the account panel once (one `support.account_viewed` at 09:00); 9.18's Given matches, so exactly three events show.
+
+## Lens verdict — final (2026-10-01)
+
+**fail**: 2 defects.
+
+This was the final scoped check, by a verifier that did not write the lens. It re-read `way/personas/_lens-verifier-brief.md` (with its cross-lens addendum) and `way/vocabulary.md` (binding). It then checked the 4 defects of "Lens verdict — re-verify 2" against the session's diff (commit `7159d1d` to `a2cb4c1`). Only the changed lines were checked, each against the stories it touches. Unchanged material was not audited again.
+
+These parts hold:
+- The counts are unchanged: 52 stories and 190 acceptance lines (149 `/r`, 35 `/s`, 6 `/m`), as §14 says.
+- The 26 stories with a "Shared:" line and the 26 rows of §11 match one to one.
+- The session cites no new outside source.
+- No owner identifier was sent to any service.
+
+### The 4 re-verify-2 defects
+
+1. **Fixed.**
+   - support-10.25 now has "Shared: Support agent + eater (Settings → Privacy → Grants history) + auditor (Audit trail)."
+   - §11 has the row "| support-10.25 | eater, auditor | the eater's Grant history does not list a read that ended in an error; the auditor sees that attempt as `grant.read` with outcome `error` |".
+   - Both match 10.25's line: "The Audit trail records the attempt as `grant.read` with outcome `error`, and the eater's Grant history does not list it". They also match §0.2: "The eater's Grant history lists only `grant.read` events with outcome `allowed`".
+2. **Fixed.** §10 now reads ""28 Sep is outside this Grant" (10.12)". That is the string 10.12 produces: "the Diary (read-only) reads "28 Sep is outside this Grant"". Day 2026-09-28 is outside `grant_7d01`'s Days 2026-09-29 to 2026-09-30 (§0.3 E4). The row's other four strings each exist in the story it names: 9.2, 9.17, 10.18 and 10.25.
+3. **Partly fixed.**
+   - support-9.2 now reads "E1's Settings → Privacy → Support code on the iOS simulator (E1's app in Arabic) shows `SB-7KQ2-94XM` with «نسخ» and «صالح حتى ٢ أكتوبر، ٠٩:١٢» (English catalogue: "Copy", "Valid until 2 Oct, 09:12")". The digits are right: the code is valid to 2026-10-02 06:12 UTC (§0.3), which is 09:12 in Asia/Riyadh. The month name matches 10.6's «سبتمبر».
+   - support-10.6 now reads "the request shows, in E1's Arabic app, the Arabic catalogue form of each line below (the English catalogue text is given; …)".
+   - 10.6 also reads "the app reads the Arabic catalogue form of "Active · ends 14:20" (with Arabic-Indic digits «١٤:٢٠»)". 14:20 Riyadh is 11:20 UTC, which matches G1.
+   - What remains is new defect 1.
+4. **Partly fixed.**
+   - §0.3 now reads "At 09:00 UTC she looked up E1 by support code, which opened its account panel (one `support.account_viewed` at 09:00); at 09:02 she opened its Sync tab".
+   - support-9.18's Given now reads "`staff_mona`'s look-up of E1 at 09:00, which opened its account panel once, and its Sync tab at 09:02 UTC (§0.3; `support.account_viewed` is written each time an account panel is shown)".
+   - Both agree with 9.2 ("enters `SB-7KQ2-94XM` … at 09:00 UTC, **Then** E1's account panel opens"). The count of `support.account_viewed` is now settled. No other story puts `staff_mona` on E1 between 09:00 and 09:05 UTC.
+   - What remains is new defect 2.
+
+### Defects
+
+1. **E1's Arabic app is still expected in English or with Western digits (re-verify 2 defect 3 is not finished · observable).** §0.3 gives E1 "Arabic, Arabic-Indic numerals". Re-verify 2 named 10.10 and 10.17 as needing "the same fix", but the session's note names only 9.2 and 10.6. These lines still expect English copy or Western digits on E1's app:
+   - **support-9.2**, an unchanged line: "**Given** E1's app is in Arabic with Arabic-Indic numerals, **When** Settings → Privacy → Support code opens, **Then** the code reads `SB-7KQ2-94XM` in Latin characters, left to right, inside the right-to-left screen, with "Copy"." The story's fixed first line expects «نسخ» on the same screen, so the story now gives two texts for one control.
+   - **support-10.6**, in the changed line: "E1 opens Settings (badge "1") → Privacy → Grants". That is a Western digit on an Arabic-Indic app, where the badge would read «١».
+   - **support-10.10**: "E1's simulator has no network … the cached request shows with Approve and Decline disabled and the line "Connect to answer this request"".
+   - **support-10.17**: "**When** E1 opens Settings → Privacy → Grants, **Then** the Grant reads "Expired · 14:20"". §11's row for 10.17 quotes the same text.
+2. **support-9.18 · "exactly three events" still depends on an unstated rule for `support.jobs_viewed` (re-verify 2 defect 4 is not finished · observable).** The fix says what writes `support.account_viewed`. Neither §0.2 nor the new Given says what writes `support.jobs_viewed`, and the lens's own lines suggest a fourth event:
+   - support-9.19: "**When** E1's account panel is open, **Then** at both sizes the account panel, the Privacy jobs or failed-job tabs, and the Grant panel show as three columns". At 390 px they stack, "account panel → Grant panel → jobs".
+   - support-9.21: "**Given** the Privacy jobs API returns 503, **When** that tab loads". support-9.8 reads that tab from `GET /v1/support/accounts/acct_a41c55/privacy-jobs`.
+   - 9.18's own `/s` line: "**Given** any `/v1/support/*` request, **When** it completes with 2xx or 4xx, **Then** exactly one Audit trail event is written".
+
+   So the panel `staff_mona` opened at 09:00 also loads a jobs tab with a `/v1/support/*` read, which writes an event, most likely a second `support.jobs_viewed` at 09:00. That would make four events, not three. The count is three only if the jobs column loads nothing until a tab is chosen, or if its first tab comes in the panel's own read. The lens says neither, so a verifier cannot tell which count is right.
+
+### Small slips (not counted; fix them in the next pass)
+
+- §11 puts the new support-10.25 row between support-9.9 and support-9.11. Every other row follows story order.
+- 10.25's Shared line names the eater's surface "Settings → Privacy → Grants history". Elsewhere the lens says "the Grant's history" on Settings → Privacy → Grants → that Grant (10.15, which cites eater-9.25) or "Grant history" (§0.2, 10.23 and 10.25's own line). Using one of those, and citing eater-9.25 as 10.15 does, keeps one name for one thing.
+
+### Cross-lens (for the model phase join; not counted)
+
+- **Eater lens (`way/personas/eater/wf1-wf9.md`, uncommitted edits in the working tree during this check).** Its Arabic-app lines for SE1 still expect English text:
+  - "it shows `SB-7KQ2-94XM` in Latin letters left to right inside the Arabic screen, with "Copy" and "Valid until 2 Oct, 09:12" (support-9.2)";
+  - "the request reads "Active · ends 14:20"";
+  - "the line "Connect to answer this request"";
+  - "the Grant reads "Expired · 14:20"".
+
+  This lens's 9.2 and 10.6 now expect the Arabic catalogue text with Arabic-Indic digits. At the join, both lenses should use one convention: the Arabic shown, with the English catalogue key given for reference.
+- The earlier cross-lens items of re-verify 2 (eater wording and Grant fixtures, auditor event names, and the ownership questions K3, K4, K5, K7 and K9) were not re-checked and still stand as listed.
