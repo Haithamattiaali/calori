@@ -75,7 +75,7 @@ Macros for Hala's 1,480 at 30/40/30 (FRD §10.3): protein 111.0 g, carbohydrate 
 | EA6 | The review date is the approval date + 14 days | FR-060's proposed minimum review window |
 | EA7 | Activity-adjusted credit is 50 % of eligible exercise, up to 300 kcal a day | synthetic; FRD §12.2 asks for "a visible user-approved credit factor and cap" but gives no values (conflict C-6) |
 | EA8 | Three gram-locked macros "fit" the Target when their 4/4/9 energy is within 5 kcal of it | gram rounding makes exact equality rare; no source |
-| EA9 | A ready export stays downloadable in the app for 7 days | support lens A8 |
+| EA9 | A Completed export stays downloadable in the app for 7 days | support lens A8 |
 | EA10 | An unanswered Grant request expires after 72 h | support lens A6 |
 | EA11 | An anonymous session upgrades to an account and keeps its records | Firebase account linking was not opened in this run |
 | EA12 | In a local trial, public Food reference search reaches the API without a user identity (App Check only) | FR-001 asks for a session only for cloud AI (conflict C-16) |
@@ -127,7 +127,7 @@ As the eater, I decide separately where my diary lives, whether photos, voice an
 - `/m` **Given** the Consent record schema, **When** a record names two purposes, **Then** validation fails.
 
 #### eater-1.4 · Know what goes to Google's AI, and what never does
-Covers: interaction rows "give separate consents (… sending photos/voice/text to Google's AI, named …)" and "Eater → AI analyzer: … Health data never sent (R7)"; FR-076, FR-079; FRD §19.1 ("Do not promise zero retention"); blueprint §1.7 (residency open question) · R2, R7, R17; P11 as corrected in r1-refute-b · E30 · EX-31, EX-32
+Covers: interaction rows "give separate consents (… sending photos/voice/text to Google's AI, named …)" and "Eater → AI analyzer: … Health data never sent (R7)"; FR-076, FR-079; FRD §19.1 ("Do not promise zero retention"); blueprint §1.7 (residency open question: no Gemini model runs in a Middle East region, as r1-refute-b established) · R2, R7, R17 · E30 · EX-31, EX-32
 As the eater, I read in a few plain sentences what is sent, to whom, where, and what never leaves my iPhone, so that my "yes" to the AI is informed.
 - `/r` **Given** Onboarding · Consents, **When** the eater taps "What is sent?" under the AI switch, **Then** the text names Google (Gemini) as the receiver; lists meal photos, voice recordings and typed food sentences as what is sent; says Apple Health data is never sent; says Google does not train its models on them; says they are processed outside Egypt and Saudi Arabia, in the wording counsel approves (blueprint §1.7); and says voice is deleted within 24 hours and raw photos within 30 days unless saved.
 - `/r` **Given** the same text in Arabic, **When** shown, **Then** "Google (Gemini)" stays an intact left-to-right run inside the right-to-left sentence, and the words match stored text version `c-ai-4` exactly (auditor-9.3).
@@ -148,7 +148,7 @@ Covers: interaction row consents ("each Health type; mic; photos"); FR-076 ("Ref
 As the eater, I am asked for the camera or Apple Health only when I first use them, with one sentence why, so that saying no to one never takes away anything else.
 - `/r` **Given** an eater who has never used the camera, **When** they tap "Add a photo" for a Unit in the Unit editor, **Then** a sheet gives one sentence on why the Photos Consent is needed, with "Give consent" and "Not now"; the iOS camera prompt appears only after "Give consent", and nothing about the microphone or Health is asked.
 - `/r` **Given** "Not now" was tapped (or the iOS prompt declined), **When** the eater returns to Today and taps a recent Unit, **Then** the Entry appears and the remaining figure changes within 300 ms (NFR-02).
-- `/r` **Given** "Health: read workouts" was given in the app but iOS returns no workouts, **When** Today shows Activity, **Then** it reads "No data from Apple Health yet", never "denied" or "0 kcal" (P30, FR-067, EX-27).
+- `/r` **Given** "Health: read workouts" is Given in the app but iOS returns no workouts, **When** Today shows Activity, **Then** it reads "No data from Apple Health yet", never "denied" or "0 kcal" (P30, FR-067, EX-27).
 - `/s` **Given** the Photos Consent is not given, **When** the Unit editor's photo control is exercised in a UI test, **Then** no camera session starts.
 
 ## 1C · Tracking before a Target
@@ -204,7 +204,7 @@ As the eater, I choose which published version of the resting-energy equation fi
 Covers: FR-002 (preferred units, time zone); blueprint §0 line 5 (reach), §1.6 user settings (language, numerals, dialect, display units) · E27 (Saudi Arabia missing as a country in MFP), E41 · EX-05, EX-07
 As the eater, I find my region, language, numerals and units already right and can change any of them in one place, so that I don't configure an app before using it.
 - `/r` **Given** Faisal's iPhone in Arabic with region Saudi Arabia and Western digits, **When** Onboarding · Profile opens, **Then** one row reads Saudi Arabia · Riyadh time · Arabic · Western digits · kg, cm, kcal (in Arabic, Western digits) with "Change", and every later onboarding screen uses Western digits inside Arabic text.
-- `/r` **Given** "Change", **When** the region list opens, **Then** it lists Egypt and Saudi Arabia with the current region first; choosing one shows the dialect it sets for food names (Egypt → EG, Saudi Arabia → Gulf; blueprint §1.6, F27) on the same sheet.
+- `/r` **Given** "Change" (the same choices live later in Settings → Units & language), **When** the region list opens, **Then** it lists Egypt and Saudi Arabia with the current region first; choosing one shows the dialect it sets for food names (Egypt → EG, Saudi Arabia → Gulf; blueprint §1.6, F27) on the same sheet.
 - `/s` **Given** the profile is saved, **When** `GET /v1/me` is read, **Then** it returns `time_zone` "Asia/Riyadh", `locale` "ar-SA", `numerals` "western" and `display_units` {mass g, body kg, energy kcal} (FRD §17 UserProfile).
 
 #### eater-1.14 · Take my weight from Apple Health — or type it
@@ -576,7 +576,7 @@ As the eater, I switch off sending to Google's AI with one tap and see what stop
 - `/r` **Given** the AI Consent is Given and one Analysis is Pending (captured offline, not sent), **When** Hala taps the AI switch in Settings → Privacy at 13:05, **Then** it turns off at once with no dialog, and the row reads "Withdrawn · 13:05 · Photo, voice and sentence analysis are off. Units, Templates and typed amounts still log." and "1 photo that wasn't sent was removed".
 - `/r` **Given** the AI Consent is Withdrawn, **When** she opens Capture & Plan, **Then** Meal, Label and voice read "Needs your Consent to send to Google's AI" with "Open Settings → Privacy", while the Unit editor and the recent Units on Today work (AT-32 pattern).
 - `/s` **Given** the withdrawal at 2026-10-01T10:05Z, **When** the app then calls `POST /v1/analyses`, **Then** it returns 403 `CONSENT_REQUIRED` and the Gemini adapter mock records 0 calls; her private cached analyses, queued uploads and the photos of Analyses never approved are gone from the emulators (the counts on auditor-9.5's effect card).
-- `/s` **Given** a ready export of hers, **When** it is scanned after the withdrawal, **Then** it holds no photo, audio or transcript, so nothing sent under the AI Consent remains in it (AT-29, exports).
+- `/s` **Given** a Completed export of hers, **When** it is scanned after the withdrawal, **Then** it holds no photo, audio or transcript, so nothing sent under the AI Consent remains in it (AT-29, exports).
 
 #### eater-9.3 · Give a Consent again, in Settings or at the moment I need it
 Covers: FR-076; interaction row consents ("explicit, per purpose") · R22 · EX-26
@@ -608,20 +608,20 @@ Covers: interaction rows "give separate consents (diary processing …) … one-
 As the eater, I withdraw my Consent to keep my diary in the account and go on using the app on this iPhone, so that I can stop the server copy without losing my diary.
 - `/r` **Given** Hala signed in, **When** she taps the Diary processing switch in Settings → Privacy, **Then** one sheet explains "Your diary stays on this iPhone. The copy in your account is deleted within 30 days and you'll be signed out." with "Withdraw and keep on this iPhone" and "Cancel" (conflict C-9).
 - `/r` **Given** "Withdraw and keep on this iPhone", **When** done, **Then** the account line of Settings reads "Not signed in · Your diary is only on this iPhone", Today shows the same Entries and totals, and Settings → Privacy shows the deletion reference.
-- `/s` **Given** the withdrawal, **When** the server is read, **Then** a deletion job exists with reason "consent_withdrawn" and the same stages as eater-9.17.
+- `/s` **Given** the withdrawal, **When** the server is read, **Then** a deletion Privacy job exists (Requested, then Running) with reason "consent_withdrawn" and the same stages as eater-9.17.
 
 #### eater-9.7 · Optional research stays off unless I choose it, and nothing depends on it
 Covers: interaction row consents ("optional research"); FR-079 ("model-training use without a separate explicit opt-in"); FRD §19.2 ("Access to raw evidence for quality review requires explicit consent and restricted roles"); NFR-10 (consented test cases) · R3 · E30
 Shared: eater + auditor (auditor-9.8), platform admin.
 As the eater, I decide on my own whether my meal photos and labels may be used to test food recognition, so that they are never used that way by default.
-- `/r` **Given** any new eater, **When** Settings → Privacy opens, **Then** "Optional research" is off, and its text says which photos and labels would be kept, who could see them, and what they are used for (testing how well food recognition works).
-- `/r` **Given** Optional research is off, **When** the eater uses Capture & Plan, Analysis review and the Meal planner, **Then** none of them asks to turn it on in order to continue.
-- `/s` **Given** Optional research is off, **When** staff with the quality-review permission request a raw photo of that eater, **Then** the API returns 403 `CONSENT_REQUIRED` (auditor-9.8).
+- `/r` **Given** any new eater, **When** Settings → Privacy opens, **Then** "Optional research" reads "Not given", and its text says which photos and labels would be kept, who could see them, and what they are used for (testing how well food recognition works).
+- `/r` **Given** Optional research is not Given, **When** the eater uses Capture & Plan, Analysis review and the Meal planner, **Then** none of them asks to turn it on in order to continue.
+- `/s` **Given** Optional research is not Given, **When** staff with the quality-review permission request a raw photo of that eater, **Then** the API returns 403 `CONSENT_REQUIRED` (auditor-9.8).
 
 #### eater-9.8 · No feature, price or advert depends on my data
 Covers: interaction row consents ("no feature paywalled behind consent"); FR-079 ("Do not sell health/nutrition data, use it for behavioral advertising"); FRD §23.3 ("Export, correction, and account deletion must never be paywalled") · R1, R3, R8 · C53 · EX-32
-As the eater, I use the whole app with every optional Consent off and see no adverts, so that my diary is never the price.
-- `/r` **Given** every optional Consent off (AI, Health, Microphone, Photos, Optional research), **When** the eater opens Today, My Units, Progress, Settings → Privacy → Export and Settings → Privacy → Delete account, **Then** each works, and no screen shows an advert or asks for a Consent in order to continue.
+As the eater, I use the whole app with no optional Consent Given and see no adverts, so that my diary is never the price.
+- `/r` **Given** no optional Consent is Given (AI, Health, Microphone, Photos, Optional research), **When** the eater opens Today, My Units, Progress, Settings → Export and Settings → Privacy → Delete account, **Then** each works, and no screen shows an advert or asks for a Consent in order to continue.
 - `/r` **Given** Settings → Privacy, **When** read, **Then** it states "We don't sell your data or use it for advertising. It isn't used to train AI models." in the eater's language.
 - `/s` **Given** the iOS app's resolved package list in CI, **When** the dependency check runs, **Then** it holds no advertising or attribution SDK, and the API has no outbound adapter beyond Gemini, USDA FoodData Central and Firebase/Google Cloud (blueprint §0 line 6).
 
@@ -656,16 +656,16 @@ As the eater, I see old photos disappear on time while the numbers I confirmed r
 Covers: WF-9 done-when ("export downloads entries, units, recipes, targets and consents"); interaction row "Eater → API: export … in-app"; FR-075; FRD §18 `POST /v1/privacy/export-or-delete`, §23.3 (never paywalled) · R31 · C53
 Shared: eater + support agent (support-9.7), auditor (auditor-9.13).
 As the eater, I ask for an export and save one file with everything I have recorded, so that I can keep or move my diary.
-- `/r` **Given** Hala signed in, **When** she taps Settings → Privacy → Export → "Prepare my export" at 18:20 on 1 Oct 2026, **Then** the screen reads "Preparing your export — you can leave this screen"; once ready it reads "Ready · 1 Oct 2026, 18:26 · available until 8 Oct 2026" with "Save to Files" and "Share", and the Settings button on Today shows "Data download ready".
+- `/r` **Given** Hala signed in, **When** she taps Settings → Export → "Prepare my export" at 18:20 on 1 Oct 2026, **Then** the screen reads "Running — your export is being prepared. You can leave this screen."; once done it reads "Completed · 1 Oct 2026, 18:26 · available until 8 Oct 2026" with "Save to Files" and "Share", and the Settings button on Today shows "Data download ready".
 - `/r` **Given** the saved .zip opened in Files, **When** listed, **Then** it holds entries.json and entries.csv (with each Entry's Corrections, Voids and Restores), units.json (every version), recipes.json, templates.json, targets.json (every Target version), activity.json, weight.json, consents.json, day_reports.csv and readme.txt explaining each file in the app's language.
-- `/s` **Given** the job, **When** `POST /v1/privacy/export-or-delete {kind: "export"}` and then `GET /v1/privacy/jobs/{id}` are read, **Then** the state moves queued → running → ready, and the archive's record counts equal the API's counts for that account.
+- `/s` **Given** the job, **When** `POST /v1/privacy/export-or-delete {kind: "export"}` and then `GET /v1/privacy/jobs/{id}` are read, **Then** the Privacy job moves Requested → Running → Completed, and the archive's record counts equal the API's counts for that account.
 - `/r` **Given** an eater with no purchase or subscription, **When** the export is requested, **Then** no purchase, upgrade or Consent screen appears.
 
 #### eater-9.13 · The export holds only my data, in a form machines and people can read
 Covers: FR-075 ("machine-readable form"); NFR-07 · research.md §6 conflict 8 (numerals in exports) · E40, E41
 As the eater, I get an export any tool can read and in which my Arabic food names are intact, so that it is useful outside the app.
 - `/s` **Given** Hala's export (her display uses Arabic-Indic digits), **When** entries.csv is parsed, **Then** every number uses Western digits with a "." decimal, every time is ISO 8601 with its offset (for example 2026-10-01T08:40:00+03:00), and Unit names such as «قرصة جبنة» are intact UTF-8.
-- `/s` **Given** two accounts (Hala and Sam) on the emulator, **When** Hala's export is built, **Then** it contains no record with Sam's user id, and Sam's token reading Hala's job gets 404 (NFR-07).
+- `/s` **Given** two accounts (Hala and Sam) on the emulator, **When** Hala's export is built, **Then** it contains no record with Sam's user id, and Sam's token reading Hala's Privacy job gets 404 `NOT_FOUND` (NFR-07).
 - `/r` **Given** entries.csv opened in Files' preview on the simulator, **When** viewed, **Then** Arabic names show right to left inside their cells and the header row uses fixed English field names.
 
 #### eater-9.14 · An export that is waiting, failed or offline says why and what next
@@ -673,14 +673,14 @@ Covers: FR-075; FRD §14 Settings mandatory state ("data download ready"), §18.
 Shared: eater + support agent (support-9.8).
 As the eater, I always know where my export stands, so that I never wonder whether it worked.
 - `/r` **Given** no network, **When** "Prepare my export" is tapped, **Then** it reads "Connect to prepare your export", and nothing is queued.
-- `/r` **Given** the job failed after its retries, **When** Settings → Privacy → Export opens, **Then** it reads "Your export couldn't be prepared. Try again, or contact Support with your support code." with "Try again"; after support re-queues it (support-9.8), the screen shows "Preparing" without a new request.
-- `/r` **Given** a ready export more than 7 days old (EA9), **When** the screen opens, **Then** it reads "This export has expired — prepare a new one", and the old file can no longer be downloaded.
-- `/s` **Given** "Prepare my export" is tapped twice quickly, **When** processed, **Then** one job exists.
+- `/r` **Given** the Privacy job is Failed after its retries, **When** Settings → Export opens, **Then** it reads "Failed — your export couldn't be prepared. Try again, or contact a Support agent with your support code." with "Try again"; after a Support agent re-queues it (support-9.8), the screen shows "Running" without a new request.
+- `/r` **Given** a Completed export more than 7 days old (EA9), **When** the screen opens, **Then** it reads "This export has expired — prepare a new one", and the old file can no longer be downloaded.
+- `/s` **Given** "Prepare my export" is tapped twice quickly, **When** processed, **Then** one Privacy job exists.
 
 #### eater-9.15 · Export a trial diary that lives only on this iPhone
 Covers: FR-075; FR-001 (local trial); FRD §23.3 · R3
 As a trial eater, I export my diary from the iPhone without an account, so that trying the app never locks my data in.
-- `/r` **Given** T1 on Hala's iPhone with no account, **When** she taps Settings → Privacy → Export, **Then** the export is built on the iPhone and offered to "Save to Files" with the same file set, and consents.json lists the Consents made on the device.
+- `/r` **Given** T1 on Hala's iPhone with no account, **When** she taps Settings → Export, **Then** the export is built on the iPhone and offered to "Save to Files" with the same file set, and consents.json lists the Consents made on the device.
 - `/s` **Given** that export, **When** the API mock's record is read, **Then** no request was sent to build it.
 
 ## 9D · Delete account
@@ -690,17 +690,17 @@ Covers: WF-9 step "delete account"; interaction row "Eater → API: … delete a
 Shared: eater + support agent (support-9.9, support-9.12), auditor (auditor-9.9, auditor-9.10).
 As the eater, I delete my account from Settings without writing to anyone, so that leaving is as easy as joining.
 - `/r` **Given** E2 signed in (English, Cairo), **When** she opens Settings → Privacy → Delete account, **Then** one screen says what will be deleted (diary, Units, Recipes, Templates, Targets, photos, voice, Consent choices) and that it completes within 30 days, offers "Export first", and has one destructive button "Delete account" and "Cancel"; no email, phone call or form is asked for.
-- `/r` **Given** "Delete account" is tapped at 10:00 on 15 Sep 2026 (Cairo), **When** the server confirms, **Then** the app shows "Your account is being deleted. Reference DEL-26-0915-K3Q8. Complete by 15 Oct 2026." with "Copy reference", signs out and clears the local database.
-- `/s` **Given** the request, **When** `POST /v1/privacy/export-or-delete {kind: "delete"}` is processed, **Then** the job has `due_by` 2026-10-15 (30 days, NFR-13), and the account can no longer sign in or call a private endpoint (401).
+- `/r` **Given** "Delete account" is tapped at 10:00 on 15 Sep 2026 (Cairo), **When** the server confirms, **Then** the app shows "Account deletion requested. Reference DEL-26-0915-K3Q8. Completed by 15 Oct 2026 at the latest." with "Copy reference", signs out and clears the local database.
+- `/s` **Given** the request, **When** `POST /v1/privacy/export-or-delete {kind: "delete"}` is processed, **Then** the Privacy job is Requested with `due_by` 2026-10-15 (30 days, NFR-13), and the account can no longer sign in or call a private endpoint (401 `UNAUTHENTICATED`).
 
 #### eater-9.17 · Deletion reaches everything: media, queues, caches, exports, Grants, Google and Apple
 Covers: AT-29; FR-078; FRD §17.2 ("Account deletion removes private records and media, including derived caches, subject to the disclosed backup lifecycle"); interaction row "Eater → API: … delete account · … processors told, Sign in with Apple revoked, completion record" · R4, R23
 Shared: eater + support agent (support-9.9, support-10.18), auditor (auditor-9.10).
 As the eater, I know my deletion reaches every copy, so that nothing of my diary is left behind.
-- `/s` **Given** E1 (Sign in with Apple) with 2 photos, 1 audio file, 1 Pending Analysis, 1 queued job, 1 prepared export, private cached analyses and the active Grant `grant_31f0`, **When** deletion runs on the emulators, **Then** Firestore and Cloud Storage hold nothing under E1's user id, the job queue holds nothing for it, the Grant is `revoked` with reason `account_deletion`, and support's next read returns 403 `GRANT_REVOKED`.
+- `/s` **Given** E1 (Sign in with Apple) with 2 photos, 1 audio file, 1 Pending Analysis, 1 queued job, 1 prepared export, private cached analyses and the Active Grant `grant_31f0`, **When** deletion runs on the emulators, **Then** Firestore and Cloud Storage hold nothing under E1's user id, the job queue holds nothing for it, the Grant is Withdrawn with reason `account_deletion`, and the Support agent's next read returns 403 `GRANT_NOT_ACTIVE`.
 - `/s` **Given** the same, **When** the Sign in with Apple adapter mock and the processor-notice step are read, **Then** the token revocation was called once, and the notice to Google is recorded with its time (R4).
-- `/r` **Given** the deletion is in progress, **When** support opens Privacy jobs in the admin console (support-9.9), **Then** each stage reads "done" or "waiting" in words, including "backups expire by 2026-10-14".
-- `/s` **Given** the deletion was requested, **When** a new Grant is requested for the account, **Then** the API returns 409 `ACCOUNT_DELETION_PENDING`.
+- `/r` **Given** the deletion Privacy job is Running, **When** it is opened in the admin console's Jobs section (support-9.9), **Then** each stage reads "done" or "waiting" in words, including "backups expire by 2026-10-14".
+- `/s` **Given** the deletion was requested, **When** a Support agent requests a new Grant for the account, **Then** the API returns 404 `NOT_FOUND` and no Grant is created.
 
 #### eater-9.18 · Deletion needs a connection and says so; food waiting on my iPhone goes with it
 Covers: FR-078; FRD §8.3 (durable outbox) · care.md group 4 ("When a command cannot work right now, do we say why?") · EX-21
@@ -715,7 +715,7 @@ Shared: eater + support agent (support-9.11), auditor (auditor-9.10).
 As the eater who left, I can start fresh like a new person and still prove my deletion with its reference, so that nothing links me to my old diary.
 - `/r` **Given** the deletion is confirmed, **When** the app is reopened, **Then** Onboarding · Age shows, as on a fresh install.
 - `/r` **Given** E2 signs up again with the same email on 20 Oct 2026, **When** Today opens, **Then** it is empty: no Units, Entries, Targets or Consents from the deleted account.
-- `/r` **Given** the completion record for DEL-26-0915-K3Q8 (completed 14 Oct 2026), **When** support enters the reference in Account lookup (support-9.11), **Then** it shows only the completion and its dates — no email, account id or device.
+- `/r` **Given** the completion record for DEL-26-0915-K3Q8 (completed 14 Oct 2026), **When** a Support agent looks the reference up in the admin console (support-9.11), **Then** it shows only "Completed" and the dates — no email, account id or device.
 
 #### eater-9.20 · Delete a trial diary, and anything my anonymous session left
 Covers: FR-001 (local trial, anonymous session); FR-078 · R4
@@ -726,59 +726,61 @@ As a trial eater, I erase everything on this iPhone and whatever my anonymous se
 
 ## 9E · Answer a support Grant (WF-10, the eater's side)
 
-#### eater-9.21 · Learn that Support asked for access, without anyone around me noticing
+Grant states follow vocabulary.md: Requested → Approved → Active → Expired · Ended (by the Support agent) · Withdrawn (by the eater); Requested → Declined · Unanswered. Approval starts the time box, so an Approved Grant is Active at once.
+
+#### eater-9.21 · Learn that a Support agent asked for access, without anyone around me noticing
 Covers: interaction row "Support → Eater: request just-in-time diary access · Grant (requested) · the eater sees who asks, why and for how long, and approves or declines in Settings"; WF-10 done-when; FR-081 · E24 · EX-12
 Shared: eater + support agent (support-10.6; support conflict K2).
 As the eater, I see a quiet sign that a request is waiting, so that I decide when I am ready.
-- `/r` **Given** `grant_31f0` was requested at 10:05 UTC, **When** E1 opens Today, **Then** the Settings button at the top of Today shows the badge "1", and Settings → Privacy shows the row "Grants · Requests from Support to read your diary · 1 waiting"; no alert or sound occurs.
-- `/r` **Given** E1 had already allowed notifications for Sips & Bytes, **When** the request arrives, **Then** one notification reads "Sips & Bytes Support asked to see part of your diary. Open Settings to decide." with no food or health detail; **given** notifications were never allowed, no permission prompt appears.
+- `/r` **Given** `grant_31f0` became Requested at 10:05 UTC, **When** E1 opens Today, **Then** the Settings button at the top of Today shows the badge "1", and Settings → Privacy shows the row "Grants · Requests from a Support agent to read your diary · 1 Requested"; no alert or sound occurs.
+- `/r` **Given** E1 had already allowed notifications for Sips & Bytes, **When** the request arrives, **Then** one notification reads "A Sips & Bytes Support agent asked to see part of your diary. Open Settings to decide." with no food or health detail; **given** notifications were never allowed, no permission prompt appears.
 
 #### eater-9.22 · See who, why, what and for how long — and approve
 Covers: interaction rows "Support → Eater … Grant (requested)" and "Support → eater diary … time box, read-only, every read audited, auto-expiry"; WF-10 done-when ("the eater approves it in Settings"); FR-081
 Shared: eater + support agent (support-10.6, support-10.9), auditor (auditor-10.6).
 As the eater, I read who wants access, why, to which Days and areas and for how long, and approve it, so that access exists only because I chose it.
-- `/r` **Given** `grant_31f0`, **When** E1 opens Settings → Privacy → Grants on the simulator, **Then** the request shows "Mona K. · Sips & Bytes Support", the reason "An entry is missing or appears twice", "Entries and day reports, My Units · 28–30 Sep 2026", "1 hour from when you approve", case CASE-1182, "Never included: photos, voice, your Target and goal settings", "Support can read, not change. Every view is listed here.", and two equal-size buttons, "Approve" and "Decline" (conflict C-12).
-- `/r` **Given** E1 taps Approve at 13:20 Asia/Riyadh, **When** the server confirms, **Then** the request reads "Approved · ends 14:20", and the support console shows the Grant as active (support-10.6).
+- `/r` **Given** `grant_31f0` is Requested, **When** E1 opens Settings → Privacy → Grants on the simulator, **Then** the request shows "Mona K. · Support agent", the reason "An entry is missing or appears twice", "Entries and day reports, My Units · 28–30 Sep 2026", "1 hour from when you approve", case CASE-1182, "Never included: photos, voice, your Target and goal settings", "The Support agent can read, not change. Every view is listed here.", and two equal-size buttons, "Approve" and "Decline" (conflict C-12).
+- `/r` **Given** E1 taps Approve at 13:20 Asia/Riyadh, **When** the server confirms, **Then** the request reads "Active · ends 14:20", and the admin console's Grants section shows `grant_31f0` as Active (support-10.6).
 - `/r` **Given** E1's app is in Arabic with Arabic-Indic digits, **When** the request shows, **Then** it is right to left, the Days read «٢٨–٣٠ سبتمبر ٢٠٢٦» and the end time «١٤:٢٠», and "Mona K." is an isolated left-to-right run.
-- `/s` **Given** `POST /v1/grants/grant_31f0/approve` with E1's own token, **When** processed, **Then** 200, state `approved` and `expires_at` = `approved_at` + 1 h; with any staff token, 403 `FORBIDDEN_ROLE`.
+- `/s` **Given** `POST /v1/grants/grant_31f0/approve` with E1's own token, **When** processed, **Then** 200, the Grant is Approved and Active, and `expires_at` = `approved_at` + 1 h; with any staff token, 403 `FORBIDDEN`.
 
 #### eater-9.23 · Decline without giving a reason
 Covers: WF-10 done-when ("a declined Grant gives no access"); interaction row "Support → Eater … approves or declines in Settings"; FR-081
 Shared: eater + support agent (support-10.7), auditor (auditor-10.7).
 As the eater, I say no with one tap and no explanation, so that declining is as easy as approving.
-- `/r` **Given** `grant_31f0` is waiting, **When** E1 taps Decline at 13:12 Asia/Riyadh, **Then** the request moves to history as "Declined by you · 1 Oct, 13:12", with no follow-up question and nothing asking her to reconsider.
-- `/s` **Given** state `declined`, **When** support reads Day 2026-09-29 under it, **Then** the API returns 403 `GRANT_DECLINED`.
-- `/r` **Given** support sends a new request later, **When** it arrives, **Then** it appears as a separate request, and the declined one stays declined.
+- `/r` **Given** `grant_31f0` is Requested, **When** E1 taps Decline at 13:12 Asia/Riyadh, **Then** the request moves to history as "Declined · 1 Oct, 13:12", with no follow-up question and nothing asking her to reconsider.
+- `/s` **Given** the Grant is Declined, **When** the Support agent reads Day 2026-09-29 under it, **Then** the API returns 403 `GRANT_NOT_ACTIVE`.
+- `/r` **Given** the Support agent sends a new request later, **When** it arrives, **Then** it appears as a separate Requested Grant, and the declined one stays Declined.
 
 #### eater-9.24 · Do nothing, and the request ends by itself
 Covers: interaction row "Support → Eater … Grant (requested)"; FR-081; WF-10 · research.md §6 conflict 6 ("make 'decline' the default when the eater does nothing, and set the request's own expiry")
 Shared: eater + support agent (support-10.8), auditor.
 As the eater who ignores a request, I am sure it gives no access and ends, so that silence is never taken as yes.
-- `/r` **Given** `grant_40aa` is waiting, **When** E1 opens it, **Then** it reads "If you don't answer, this request ends on 4 Oct at 13:05" (EA10).
-- `/r` **Given** `grant_40aa` was never answered, **When** E1 opens Settings → Privacy → Grants on 4 Oct 2026 at 13:06 Asia/Riyadh, **Then** history shows it as "Ended without an answer · no access was given", with no Approve button.
-- `/s` **Given** state `expired_unanswered`, **When** a late approve call from E1 arrives, **Then** the API returns 409 with state `expired_unanswered`, and no access is created.
+- `/r` **Given** `grant_40aa` is Requested, **When** E1 opens it, **Then** it reads "If you don't answer, this request ends on 4 Oct at 13:05" (EA10).
+- `/r` **Given** `grant_40aa` was never answered, **When** E1 opens Settings → Privacy → Grants on 4 Oct 2026 at 13:06 Asia/Riyadh, **Then** history shows it as "Unanswered · no access was given", with no Approve button.
+- `/s` **Given** the Grant is Unanswered, **When** a late approve call from E1 arrives, **Then** the API returns 409 `GRANT_NOT_ACTIVE`, and no access is created.
 
-#### eater-9.25 · See every read Support made under my Grant
+#### eater-9.25 · See every read a Support agent made under my Grant
 Covers: interaction row "Support → eater diary … every read audited"; WF-10 done-when ("every read shows in the auditor's trail"); FR-081, FR-082
 Shared: eater + support agent (support-10.15), auditor (auditor-10.3; auditor conflict 13).
-As the eater, I see each thing Support looked at and when, so that I know exactly what was seen.
-- `/r` **Given** Mona K. viewed Day 2026-09-29, an Entry's details and My Units under `grant_31f0`, **When** E1 opens that Grant in Settings → Privacy → Grants, **Then** three lines show, such as "Mona K. viewed your diary for 29 Sep · 13:24", in E1's language, digits and time zone (conflict C-14).
-- `/s` **Given** the same, **When** `GET /v1/me/grants/grant_31f0/reads` is compared with the auditor's trail filtered by that Grant, **Then** both list the same 3 reads at the same times.
-- `/r` **Given** an approved Grant with no reads yet, **When** opened, **Then** it reads "No views yet".
+As the eater, I see each thing the Support agent looked at and when, so that I know exactly what was seen.
+- `/r` **Given** Mona K. viewed Day 2026-09-29, an Entry's details and My Units while `grant_31f0` was Active, **When** E1 opens that Grant in Settings → Privacy → Grants, **Then** three lines show, such as "Mona K. viewed your diary for 29 Sep · 13:24", in E1's language, digits and time zone (conflict C-14).
+- `/s` **Given** the same, **When** `GET /v1/me/grants/grant_31f0/reads` is compared with the Audit trail filtered by that Grant, **Then** both list the same 3 reads at the same times.
+- `/r` **Given** an Active Grant with no reads yet, **When** opened, **Then** it reads "No views yet".
 
-#### eater-9.26 · End access early
+#### eater-9.26 · Withdraw access early
 Covers: interaction row "Support → eater diary … time box … auto-expiry"; FR-081; AT-29 (withdrawal propagates)
 Shared: eater + support agent (support-10.18).
-As the eater, I stop an approved Grant whenever I want, so that my "stop" works at once.
-- `/r` **Given** `grant_31f0` is active, **When** E1 opens it, **Then** "Ends 14:20 · End access" is visible at the top of the request without scrolling.
-- `/r` **Given** E1 taps "End access" at 13:41 Asia/Riyadh, **When** the server confirms, **Then** the app reads "Support can no longer see your diary", and the access history keeps every read made before 13:41.
-- `/s` **Given** the Grant was ended, **When** support's next read arrives, **Then** the API returns 403 `GRANT_REVOKED`.
+As the eater, I withdraw an Active Grant whenever I want, so that my "stop" works at once.
+- `/r` **Given** `grant_31f0` is Active, **When** E1 opens it, **Then** "Active · ends 14:20 · Withdraw access" is visible at the top of the request without scrolling.
+- `/r` **Given** E1 taps "Withdraw access" at 13:41 Asia/Riyadh, **When** the server confirms, **Then** the request reads "Withdrawn · 13:41 · The Support agent can no longer see your diary", and the access history keeps every read made before 13:41.
+- `/s` **Given** the Grant is Withdrawn, **When** the Support agent's next read arrives, **Then** the API returns 403 `GRANT_NOT_ACTIVE`.
 
 #### eater-9.27 · Answer a request only when online
 Covers: interaction row "Support → Eater … approves or declines in Settings"; FR-081; FRD §8.3 (the outbox carries food commands)
 Shared: eater + support agent (support-10.10).
 As the eater without signal, I see the request but cannot answer until I am online, so that an approval never applies later by surprise.
-- `/r` **Given** no network, **When** E1 opens Settings → Privacy → Grants, **Then** the cached request shows with Approve and Decline disabled and the line "Connect to answer this request".
+- `/r` **Given** no network, **When** E1 opens Settings → Privacy → Grants, **Then** the cached Requested Grant shows with Approve and Decline disabled and the line "Connect to answer this request".
 - `/m` **Given** the outbox, **When** a Grant answer is attempted offline, **Then** no outbox command is created.
 
 #### eater-9.28 · Approve once, even if I tap twice
@@ -786,22 +788,22 @@ Covers: interaction row "Support → Eater … Grant approved or declined"; FR-0
 Shared: eater + auditor (auditor fixture G-2026-0046: one approve delivered three times).
 As the eater, I give one approval however many times it is sent, so that the record shows one decision.
 - `/s` **Given** E1's approve for `grant_31f0` delivered three times with one `command_id`, **When** processed, **Then** one `grant.approved` event exists, and the time box starts at the first approval.
-- `/r` **Given** Approve is tapped twice quickly, **When** the server confirms, **Then** the request reads "Approved · ends 14:20" once, and its history lists one approval.
+- `/r` **Given** Approve is tapped twice quickly, **When** the server confirms, **Then** the request reads "Active · ends 14:20" once, and its history lists one approval.
 
-#### eater-9.29 · Read my support code from Settings → Help
+#### eater-9.29 · Read my support code from Settings → Privacy
 Covers: interaction row "Support → Eater"; FR-081 (support without diary access); FR-001 (anonymous session, local trial)
-Shared: eater + support agent (support-9.2).
-As the eater writing to Support, I read them a short code from the app, so that they find my account without me sending my email or anything private.
-- `/r` **Given** E1 signed in, **When** she opens Settings → Help, **Then** the code `SB-7KQ2-94XM` shows in Latin letters left to right (in the Arabic screen too), with "Copy" and "Valid until 2 Oct, 09:12".
-- `/r` **Given** an anonymous session, **When** Settings → Help opens, **Then** a code shows; **given** a local trial, it reads "Your diary is only on this iPhone, so Support can't see it" with "Create account".
+Shared: eater + support agent (support-9.2, which places the code in a Help section; conflict C-19).
+As the eater writing to a Support agent, I read them a short code from the app, so that they find my account without me sending my email or anything private.
+- `/r` **Given** E1 signed in, **When** she opens Settings → Privacy → Support code, **Then** the code `SB-7KQ2-94XM` shows in Latin letters left to right (in the Arabic screen too), with "Copy" and "Valid until 2 Oct, 09:12".
+- `/r` **Given** an anonymous session, **When** Settings → Privacy → Support code opens, **Then** a code shows; **given** a local trial, it reads "Your diary is only on this iPhone, so a Support agent can't see it" with "Create account".
 
 ## 9F · Language and access
 
 #### eater-9.30 · Privacy in Arabic, with VoiceOver and the largest text
 Covers: WF-9 (all steps); NFR-08; blueprint §0 line 5 (reach) · E36, E40, E41 · EX-15, EX-33, EX-36, EX-39
 As an Arabic-speaking or VoiceOver eater, I manage Consents, export, deletion and Grants with nothing clipped or unread, so that privacy controls work for me too.
-- `/r` **Given** Arabic and the largest text size on the smallest simulator, **When** Settings → Privacy, Export, Delete account and Grants open, **Then** nothing clips or overlaps, the layout is right to left, and dates use Arabic-Indic digits.
-- `/r` **Given** VoiceOver, **When** a Consent switch is focused, **Then** it reads the purpose, "on" or "off" and the date of the last change, and after a one-tap withdrawal it announces "Off".
+- `/r` **Given** Arabic and the largest text size on the smallest simulator, **When** Settings → Privacy, Settings → Export, Settings → Privacy → Delete account and Settings → Privacy → Grants open, **Then** nothing clips or overlaps, the layout is right to left, and dates use Arabic-Indic digits.
+- `/r` **Given** VoiceOver, **When** a Consent switch is focused, **Then** it reads the purpose, "Given" or "Withdrawn" and the date of the last change, and after a one-tap withdrawal it announces "Withdrawn".
 - `/r` **Given** the destructive "Delete account" button, **When** measured, **Then** it is at least 44 × 44 pt and is not the first item VoiceOver focuses on the screen (EX-15).
 
 ---
@@ -837,13 +839,14 @@ These are tensions with other personas or inside the model. They are for the mod
 9. **C-9 · Withdrawing Diary processing (eater ↔ auditor, model).** The interaction row promises one-tap withdrawal (R22). Here the withdrawal deletes the account's copy, so this lens adds one confirmation (eater-9.6), following care.md group 4: "warn only before loss that is both unexpected and permanent". The model confirms or removes it.
 10. **C-10 · Export contents (eater ↔ support agent, auditor).** The eater's export adds Templates, Activity and weight (eater-9.12). support-9.7 and auditor-9.13 list Entries, Units, Recipes, Targets, Consents and Reports. One list is needed. Also open: whether photos saved as Unit Evidence travel in the export (this lens: no media).
 11. **C-11 · Imported Activity after a Health Consent withdrawal (eater ↔ auditor).** This lens keeps workouts already imported as diary records (eater-9.4). R22's "cease processing" may require removing them or offering removal.
-12. **C-12 · The Grant button's verb (eater ↔ support agent).** The map says the eater "approves or declines" a Grant. support-10.6 writes "Allow". This lens uses "Approve", so that one action has one name (as on "Approve target"). support-10.6 should match.
-13. **C-13 · The Grant label on the eater's screen (support K6).** This lens keeps the map's word "Grants", with the subtitle "Requests from Support to read your diary" (eater-9.21).
+12. **C-12 · Grant verbs (eater ↔ support agent).** The map says the eater "approves or declines" a Grant, and vocabulary.md names the eater's early stop **Withdrawn** (the Support agent's is Ended). support-10.6 writes "Allow" and support-10.18 "End access". This lens uses "Approve", "Decline" and "Withdraw access" (eater-9.22, 9.23, 9.26), so that each action and state has one name, as on "Approve target". The support lens should match.
+13. **C-13 · The Grant label on the eater's screen (support K6).** This lens keeps the map's word "Grants", with the subtitle "Requests from a Support agent to read your diary" (eater-9.21).
 14. **C-14 · What the eater's access history lists (support K1, auditor conflict 13).** This lens lists Grant reads only (eater-9.25). Metadata look-ups, which show no diary, appear to the auditor but not to the eater.
 15. **C-15 · How the eater learns of a request (support K2).** This lens shows a Settings badge always, and a notification only if notifications were already allowed; a Grant request never triggers the permission prompt (eater-9.21). With a 72 h expiry (EA10), a request may lapse unseen. That is the safe failure.
 16. **C-16 · Public Food search in the local trial (eater ↔ platform admin).** EA12 lets a trial reach the reference search with App Check only. Per-user quotas (NFR-12) then have no user to count against.
 17. **C-17 · Duplicate Units when a trial joins an account (eater ↔ model).** Which version becomes the default for new logs, and whether "Keep both" leaves two Units or one Unit with two versions (eater-1.53).
 18. **C-18 · A self-declared age gate (eater ↔ auditor).** R16 bars services "likely to be accessed by" under-18s, and the store's 9+ rating (R13) does not keep them out. Whether a self-declared age (eater-1.1, 1.2) is enough is for counsel.
+19. **C-19 · Settings sections with no name (eater ↔ support agent, vocabulary.md).** vocabulary.md lists Settings → Goals, Food rules, Activity, Units & language, Privacy and Export. It has no Account or Help section, though FRD §14 lists "Account" and support-9.2 uses Settings → Help for the support code. This lens shows the account state as a line at the top of Settings and puts the support code under Settings → Privacy → Support code (eater-9.29). It also uses Settings → Export, where support-9.7 says Settings → Privacy → Export. A dated delta should settle all three.
 
 Two of research.md §6's conflicts are answered here as proposals: conflict 6 (an unanswered Grant ends with no access, eater-9.24) and conflict 8 (exports use Western digits and ISO dates, eater-9.13).
 
@@ -882,4 +885,4 @@ Two of research.md §6's conflicts are answered here as proposals: conflict 6 (a
 | WF-10 done-when, eater side (approve in Settings; reads in the box; expiry; reads in the trail; a decline gives no access) | 9.21–9.28 |
 | Other lines cited | AT-10 (1.5, 1.43, 1.52, 9.5, 9.28) · AT-13 (1.9) · AT-16 (1.7) · AT-23 (1.39) · AT-32 (1.27, 9.2) · FR-071 (1.22, 1.47, 1.48) · FR-081 (9.21–9.29) · NFR-06 (1.52) · NFR-07 (9.13) · NFR-08 (1.55, 9.30) · NFR-13 (9.16) |
 
-**Counts:** 86 stories (56 in journey 1, 30 in journey 9).
+**Counts:** 86 stories (56 in journey 1, 30 in journey 9) · 277 acceptance lines (`/m` 21 · `/s` 73 · `/r` 183).
