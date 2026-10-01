@@ -653,3 +653,29 @@ The contract still validates (OpenAPI 3.1, 149 paths).
 2. admin-10.73 publishes `c-ai-6` with `asks_again: true`, the value its proposal carries (J158 below).
 3. Both `GET /v1/admin/wording/versions` reads name `staff_ali`'s token.
 Model gaps decided in `join.md` J158–J159: a publish must carry the Proposed version's `asks_again`; Settings › Wordings is readable by holders of "Publish wording" and by the Auditor.
+
+## Lens verdict — closing 3 (2026-10-01)
+
+**pass** — 0 defects. All 3 closing-2 defects are fixed. This check covers only the three lines the third closing fix changed. They are read against `way/join.md` J158–J159 (with J2, J40, J153–J155), `way/vocabulary.md` D6, seed §3 and §4.7, and `contracts/openapi.yaml` (`listGrantSettingsVersions`, `listWordings`, `proposeWording`, `publishWording`, `PublishWording`, `Wording`, `WordingState`, `staffSession`).
+
+**The 3 closing-2 defects (each changed line as it now reads)**
+1. admin-10.72's Trace — **fixed.** "`contracts/openapi.yaml` `getGrantSettings` / `listGrantSettingsVersions` / `saveGrantSettings` / `getGrant` / `requestGrant`".
+   - All five operations exist with those ids.
+   - `listGrantSettingsVersions` is the route the story's Auditor line calls ("`GET /v1/admin/grant-settings/versions` with her token"), and its `x-stories` is `[admin-10.72]`.
+2. admin-10.73's `c-ai-6` publish — **fixed.** "then signs its privacy review and publishes `c-ai-6` with `asks_again: true` (the value its proposal carries; J158). `wording.published` carries `asks_again: true`".
+   - J158: "`POST /v1/admin/wording` for a Proposed version must send the same `asks_again` the proposal stored". The proposal in the same line is sent "through `POST /v1/admin/wording/proposals` with `asks_again: true`", so the two values match.
+   - `PublishWording` requires `asks_again`, and the line now names it. The observed `wording.published` `asks_again: true` follows from the request.
+   - The line agrees with the `c-ai-5` path, which publishes with the stored value ("Ask eaters again" off, as stored).
+3. The two `GET /v1/admin/wording/versions` reads — **fixed.**
+   - The Given: "`GET /v1/admin/wording/versions?family=c-ai` returns the same three states when called with `staff_ali`'s token."
+   - After the publish: "`GET /v1/admin/wording/versions?family=c-ai` with `staff_ali`'s token returns `published` for `c-ai-5` and `superseded` for `c-ai-4` and `c-ai-3`."
+   - J159 lets holders of "Publish wording" read the route; the Platform admin holds it "for consent texts". Seed §3 gives the Platform admin "Publish wording (consent texts, `grant-req-1`; …)", and the story's Given names it: "`staff_ali` (Ali N., Platform admin) holds "Publish wording" and "Sign launch gates"". `c-ai` is a consent text.
+   - `listWordings` takes the `family` query, returns `versions` of `Wording` with `state`, and `WordingState` is `proposed, published, superseded`. Seed §4.7's main seed holds `c-ai-3`, `c-ai-4` and `c-ai-5` only, so "three" holds before the publish, and the three states after it are right.
+
+### Notes — not counted
+- **The contract lags J158–J159** (model documents, for the model phase).
+  - `publishWording` and `PublishWording` do not state J158's 422 `VALIDATION_ERROR`, field `asks_again`, though `x-error-codes` already lists 422 `VALIDATION_ERROR`.
+  - `listWordings` names no readers, and its `x-events` is `[]`, though J159 writes `access.refused` on its 403.
+- **J158 settles `asks_again` only.** Whether a publish of a stored Proposed version must resend `en` and `ar`, and what happens when they differ from the stored texts, is still open (closing 2, cross-lens). The `c-ai-6` publish line names no `en` or `ar`; the `c-ai-5` 409 line says "equal to the stored Proposed texts".
+- **admin-10.73's Trace does not list J158 or J159.** The changed line cites J158 inline. The file has no rule that every inline J item is in the Trace (J146 is cited inline and not traced either).
+- **"token" for a staff caller.** `staffSession` is the `sb_staff_session` cookie, so "`staff_ali`'s token" means his console session. The file uses the same form elsewhere ("with her token", "the token of `staff_mona`"), and closing 2 suggested it.

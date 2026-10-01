@@ -1456,9 +1456,9 @@ paths:
       operationId: listWordings
       summary: Settings › Wordings — every Wording version with its state
       tags: [privacy]
-      description: 'Every version of every Wording family (consent texts, `grant-req-n`, `guidance-n`) with its state (Proposed · Published · Superseded, J153) and `asks_again` (J154).'
+      description: 'Every version of every Wording family (consent texts, `grant-req-n`, `guidance-n`) with its state (Proposed · Published · Superseded, J153) and `asks_again` (J154). Readers: holders of "Publish wording" and the Auditor (J159); any other staff role gets 403 FORBIDDEN with `access.refused`.'
       x-module: privacy
-      x-events: []
+      x-events: [access.refused]
       x-stories: [admin-10.73, auditor-9.3]
       security:
       - staffSession: []
@@ -1499,7 +1499,7 @@ paths:
         required: true
         content:
           application/json:
-            schema: {$ref: '#/components/schemas/PublishWording'}
+            schema: {$ref: '#/components/schemas/ProposeWording'}
       x-error-codes:
         '401': [UNAUTHENTICATED]
         '403': [FORBIDDEN]
@@ -11053,12 +11053,25 @@ components:
           items: {$ref: '#/components/schemas/CrossCheck'}
         reason: {type: string, maxLength: 200}
       additionalProperties: false
+    ProposeWording:
+      type: object
+      description: 'Store a new Wording version in state Proposed, with both texts and `asks_again` (J153, J154).'
+      required: [command_id, text_version, en, ar, asks_again]
+      properties:
+        command_id: {$ref: '#/components/schemas/CommandId'}
+        text_version: {$ref: '#/components/schemas/TextVersion'}
+        en: {type: string, minLength: 1}
+        ar: {type: string, minLength: 1}
+        asks_again: {type: boolean, description: Ask eaters who decided under an earlier version again (J154).}
+      additionalProperties: false
     PublishWording:
       type: object
-      description: 'Publish a Wording version; the previous version of the family becomes Superseded. A consent text whose
-        privacy review is not signed on Settings › launch gates is 409 VALIDATION_ERROR `reason: privacy_review_not_signed`
-        with the gate''s state (J26, J149).'
-      required: [command_id, text_version, en, ar, asks_again]
+      description: 'Publish a stored Proposed Wording version (J160): `en` and `ar` are optional and, when sent, must equal
+        the stored texts; `asks_again` must equal the value the proposal stored (J158), else 422 VALIDATION_ERROR on that
+        field. The previous version of the family becomes Superseded. A consent text whose privacy review is not signed
+        on Settings › launch gates is 409 VALIDATION_ERROR `reason: privacy_review_not_signed` with the gate''s state (J26,
+        J149).'
+      required: [command_id, text_version, asks_again]
       properties:
         command_id: {$ref: '#/components/schemas/CommandId'}
         text_version: {$ref: '#/components/schemas/TextVersion', description: 'The version to publish, e.g. `c-ai-5` (its

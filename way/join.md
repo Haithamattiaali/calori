@@ -1052,3 +1052,5 @@ Source: `way/personas/added-stories.md` ("Proposed for D6", "Conflicts for the m
 **J158 · The publish carries the proposal's `asks_again`.** `POST /v1/admin/wording` for a Proposed version must send the same `asks_again` the proposal stored; a different value is 422 `VALIDATION_ERROR`, field `asks_again` (change it by proposing a new version). Reason: J154 — the flag is decided once, by the publisher, and recorded.
 
 **J159 · Who reads Settings › Wordings.** Holders of "Publish wording" (Platform admin for consent texts and `grant-req-n`; Nutrition approver for `guidance-n`, J40) and the Auditor (read-only) may read `GET /v1/admin/wording/versions`; any other staff role gets 403 `FORBIDDEN` with `access.refused`. Reason: FR-081 least privilege; the Auditor reviews consent texts (auditor-9.3).
+
+**J160 · Publishing a stored Proposed Wording sends only its id and flag.** `POST /v1/admin/wording` takes `text_version` and `asks_again`; `en` and `ar` are optional and, when sent, must equal the stored Proposed texts (else 422 `VALIDATION_ERROR`). Reason: a Proposed text is stored once and cannot change (J153); resending invites drift.
