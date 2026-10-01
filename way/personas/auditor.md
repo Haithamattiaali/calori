@@ -496,3 +496,71 @@ As the Auditor, I am told when a Consent points to a text version that cannot be
 - **AT fixtures reused:** AT-10 (retry delivered three times → one event: 10.6, 9.6) · AT-29 (deletion and withdrawal propagate to media, queues, private cached analysis and exports: 9.5, 9.10).
 - **Research cited:** R2, R3, R4, R7, R20–R26, R28, R29 (as corrected), R30, R31; P4, P11 (as corrected), P30; plus §1.1–1.2 above.
 - **Counts:** 55 stories (38 in journey 10, 17 in journey 9) · 112 acceptance lines (/m 8 · /s 10 · /r 94).
+
+---
+
+## Lens verdict (2026-10-01)
+
+**fail** — 24 defects.
+
+An independent verifier, following `way/personas/_lens-verifier-brief.md`, checked this lens and changed nothing above. What passed:
+- **Ids (check 7).** All ids follow `auditor-<WF>.<n>`.
+- **Counts.** The §8 counts are exact: 55 stories and 112 acceptance lines (/m 8, /s 10, /r 94).
+- **Runtime lines.** Every story has at least one /r line.
+- **Experience (check 6).** §5 answers device, place, moment, feeling and style, and the six care groups.
+- **Refuted findings.** No refuted finding is cited as standing (R34, P5, R18's Cloud Tasks claim).
+- **Quotes.** The quotes in §1.1–§1.2 were spot-checked against the sources, re-opened on 2026-10-01 with a generic User-Agent and no owner identifier sent. Every quote checked was found: the SDAIA Implementing Regulation, the Law and the DPO Rules, the Sharkawy dual text, Shalakany's PDF, Google Cloud Audit Logs, Access Approval and Access Transparency, GitHub's audit-log docs, the OWASP Logging Cheat Sheet, Microsoft Purview, the NIST OSCAL v5.2.0 catalogue, the ICO and AccessOwl.
+
+The eater lens is not written yet (`way/personas/eater/` holds only `research.md`), so the eater side of the shared stories (10.3, 10.6, 10.7, 10.11, 9.5) could not be cross-checked.
+
+### Observable
+
+1. **auditor-10.3: the event count contradicts itself.** The /r timeline lists 7 events: "Requested · Approved by the eater · Read ×3 · Expired · Read denied (10:06:30Z, GRANT_EXPIRED)". The first /s line says the API "returns the same 6 events … that Trail shows for `object = G-2026-0042`". Both lines cannot pass.
+2. **Fixture "trail", used by 10.1, 10.14 and 10.30: a 1,248-event trail cannot exist at 2026-09-28T14:10Z.** 10.1 shows "Intact through event 1,248 · checked 14:10:00Z" on 2026-09-28, and 10.14 shows "Intact · events 1–1,248 · 14:11:10Z". The same 1,248 events must also hold later events: the revocation at 14:20:00Z, the denied read at 14:21:00Z, G-2026-0046 on 09-29 and the 09-30 denials of 10.9. 10.30 then exports September "as-of sequence 1,248". The fixture needs dated sequence numbers.
+3. **auditor-10.30 and 10.32: the counts do not match the fixture.** 10.30 says `subj_7Q2M` has "17 events" in September. 10.32's own figures give at least 19: 7 for G-2026-0042, 5 for G-2026-0044 (requested, approved, read, revoked, denied), 2 for G-2026-0046, and "Consent events (5)". The 5 cannot be checked either. The fixture has 4 Consent events plus 9.7's Health event, with no Diary processing Consent and no "given" event before the research withdrawal.
+4. **auditor-10.31 (also 10.28): two possible outcomes, and data outside the fixture.** The line says "It delivers numbered parts … ; or AU-01 is asked to narrow the filter", so a verifier cannot tell which outcome passes. The "25,000 events" and "1,200,000 events" are outside the fixture table, which claims to be "used by every acceptance line below" and holds a 1,248-event trail.
+5. **auditor-10.10: no lapse value, so the line cannot be observed.** The line says "not answered within the lapse time set in the live Policy version", but gives no value, and the map's Policy (§1 ¶6) has no such field (Conflicts item 10). The read made with G-2026-0045 has no actor or time. If S-07 makes it on 09-28, 10.25's "exactly 3 rows" and 10.33's "reads denied 3" no longer hold. A fixture value labelled `assumption`, plus an actor and a time for that read, are needed.
+6. **Fixture gaps: acceptance lines name data the fixture never defines.**
+   - 9.12 opens "Grant G-2026-0039", which is not in the fixture.
+   - 10.2 and 10.25 need G-2026-0044's requester ("requested 13:55:00Z", no actor).
+   - 9.8 uses "a staff member with the quality-review permission", who is not in the staff row.
+   - 10.21 needs the فول مدمس record's id, version, time, licence and evidence ids.
+   - Line 3 of 10.17 needs v7's reviewer.
+   - 10.4 gives "the exact request wording version, in the language the eater saw (en or ar)" with no version id and no language.
+   - Line 2 of 9.14 gives "Anomalies shows any raw scan over 30 days … by count" with no count, and it clashes with line 1's run on 2026-09-28 without being marked as a separate fixture.
+7. **auditor-10.22: the empty state cannot occur.** The line says "Given no staff besides AU-01 (a fresh system) … 'Only you hold a role. Roles appear here as the platform admin assigns them.'" Under 10.24 (no self-assignment), the read-only Auditor and admin-10.61 ("cannot remove the last Platform admin"), a system where only the Auditor holds a role has nobody who can assign one.
+8. **auditor-10.25, 10.33 and §5: speed is promised but never checked.** The stories promise "find the events a question is about in seconds" and "Scope a suspected breach in minutes", and §5 says "Fast: keyboard-first". No acceptance line bounds the time for a filtered list or for the Summary. The only time in any line is the 2 s progress threshold.
+
+### Traced
+
+9. **auditor-10.11: "Revoked by the eater · 14:20:00Z" traces to nothing.** The map's Grant rows end with "approves or declines in Settings" and "auto-expiry". Revoking an active Grant is in no map line or FR line. The story cites neither, and it is not in Conflicts. The support lens also has `revoked`, so the model phase has to add it to the map.
+10. **auditor-10.17, and the 10.13 rule "Live Policy versions without a recorded review": the review split traces to nothing.** The lines show "reviewed by A-05 at 07:30:00Z, approved by A-02 at 08:00:00Z". The map says only "qualified review", and the approver lens publishes alone (approver.md §7 item 8: "A single fractional approver publishes alone"). The two lenses disagree on whether a Policy version has a separate reviewer, and this lens does not list the disagreement in Conflicts.
+
+### Complete
+
+11. **Missing step: WF-10 done-when "an admin rolls a model version back and manual logging keeps working".** Neither the registry fixture nor 10.19/10.20 has a rollback event (for example R-16 → R-14, with who, when and why). The "shadow" stage of "shadow → canary → rollout" never appears.
+12. **Missing step: interaction row "Support → eater diary | read within the Grant | time box, read-only".** No story shows the Auditor a write attempt inside an active Grant, refused and logged. 10.9 covers only reads made without a Grant. The support lens also defines `GRANT_READ_ONLY` and `GRANT_OUT_OF_SCOPE`, and the Grant states `withdrawn` and `ended` ("Ended early by support at 10:49"). This lens gives the Auditor no view of any of them.
+13. **auditor-10.21: Alias approvals have no acceptance line.** The story says "who approved each Food record and Alias", but its only acceptance line covers a Food record. No line shows `alias.approved` with its dialect (EG, Gulf, MSA; F27).
+14. **Missing step: interaction row "Eater → app | confirm age 18+, give separate consents … | Consent records (version, time, method)".** No story lets the Auditor see the 18+ confirmation, which R22 ("full legal capacity") and R16 rest on.
+15. **auditor-9.1: the Health purposes are incomplete.** The list reads "Health: read workouts · Health: read body mass · Health: write dietary energy". The map asks for consent per "each Health type" and imports "workouts, active energy, body mass", so "Health: read active energy" is missing. The map also calls the write a "food correlation", not dietary energy alone.
+16. **auditor-9.5: AT-29 is only half covered.** The story cites AT-29: "consent withdrawal propagate[s] to media, queues, private cached analysis, and exports". The Effect card shows AI requests, Pending Analyses, the private cached analysis and queued uploads, but nothing for media or exports.
+17. **auditor-9.13: reports are missing from the export.** The story cites FR-075 ("entries, portions, recipes, targets, and reports"), but its categories are "Entries, Units, Recipes, Targets, Consents".
+
+### Sourced
+
+18. **§1.1–§1.2: no source has a link.** The file holds no URL at all, while both briefs require "link, date, quote". The quotes check out; the links are what is missing. These need links: the SDAIA PDFs, the Sharkawy dual text, Shalakany's PDF, GDPR, the Google Cloud pages, GitHub's docs, Microsoft Learn, OWASP, NIST OSCAL, the ICO and AccessOwl.
+19. **§1.1 "Dates and status": the R29 match is overstated.** The lens quotes Shalakany, "the Minister of Communications and Information Technology issued … published in the Official Gazette on November 1st, 2025", and says this "matches the corrected R29". The corrected R29 leaves out the decree type as doubtful, and R29's own evidence (CMS) says the regulations were "not made publicly available until 25 December 2025". The lens brings a doubtful sub-claim back and does not flag the conflict.
+20. **§1.1 row "The DPO seat itself" and Conflicts item 3: the Egypt Art. 9(1) wording is the translation's, not the Arabic's.** The lens quotes "approving the results of such evaluation". In the same dual text, the Arabic reads «توثيق نتائج التقييم» ("documenting the results"). Conflict 3 rests its write proposal partly on "approving", while §1.3 itself treats the Arabic prevailing as an assumption.
+21. **auditor-9.10 and 9.14: two values have no source and no label.** 9.10 says "backups expire by 2026-10-16 under the disclosed backup lifecycle", which is 30 days after completion. 9.14 says "expected daily". Neither value has a source or an `assumption` or "chosen default" label, and neither FRD §17.2 nor NFR-13 gives a backup period.
+
+### Vocabulary
+
+22. **The role "Support" has two names.** This lens writes "S-07 · Support", "Your roles: Support." and "Support" in the staff fixture. The map's persona is "Support agent", and the admin lens names the role "Support agent" ("Support agent cannot be combined with Platform admin (FR-081)").
+23. **Other lenses use different names for the same things, and Conflicts lists none of these differences** (Conflict 5 covers identity fields only):
+   - "Lapsed" (10.10) here; "Expired unanswered" / `expired_unanswered` in the support lens.
+   - `GRANT_NOT_APPROVED` for a declined Grant (10.7) here; `GRANT_DECLINED` in the support lens.
+   - `ROLE_FORBIDDEN` here; `FORBIDDEN_ROLE` in the approver lens.
+   - The page "Trail" here; "Audit trail" in the support lens.
+   - Grant ids `G-2026-0042` here; `grant_31f0` in the support lens.
+   - Here a Grant request has a free-text reason and the scope "diary, read-only" (10.4, 10.25). In the support lens it has a reason from a fixed list plus a note, diary days, areas and a case reference.
+24. **auditor-10.24 and the staff fixture: U-19 cannot be set up through the product.** The fixture reads "U-19 Support **and** Platform admin (seeded violation)", but admin-10.59 refuses that combination at save. The acceptance line must say U-19 is seeded below the roles API, in storage. Conflicts should record that this anomaly is a detective control behind admin-10.59.
