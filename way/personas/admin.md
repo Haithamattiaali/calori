@@ -209,7 +209,7 @@ Moments that decide their trust. These are inferred from the sources above, `ass
 | Canary duration — the deadline for the minimum sample | 24 hours | A17's bake-in, applied as a deadline only: Move to Rollout is offered as soon as the minimum sample is met and every check passes, with no further wait (10.24, 10.26, 10.71) — `assumption` |
 | Seeded quotas ("Quotas version 1") | image tasks soft 15 / hard 25; Text and Voice soft 60 / hard 100; anonymous sessions hard 3 / 10 | §23.3 |
 | Seeded AI spend cap | alert at $40, cap at $60 per UTC day | A4 |
-| Seeded price rows (prices panel on **Metrics**) | `gemini-3.8-flash` input $0.75 / output $3.75 per million tokens, effective 2 Sep 2026; `gemini-3.5-flash-lite` input $0.30 / output $2.50 per million tokens, effective at seeding. The 1 Jan 2027 rise is not seeded: an admin adds it (10.45) | A18; agrees with P3 (stands in r1-refute-b) |
+| Seeded price rows (prices panel on **Metrics**) | `gemini-3.8-flash` input $0.75 / output $3.75 per million tokens effective 2 Sep 2026, and the announced rise to $1.50 / $7.50 effective 1 Jan 2027; `gemini-3.5-flash-lite` input $0.30 / output $2.50 per million tokens effective at seeding | A18; agrees with P3 (stands in r1-refute-b) |
 | Evaluation tolerance | proposed version ≥ Rollout version − 2 points per score | — |
 | Small groups | fewer than 11 distinct eaters are hidden | A26 |
 | Retirement warning / block for new Proposed versions | ≤90 days / ≤30 days | — |
@@ -775,9 +775,9 @@ As platform admin, I reset each eater's quota at their own diary-day boundary, s
 
 #### admin-10.45 · Keep effective-dated prices
 As platform admin, I record provider prices per model with effective dates on the prices panel of **Metrics**, so that each call is priced at the rate of its own day and a known change is ready in advance. §16.5, §23.3 ("Do not embed temporary provider prices in core requirements"); A18.
-- Given a fresh deployment, When the prices panel on **Metrics** opens, Then it lists the seeded rows of §3 — `gemini-3.8-flash` $0.75 / $3.75 from 2 Sep 2026 and `gemini-3.5-flash-lite` $0.30 / $2.50 — each marked "Seeded", and `GET /v1/admin/prices` returns both. `/r`
-- Given those seeded rows, When `admin.a` adds for `gemini-3.8-flash` input $1.50 and output $7.50 per million tokens from 1 Jan 2027 with the source page, Then the panel shows both `gemini-3.8-flash` rows with their effective dates and the note "output includes thinking tokens". `/r`
-- Given those prices, When an Analysis at 2026-12-31 23:59:59 UTC and one at 2027-01-01 00:00:00 UTC each use 1,000 input and 500 output tokens, Then:
+- Given a fresh deployment, When the prices panel on **Metrics** opens, Then it lists the three seeded rows of §3 — `gemini-3.8-flash` $0.75 / $3.75 from 2 Sep 2026, `gemini-3.8-flash` $1.50 / $7.50 from 1 Jan 2027, and `gemini-3.5-flash-lite` $0.30 / $2.50 — each marked "Seeded", the `gemini-3.8-flash` rows with the note "output includes thinking tokens", and `GET /v1/admin/prices` returns the three. `/r`
+- Given those seeded rows, When `admin.a` adds a synthetic future row for `gemini-3.5-flash-lite` (input $0.35, output $2.80 per million tokens, from 1 Mar 2027) with its source page, Then the panel shows both `gemini-3.5-flash-lite` rows with their effective dates, and the 2026 `gemini-3.5-flash-lite` row is unchanged. `/r`
+- Given the seeded `gemini-3.8-flash` rows, When a `gemini-3.8-flash` Analysis at 2026-12-31 23:59:59 UTC and another at 2027-01-01 00:00:00 UTC each use 1,000 input and 500 output tokens, Then:
   - their costs are stored unrounded as $0.002625 and $0.00525;
   - **Metrics** shows them as $0.0026 and $0.0053 (four decimals, half up). `/r` `/m`
 - Given a price that is already in effect, When anyone tries to edit it, Then the edit is refused with "Add a new effective date instead", and earlier costs never change. `/r`
@@ -1839,3 +1839,53 @@ After two fix rounds, 6 defects remained (re-verify 2). Cause in one sentence: e
 2. Care 4.7 is an explicit list of the five confirmations, with each direct-save action named and its reason; Move to Shadow (10.18) saves directly because Shadow results never reach an eater.
 3. Seeded price rows include `gemini-3.5-flash-lite` ($0.30 / $2.50, from A18), and the source cell says P3 stands.
 4. No new "Prices version" name: §3, care 2.7, 10.43 and 10.45 speak of the seeded price rows on the prices panel; 10.45 now shows them on a fresh deployment and the admin adds only the 1 Jan 2027 row; care 3.8 lists the row.
+
+## Lens verdict — final 2 (2026-10-01)
+
+**fail**: 2 defects. All 4 defects from the final verdict are fixed. The 2 defects below are new, and both come from the price fix (§3 and 10.45). A lens verifier that did not write this file checked only the lines the session changed (commit 462ac11 → cf147fa): 10.65's last line, care 4.7, the §3 seeded price rows, care 2.7's price bullet, care 3.8's price row, 10.43's Given and 10.45's first two lines. It checked them against the stories they touch (10.18, 10.22, 10.25–10.27, 10.30–10.39, 10.43–10.48, 10.71), `way/vocabulary.md` as it reads now, A18 and `way/research/r1-refute-b.md`. Unchanged material was not re-audited. No outside service was contacted.
+
+**What holds.**
+- "Prices version" appears only in the dated records (the session diagnosis and the final verdict), not in the lens's own text.
+- 10.43 still adds up. On a fresh test database the only `gemini-3.8-flash` row is the 2026 one: 2 × (1,000 × $0.75 + 500 × $3.75) ÷ 1,000,000 = $0.00525, shown as $0.0053.
+- Care 4.7's five confirmations match "The matching style", care 1.7 and the stories: 10.22, 10.26, 10.27, 10.31, 10.32 and 10.39 confirm. 10.18, 10.25, 10.30, 10.35 and 10.38 save directly. 10.71's "Esc closes each confirmation" asks for nothing more.
+- Both seeded task models are now priced, so a seeded `text` Rollout version on `gemini-3.5-flash-lite` no longer runs with "No price" (10.46, 10.48).
+
+### The 4 final defects
+
+| # | status | quoted line |
+|---|---|---|
+| 1 | fixed | 10.65: "Given `eater-synth-105` has saved the distinctive synthetic profile values weight 82.37 kg and height 178.6 cm, … the item names that voice Analysis returned (read through `GET /v1/analyses/{id}`), the strings `82.37` and `178.6`, …". These are the distinctive values the final verdict asked for. "Unit names" and "the approved Analysis" are gone. **Settings** › Goals is no longer named. |
+| 2 | fixed | Care 4.7: "Confirmations are exactly the five named in "The matching style", and nothing else confirms" and "Everything else saves directly, and the Audit trail records it: Move to Shadow (10.18), because a Shadow version's results never reach an eater; …". Quotas roll back is now one of the five, and Move to Shadow is named as a direct save. |
+| 3 | fixed | §3: "`gemini-3.5-flash-lite` input $0.30 / output $2.50 per million tokens, effective at seeding" and "A18; agrees with P3 (stands in r1-refute-b)". This matches A18 ("$0.30" input and "$2.50" output) and r1-refute-b ("P3 \| stands (now opened)"). |
+| 4 | fixed; the new rows bring defects 1 and 2 | 10.45: "Given a fresh deployment, When the prices panel on **Metrics** opens, Then it lists the seeded rows of §3 … each marked "Seeded", and `GET /v1/admin/prices` returns both." The admin then adds only the 1 Jan 2027 row, so line 4's "Add a new effective date instead" no longer clashes. Care 3.8: "\| seeded price rows \| 10.43, 10.45 \|". Care 2.7: "the seeded price rows on the prices panel of **Metrics** (§3, 10.45)". |
+
+### Defects
+
+**Experience (the cost-jump moment, care 2.7) and the story's own "so that"**
+1. **§3, Seeded price rows: the known 1 Jan 2027 price rise is now left out, and nothing makes sure it gets added.**
+   - The row reads "The 1 Jan 2027 rise is not seeded: an admin adds it (10.45)". A18 is opened and gives the date and the new price: "$1.50 starting January 1, 2027" (input) and "$7.50 starting January 1, 2027" (output).
+   - Suppose nobody adds the row on a fresh deployment. Then every `gemini-3.8-flash` call from 1 Jan 2027 is priced at half its rate: 1,000 input and 500 output tokens count as $0.002625 instead of $0.00525.
+   - 10.48's cap works on "the estimated cost", so a "$60" cap would let about $120 of `gemini-3.8-flash` spend through. The cost views (10.43, 10.47) would read half the real cost.
+   - No line warns that a known price change has no row yet. 10.45 shows the admin adding the row but never prompts it. Care 2.11 puts only retirement, re-check and the AI spend alert at the top of **Registry**.
+   - This contradicts:
+     - 10.45's "so that … a known change is ready in advance";
+     - care 2.7: "Defaults are right from the start. Nothing needs setting first … the seeded price rows …, which the spend cap and the cost views need";
+     - §1.3's moment "4. A cost jump (A18)".
+   - The seed at 462ac11 included this row. It was dropped only so that 10.45 could show an admin adding a row.
+
+**Observable**
+2. **admin-10.45, line 3: "those prices" now covers two models, and the line does not say which model its Analyses use.**
+   - After the change, "Given those prices" means the seeded `gemini-3.8-flash` and `gemini-3.5-flash-lite` rows plus the added 1 Jan 2027 row.
+   - The line reads "When an Analysis at 2026-12-31 23:59:59 UTC and one at 2027-01-01 00:00:00 UTC each use 1,000 input and 500 output tokens, Then … stored unrounded as $0.002625 and $0.00525".
+   - Those values hold only on `gemini-3.8-flash`. On `gemini-3.5-flash-lite`, both Analyses cost (1,000 × $0.30 + 500 × $2.50) ÷ 1,000,000 = $0.00155.
+   - Before the change, "those prices" held only `gemini-3.8-flash` rows, so the model was implied. Now the Given has to name the task or the model.
+
+**Ids**: no defects.
+
+### Cross-lens (for the model phase join; not counted)
+- None new. The earlier item (profile values on **Settings** › Goals) no longer applies: 10.65 no longer names where the eater saves them.
+
+## Third fix by the session (2026-10-01), after final check 2
+1. The announced 1 Jan 2027 `gemini-3.8-flash` rise is seeded again (§3), so the spend cap and cost views are right on that date without anyone acting; 10.45's first line lists the three seeded rows.
+2. 10.45's admin step adds a synthetic future `gemini-3.5-flash-lite` row (so the "add a new effective date" path is still exercised), and the boundary-cost line names `gemini-3.8-flash` for both Analyses ($0.002625 and $0.00525 hold only there).
+Checked by the session against 10.43 (2026 rows, $0.00525 for two calls), 10.46 (every Rollout model priced), 10.48 (cap counts every task) and care 2.7 before this note was written.

@@ -296,7 +296,7 @@ Size is **platform**, so every care.md group applies on every eater screen, and 
   - **Meal planner:** counts of my Units that fit my limits, or which limit blocks them (FR-054, FR-055).
   - **Meal review:** confirm what I actually ate from a Plan — Ate as planned, Change amounts or Not eaten (FRD §2.5).
   - **Siri phrase and widget:** log a recent Unit or Template without opening the app; the widget shows an innocuous summary (P22–P24, C55).
-- **EX-46 · What we said no to, so the table moment stays light.** No streak flames or badges, which punish a missed midnight (E20); no social feed and no barcode-first journey (both excluded, FRD §1.3); no chat window with hidden state (FRD §2.1); no fixed breakfast/lunch/dinner slots (E1, E11, E12; Conflict 2); no AI re-thinking of a saved number (E29); no full-screen interruptions in the logging path (C21); no advertising based on diary data (FR-079).
+- **EX-46 · What we said no to, so the table moment stays light.** No streak flames or badges, which punish a missed midnight (E20); no social feed and no barcode-first journey (both excluded, FRD §1.3); no chat window with hidden state (FRD §2.1); no AI re-thinking of a saved number (E29); no full-screen interruptions in the logging path (C21); no advertising based on diary data (FR-079). Whether Today groups Entries in fixed meal slots stays open for the model phase (Conflict 2; E1, E11, E12).
 - **EX-47 · Need first, technology second.** Every eater feature traces to a moment in §3 and to a finding or an FR line. AI is used only where the moment needs interpretation (photo, label, voice, free text), never for arithmetic, never on the repeat path, and never as the only way to log (FRD principle "AI interprets … deterministic code calculates"; E15, E16, E32, E43).
 
 ### Group 2 · How it is found and understood
@@ -317,7 +317,7 @@ Size is **platform**, so every care.md group applies on every eater screen, and 
 - **EX-48 · Where am I, and how do I get out.** Every screen's title names the place in the vocabulary (Today, My Units, Analysis review, Unit editor, Meal planner, Meal review, Settings), never the app's name. Every pushed screen has Back (pointing right in Arabic, E40); every sheet has Cancel or Close; the tab bar always shows where else the eater can go. A first-time eater can answer, on each screen and within seconds: where am I, what can I do here, where can I go next, what will I find there, how do I get out.
 - **EX-49 · Platform conventions, not inventions.** The standard iOS tab bar, navigation stack, sheets, swipe actions (each with a visible button, EX-37), system share and permission sheets and SF Symbols; the system's own right-to-left mirroring for Arabic; Siri and widgets through App Intents (P22–P24).
 - **EX-50 · Each colour means one thing.** One accent colour means "tappable or primary". One caution colour appears only for a failed limit or an uncertain measurement (FRD §14.2), never for an ordinary over-Target Day. Pending uses a neutral tone with its word. Evidence values differ by word and icon, not by hue alone (EX-35). The meanings are the same in light and dark.
-- **EX-51 · Labels a newcomer understands.** The eater sees the map's words (Entry, Void, Restore, Evidence, Pending, Correction), because one name per thing is binding (blueprint §1 ¶4), but each comes with plain help where it first matters: the Void button carries the line "Removes it from this Day; you can restore it"; Pending reads as "Pending — saved on this phone, not yet sent" (D2: queued on the device); each Evidence value opens a one-line explanation. Internal names (resolver, registry, Tier A or Tier B, projection, command, idempotency) never reach an eater screen. The exact help wording is chosen on the served screen (EX-55).
+- **EX-51 · Labels a newcomer understands.** The eater sees the map's words (Entry, Void, Restore, Evidence, Pending, Correction), because one name per thing is binding (blueprint §1 ¶4), but each comes with plain help where it first matters: the Void button carries the line "Removes it from this Day; you can restore it"; Pending reads as "Pending — saved on this phone, not yet confirmed" (D2: queued on the device, not yet accepted by the server); each Evidence value opens a one-line explanation. Internal names (resolver, registry, Tier A or Tier B, projection, command, idempotency) never reach an eater screen. The exact help wording is chosen on the served screen (EX-55).
 - **EX-52 · Tappable or plain, at a glance.** Unit tiles look like buttons (filled tile, picture or icon, name, count control); Entry rows are list rows with a disclosure that opens the Entry; totals and macro figures are plain text, and when one opens a detail it carries a disclosure too. Nothing plain looks tappable, nothing tappable looks plain.
 
 ### Group 3 · How it feels
@@ -348,7 +348,7 @@ Size is **platform**, so every care.md group applies on every eater screen, and 
 - **EX-25 · Half-built work survives.** Closing the Unit editor or the Recipe pot-weighing midway keeps the Unit's Draft; closing onboarding, an Analysis in Needs answers, or the Meal planner's limits midway keeps the answers already given (care.md group 4).
 - **EX-26 · Permissions asked at the moment of use, with one plain sentence.** Camera on first photo, microphone on first voice log, Health on first Activity or Health write, each separately (FR-076, R3). Declining keeps manual logging (FRD §3.2).
 - **EX-27 · Missing data is "unknown", never zero.** Unlogged Days are shown as coverage, not as successes (AT-25); a calorie-only Entry marks macro coverage incomplete (AT-16); Health with no data is "no data", not "denied" (P30, FR-067).
-- **EX-62 · Every error the eater can meet has words, and says why.** Each error the eater can reach — `UNIT_NOT_FOUND`, `UNIT_AMBIGUOUS`, `STALE_REVISION`, `SOURCE_BASIS_UNKNOWN`, `MASS_BALANCE_ERROR`, `MACROS_INCOMPLETE`, `PLAN_INFEASIBLE`, `AI_UNAVAILABLE`, `RATE_LIMITED`, `VALIDATION_ERROR`, `UNAUTHENTICATED`, `CONSENT_REQUIRED`, `AGE_REQUIREMENT`, `POLICY_FLOOR`, `NOT_FOUND` (vocabulary D2) — has one fixed message in both languages that says why the command cannot work now and what to do; no code reaches the screen raw; no unhandled state leaves an empty screen.
+- **EX-62 · Every error the eater can meet has words, and says why.** Each error the eater can reach — `UNIT_NOT_FOUND`, `UNIT_AMBIGUOUS`, `STALE_REVISION`, `SOURCE_BASIS_UNKNOWN`, `MASS_BALANCE_ERROR`, `MACROS_INCOMPLETE`, `PLAN_INFEASIBLE`, `AI_UNAVAILABLE`, `RATE_LIMITED`, `VALIDATION_ERROR`, `UNAUTHENTICATED`, `CONSENT_REQUIRED`, `AGE_REQUIREMENT`, `POLICY_FLOOR`, `NOT_FOUND`, `GRANT_NOT_ACTIVE` (vocabulary D2) — has one fixed message in both languages that says why the command cannot work now and what to do; no code reaches the screen raw; no unhandled state leaves an empty screen.
 
 ### Group 5 · The inside the eater never sees
 
@@ -554,3 +554,73 @@ All 16 defects of the verdict above were fixed at their root, in this file only.
 
 Counts after this round: 45 findings (E1–E45), 63 experience requirements (EX-01–EX-63), 58 care questions answered in §5a (57 answered, 1 marked n/a with its reason).
 
+## Lens verdict — re-verify (2026-10-01)
+
+**fail** — 3 defects. Scope: checks 4 (Sourced), 5 (Vocabulary) and 6 (Experience) of `_lens-verifier-brief.md` and its addendum, with `way/vocabulary.md` (D2) binding. Verifier: an independent agent. It re-checked the 16 defects of the verdict above, then read only the lines fix round 1 changed (commit 37ba298 against e837525), including E45, EX-45…EX-63 and §5a. Nothing in this file was fixed.
+
+**What was re-opened today (generic User-Agent; no owner identifier sent).**
+- E5: the page's `datePublished` is "2025-02-23T15:05:04+0200", and the quote is on the page.
+- E7: the review, through Europe PMC full text (PMC6520825). It calls itself a "narrative review"; "[20]" is Abu-Saad et al. 2009, Public Health Nutr 12:2464–2472, in Israel; Egypt appears only as "Egypt [13]", Jerome 1997, a "Case Study". The Abu-Saad abstract, through Europe PMC (PMID 19405990, first published 2009-05-01, "451 adults"): all three quotes match.
+- E32: MFP help article 360032622131 (`updated_at` 2026-08-26). The quote matches.
+- The cycle-1 ids the new lines cite (C16, C21, C29, C55, P22–P24, P34) stand in `r1-refute-a.md` and `r1-refute-b.md`. C16 and C29 as corrected both say the store listing has no Arabic, which backs line 216. The FRD lines the new EX lines cite say what the file says they say: §1.3, §2.1, §2.5, §4.3, §7.2, §14 ("Insufficient data"), §14.1 ("decimal input"), §14.2, §23.1 ("Consented pilot"), FR-006, FR-023, FR-043, FR-054, FR-055, FR-079, NFR-03, NFR-06, AT-07, AT-09, AT-13, AT-31 and AT-32.
+
+### The 16 earlier defects: each one is fixed
+
+1. **E7.** Line 46: "The review's range of "30 and 88% of total daily energy" rests on a single study it cites (its reference 20), of Bedouin Arab adults in southern Israel". This matches both sources. Fixed.
+2. **E32 and the MFP row.** Line 151: "Reviews are single users' reports, not product facts." Line 153 quotes MFP's help: "select a date to copy the items". Line 215: "copy items to any date (its help) … one user could not find how to copy from a week ago". Fixed.
+3. **The Lose It! / Cronometer row.** Line 216: "a recipe flow one user found convoluted on a small iPhone, unsure whether ingredients went to the recipe or the food log (one review, E45)". E45 (line 206) carries the source. Fixed.
+4. **E39.** Line 183: "How many eaters each country contributes depends on population and adoption figures that were not opened (`assumption`)". The recipe-sharing claim is gone. Fixed.
+5. **E5.** Line 39: "page dated 2025-02-23 (its `datePublished`; the URL slug reads 2023/7/26)". Re-opened today. Fixed.
+6. **Group 1.** EX-45 (line 288) gives one sentence for each of the ten eater surfaces. §5a row 1.8 (line 394): "**n/a for v1:** no eater screen has shipped and no eater exists yet". Fixed.
+7. **Group 2.** EX-51 (line 320): "Internal names (resolver, registry, Tier A or Tier B, projection, command, idempotency) never reach an eater screen". EX-52 (line 321): "Nothing plain looks tappable, nothing tappable looks plain." EX-50 (line 319): "One accent colour means "tappable or primary"". Fixed.
+8. **Group 3.** EX-54 (line 332): "layout uses leading and trailing, never left and right, so mirrored Arabic keeps identical gaps; mixed Arabic–English rows share one baseline". Fixed.
+9. **Group 4.** EX-58 (line 340): "Today, My Units and Progress show the last saved content from the device at once … Analysis review shows the photo and the Processing state at once". EX-60 (line 346): "In the Unit editor (weights, sample count, component weights, pot weight, cooked yield), the count stepper and the profile and Target inputs". Fixed.
+10. **Group 5.** EX-56 (line 334): "measures cold start to an interactive Today and resume to the last tab and Day, on the smallest supported iPhone simulator (P34) with a slow-network profile, reporting median and worst case". Fixed (see observation 3).
+11. **Group 6.** EX-63 (line 372): every interactive element "shows the system focus ring", and WF-3 and WF-6 "can be done by keyboard, by Switch Control and by Voice Control". Fixed.
+12. **"draft" for an Analysis.** EX-17 (line 329): "an Analysis in Needs answers or Ready for review can be Discarded". EX-21 (line 343): "An offline photo becomes a Pending Analysis (captured offline, not sent)". No Analysis is called a draft any more. Fixed.
+13. **Conflict 6.** Line 455: "a request the eater does not answer before its request window closes becomes Unanswered and gives no access (`GRANT_NOT_ACTIVE`)". Fixed.
+14. **Role names.** Conflicts 1, 3, 5, 6, 8 and 9 (lines 450–458) now read, for example, "Eater vs Auditor and Nutrition approver", "the Nutrition approver's approved Alias" and "Eater vs Platform admin". A search finds no bare "approver", "admin" or "support" outside quotes, URLs and the verdict above. Fixed.
+15. **Two names for one thing.** "suhur" and "Sohor" now appear only inside quotes, as line 9 explains. "Day boundary" is gone: E11, E13, Mona, Faisal, EX-07, EX-20 and Conflict 1 say "diary-day boundary". Line 98: "fixed mode as the default activity mode (activity-adjusted mode only by the eater's choice)". Fixed.
+16. **EX-08.** Lines 305–312 list every map thing, the Evidence values, the D2 states the eater sees, the places and Settings sections, the modes, the role and the errors. Each state was checked against D2. Fixed.
+
+### New in the lines fix round 1 changed
+
+1. **EX-46 cites Conflict 2 for a "no" that Conflict 2 leaves open.**
+   - Line 299 says: "no fixed breakfast/lunch/dinner slots (E1, E11, E12; Conflict 2)".
+   - Line 451 (Conflict 2) says: "The model must name the meal grouping once … and say whether it is fixed slots or time-based."
+   - So the file presents as decided a question it hands to the model phase. The fix: either keep the "no", which E1 and E12 support, and narrow Conflict 2 to the naming and the time-based rule; or drop the item from EX-46.
+2. **EX-62 leaves the eater's side of WF-10 with no error answer.**
+   - Line 351 lists "Each error the eater can reach" but leaves out `GRANT_NOT_ACTIVE`. This is D2's code for a Grant that is "declined, unanswered, expired, ended or withdrawn".
+   - The eater can reach that state in two ways:
+     - tapping Approve after the request window has closed, which is the Unanswered case the WF-10 row names (line 260);
+     - tapping Withdraw on a Grant that is already Expired or Ended.
+   - No EX line says what the eater sees in either case. care.md 4.11 asks "When a command cannot work right now, do we say why?", and §5a row 4.11 points to EX-62.
+3. **EX-51 explains Pending more narrowly than D2, while citing D2.**
+   - Line 320 says: "Pending reads as "Pending — saved on this phone, not yet sent" (D2: queued on the device)".
+   - D2 says: "Pending = queued on the device, not yet accepted by the server".
+   - Some Entries are still Pending but have already been sent: one waiting for the server's answer, and one the server answered with a conflict (FRD §8.3). For those, "not yet sent" is false.
+   - The help text must carry D2's meaning ("not yet accepted"). The exact words can still be chosen on the served screen.
+
+### Not re-opened live today (uncounted)
+
+Apple's customer-review feed again returned zero entries for US Lose It! (id297368629, pages 1–2) and US MFP (id341232718, page 1). The App Store web pages do not show these reviews either.
+
+Instead, the review quotes in E32 and both quotes in E45 were compared with this run's own raw captures of that feed, saved earlier on 2026-10-01 in the scratchpad (`eater/ru_us_341232718_2.json`, `eater/ru_us_341232718_3.json` and `eater/ru_us_297368629_4.json`). They match word for word, and the dates and stars match. That is not a live re-open, so these quotes are not judged here.
+
+E39's StatCounter figures have not changed since the earlier verdict and were not re-opened.
+
+### Observations (uncounted)
+
+1. **Feed page numbers.** The review links in E32 and E45, as in E14, E17 and E19, point to feed `page=1`. In the captures, the E32 reviews are on pages 2–3 and the E45 and E17 reviews are on page 4. E27 names its pages; the others could do the same.
+2. **The fix-round table overstates the EX-02 change.** Row 2 of that table says the requirement "became "copy from any past Day must be easy to find" (EX-02)". EX-02 (line 283) was not edited. The requirement that copying be reachable "both from the past Day and from Today" appears only in E32's "For the eater" (line 154), so the drafters should cite E32 for it.
+3. **A simulator is not a slow device.** EX-56 measures on the smallest simulator. A simulator runs on the CI Mac's processor, so it tests the smallest screen, not a slow device. The model phase may want a CPU-throttled profile, or a stated limit.
+
+### Cross-lens (for the model phase join, uncounted)
+
+None found within checks 4–6.
+
+
+## Fix by the session (2026-10-01), after the re-verify
+1. EX-46 no longer lists fixed meal slots among the no's; it says the question stays open for the model phase (Conflict 2).
+2. EX-62 includes `GRANT_NOT_ACTIVE`, which the eater meets on their side of WF-10.
+3. EX-51's Pending help reads "saved on this phone, not yet confirmed", matching D2 (not yet accepted by the server).
