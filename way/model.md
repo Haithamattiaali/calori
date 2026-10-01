@@ -1365,7 +1365,10 @@ Each line names its research. Versions are those in `research/sdks.md` (research
 
 ## §5 Contracts
 
-(written after §1–§3: `contracts/openapi.yaml`, `contracts/events.md` = `events.md`, module interfaces)
+- **API:** `contracts/openapi.yaml` — OpenAPI 3.1.0, 146 paths, 169 operations, 354 schemas; validated with openapi-spec-validator and openapi-core 0.23.1 (2026-10-01). Each operation names its module (`x-module`), the events it writes (`x-events`, all in `events.md`) and stories (`x-stories`). One `Error` schema whose `code` enum is the vocabulary's 19 codes. Usage, versioning and the story lines read through the contract: `contracts/README.md`.
+- **Events:** `way/events.md` (119 events: Audit trail and domain events) is the event contract.
+- **Module interfaces:** §3 above (service signatures per module; `nutrition_core`; the `Analyzer` and `JobQueue` ports).
+- A contract change is a dated delta in `blueprint.md` §3 with its impact; every landing checks the contract from both sides (consumer mocks and provider responses against the same file).
 
 ## §6 The dependency map
 

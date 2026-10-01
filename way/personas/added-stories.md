@@ -196,3 +196,94 @@ All six stories were rewritten above. Each defect is fixed where it started: in 
   - the credit-offer route (item 7);
   - `credit_cap` vs `credit_cap_kcal` (item 8).
 - The Anomalies rule "roles held with no assignment event" after retention is also recorded (item 9).
+
+## Lens verdict — re-verify (2026-10-01)
+
+**fail** — 12 defects. All 26 earlier defects are fixed as the first verdict asked. Four of those fixes (21, 22, 24, 26) followed D2–D4, and the session's later decisions J153 and J154 changed those rules, so the lines now disagree with the model (new defects 8–10). The other 11 counted defects are also places where the stories do not yet carry J149–J157. Read against `way/join.md` (J1–J3, J14–J18, J23–J27, J35, J38, J40, J47, J49–J53, J60, J103–J107, J116, J130, J143, J146, J147 and §22 J149–J157), `way/vocabulary.md` (D2–D6), `way/seed.md`, `way/events.md`, `way/model.md` and the lens files the stories cite.
+
+**What holds**
+- **Ids.** admin-10.72 and 10.73 follow admin-10.71 (`admin.md` line 1030). auditor-10.42 and 10.43 follow auditor-10.41. eater-5.45 and 7.25 follow eater-5.44 and 7.24. No id is used twice. `blueprint.md` D5 and `plan-skeleton.md` cite the same six ids.
+- **Start clocks and seed values match seed.md.**
+  - Grant settings version 1 (§4.6, event 21).
+  - `grant_31f0`: requested 10:05, Active 10:20 → 11:20, events 196, 198–201 and 205–207, CASE-1182, 3 · 2 · 0.
+  - `grant_40aa`: `staff_omar`, 4 h, requested 10:09, Unanswered 2026-10-04 10:09 (events 197, 263).
+  - E10: Africa/Cairo, no Requested Grant at 10:21.
+  - Events 1–24 fall on 2026-08-01 06:00–21:00, and event 25 is at 2026-08-03 18:20. No later `seq` has an earlier `occurred_at`.
+  - Faisal: 03:00 boundary, Western digits, Fixed mode, 2,040, and 1,400 on 1 Oct (§12.2). His Units are version 1 (§7.2).
+  - Sam: `tv_sam_1` 1,870, Entered by you, Fixed mode.
+  - Policy v2 equals v1 except the mismatch threshold (§4.2).
+  - `c-ai-4`: events 144 and 145. Faisal's `c-ai-3`: event 78, 2026-08-25T15:02:10Z. Nadia (`acct_e9a005`): English, AI Consent Not given.
+  - Permissions as §3.
+- **Arithmetic is exact.**
+  - Time zones: 10:22Z = 13:22 Cairo. 11:20Z = 12:20 Dublin = 14:20 Riyadh. 10:23Z + 48 h = 2026-10-03T10:23Z, which is 11:23 Dublin and 13:23 Cairo. 10:09Z + 72 h = 2026-10-04T10:09Z.
+  - Audit trail retention: 2031-08-02T00:00Z is after 2031-08-01T21:00Z (event 24 plus 5 years) and before 2031-08-03T18:20Z (event 25 plus 5 years).
+  - The Plan: 18:30Z = 21:30 Riyadh. 23:59Z = 02:59, still Day 1 Oct. `expired_at` 00:00Z = 03:00 Riyadh. 4 × 42.4 + 2 × 114 = 397.6.
+  - The activity credit: 1,870 × 2,134.8 ÷ 2,334.8 = 1,709.81, shown 1,710 (J104). 400 × 50 % = 200 ≤ 300, and 1,709.81 + 200 = 1,909.81, shown **1,910**. 400 × 40 % = 160 ≤ 250, and 1,709.81 + 160 = 1,869.81, shown **1,870**. Policy v3's effective-from 2026-10-07T00:00+03:00 = 2026-10-06T21:00Z.
+- **Routes, fields, events and codes.**
+  - The routes are in model §3 and J49: `GET|PUT /v1/admin/grant-settings`, `GET /v1/admin/grants/{id}`, `POST /v1/grants`, `POST /v1/admin/audit-trail/review-notes|verify`, `GET /v1/meal-plans/{id}`, `GET /v1/meal-plans?state=`, `POST /v1/consumption`, `GET /v1/reports/day`, `POST|GET /v1/targets`, `GET /v1/targets/current`, `POST /v1/admin/policy/versions[/{v}/approve]`, `POST /v1/admin/wording` and `POST /v1/admin/launch-gates/{gate}/sign`.
+  - The E20 fields are model E20's: `grant_settings_version`, `request_closes_at` and `expires_at`.
+  - Event details match `events.md`: `grant_settings.version.saved` (before → after, `reason`), `access.refused` (`path`, `permission_missing`), `audit_trail.review_noted` (`period`, `scope`, `finding`, `note`), `audit_trail.verified`, `launch_gate.signed`, `consent.given` and `plan.expired` (`state`, `selected_versions`).
+  - The codes and statuses follow J35 and J38.
+- **Agrees with §22.**
+  - J149: each D6-A1…A9 default is applied where its line uses it.
+  - J150: the Plan reads `state: "saved"` with `expired_at`, and the copy says "not logged".
+  - J152: the Plan card is on Today.
+  - J154's outcome: Faisal stays Given under `c-ai-3`.
+  - J156's number form: `credit_factor: 0.5`.
+
+**The 26 earlier defects — each fixed (the line now reads):**
+1. "## admin-10.72 · Change the Grant settings; a Grant already sent keeps its own" · "## admin-10.73 · Publish a consent Wording after its privacy review is signed".
+2. "Grant settings version 1 In use (seed §4.6, event 21: durations 1 h (default) · 4 h · 24 h; request window 72 h)" · "the duration offers 1 hour (selected) and 4 hours, and nothing longer".
+3. "the durations field reads "Keep at least one duration, each from 1 to 24 hours" … — `assumption (D6-A1)`" (now J149).
+4. "Grant settings version 2 · In use · saved by Ali N. · 13:22 your time (10:22 UTC)".
+5. "**Start clock 2026-10-01T10:21:00Z.** … `grant_31f0` … Active since 10:20:00Z, `expires_at` 11:20:00Z (event 198)" · "ends 12:20 your time (11:20 UTC) · 14:20 eater's time".
+6. "`staff_hana` (Auditor, holds "Read Grants (all)") calls `GET /v1/admin/grants/grant_31f0` … `grant_settings_version: 1`".
+7. "actor Hana Q. (role Auditor)".
+8. "detail `scope`, `period`, `finding` and `note` exactly as entered, with no other detail key (J14)" · "Given no finding is chosen … naming `finding`".
+9. "**Start clock 2026-10-05T09:00:00Z** … The test clock is then moved (`PUT /v1/test/clock`, J51) to **2031-08-02T00:00:00Z**".
+10. "detail `removed_through_seq: 24` and `anchor_hash` equal to event 25's `prev_hash`" · "`SHA-256(anchor_hash ‖ canonical(event 25))` equals event 25's stored `hash`".
+11. "Trace: J18, FR-082 ("retention verification"), events.md §1 (Retention) and §2.10 …" (no NFR-13).
+12. "## eater-5.45 · A Saved Plan I never confirmed expires at the end of its Day".
+13. "**Start clock 2026-10-01T18:30:00Z** … the Given adds one through the public API: eater-5.14's request … returns the Proposed Plan 4 rice + 2 chicken (397.6 kcal)".
+14. "`staff_yara` … proposes Policy version 3 based on v2 with one change, the Activity-adjusted credit factor 40 % and cap 250 kcal a day … `staff_dina` … approves it … effective-from 2026-10-07T00:00:00+03:00".
+15. "Sam approves Activity-adjusted mode with Policy v2's credit … (eater-7.18's Approve; `POST /v1/targets`), which gives Target version `tv_sam_2`".
+16. "Today reads "Food Target: Activity-adjusted" and "Target today 1,910 (1,710 + 200 Activity credit)"".
+17. "Target today 1,870 (1,710 + 160 Activity credit)". "exercise credit" appears nowhere.
+18. "When he taps Review and then Cancel, Then Settings → Activity → Activity mode still reads "Your credit: 50 % up to 300 kcal" … Progress → Target history has no new row, and `GET /v1/targets/current` still returns `tv_sam_2`".
+19. "`c-ai-4` in force for the AI Consent since 2026-09-24T08:00Z (event 145), `c-ai-5` not published".
+20. "`ai_processing` still reads Given with `text_version: "c-ai-3"` and `made_at: "2026-08-25T15:02:10Z"`". The English copy is checked on Nadia.
+21. Fixed against D2–D4: the story uses no Wording state. J153 has since given Wording states (new defect 9).
+22. Fixed against D4: the story no longer names "Settings › Wordings". J153 has since made **Settings › Wordings** the place, so the fix now contradicts the model (new defect 8).
+23. "Then Publish is disabled with "Sign the privacy review of c-ai-5 first", and `POST /v1/admin/wording` with key `c-ai-5` returns 409 `VALIDATION_ERROR` with `reason: privacy_review_not_signed`" · "a `review_gate` naming the privacy review signed for `c-ai-5`".
+24. "`staff_hana` sees … `wording.published` (actor `staff_ali`; detail `key: c-ai-5`, `version: 5` and the languages English and Arabic …)". Its "with no other detail key" now conflicts with J154 (new defect 10).
+25. "`POST /v1/admin/wording` with key `c-ai-5` is called with the token of `staff_mona` … or of `staff_dina`".
+26. "`ai_processing` still reads Given with `text_version: "c-ai-3"` … and opening **Capture & Plan** shows him no Consent sheet". The untraced re-consent block is gone. The line's source is now J154 (new defect 10).
+
+**Defects**
+1. **admin-10.72 — J155 not carried.** After the save, the only state shown is "Grant settings version 2 · In use · saved by Ali N. …". No line reads version 1 after it is replaced, and Conflicts item 6 still says "admin-10.72 does not name version 1's state after the save". J155 decides: "A replaced Grant settings version is "Replaced" … In use → Replaced · Rolled back" (also D6). A line must observe version 1 as Replaced, on Settings › Grant settings and in `GET /v1/admin/grant-settings`.
+2. **auditor-10.43 — J157 not carried.** The `/r` line checks only "`removed_through_seq: 24` and `anchor_hash` …". J157: "The `audit_trail.retention_run` summary event carries `roles_held_at_anchor` (each user's roles at the anchor). The Anomalies rule "roles held with no assignment event" treats a role listed there as assigned." The run removes events 1–6, the `role.assigned` events of `staff_ali`, `staff_mona`, `staff_omar`, `staff_dina`, `staff_hana` and `staff_lee`. No line checks `roles_held_at_anchor`. No line checks that Audit trail › Anomalies "roles held with no assignment event" still counts 1 (`staff_sod_seed`) after the run. Conflicts item 9 is still written as open.
+3. **eater-5.45 `/r` 5 — J151: the refusal names no `made_at`.** "When `POST /v1/consumption` is sent with Faisal's token, a new command id, the Plan's own counts and versions and `source_plan_id` set to its id, Then it returns 409 `VALIDATION_ERROR` with `reason: plan_expired`". Under J151, "A consume command carries the device's `made_at`; when `made_at` is before the Plan's `expired_at`, the server accepts it once onto the Plan's Day". Without a `made_at` after 2026-10-02T00:00:00Z in the command, the line does not decide between 409 and acceptance.
+4. **eater-5.45 — J151's accepted late confirmation has no line.** The story still follows D6-A7's old scope: "A confirmation made offline before `expired_at` and delivered later is not decided here (Conflicts, item 3)". J151 decides it: the server accepts it once onto the Plan's Day. A line is needed, for example: "Ate as planned" tapped offline at 2026-10-01T23:50Z (02:50 Riyadh) and delivered at 05:00Z is accepted once onto Day 2026-10-01 (1,400 + 397.6 = 1,797.6). The Plan becomes Confirmed (`confirmed_as: "ate_as_planned"`), and a repeat delivery adds nothing.
+5. **eater-5.45 — J150's list has no line.** Conflicts item 1 asked the model phase to "say what `GET /v1/meal-plans?state=saved` lists". J150 answers: "`GET /v1/meal-plans?state=saved` lists unexpired Plans; `&include_expired=true` lists all". No line checks either at 2026-10-02T05:00:00Z. The only list check is `?state=proposed`.
+6. **eater-7.25 `/s` — two names for one field.** The line reads "`credit_factor: 0.4` and `credit_cap: 250`". J156: "`credit_factor` (fraction) and `credit_cap_kcal` everywhere — `events.md` is aligned". `events.md` §3 gives the `target.version.approved` payload "`credit_factor`, `credit_cap_kcal`". The same story writes `credit_cap_kcal` in its `/r` 2 and in this line's `tv_sam_2` check, so it uses two names for one field.
+7. **eater-7.25 — J156's routes are not used.** Conflicts item 7 still says "eater-7.25 observes it on screen only", and the raise check calls only "`POST /v1/targets` with `credit_factor: 0.45`". J156: "`GET /v1/targets/activity-credit-offer` returns the newer Policy's credit when it differs from the eater's Target version, and `POST /v1/targets/activity-credit-offer/approve` creates the new Target version". The missing checks:
+   - With Given (a) only on 6 Oct, the offer route returns no offer.
+   - With (a)–(d) on 7 Oct, it returns `credit_factor: 0.4`, `credit_cap_kcal: 250` and `policy_version: 3`.
+   - After Approve, it returns no offer.
+   - Tapping Approve calls the approve route.
+   - A raised factor sent to the approve route is refused.
+8. **admin-10.73 `/r` 1 — the wrong place.** The line reads "When `staff_ali` … tries to publish `c-ai-5` on **Settings › launch gates**, Then Publish is disabled …". J153: "Console place: **Settings › Wordings**" (also D6). The privacy review is still signed on Settings › launch gates (J26). Publishing, and the disabled Publish with its message, belong on Settings › Wordings. Conflicts item 4 still proposes launch gates.
+9. **admin-10.73 — no Wording states.** The Given says only "`c-ai-5` not published". The `/s` line checks only that "the stored English and Arabic texts of `c-ai-4` and `c-ai-3` are byte for byte unchanged". J153: "A Wording version is Proposed → Published · Superseded (a newer version of the same key is Published)". No line reads `c-ai-5` as Proposed before the publish and Published after it. No line reads `c-ai-4` as Superseded after the publish, alongside Consents under `c-ai-4` keeping their version. Fix-log row 21's "No Wording state is used" now runs against D6.
+10. **admin-10.73 `/r` 2, `/s`, `/r` 4 — `asks_again` is missing and refused.** `/r` 2 reads "`wording.published` (… detail `key: c-ai-5`, `version: 5` and the languages English and Arabic, with no other detail key …)". `/r` 4 rests on "the seed's precedent … see Conflicts, item 5". J154: "Each Wording version carries `asks_again` (set by the publisher, recorded in the Audit trail) … The seed's `c-ai-5` has `asks_again: false`". The publish never sets `asks_again`. The `/s` line does not read it on the Wording. The event line forbids the key that J154 says is recorded. Faisal's "no Consent sheet" should trace to `asks_again: false` (J154), not to a precedent and an open conflict.
+11. **admin-10.73 — J154's `asks_again: true` path has no line.** J154: "When true, the next use of that purpose shows the Consent sheet and the purpose stays blocked (`CONSENT_REQUIRED`) until the eater gives or declines it". No story covers it. For example: a version published with `asks_again: true`; Faisal's next Text analysis on Capture & Plan shows the sheet; `POST /v1/analyses` returns 403 `CONSENT_REQUIRED` until he decides; his `c-ai-3` record stays as it was.
+12. **Proposed for D6 and Conflicts — stale after J149–J157.** The file still says "Nothing in `join.md`, `seed.md` or the FRD decides these … each default can be replaced by a dated delta D6", and lists Conflicts items 1–9 as open. J149 says "The nine defaults D6-A1…A9 are adopted as written, except where J151 below widens D6-A7", and J150–J157 decide items 1–9. The ten `assumption (D6-An)` labels in the story lines should trace to J149, to J151 for A7's wider rule and to J156 for A8. Line 3's "`way/vocabulary.md` (D2–D4)" is now D2–D6.
+
+### Cross-lens and model documents (for the model phase) — not counted
+- **`events.md` lags §22.** `wording.published` has no `asks_again` (J154). `audit_trail.retention_run` has no `roles_held_at_anchor` (J157). `target.version.approved` names only `POST /v1/targets` as its request (J156 adds `POST /v1/targets/activity-credit-offer/approve`).
+- **`model.md` lags §22.**
+  - §3 `targets` routes lack J156's two routes.
+  - §1 row 7.8 still writes `credit_cap` (J156).
+  - E12 Wording has no state and no `asks_again` (J153, J154).
+  - E21's states lack Replaced (J155).
+  - No module names the console place Settings › Wordings (J153).
+- **`seed.md` §4.7 has no `c-ai-5` row.** J154 says "The seed's `c-ai-5` has `asks_again: false`". admin-10.73 has the test supply the texts. The model phase should say whether `c-ai-5` is a seeded Proposed Wording, and at what time.
