@@ -34,30 +34,34 @@ Read first: `way/blueprint.md` §0–§1, `way/vocabulary.md` (delta D2 — bind
 
 ### 0.2 · Audit trail events this lens writes (proposal)
 
-`staff.sign_in_failed` · `staff.sign_in_locked` · `staff.session_ended` · `support.lookup` (method `support_code` · `email` · `deletion_reference` · `grant`) · `support.lookup_rate_limited` · `support.job_retried` · `support.escalated` · `support.request_logged` · `grant.requested` · `grant.approved` · `grant.active` · `grant.declined` · `grant.unanswered` · `grant.expired` · `grant.ended` · `grant.withdrawn` · `grant.read` · `grant.read_denied` · `grant.approve_denied`. Each event holds what, when (UTC), where (console route and API path), source (staff or account id and role), outcome and the ids involved (SR8 AU-3).
+`staff.sign_in_failed` · `staff.sign_in_locked` · `staff.session_ended` · `support.lookup` (method `support_code` · `email` · `deletion_reference` · `grant`) · `support.lookup_rate_limited` · `support.account_viewed` · `support.jobs_viewed` · `support.job_retried` · `support.escalated` · `support.request_logged` · `grant.requested` · `grant.approved` · `grant.active` · `grant.declined` · `grant.unanswered` · `grant.expired` · `grant.ended` · `grant.withdrawn` · `grant.read` · `grant.read_denied` · `grant.approve_denied`.
+
+Each event holds what, when (UTC), where (console route and API path), source (staff or account id and role), outcome (`allowed`, `found`, `not_found`, `failed`, `denied` or `error`) and the ids involved (SR8 AU-3). The eater's Grant history lists only `grant.read` events with outcome `allowed`.
 
 ### 0.3 · Synthetic fixtures (all invented; the repo is public)
 
+One seed holds all of these at once. Times are on 2026-10-01 unless a date is given. Each Grant has its own reason, Days, areas, duration and case, so that no two stories give one Grant two histories.
+
 | fixture | values |
 |---|---|
-| E1 | `acct_9c41e2` · Sign in with Apple, email shown masked `r•••@privaterelay.appleid.com` · Arabic, Arabic-Indic numerals · Asia/Riyadh · diary-day boundary 04:00 · created 2026-08-03 · two iPhones: app 1.0.3 on iOS 26.1, last sync 2026-10-01 10:02 UTC; app 1.0.2, last sync 2026-09-29 20:40 UTC · Consent "Send photos, voice and text to Google's AI" Given · Consent "Health: read workouts" Given · support code `SB-7KQ2-94XM` issued 2026-10-01 06:12 UTC; older code `SB-3MRT-7WQD` issued 2026-09-29 06:12 UTC, expired 2026-09-30 06:12 UTC · 3 of 10 AI analyses used on 2026-10-01 · sync conflict on command `cmd_7a1e` (2026-09-30 19:15 UTC) · command `cmd_44c0` delivered 3 times (2026-09-29 05:12 UTC) · last Activity import 2026-10-01 04:30 UTC: accepted 1, updated 0, duplicate 2, conflict 0 · Entry `en_9921` on Day 2026-09-29 from Analysis `an_5512` (photo) · no Privacy job |
-| E2 | `acct_51ab07` · English · Africa/Cairo · deletion Privacy job, reference `DEL-26-0915-K3Q8`, Requested 2026-09-15 07:00 UTC, Running |
-| E3 | `acct_e07d13` · English · Africa/Cairo · export Privacy job `job_exp_4410` Failed: storage write timed out, 3 attempts, last 2026-10-01 08:40 UTC |
-| E4 | `acct_77d2c0` · English · Asia/Riyadh · tracking-only after a pregnancy answer · weight observations · Grant `grant_7d01` (by `staff_mona`; "Entries and day reports", Days 2026-09-29 to 2026-09-30) Active 2026-10-01 15:30–16:30 UTC |
-| E5 | `acct_b6f204` · English · Africa/Cairo · Analysis `an_5530` Failed with `AI_UNAVAILABLE` at 2026-10-01 09:04 UTC (photo + words, `gemini-3.8-flash`, prompt v14, schema v6, 12,000 ms, 2 retries) · 10 of 10 AI analyses used on 2026-10-01; the 11th refused with `RATE_LIMITED` at 16:40 UTC |
-| E6 | `acct_c2a917` · Arabic · Asia/Riyadh · Consent "Send photos, voice and text to Google's AI" Withdrawn 2026-09-30 18:14 UTC (v3, in-app) · before it: 2 queued uploads, 3 cached private analyses, 4 raw photos and 1 audio clip, 1 prepared export · its Consent-withdrawal Privacy job Completed 2026-09-30 18:20 UTC |
-| E7 | `acct_a41c55` · email `karim.synthetic@example.com` · English · Africa/Cairo · export `job_exp_77` Completed 2026-09-30 15:09 UTC (requested 15:02 UTC; 2.4 MB) · export `job_exp_31` Completed 2026-09-20 12:00 UTC (download window over 2026-09-27 12:00 UTC) · export `job_exp_88` requested 2026-10-01 10:40 UTC, Running · no Activity import in the last 7 days |
+| E1 | `acct_9c41e2`<br>• **Account:** Sign in with Apple; email shown masked `r•••@privaterelay.appleid.com`; Arabic, Arabic-Indic numerals; Asia/Riyadh; diary-day boundary 04:00; created 2026-08-03<br>• **Devices:** app 1.0.3 on iOS 26.1, last sync 10:02 UTC; app 1.0.2, last sync 2026-09-29 20:40 UTC<br>• **Consents:** "Send photos, voice and text to Google's AI" Given; "Health: read workouts" Given<br>• **Support codes:** `SB-7KQ2-94XM` issued 06:12 UTC, valid to 2026-10-02 06:12 UTC; older code `SB-3MRT-7WQD` issued 2026-09-29 06:12 UTC, expired 2026-09-30 06:12 UTC<br>• **AI use:** 3 of 10 analyses used today<br>• **Sync:** conflict on command `cmd_7a1e` (2026-09-30 19:15 UTC); command `cmd_44c0` delivered 3 times (2026-09-29 05:12 UTC)<br>• **Activity:** last import 04:30 UTC — accepted 1, updated 0, duplicate 2, conflict 0<br>• **Diary:** Entry `en_9921` on Day 2026-09-29, from Analysis `an_5512` (photo)<br>• No Privacy job, no request received outside the app<br>• **Grants:** G1 and G2 below |
+| E2 | `acct_51ab07` · email sign-in · English · Africa/Cairo · deletion Privacy job (reference `DEL-26-0915-K3Q8`) Requested 2026-09-15 07:00 UTC, Running; it Completes 2026-10-14 |
+| E3 | `acct_e07d13` · English · Africa/Cairo · export Privacy job `job_exp_4410` Failed (storage write timed out; 3 attempts; last 08:40 UTC) |
+| E4 | `acct_77d2c0` · English · Asia/Riyadh · tracking-only after a pregnancy answer · weight observations<br>• **Grant `grant_7d01`:** by `staff_mona`; reason "A day report total looks wrong"; Days 2026-09-29 to 2026-09-30; area "Entries and day reports"; 1 hour; case `CASE-1225`; Requested 15:29, Active 15:30, Expired 16:30 UTC<br>• **Reads:** day report of Day 2026-09-29 at 15:35 UTC; refused attempts at 15:40 UTC (Day 2026-09-28), 15:41 (My Units), 15:42 (Activity), 15:43 (an id of E2) and 15:45 (writes) |
+| E5 | `acct_b6f204` · English · Africa/Cairo<br>• **Analysis `an_5530`:** Failed with `AI_UNAVAILABLE` at 09:04 UTC (photo + words; `gemini-3.8-flash`; prompt v14; schema v6; 12,000 ms; 2 retries)<br>• **AI use:** 10 of 10 analyses used today; the 11th refused with `RATE_LIMITED` at 16:40 UTC |
+| E6 | `acct_c2a917` · Arabic · Asia/Riyadh<br>• **Consent:** "Send photos, voice and text to Google's AI" Withdrawn 2026-09-30 18:14 UTC (v3, in the app)<br>• **Before the withdrawal:** 2 queued uploads, 3 cached private analyses, 4 raw photos and 1 audio clip, 1 prepared export<br>• **Consent-withdrawal Privacy job:** Completed 2026-09-30 18:20 UTC<br>• **Grant `grant_a1d4`:** by `staff_omar`; reason "A day report total looks wrong"; Days 2026-09-29 to 2026-09-30; area "Entries and day reports"; 1 hour; case `CASE-1250`; Requested 07:55, Active 08:00, Expired 09:00 UTC |
+| E7 | `acct_a41c55` · email `karim.synthetic@example.com` · English · Africa/Cairo<br>• **Exports:** `job_exp_77` Completed 2026-09-30 15:09 UTC (requested 15:02 UTC; 2.4 MB); `job_exp_31` Completed 2026-09-20 12:00 UTC, download window over 2026-09-27 12:00 UTC; `job_exp_88` requested 10:40 UTC, Running<br>• **Request received outside the app:** an email at 09:30 UTC (support-9.15)<br>• No failed Analyses, sync conflicts or duplicates in 30 days; no Activity import in 7 days<br>• **Grant `grant_9b30`:** by `staff_mona`; reason "A day report total looks wrong"; Day 2026-09-30; area "Entries and day reports"; 1 hour; case `CASE-1240`; Requested 16:55, Active 17:00 UTC (would expire 18:00); Ended 17:25 UTC (support-10.25) |
 | E8 | a finished deletion: reference `DEL-26-0820-M2V5`, requested 2026-08-20, Completed 2026-09-18; the former email `lina.synthetic@example.com` exists only in this table |
-| E9 | `acct_9a07e5` · English · Africa/Cairo · deletion `DEL-26-0905-P7T2` Requested 2026-09-05 08:00 UTC; stage "Google notified" Failed 3 times; due by 2026-10-05 |
-| E10 | `acct_f1e0c3` · English · Africa/Cairo · Grants by `staff_mona`: `grant_40aa` Requested 2026-09-27 10:05 UTC → Unanswered 2026-09-30 10:05 UTC; on 2026-10-01: `grant_52a3` Requested 12:00, Active 12:05 UTC (1 h), Withdrawn by the eater 12:26 UTC; `grant_52a7` Requested 13:00, Active 13:04 UTC (1 h, would expire 14:04), Ended by the Support agent 13:33 UTC; `grant_6c10` Active 15:02–16:02 UTC; `grant_6c14` Requested 15:55 UTC |
+| E9 | `acct_9a07e5` · English · Africa/Cairo · deletion `DEL-26-0905-P7T2` Requested 2026-09-05 08:00 UTC · stage "Google notified" Failed 3 times · due by 2026-10-05 |
+| E10 | `acct_f1e0c3` · English · Africa/Cairo · Grants by `staff_mona`:<br>• `grant_40ab`: reason "An Entry is missing or appears twice"; Days 2026-09-24 to 2026-09-26; area "Entries and day reports"; 1 hour; case `CASE-1170`; Requested 2026-09-27 10:05 UTC, Unanswered 2026-09-30 10:05 UTC<br>• `grant_52a3`: reason "A day report total looks wrong"; Days 2026-09-29 to 2026-09-30; area "Entries and day reports"; 1 hour; case `CASE-1220`; Requested 12:00, Active 12:05, Withdrawn by the eater 12:26 UTC<br>• `grant_52a7`: reason "A Unit or Recipe calculates unexpectedly"; Day 2026-09-30; area "My Units"; 1 hour; case `CASE-1221`; Requested 13:00, Active 13:04 (would expire 14:04), Ended by the Support agent 13:33 UTC<br>• `grant_6c10`: reason "Imported Activity looks wrong"; Days 2026-09-29 to 2026-09-30; area "Activity"; 1 hour; case `CASE-1236`; Requested 14:58, Active 15:02, Expired 16:02 UTC; `staff_mona` idle from 15:10 UTC, signed out 15:25 UTC, signed in again 15:28 UTC (support-10.21)<br>• `grant_6c14`: the same reason, Days, area and case as `grant_6c10`; Requested 15:55 UTC; still Requested at 16:00 UTC |
 | E11 | `acct_e5c3a0` · email `samir.synthetic@example.com` · English · Africa/Cairo · email sign-in · last sign-in 2026-08-02 · has lost access to the app |
-| E12 | `acct_0d4e9b` · test eater with Grant `grant_8e20` Active, used to request deletion during a Grant |
+| E12 | `acct_0d4e9b` · emulator seed only · Grant `grant_8e20` by `staff_omar`, Active, used to request deletion during a Grant |
 | E13 | anonymous-session eater `acct_anon_71f2`; and a local-trial install with no account |
-| E14 | `acct_7b12aa` · 240 failed Analyses in the last 30 days, none on any day above the daily quota |
-| Staff | `staff_mona` "Mona K." Support agent, console English, Europe/Dublin · `staff_lee` "Lee T." Support agent, console English, Europe/Dublin, no Grants · `staff_omar` "Omar S." Support agent, console Arabic, Asia/Riyadh · `staff_dina` Nutrition approver · `staff_ali` Platform admin · `staff_hana` Auditor. Every staff account has a password and an authenticator second factor (A19) |
-| Grant G1 | `grant_31f0` for E1 by `staff_mona`: Requested 2026-10-01 10:05 UTC · reason "An Entry is missing or appears twice" · Days 2026-09-28 to 2026-09-30 · areas "Entries and day reports" and "My Units" · 1 hour · case `CASE-1182` · Approved and Active 10:20 UTC · Expired 11:20 UTC (12:20 Dublin, 14:20 Riyadh) · reads at 10:24, 10:25 and 10:27 UTC |
-| Grant G2 | `grant_31f9` for E1 by `staff_mona`: Requested 11:30 UTC, Declined 11:42 UTC |
-| Platform | Kill switch for image analysis On 2026-10-01 09:10 UTC, Off 09:55 UTC |
+| E14 | `acct_7b12aa` · 240 Failed Analyses in the last 30 days, none on any day above the daily quota · among them `an_7740`, Failed with `AI_UNAVAILABLE` at 09:20 UTC while the kill switch was On |
+| Staff | `staff_mona` "Mona K." Support agent, console English, Europe/Dublin<br>• At 09:00 UTC she looked up E1 by support code; at 09:01 she opened its account panel; at 09:02 she opened its Sync tab<br>`staff_lee` "Lee T." Support agent, console English, Europe/Dublin, no Grants<br>• Five failed sign-ins at 09:30:00, 09:30:30, 09:31:00, 09:31:30 and 09:32:00 UTC<br>`staff_omar` "Omar S." Support agent, console Arabic, Asia/Riyadh<br>`staff_dina` Nutrition approver · `staff_ali` Platform admin · `staff_hana` Auditor<br>Every staff account has a password and an authenticator second factor (A19) |
+| Grant G1 | `grant_31f0` for E1, by `staff_mona`<br>• reason "An Entry is missing or appears twice"; Days 2026-09-28 to 2026-09-30; areas "Entries and day reports" and "My Units"; 1 hour; case `CASE-1182`<br>• Requested 10:05; Approved and Active 10:20; Expired 11:20 UTC (12:20 Dublin, 14:20 Riyadh)<br>• **Reads:** Day 2026-09-29 at 10:24; Entry `en_9921` at 10:25; My Units at 10:27 UTC<br>• **Refused read attempts after expiry:** 11:20:01 and 11:20:05 UTC<br>• Nothing else happens under this Grant |
+| Grant G2 | `grant_31f9` for E1, by `staff_mona`<br>• the same reason, Days, areas and case as G1<br>• Requested 11:30; Declined 11:42 UTC; one refused read attempt at 11:45 UTC |
+| Platform | the kill switch for image analysis is On from 09:10 to 09:55 UTC |
 
 ---
 
@@ -163,6 +167,13 @@ Every source below was opened in this run on **2026-10-01** with a generic User-
 | A20 | An eater who lost access recovers it through the sign-in screen's recovery path: "Forgot password" for email sign-in, Apple's own account recovery for Sign in with Apple | the FRD names Firebase Authentication but no recovery flow |
 | A21 | The test build has a fault-injection switch that slows or fails the support API, so slow and error states can be observed | no source; needed to make the Givens reachable |
 | A22 | The case reference is the helpdesk's ticket number that the eater already sees in support emails, so showing it in the app is not an internal id | no helpdesk integration is in the profile (§0 line 6) |
+| A23 | A deletion is "due soon" with 5 days or fewer before its due date (error colour, support-9.19); requests received outside the app sort first when due within 5 days (support-9.15) | no source; a working week before the legal deadline |
+| A24 | Lists page 50 rows at a time, with "Load 50 more" | no source |
+| A25 | The outcome note on a request received outside the app holds 120 characters | enough for an outcome, too short for pasted content |
+| A26 | The Grant bar warns at 10 and 2 minutes before the end, and offers "Ask the eater for more time" from 10 minutes before the end | no source |
+| A27 | Failed-job tabs and "Duplicates ignored" look back 30 days; the Activity tab's "No Activity imported" looks back 7 days | 30 days matches the request-answer window (SR11); 7 days is a week of Activity |
+| A28 | The Support agent's desk monitor is at least 1440 px wide | no source; the narrow end is proved at ~390 px (§0) |
+| A29 | The console's text-size check is 200 % browser zoom | no source opened in this run for a zoom level |
 
 ---
 
@@ -213,23 +224,23 @@ As the Support agent, I sign in to the admin console with my own staff identity 
 Covers: FR-080, FR-081, NFR-12 · SR4 (MFA), SR6, SR8 (AC-12) · A7, A18, A19
 - `/r` **Given** `staff_mona` with her password and authenticator, **When** she signs in to the admin console and enters the 6-digit code, **Then** the header reads "Mona K. · Support agent" and the navigation lists only Jobs, Grants and Settings.
 - `/r` **Given** the right password but no code, **When** she submits, **Then** the console asks "Enter the 6-digit code from your authenticator app" and shows no section until a valid code is entered.
-- `/r` **Given** a wrong password, **When** she submits, **Then** sign-in reads "Email or password is incorrect" (the same text for an unknown email), no section loads, and the Audit trail has `staff.sign_in_failed` with outcome `failed`.
-- `/r` **Given** 5 failed attempts for `staff_mona` within 15 minutes, starting at 09:32 UTC, **When** she tries a sixth time, **Then** sign-in reads "Too many attempts. Try again at 10:47 your time (09:47 UTC).", and `staff_hana` sees the five `staff.sign_in_failed` events and one `staff.sign_in_locked` in the Audit trail.
-- `/r` **Given** `staff_mona` is signed in and idle for 13 minutes, **When** the 13th minute passes, **Then** a banner (not a dialog) reads "You'll be signed out in 2 minutes." with a "Stay signed in" button, the screen reader announces it once, and any key or click keeps the session.
-- `/r` **Given** she stays idle to 15 minutes, **When** the time passes, **Then** the console shows sign-in with no account data left on the page, and the Audit trail has `staff.session_ended` with reason `idle`.
+- `/r` **Given** `staff_lee` types a wrong password at 09:30:00 UTC, **When** he submits, **Then** sign-in reads "Email or password is incorrect" (the same text for an unknown email), no section loads, and the Audit trail has `staff.sign_in_failed` with outcome `failed`.
+- `/r` **Given** `staff_lee`'s five failed sign-ins, the fifth at 09:32:00 UTC, **When** he tries again at 09:33 UTC, **Then** sign-in reads "Too many attempts. Try again at 10:47 your time (09:47 UTC).", and `staff_hana` sees the five `staff.sign_in_failed` events and one `staff.sign_in_locked` in the Audit trail.
+- `/r` **Given** `staff_mona` is signed in and idle from 15:10 UTC (the idle period of support-10.21), **When** 15:23 UTC passes, **Then** a banner (not a dialog) reads "You'll be signed out in 2 minutes." with a "Stay signed in" button, the screen reader announces it once, and any key or click would keep the session.
+- `/r` **Given** she stays idle, **When** 15:25 UTC passes, **Then** the console shows sign-in with no account data left on the page, and the Audit trail has `staff.session_ended` with reason `idle`.
 - `/s` **Given** any `/v1/support/*` route, **When** it is called with no token, **Then** 401 `UNAUTHENTICATED`; **when** it is called with an eater's Firebase token, **then** 403 `FORBIDDEN`; neither returns data.
 
 #### support-9.2 · Find an account by the eater's support code
-Shared: Support agent + eater (Settings → Privacy → Support code).
+Shared: Support agent + eater (Settings → Privacy → Support code; eater-9.29).
 As the Support agent, I find an account by the support code the eater reads me from Settings → Privacy, so that I reach the right account without searching for people.
 Covers: FR-080, FR-081, FR-001 · SR10, SR12 · A2
-- `/r` **Given** E1's Settings → Privacy shows "Support code SB-7KQ2-94XM · valid until 09:12 tomorrow" on the iOS simulator, **When** `staff_mona` enters `SB-7KQ2-94XM` in Jobs → Look up an account, **Then** E1's account panel opens.
-- `/r` **Given** E1's older code `SB-3MRT-7WQD` (expired 2026-09-30 06:12 UTC), **When** it is entered, **Then** Jobs reads "This support code has expired. Ask the eater for a new one from Settings → Privacy → Support code." and no account opens.
-- `/r` **Given** `sb 7kq2 94xm`, `SB7KQ294XM` or ` SB-7KQ2-94XM `, **When** each is entered, **Then** the field shows `SB-7KQ2-94XM` and E1's account panel opens (case, spaces and hyphens are normalised).
+- `/r` **Given** E1's Settings → Privacy → Support code shows `SB-7KQ2-94XM` with "Copy" and "Valid until 2 Oct, 09:12" on the iOS simulator, **When** `staff_mona` enters `SB-7KQ2-94XM` in Jobs → Look up an account at 09:00 UTC, **Then** E1's account panel opens.
+- `/r` **Given** E1's older code `SB-3MRT-7WQD` (expired 2026-09-30 06:12 UTC), **When** it is entered at 09:10 UTC, **Then** Jobs reads "This support code has expired. Ask the eater for a new one from Settings → Privacy → Support code." and no account opens.
+- `/r` **Given** `sb 7kq2 94xm`, `SB7KQ294XM` or ` SB-7KQ2-94XM `, **When** each is entered at 09:12 UTC, **Then** the field shows `SB-7KQ2-94XM` and E1's account panel opens (case, spaces and hyphens are normalised).
 - `/r` **Given** `SB-7KQ2-94X` (one character short), **When** it is looked up, **Then** Jobs reads "No account matches this code" with no suggestions or list, and `GET /v1/support/accounts?support_code=SB-7KQ2-94X` returns 404 `NOT_FOUND`.
 - `/m` **Given** the support-code generator and normaliser, **When** 10,000 codes are issued and each is re-entered in lower case without hyphens, **Then** every code has 8 characters with no 0, O, 1 or I, no two valid codes are equal, and every re-entry normalises back to its code.
-- `/r` **Given** E1's app is in Arabic with Arabic-Indic numerals, **When** Settings → Privacy shows the code, **Then** it reads `SB-7KQ2-94XM` in Latin characters, left to right, inside the right-to-left screen, with a Copy button.
-- `/r` **Given** E13's anonymous session (FR-001), **When** its Settings → Privacy opens, **Then** a support code shows, and the account panel reads sign-in "Anonymous session"; **given** the local-trial install, **then** Settings → Privacy says the diary is only on this phone and support cannot see it, and offers account creation.
+- `/r` **Given** E1's app is in Arabic with Arabic-Indic numerals, **When** Settings → Privacy → Support code opens, **Then** the code reads `SB-7KQ2-94XM` in Latin characters, left to right, inside the right-to-left screen, with "Copy".
+- `/r` **Given** E13's anonymous session (FR-001), **When** its Settings → Privacy → Support code opens, **Then** a code shows, and the account panel reads sign-in "Anonymous session"; **given** the local-trial install, **then** it reads "Your diary is only on this iPhone, so a Support agent can't see it", with "Create account" (eater-9.29).
 
 #### support-9.3 · Find an account by exact email, with a case reference
 Shared: Support agent + auditor (Audit trail).
@@ -246,8 +257,19 @@ Covers: FR-081, NFR-12 · SR4, SR11 Art. 3(1)(d), SR12 · A3
 #### support-9.4 · Read the account panel — only what helps
 As the Support agent, I read an account's sign-in method, language and numerals, time zone and diary-day boundary, devices with app version and last sync, Consents, Privacy jobs, AI use today and Grants, so that I can explain most issues without the diary.
 Covers: FR-080, FR-081, FRD §8.1, §19.2 · SR5, SR11 Art. 26(3) · A17
-- `/r` **Given** E1, **When** its account panel opens in Jobs, **Then** it shows: created 2026-08-03; sign-in "Sign in with Apple"; email `r•••@privaterelay.appleid.com`; language Arabic; numerals Arabic-Indic; time zone Asia/Riyadh; diary-day boundary 04:00; devices "iPhone · app 1.0.3 · iOS 26.1 · last sync 11:02 your time (10:02 UTC) · 13:02 eater's time" and "iPhone · app 1.0.2 · last sync 2026-09-29 21:40 your time (20:40 UTC) · 23:40 eater's time"; Consents, each Given or Withdrawn; AI analyses today 3 of 10; Privacy jobs: none; Grants: none Requested or Active; and the account id `acct_9c41e2` in the secondary column.
-- `/r` **Given** the diary-day boundary 04:00, **When** the agent hovers or focuses it, **Then** the hint reads "Food eaten 00:00–03:59 counts on the previous Day", which answers a suhoor "wrong Day" question without the diary.
+- `/r` **Given** E1, **When** `staff_mona` opens its account panel in Jobs at 10:03 UTC, **Then** it shows:
+  - created 2026-08-03;
+  - sign-in "Sign in with Apple";
+  - email `r•••@privaterelay.appleid.com`;
+  - language Arabic; numerals Arabic-Indic;
+  - time zone Asia/Riyadh; diary-day boundary 04:00;
+  - devices "iPhone · app 1.0.3 · iOS 26.1 · last sync 11:02 your time (10:02 UTC) · 13:02 eater's time" and "iPhone · app 1.0.2 · last sync 2026-09-29 21:40 your time (20:40 UTC) · 23:40 eater's time";
+  - Consents, each Given or Withdrawn;
+  - AI analyses today 3 of 10;
+  - Privacy jobs: none;
+  - Grants: none Requested or Active (`grant_31f0` is requested at 10:05 UTC);
+  - and the account id `acct_9c41e2` in the secondary column.
+- `/r` **Given** the diary-day boundary 04:00, **When** the agent hovers over it or focuses it, **Then** the hint reads "Food eaten 00:00–03:59 counts on the previous Day". This answers a suhoor "wrong Day" question without the diary.
 - `/r` **Given** the account panel is open, **When** the agent presses `/`, **Then** focus moves to Jobs → Look up an account.
 
 #### support-9.5 · Never see what the eater did not share
@@ -267,29 +289,39 @@ Covers: FR-076, FR-067; map interaction row "Eater → app: … separate consent
 #### support-9.7 · See what a Consent withdrawal removed
 As the Support agent, I see the Privacy job that follows a Consent withdrawal — media, queues, cached analyses and exports — so that I can tell the eater what was removed and when.
 Covers: AT-29 ("consent withdrawal propagate[s] to media, queues, private cached analysis, and exports"), FR-076, FR-078 · R3, R22
-- `/r` **Given** E6's withdrawal, **When** Jobs → Privacy jobs opens, **Then** the row reads "Consent withdrawal · Send photos, voice and text to Google's AI · Completed 2026-09-30 19:20 your time (18:20 UTC)" with stages: new Analyses refused — Completed 18:14 UTC; queued photo and voice uploads removed — Completed 18:15 UTC; cached private analyses deleted — Completed 18:17 UTC; raw photos and audio deleted — Completed 18:19 UTC; prepared exports deleted — Completed 18:20 UTC; confirmed Entries — Not applicable (they stay until deleted, FR-078).
+- `/r` **Given** E6's withdrawal, **When** Jobs → Privacy jobs opens, **Then** the row reads "Consent withdrawal · Send photos, voice and text to Google's AI · Completed 2026-09-30 19:20 your time (18:20 UTC)", with these stages:
+  - new Analyses refused — Completed 19:14 your time (18:14 UTC);
+  - queued photo and voice uploads removed — Completed 19:15 your time (18:15 UTC);
+  - cached private analyses deleted — Completed 19:17 your time (18:17 UTC);
+  - raw photos and audio deleted — Completed 19:19 your time (18:19 UTC);
+  - prepared exports deleted — Completed 19:20 your time (18:20 UTC);
+  - confirmed Entries — Not applicable (they stay until deleted, FR-078).
 - `/s` **Given** E6's emulator seed before the withdrawal (2 queued uploads, 3 cached private analyses, 4 raw photos, 1 audio clip, 1 prepared export), **When** the withdrawal runs, **Then** storage and queues hold none of them for E6, each stage time is written in UTC, and a later `POST /v1/analyses` from E6 returns `CONSENT_REQUIRED`.
-- `/r` **Given** the row, **When** the agent opens "What to tell the eater", **Then** the Arabic text comes first — «منذ ٢١:١٤ يوم ٣٠ سبتمبر لم تعد صورك وتسجيلاتك تُرسل إلى الذكاء الاصطناعي من Google. حذفنا الصور والتسجيلات والتحليلات المخزنة وملفات التصدير المُعدّة. إدخالاتك المؤكدة لم تتغير.» (proposal, A16) — then the English: "Since 21:14 on 30 Sep, your photos and recordings are no longer sent to Google's AI. We deleted the photos, recordings, stored analyses and prepared exports. Your confirmed Entries are unchanged."
+- `/r` **Given** the row, **When** the agent opens "What to tell the eater", **Then** the Arabic text comes first, then the English:
+  - Arabic (proposal, A16): «منذ ٢١:١٤ يوم ٣٠ سبتمبر لم تعد صورك وتسجيلاتك تُرسل إلى الذكاء الاصطناعي من Google. حذفنا الصور والتسجيلات والتحليلات المخزنة وملفات التصدير المُعدّة. إدخالاتك المؤكدة لم تتغير.»
+  - English: "Since 21:14 on 30 Sep, your photos and recordings are no longer sent to Google's AI. We deleted the photos, recordings, stored analyses and prepared exports. Your confirmed Entries are unchanged."
 
 ### 9C · Export and deletion status
 
 #### support-9.8 · Tell an eater where their export is
 As the Support agent, I see an export's state, timing and section list — never the file — so that I can tell the eater exactly where their export is.
 Covers: FR-075, FR-078, FRD §18 `POST /v1/privacy/export-or-delete`, WF-9 done-when ("export downloads entries, units, recipes, targets and consents") · A8
-- `/r` **Given** E7's `job_exp_77`, **When** Jobs → Privacy jobs opens, **Then** the row reads "Export · Completed · requested 2026-09-30 16:02 your time (15:02 UTC) · completed 16:09 your time (15:09 UTC) · Entries, Units, Recipes, Targets, Consents, Reports · 2.4 MB · download in the app until 2026-10-07 18:09 eater's time", with the line "Open Settings → Export to download it." ready to copy.
-- `/r` **Given** E7's `job_exp_88` (requested 2026-10-01 10:40 UTC, Running), **When** the row shows, **Then** it reads "Export · Running · requested 11:40 your time (10:40 UTC) · 13:40 eater's time", with the line "Your export is being prepared. It will appear in Settings → Export when it is ready." — no time is promised.
-- `/r` **Given** E7's `job_exp_31` (Completed 2026-09-20, window over 2026-09-27), **When** the row shows, **Then** it reads "Export · Completed 2026-09-20 · download no longer available since 2026-09-27", with the line "Ask for a new export in Settings → Export."
+- `/r` **Given** E7's `job_exp_77`, **When** Jobs → Privacy jobs opens, **Then** the row reads "Export · Completed · requested 2026-09-30 16:02 your time (15:02 UTC) · completed 16:09 your time (15:09 UTC) · Entries, Units, Recipes, Targets, Consents, Reports · 2.4 MB · download in the app until 2026-10-07 16:09 your time (15:09 UTC) · 18:09 eater's time", with the line "Open Settings → Export to download it." ready to copy.
+- `/r` **Given** E7's `job_exp_88` (requested 10:40 UTC, Running), **When** the row shows, **Then** it reads "Export · Running · requested 11:40 your time (10:40 UTC) · 13:40 eater's time", with the line "Your export is being prepared. It will appear in Settings → Export when it is ready." No time is promised.
+- `/r` **Given** E7's `job_exp_31` (Completed 2026-09-20; download window over 2026-09-27), **When** the row shows, **Then** it reads "Export · Completed 2026-09-20 · download no longer available since 2026-09-27", with the line "Ask for a new export in Settings → Export."
 - `/s` **Given** `GET /v1/support/accounts/acct_a41c55/privacy-jobs`, **When** it is read, **Then** no export item carries a URL, signed link, file id or per-Day counts, and `GET /v1/support/privacy-jobs/job_exp_77/file` returns 403 `FORBIDDEN`.
-- `/r` **Given** E1 (no Privacy job), **When** Privacy jobs opens, **Then** it reads "No export, deletion or Consent withdrawal" and gives the in-app paths: Settings → Export, and Settings → Privacy → Delete account.
+- `/r` **Given** E1 (no Privacy job), **When** Privacy jobs opens, **Then** it reads "No export, deletion or Consent withdrawal", with the in-app paths Settings → Export and Settings → Privacy → Delete account.
 
 #### support-9.9 · Retry a Failed export once
-Shared: Support agent + auditor (Audit trail) + platform admin (escalation).
+Shared: Support agent + eater (Settings → Export; eater-9.14) + auditor (Audit trail) + platform admin (escalation).
 As the Support agent, I see why an export Failed and retry it once with the same id, so that the eater gets their export without starting over or sending me anything.
-Covers: FR-075, FR-078, FRD §18.2 ("bounded retries with the same command ID"), NFR-12 · A9 · conflict K4
-- `/r` **Given** E3's `job_exp_4410`, **When** Jobs → Privacy jobs opens, **Then** the row reads "Export · Failed · storage write timed out · 3 attempts · last 09:40 your time (08:40 UTC)" with a Retry button.
-- `/r` **Given** that row, **When** the agent presses Retry, **Then** the row reads "Export · Requested · retried by Mona K. · 0 of 3 attempts" under the same id `job_exp_4410`, the Retry button is gone, the row turns Running when the job starts, and `staff_hana` sees `support.job_retried` in the Audit trail.
+Covers: FR-075, FR-078, FRD §18.2 ("bounded retries with the same command ID"), NFR-12 · A9, A21 · conflict K4
+- `/r` **Given** E3's `job_exp_4410`, **When** Jobs → Privacy jobs opens, **Then** the row reads "Export · Failed · storage write timed out · 3 attempts · last 09:40 your time (08:40 UTC)", with a Retry button.
+- `/r` **Given** the retry API returns 503 (fault injection), **When** the agent presses Retry, **Then** the row reads "Couldn't retry this export. Nothing changed. Try again." above the unchanged "Export · Failed …" line, and Retry stays available.
+- `/r` **Given** the API answers normally, **When** the agent presses Retry, **Then** the row reads "Export · Requested · retried by Mona K. · 0 of 3 attempts" under the same id `job_exp_4410`, the Retry button is gone, and the row turns Running when the job starts. `staff_hana` sees `support.job_retried` in the Audit trail.
+- `/r` **Given** the retried job is Running, **When** E3 opens Settings → Export on the simulator, **Then** it reads "Running", with no new request (eater-9.14).
 - `/s` **Given** `POST /v1/support/privacy-jobs/job_exp_4410/retry` arrives twice, **When** the second is processed, **Then** it returns 409 `VALIDATION_ERROR` with the current state, and no second job exists.
-- `/r` **Given** the retried `job_exp_4410` fails again (fault injection in the test build, A21), **When** the row updates, **Then** it reads "Export · Failed · retried once by Mona K." with no Retry button, offering only "Escalate to the platform admin" (support-9.11).
+- `/r` **Given** the retried job fails again (fault injection), **When** the row updates, **Then** it reads "Export · Failed · retried once by Mona K.", with no Retry button and only "Escalate to the platform admin" (support-9.11).
 - `/r` **Given** any deletion row, **When** the agent opens it, **Then** it has no Retry control.
 
 #### support-9.10 · Tell an eater when their deletion completes
@@ -300,13 +332,14 @@ Covers: FR-078, NFR-13, AT-29, FRD §17.2; map interaction row "Eater → API: �
 - `/r` **Given** the stage list, **When** a screen reader reads it, **Then** each stage says its state in words (Completed, Running, Requested, Failed, Not applicable), never by colour or icon alone.
 
 #### support-9.11 · Escalate a Failed or late deletion, and see it land
-Shared: Support agent + platform admin (Jobs → Escalated) + auditor (Audit trail).
-As the Support agent, I see when a deletion stage Failed or its due-by date is near and escalate it to the platform admin, who sees it in their Jobs section, so that no deletion quietly misses its legal window.
-Covers: NFR-13, AT-29, FR-080 ("failed jobs") · R23, R24 · conflict K4
-- `/r` **Given** E9's deletion `DEL-26-0905-P7T2`, **When** Jobs → Privacy jobs opens on 2026-10-01, **Then** the row reads "Deletion · Failed · stage 'Google notified' failed 3 times · due by 2026-10-05 · 4 days left" and offers only "Escalate to the platform admin" — no retry, cancel or "mark as completed".
-- `/r` **Given** the agent escalates with case `CASE-1201` at 11:05 UTC, **When** it is sent, **Then** the row reads "Escalated to the platform admin · 12:05 your time (11:05 UTC) · Mona K.", and `staff_hana` sees `support.escalated` in the Audit trail.
-- `/r` **Given** that escalation, **When** `staff_ali` opens Jobs with the filter "Escalated", **Then** the row shows `DEL-26-0905-P7T2`, the Failed stage, due by 2026-10-05, escalated by Mona K., case `CASE-1201`, sorted by due date.
-- `/r` **Given** `staff_ali` retries the stage with the same id and it Completes, **When** `staff_mona` reopens E9's Privacy jobs, **Then** the row reads "Deletion · Running · escalation resolved by the platform admin at …" (his time, in her time zone, with UTC).
+Shared: Support agent + platform admin (Jobs → "Escalated") + auditor (Audit trail).
+As the Support agent, I see when a deletion stage Failed or its due-by date is near, and I escalate it to the platform admin, who sees it in their Jobs section, so that no deletion quietly misses its legal window.
+Covers: NFR-13, AT-29, FR-080 ("failed jobs") · R23, R24 · A21, A23 · conflict K4
+- `/r` **Given** E9's deletion `DEL-26-0905-P7T2`, **When** Jobs → Privacy jobs opens on 2026-10-01, **Then** the row reads "Deletion · Failed · stage 'Google notified' failed 3 times · due by 2026-10-05 · 4 days left". It offers only "Escalate to the platform admin" — no retry, cancel or "mark as completed".
+- `/r` **Given** the escalation API returns 503 at 11:03 UTC (fault injection), **When** the agent presses Escalate, **Then** the row reads "Couldn't escalate. Nothing was sent to the platform admin. Try again.", and Escalate stays available.
+- `/r` **Given** the API answers normally and she escalates with case `CASE-1201` at 11:05 UTC, **When** it is sent, **Then** the row keeps its state and reads "Deletion · Failed · escalated to the platform admin at 12:05 your time (11:05 UTC) by Mona K.", and `staff_hana` sees `support.escalated` in the Audit trail.
+- `/r` **Given** that escalation, **When** `staff_ali` opens Jobs with the filter "Escalated", **Then** the row shows `DEL-26-0905-P7T2`, the Failed stage, due by 2026-10-05, "escalated by Mona K." and case `CASE-1201`, sorted by due date.
+- `/r` **Given** `staff_ali` retries the stage with the same id at 14:10 UTC and it Completes at 14:12 UTC, **When** `staff_mona` reopens E9's Privacy jobs, **Then** the row reads "Deletion · Running · escalation resolved by the platform admin at 15:12 your time (14:12 UTC)".
 - `/s` **Given** a support token, **When** it calls any endpoint that cancels, pauses, speeds up or completes a deletion, **Then** 403 `FORBIDDEN`.
 
 #### support-9.12 · Confirm a finished deletion from its reference alone
@@ -324,27 +357,31 @@ Covers: FR-078, FRD §23.3 (export and deletion never paywalled); map interactio
 - `/r` **Given** Privacy help, **When** it is read, **Then** it says "Don't ask for ID documents or photos: the eater proves who they are by signing in to the app." and offers no field to collect identity data (SR10 ¶73–74).
 
 #### support-9.14 · Answer a privacy request from an eater who cannot sign in
-Shared: Support agent + platform admin (Jobs → Escalated).
-As the Support agent, I answer a privacy request from an eater who has lost access, with the recovery path, a recorded request with its due date, and an escalation if recovery fails, so that the request is answered within 30 days without support exporting or deleting anything.
-Covers: map interaction row "Eater → API: export; delete account — ≤30 days"; FR-078; NFR-13 · R4, R23, R31 · SR9 Art. 12(6), SR10 ¶74, SR11 Art. 3(1)(a)(c)(d) · A20 · conflict K9
+Shared: Support agent + platform admin (Jobs → "Escalated").
+As the Support agent, I answer a privacy request from an eater who has lost access — with the recovery path, a recorded request with its due date, and an escalation if recovery fails — so that the request is answered within 30 days without support exporting or deleting anything.
+Covers: map interaction row "Eater → API: export; delete account — ≤30 days"; FR-078; NFR-13 · R4, R23, R31 · SR9 Art. 12(6), SR10 ¶74, SR11 Art. 3(1)(a)(c)(d) · A20, A21 · conflict K9
 - `/r` **Given** E11 (`samir.synthetic@example.com`) with case `CASE-1230`, **When** `staff_mona` looks it up, **Then** the account panel shows sign-in "Email" and last sign-in 2026-08-02, and Privacy help offers: "Use 'Forgot password' on the app's sign-in screen to get back in, then go to Settings → Privacy → Delete account."
 - `/r` **Given** she records the request in Jobs → Requests received outside the app (type Deletion, channel Email, case `CASE-1230`, account E11, received 10:50 your time (09:50 UTC)), **When** she saves it, **Then** the row reads "Open · due by 2026-10-31".
-- `/r` **Given** the eater replies that recovery failed, **When** she presses "Escalate to the platform admin" on that row with the note "cannot sign in", **Then** the row reads "Escalated to the platform admin · due by 2026-10-31", the platform admin's Jobs → "Escalated" lists it sorted by due date, and support still has no export or delete control.
+- `/r` **Given** the escalation API returns 503 (fault injection), **When** she presses "Escalate to the platform admin" on that row, **Then** the row reads "Couldn't escalate. Nothing was sent to the platform admin. Try again." and stays Open.
+- `/r` **Given** the eater replies that recovery failed, and the API answers normally, **When** she escalates the row with the note "cannot sign in", **Then** the row reads "Escalated to the platform admin · due by 2026-10-31", the platform admin's Jobs → "Escalated" lists it sorted by due date, and support still has no export or delete control.
 - `/r` **Given** this row's Privacy help, **When** it is read, **Then** it says "Don't ask for ID documents or photos" and has no field to collect identity data.
 
 #### support-9.15 · Record a privacy request that arrived outside the app
 Shared: Support agent + auditor (Audit trail).
 As the Support agent, I record each privacy request that reaches support by email, chat or phone — type, channel, time, case, account and outcome, with no content — so that every request is documented and answered within 30 days.
-Covers: map interaction row "Eater → API: export; delete account → Privacy job (≤30 days; R4, R23, R31)" · SR11 Art. 3(1)(a)(d), SR9 Art. 12(3)
-- `/r` **Given** an email asking for a copy of data, received 2026-10-01 09:30 UTC, **When** the agent records it in Jobs → Requests received outside the app as type "Access or export", channel Email, case `CASE-1215`, account E7, **Then** the row reads "Open · received 10:30 your time (09:30 UTC) · due by 2026-10-31 · pointed to the in-app export", and `staff_hana` sees `support.request_logged` in the Audit trail.
+Covers: map interaction row "Eater → API: export; delete account → Privacy job (≤30 days; R4, R23, R31)" · SR11 Art. 3(1)(a)(d), SR9 Art. 12(3) · A21, A23, A25
+- `/r` **Given** E7's email asking for a copy of data, received 09:30 UTC, **When** the agent records it in Jobs → Requests received outside the app (type "Access or export", channel Email, case `CASE-1215`, account E7), **Then** the row reads "Open · received 10:30 your time (09:30 UTC) · due by 2026-10-31 · pointed to the in-app export", and `staff_hana` sees `support.request_logged` in the Audit trail.
 - `/r` **Given** E7 then exported in the app (`job_exp_88`), **When** the agent links that job, **Then** the row reads "Open · linked to export job_exp_88 · Running", and it turns "Closed · completed by the in-app export on 2026-10-01" when the job Completes.
 - `/r` **Given** the form, **When** the agent tries to paste the email body, **Then** the only free text is a 120-character outcome note marked "Don't paste food, health or message content".
 - `/r` **Given** 3 Open rows due within 5 days, **When** the view opens, **Then** they sort first with "Due in n days" in words.
+- `/r` **Given** the view is filtered to E1 (no request recorded), **When** it opens, **Then** it reads "No requests recorded for this account. Record one when a privacy request reaches you by email, chat or phone." with "Record a request".
+- `/r` **Given** the save API returns 503 (fault injection), **When** the agent saves a filled form, **Then** the form keeps every field and reads "Couldn't save this request. Nothing was recorded. Try again."
 - `/r` **Given** a half-filled form (type and channel chosen), **When** the agent switches to Grants and comes back in the same session, **Then** the draft is restored; signing out clears it.
 
 ### 9D · Boundaries, trail, desk, language, and failure states
 
 #### support-9.16 · Stay inside the Support agent role
+Shared: Support agent + nutrition approver (`staff_dina`'s session) + platform admin (`staff_ali`'s session).
 As the Support agent, I can use only the Jobs, Grants and Settings sections, and only the Support agent role can request a Grant, so that support, nutrition approval and platform administration stay separate.
 Covers: FR-081, NFR-07, NFR-12 · SR8 (AC-5, AC-6), SR11 Art. 26(3)
 - `/r` **Given** `staff_mona`, **When** she opens `/console/review`, `/console/foods`, `/console/recipes`, `/console/aliases`, `/console/policy`, `/console/registry`, `/console/roles`, `/console/audit-trail` or `/console/metrics` by URL, **Then** each reads "You don't have access to this area", and the API returns 403 `FORBIDDEN`.
@@ -361,25 +398,32 @@ Covers: NFR-07, FRD release blockers ("any cross-user exposure") · A13
 Shared: Support agent + auditor (Audit trail).
 As the Support agent, I know each look-up, view, retry, escalation and Grant step is recorded with who, what, when, where and outcome, so that honest work is provable and misuse is visible.
 Covers: FR-081 · SR3, SR8 (AU-3, AC-6(9)), SR11 Art. 26(4) · R24
-- `/r` **Given** `staff_mona` looked up E1 and opened its account panel and its Sync tab on 2026-10-01, **When** `staff_hana` filters the Audit trail by `staff_mona` and that day, **Then** three events show, each with event type, time (UTC), where (console route and API path), staff id and role, account id, case reference and outcome.
+- `/r` **Given** `staff_mona`'s look-up of E1 at 09:00, its account panel at 09:01 and its Sync tab at 09:02 UTC (§0.3), **When** `staff_hana` filters the Audit trail by `staff_mona`, account `acct_9c41e2` and 09:00–09:05 UTC, **Then** exactly three events show: `support.lookup` (method `support_code`), `support.account_viewed` and `support.jobs_viewed`. Each has the time (UTC), where (console route and API path), staff id and role, account id, case reference (none for a support-code look-up) and outcome.
 - `/s` **Given** any `/v1/support/*` request, **When** it completes with 2xx or 4xx, **Then** exactly one Audit trail event is written; if the write fails, the request fails and returns no data.
-- `/r` **Given** `staff_mona`, **When** she opens `/console/audit-trail`, **Then** 403 `FORBIDDEN` — a Support agent can neither read nor edit the trail.
+- `/r` **Given** `staff_mona`, **When** she opens `/console/audit-trail`, **Then** the screen reads "You don't have access to this area", and the API returns 403 `FORBIDDEN` — a Support agent can neither read nor edit the trail.
 
 #### support-9.19 · Work fast at a desk, and still at phone width
 As the Support agent, I work keyboard first on a large screen with the account panel, jobs and the Grant panel side by side, and the console still works at phone width, so that I close cases quickly and can check one away from my desk.
-Covers: FR-080, NFR-08; blueprint §0 ("admin console proved in a browser at desktop and ~390 px") · care groups 2, 3, 6
-- `/r` **Given** a 1440×900 window and then a 1920×1080 window, **When** E1's account panel is open, **Then** at both sizes the account panel, Privacy jobs or failed-job tabs, and the Grant panel show as three columns without horizontal scroll, with ids in a monospaced face and tabular numbers.
-- `/r` **Given** a 390 px wide window, **When** the same account is open, **Then** the columns stack as account panel → Grant panel → jobs, every action can be reached, there is no horizontal page scroll, and the Grant bar stays pinned at the top while a Grant is Active.
+Covers: FR-080, NFR-08; blueprint §0 ("admin console proved in a browser at desktop and ~390 px") · care groups 2, 3, 6 · A23, A28, A29
+- `/r` **Given** a 1440×900 window and then a 1920×1080 window, **When** E1's account panel is open, **Then** at both sizes the account panel, the Privacy jobs or failed-job tabs, and the Grant panel show as three columns without horizontal scroll, with ids in a monospaced face and tabular numbers.
+- `/r` **Given** a 390 px wide window, **When** the same account is open, **Then**:
+  - the columns stack as account panel → Grant panel → jobs;
+  - every action can be reached;
+  - there is no horizontal page scroll;
+  - the Grant bar stays pinned at the top while a Grant is Active.
 - `/r` **Given** keyboard only, **When** the agent tabs from Look up an account through the account panel and the Sync tab to "Request a Grant", **Then** every control shows a visible focus ring, and every action works without a mouse.
 - `/r` **Given** 200 % browser zoom, in light and in dark appearance, **When** the account panel is open, **Then** nothing clips or overlaps, and all text meets 4.5:1 contrast.
 - `/r` **Given** Jobs and Grants with and without an Active Grant, **When** the computed colours of every element are listed, **Then** the Grant accent colour (token `--grant-active`) appears only on the Grant panel and the Grant bar, and only while a Grant is Active.
-- `/r` **Given** Look up, tab switches and Retry each pressed 5 times, **When** the screen is recorded, **Then** no element animates (computed transition and animation durations are 0 s on these controls).
-- `/r` **Given** rows in the states Completed, Running, Requested, Given and Withdrawn, **When** they render, **Then** none uses the error colour; the error colour appears only on Failed rows and on a deletion with 5 days or fewer before its due date.
+- `/r` **Given** Look up, tab switches and Retry each pressed 5 times, **When** the screen is recorded, **Then** no element animates: the computed transition and animation durations are 0 s on these controls.
+- `/r` **Given** rows in the states Completed, Running, Requested, Given and Withdrawn, **When** they render, **Then** none uses the error colour. The error colour appears only on Failed rows and on a deletion with 5 days or fewer before its due date.
 
 #### support-9.20 · Use the console in Arabic, and reply in the eater's language
 As the Support agent, I can use the console in Arabic and always see the eater's app language, so that I reply in the eater's language and Arabic-speaking agents work in theirs.
 Covers: FR-080, NFR-08; FRD §1.2 and §14.1 (English and Arabic, right to left) · care group 6 · A16
-- `/r` **Given** `staff_omar` set Settings → language to Arabic, **When** E1's account panel opens, **Then** the layout mirrors (navigation on the right, back arrow pointing right), ids, codes and times stay left to right, and the Grant bar's countdown fills from the right.
+- `/r` **Given** `staff_omar` set Settings → language to Arabic, and his `grant_a1d4` for E6 is Active at 08:30 UTC, **When** he opens E6's account panel, **Then**:
+  - the layout mirrors (navigation on the right, back arrow pointing right);
+  - ids, codes and times stay left to right;
+  - the Grant bar's countdown for `grant_a1d4` fills from the right.
 - `/r` **Given** an eater whose language is Arabic (E1 or E6), **When** any "What to tell the eater" text opens, **Then** the Arabic text comes first and the English second, whatever the console language.
 
 #### support-9.21 · Jobs when slow, failing or offline
@@ -388,7 +432,7 @@ Covers: FR-080, NFR-05 · care group 4 · A15, A21
 - `/r` **Given** the look-up API is slowed to 3 s (fault injection), **When** the agent presses Look up, **Then** the button reads "Looking up…" within 100 ms, the result appears at 3 s, and if it takes longer than 10 s the field shows "Still looking — Cancel".
 - `/r` **Given** the account panel API returns 503, **When** it loads, **Then** the panel reads "Couldn't load this account. Try again." with the request id `req_…`, and Look up stays usable.
 - `/r` **Given** the Privacy jobs API returns 503, **When** that tab loads, **Then** it reads "Couldn't load Privacy jobs. Try again.", and the rest of the account panel stays usable.
-- `/r` **Given** E1's account panel is loaded and the browser goes offline at 10:42 UTC, **When** the agent looks at it, **Then** a quiet strip reads "Offline — showing data from 11:42 your time (10:42 UTC)", the data stays, and Look up, Retry and Escalate are disabled with "Connect to look up or change anything"; when the connection returns, the strip disappears and the data refreshes.
+- `/r` **Given** `staff_lee` (who holds no Grant) has E1's account panel loaded and his browser goes offline at 10:42 UTC, **When** he looks at it, **Then** a quiet strip reads "Offline — showing data from 11:42 your time (10:42 UTC)", the data stays, and Look up, Retry and Escalate are disabled with "Connect to look up or change anything"; when the connection returns, the strip disappears and the data refreshes.
 
 ---
 
@@ -399,15 +443,17 @@ Step: an eater asks why an Entry did not appear or appeared twice. The answer co
 #### support-3.1 · See sync conflicts without the Entries
 As the Support agent, I see sync conflicts — command id, operation, device, time and `STALE_REVISION` — but not the Entries, so that I can tell the eater which device to open to choose a version.
 Covers: WF-3 ("offline logs sync once"), FR-041, FR-043, FR-080, §8.3, §18.2, AT-31, NFR-06
-- `/r` **Given** E1's command `cmd_7a1e` (operation "correct", app 1.0.2) was refused with 409 `STALE_REVISION`, **When** the agent opens Jobs → Sync, **Then** the row reads "Pending on the device · STALE_REVISION · correct · iPhone app 1.0.2 · 2026-09-30 20:15 your time (19:15 UTC) · 22:15 eater's time" with "Waiting for the eater to choose a version on the iPhone with app 1.0.2", and shows no Food, quantity, kcal or Entry label.
-- `/r` **Given** that row, **When** the agent opens "What to tell the eater", **Then** the text (Arabic first) says that the iPhone with the older app shows both versions to choose from, and that calories were not added twice (AT-31).
+- `/r` **Given** E1's command `cmd_7a1e` (operation "correct", app 1.0.2) was refused with 409 `STALE_REVISION`, **When** the agent opens Jobs → Sync, **Then** the row reads "Pending on the device · STALE_REVISION · correct · iPhone app 1.0.2 · 2026-09-30 20:15 your time (19:15 UTC) · 22:15 eater's time", with "Waiting for the eater to choose a version on the iPhone with app 1.0.2". It shows no Food, quantity, kcal or Entry label.
+- `/r` **Given** that row, **When** the agent opens "What to tell the eater", **Then** the Arabic text comes first, then the English:
+  - Arabic (proposal, A16): «في جهاز iPhone الذي يعمل بالإصدار الأقدم من التطبيق نسختان من إدخال واحد. افتح Sips & Bytes على ذلك الجهاز واختر النسخة التي تريد الاحتفاظ بها. لم يُضَف شيء مرتين.»
+  - English: "Your iPhone with the older app version has two versions of one Entry. Open Sips & Bytes on that iPhone and choose the one to keep. Nothing was added twice." (AT-31)
 - `/s` **Given** a support token, **When** it calls any reconcile, correct, void, restore or move endpoint, **Then** 403 `FORBIDDEN`.
 
 #### support-3.2 · Answer "did it log twice?" from the duplicate record
 As the Support agent, I see how many duplicate deliveries of a command were ignored, so that I can reassure an eater that a retry did not add food twice.
-Covers: WF-3, FR-043, FR-080, AT-10, AT-21
+Covers: WF-3, FR-043, FR-080, AT-10, AT-21 · A27
 - `/r` **Given** E1's command `cmd_44c0`, delivered 3 times (the AT-10 fixture), **When** the agent opens Jobs → Sync → Duplicates ignored, **Then** the row reads "cmd_44c0 · Confirmed once · 2 duplicate deliveries ignored · 2026-09-29 06:12 your time (05:12 UTC) · 08:12 eater's time", with no item, Unit or kcal.
-- `/r` **Given** E7 (no duplicates in 30 days), **When** the tab opens, **Then** it reads "No duplicate deliveries in the last 30 days."
+- `/r` **Given** E7 (no duplicates in 30 days), **When** Duplicates ignored opens, **Then** it reads "No duplicate deliveries in the last 30 days."
 
 ---
 
@@ -429,11 +475,11 @@ Covers: WF-4, FRD §16.5, §18.2; blueprint §6 (Registry: "per-user daily AI qu
 - `/r` **Given** the Support agent role, **When** the agent looks for a way to raise the quota, **Then** there is none, and the panel says "Quotas are set by the platform admin in Registry."
 
 #### support-4.3 · Failed-job tabs when empty, slow or failing
-As the Support agent, I get a designed answer when the Failed Analyses, Sync or Activity tab is empty, slow or broken, so that I never mistake a blank screen for "nothing wrong".
-Covers: FR-080 ("failed jobs") · care group 4 · A15, A21
-- `/r` **Given** E7 (no failures in 30 days), **When** each failed-job tab opens, **Then** it reads "No failed … in the last 30 days" and names the next place to check (Privacy jobs, Consents).
-- `/r` **Given** the failed-jobs API is slowed to 3 s (fault injection), **When** a tab opens, **Then** table-shaped placeholders appear within 300 ms and the rows replace them at 3 s; if it takes longer than 10 s the tab reads "Still loading — Cancel".
-- `/r` **Given** the failed-jobs API returns 503, **When** a tab loads, **Then** it reads "Couldn't load failed jobs. Try again." with the request id `req_…`, and the rest of the account panel stays usable.
+As the Support agent, I get a designed answer when a failed-job tab is empty, slow or broken, so that I never mistake a blank screen for "nothing wrong".
+Covers: FR-080 ("failed jobs") · care group 4 · A15, A21, A24, A27
+- `/r` **Given** E7 (no failures in 30 days), **When** Jobs → Failed Analyses opens, **Then** it reads "No failed Analyses in the last 30 days. Next, check Privacy jobs and Consents."; **when** Jobs → Sync opens, **then** its conflict list reads "No sync conflicts in the last 30 days. Next, check Privacy jobs and Consents." The Activity tab's own empty text is in support-7.1.
+- `/r` **Given** the failed-jobs API is slowed to 3 s (fault injection), **When** the Failed Analyses, Sync or Activity tab opens, **Then** table-shaped placeholders appear within 300 ms and the rows replace them at 3 s; if loading takes longer than 10 s, the tab reads "Still loading — Cancel".
+- `/r` **Given** the failed-jobs API returns 503, **When** any of those tabs loads, **Then** it reads "Couldn't load failed jobs. Try again." with the request id `req_…`, and the rest of the account panel stays usable.
 - `/r` **Given** E14 (240 Failed Analyses in 30 days), **When** Failed Analyses opens, **Then** 50 rows show with the total "240" and "Load 50 more".
 
 ---
@@ -444,9 +490,9 @@ Step: an eater says a workout is missing or counted once instead of twice. The a
 
 #### support-7.1 · See Activity import results
 As the Support agent, I see Activity import results — accepted, updated, duplicate and conflict counts and the last import time — so that I can explain a missing or merged workout without seeing workouts.
-Covers: WF-7, FR-063, FR-064, FR-067, FR-080, FRD §18 `POST /v1/activity/import`, AT-22 · R7
-- `/r` **Given** E1's last import, **When** the agent opens Jobs → Activity, **Then** it reads "Last import 05:30 your time (04:30 UTC) · 07:30 eater's time · accepted 1 · updated 0 · duplicate 2 · conflict 0" with "Duplicates were merged into one contribution", and shows no activity type, energy, duration or source app.
-- `/r` **Given** E7 (no import in 7 days), **When** the tab opens, **Then** it reads "No Activity imported in 7 days. Missing data is unknown, not proof of no exercise." (FR-067)
+Covers: WF-7, FR-063, FR-064, FR-067, FR-080, FRD §18 `POST /v1/activity/import`, AT-22 · R7 · A27
+- `/r` **Given** E1's last import, **When** the agent opens Jobs → Activity, **Then** it reads "Last import 05:30 your time (04:30 UTC) · 07:30 eater's time · accepted 1 · updated 0 · duplicate 2 · conflict 0" with "Duplicates were merged into one contribution". It shows no activity type, energy, duration or source app.
+- `/r` **Given** E7 (no import in 7 days), **When** Jobs → Activity opens, **Then** it reads "No Activity imported in 7 days. Missing data is unknown, not proof of no exercise." (FR-067)
 
 ---
 
@@ -457,11 +503,12 @@ Steps: **10A** decide that metadata is not enough → **10B** request a Grant �
 ### 10A · Decide
 
 #### support-10.1 · Ask for diary access only from a case
+Shared: Support agent + auditor (Audit trail).
 As the Support agent, I start a Grant request only from an account I looked up, after metadata could not answer, so that diary access is the exception, not the habit.
 Covers: WF-10 ("support requests a Grant"), FR-081 · SR1, SR5, SR7
-- `/r` **Given** E1's account panel with no Grant, **When** the agent looks for the diary, **Then** the only control is "Request a Grant", and `/console/grants/diary?account=acct_9c41e2` reads "No Active Grant for this account".
+- `/r` **Given** E1's account panel at 10:03 UTC (no Grant yet), **When** the agent looks for the diary, **Then** the only control is "Request a Grant", and `/console/grants/diary?account=acct_9c41e2` reads "No Active Grant for this account".
 - `/r` **Given** the agent presses "Request a Grant", **When** the form opens in Grants, **Then** account, eater language and eater time zone are filled in, and reason, Days and areas are empty.
-- `/s` **Given** any read under `/v1/grants/{id}/…`, **When** it is called with no Grant, **Then** 403 `GRANT_REQUIRED` and a `grant.read_denied` event in the Audit trail.
+- `/s` **Given** a Grant id that does not exist, **When** a read under `/v1/grants/{id}/…` is called with it, **Then** 403 `GRANT_REQUIRED`, and a `grant.read_denied` event is in the Audit trail.
 
 ### 10B · Request
 
@@ -469,9 +516,9 @@ Covers: WF-10 ("support requests a Grant"), FR-081 · SR1, SR5, SR7
 Shared: Support agent + auditor (Audit trail).
 As the Support agent, I request a Grant naming a reason from a fixed list, the Days and areas I need, a duration and my case reference, so that the eater can decide knowing exactly who wants what, why and for how long.
 Covers: WF-10; map interaction row "Support → Eater: request just-in-time diary access — the eater sees who asks, why and for how long"; FR-081 · SR1, SR4, SR5 · A4, A5, A6, A16
-- `/r` **Given** `staff_mona` chooses the reason "An Entry is missing or appears twice", Days 2026-09-28 to 2026-09-30, areas "Entries and day reports" and "My Units", duration 1 hour and case `CASE-1182`, **When** she presses "Send request" at 10:05 UTC, **Then** the Grant panel reads "Requested · waiting for the eater · the request closes 2026-10-04 11:05 your time (10:05 UTC)", and `POST /v1/grants` returned 201 with state Requested.
-- `/r` **Given** the form, **When** it opens, **Then** duration offers 1 hour (selected), 4 hours and 24 hours, and nothing longer; areas offer "Entries and day reports", "My Units" (Unit, Composite and Recipe versions), "Templates" and "Activity", none selected.
-- `/m` **Given** the Grant state machine, **When** events arrive in any order, **Then** the only paths are Requested → Approved → Active → Expired | Ended | Withdrawn, and Requested → Declined | Unanswered; Active is reachable only through Approved.
+- `/r` **Given** `staff_mona` chooses the reason "An Entry is missing or appears twice", Days 2026-09-28 to 2026-09-30, the areas "Entries and day reports" and "My Units", a duration of 1 hour and case `CASE-1182`, **When** she presses "Send request" at 10:05 UTC, **Then** the Grant panel reads "Requested · waiting for the eater · the request closes 2026-10-04 11:05 your time (10:05 UTC) · 13:05 eater's time", and `POST /v1/grants` returned 201 with state Requested.
+- `/r` **Given** the form, **When** it opens, **Then** duration offers 1 hour (selected), 4 hours and 24 hours, and nothing longer. Areas offer "Entries and day reports", "My Units" (Unit, Composite and Recipe versions), "Templates" and "Activity", none selected.
+- `/m` **Given** the Grant state machine, **When** events arrive in any order, **Then** the only paths are Requested → Approved → Active → Expired | Ended | Withdrawn, and Requested → Declined | Unanswered. Active is reachable only through Approved.
 - `/r` **Given** the request was sent, **When** `staff_hana` opens the Audit trail, **Then** `grant.requested` shows staff, account, reason, Days, areas, duration and case.
 
 Reason catalogue (proposal for the string catalogue, A16):
@@ -501,49 +548,65 @@ Covers: WF-10, FR-081 (the conflict path)
 - `/s` **Given** two `POST /v1/grants` for one account within 50 ms, **When** both are processed, **Then** exactly one returns 201 and the other 409.
 
 #### support-10.5 · Wait and keep helping
-As the Support agent, I see a waiting request's state live and keep helping from metadata in the meantime, so that waiting for the eater never blocks the case.
+As the Support agent, I see a waiting request's state live, and keep helping from metadata in the meantime, so that waiting for the eater never blocks the case.
 Covers: WF-10, FR-081 · SR2 ("support response time increases") · A11 · conflict K10
 - `/r` **Given** `grant_31f0` is Requested and unanswered at 10:08 UTC, **When** the agent looks at the Grant panel, **Then** it reads "Requested · sent 11:05 your time (10:05 UTC) · the request closes in 2 d 23 h", and the account panel, Privacy jobs and failed-job tabs stay usable.
-- `/r` **Given** the Grant panel is open, **When** the eater answers, **Then** the panel shows the new state within 5 s without a reload, and the screen reader announces it once.
-- `/r` **Given** a Requested Grant, **When** the agent looks for a way to cancel it, **Then** none exists, and the panel says "A request ends when the eater answers, or when it closes on 2026-10-04 11:05 your time."
+- `/r` **Given** the Grant panel is open, **When** the eater answers at 10:20 UTC, **Then** the panel shows the new state within 5 s without a reload, and the screen reader announces it once.
+- `/r` **Given** a Requested Grant, **When** the agent looks for a way to cancel it, **Then** none exists, and the panel says "A request ends when the eater answers, or when it closes on 2026-10-04 at 11:05 your time (10:05 UTC) · 13:05 eater's time."
 
 ### 10C · The eater decides in Settings → Privacy → Grants
 
 #### support-10.6 · The eater sees who, why, what and how long — and approves
-Shared: Support agent + eater.
-As the Support agent, I rely on the eater seeing my name, the reason, the Days and areas, the duration and the case in Settings → Privacy → Grants and approving it there, so that access exists only because the eater chose it.
+Shared: Support agent + eater (eater-9.22) + auditor (Audit trail).
+As the Support agent, I rely on the eater seeing my name, the reason, the Days and areas, the duration and the case in Settings → Privacy → Grants, and approving it there, so that access exists only because the eater chose it.
 Covers: WF-10 ("the eater approves or declines in Settings"); map interaction row "Support → Eater"; FR-081; blueprint §2 (the approver is the eater) · SR1, SR2, SR14 · A22
-- `/r` **Given** `grant_31f0`, **When** E1 opens Settings (badge "1") → Privacy → Grants on the iOS simulator, **Then** the request shows: who, "Mona K. · Sips & Bytes Support"; why, the reason text; what, "Entries and day reports, My Units · 28–30 Sep 2026"; how long, "1 hour from when you approve"; the case `CASE-1182`; the buttons "Approve" and "Decline"; and the line "Support can read, not change. Every read is listed here."
-- `/r` **Given** the eater taps Approve at 13:20 their time (10:20 UTC), **When** the server confirms, **Then** the app reads "Active until 14:20", and the console's Grant panel turns to "Active · read-only · ends 12:20 your time (11:20 UTC) · 14:20 eater's time" — the time box starts at approval, not at the request.
-- `/s` **Given** `POST /v1/grants/grant_31f0/approve` with the eater's own token, **When** it is processed, **Then** 200, the state passes Approved to Active in one transaction, `expires_at` = approval time + 1 h, and the Audit trail has `grant.approved` and `grant.active` with method `in_app` and the device.
-- `/r` **Given** E1's app is in Arabic, **When** the request shows, **Then** it reads right to left, the reason reads «إدخال مفقود أو ظاهر مرتين», the Days read «٢٨–٣٠ سبتمبر ٢٠٢٦» in Arabic-Indic numerals, and the Latin name "Mona K." sits in an isolated left-to-right run without reordering the sentence.
+- `/r` **Given** `grant_31f0` is Requested, **When** E1 opens Settings (badge "1") → Privacy → Grants on the iOS simulator, **Then** the request shows:
+  - who: "Mona K. · Support agent";
+  - why: "An Entry is missing or appears twice";
+  - what: "Entries and day reports, My Units · 28–30 Sep 2026";
+  - how long: "1 hour from when you approve";
+  - the case `CASE-1182`;
+  - "Never included: photos, voice, your Target and goal settings";
+  - "The Support agent can read, not change. Every read is listed here.";
+  - two equal-size buttons, "Approve" and "Decline".
+- `/r` **Given** the eater taps Approve at 13:20 their time (10:20 UTC), **When** the server confirms, **Then** the app reads "Active · ends 14:20", and the console's Grant panel turns to "Active · read-only · ends 12:20 your time (11:20 UTC) · 14:20 eater's time". The time box starts at approval, not at the request.
+- `/s` **Given** `POST /v1/grants/grant_31f0/approve` with the eater's own token, **When** it is processed, **Then**:
+  - it returns 200;
+  - the state passes Approved to Active in one transaction;
+  - `expires_at` = approval time + 1 h;
+  - the Audit trail has `grant.approved` and `grant.active`, with method `in_app` and the device.
+- `/r` **Given** E1's app is in Arabic, **When** the request shows, **Then**:
+  - it reads right to left;
+  - the reason reads «إدخال مفقود أو ظاهر مرتين»;
+  - the Days read «٢٨–٣٠ سبتمبر ٢٠٢٦» in Arabic-Indic numerals;
+  - the Latin name "Mona K." sits in an isolated left-to-right run, without reordering the sentence.
 - `/r` **Given** the largest accessibility text size, **When** the request shows, **Then** every line wraps without clipping, and Approve and Decline stay fully visible and tappable.
 
 #### support-10.7 · A declined request gives no access
-Shared: Support agent + eater.
+Shared: Support agent + eater (eater-9.23) + auditor (Audit trail).
 As the Support agent, I see a declined request end with no access and no pressure on the eater, so that "no" is a real answer.
 Covers: WF-10 done-when ("a declined Grant gives no access"), FR-081 · A14
-- `/r` **Given** `grant_31f9` is Requested for E1, **When** the eater taps Decline at 14:42 their time (11:42 UTC), **Then** the console's Grant panel reads "Declined · 12:42 your time (11:42 UTC)", the eater was not asked for a reason, and the panel suggests the metadata checks to try next.
-- `/s` **Given** `grant_31f9` is Declined, **When** `staff_mona` calls `GET /v1/grants/grant_31f9/days/2026-09-29`, **Then** 403 `GRANT_NOT_ACTIVE` with state Declined, and `grant.read_denied` is in the Audit trail.
+- `/r` **Given** `grant_31f9` is Requested for E1, **When** the eater taps Decline at 14:42 their time (11:42 UTC), **Then** the console's Grant panel reads "Declined · 12:42 your time (11:42 UTC). Next: check Sync and Privacy jobs for this account.", with links to those two tabs. The eater was not asked for a reason.
+- `/s` **Given** `grant_31f9` is Declined, **When** `staff_mona` calls `GET /v1/grants/grant_31f9/days/2026-09-29` at 11:45 UTC, **Then** 403 `GRANT_NOT_ACTIVE` with state Declined, and `grant.read_denied` is in the Audit trail.
 - `/r` **Given** the decline is less than 24 h old, **When** any agent opens the Grant form for E1, **Then** the form reads "The eater declined a request at 12:42 your time (11:42 UTC) today" above the reason field.
 
 #### support-10.8 · An unanswered request closes by itself
-Shared: Support agent + eater.
+Shared: Support agent + eater (eater-9.24).
 As the Support agent, I see an unanswered request close on its own, so that an old request can never turn into access later.
 Covers: WF-10, FR-081 · SR1 (unanswered requests expire) · A6
-- `/r` **Given** E10's `grant_40aa` (Requested 2026-09-27 10:05 UTC, never answered), **When** `staff_mona` opens Grants on 2026-10-01, **Then** its row reads "Unanswered · the request closed 2026-09-30 11:05 your time (10:05 UTC)", and E10's Settings → Privacy → Grants lists it under history as "Unanswered", with no Approve button.
+- `/r` **Given** E10's `grant_40ab` (Requested 2026-09-27 10:05 UTC, never answered), **When** `staff_mona` opens Grants on 2026-10-01, **Then** its row reads "Unanswered · the request closed 2026-09-30 11:05 your time (10:05 UTC)", and E10's Settings → Privacy → Grants lists it in history as "Unanswered · no access was given", with no Approve button.
 - `/s` **Given** a Requested Grant and the test clock moved 72 h ahead, **When** the eater's approve call arrives, **Then** 409 `GRANT_NOT_ACTIVE` with state Unanswered — a late approval never makes it Active.
 
 #### support-10.9 · Only the eater can approve
-Shared: Support agent + auditor (Audit trail).
+Shared: Support agent + platform admin (`staff_ali`'s token) + auditor (`staff_hana`'s token; Audit trail).
 As the Support agent, I cannot approve any Grant — mine or anyone's — and no staff role can, so that nobody at Sips & Bytes can give themselves a diary.
 Covers: WF-10, FR-081; blueprint §2 ("no staff member can approve their own request") · SR7, SR8 (AC-5)
-- `/s` **Given** `grant_31f0` is Requested, **When** `POST /v1/grants/grant_31f0/approve` is sent with the token of `staff_mona`, `staff_lee`, `staff_ali` or `staff_hana`, **Then** each returns 403 `FORBIDDEN`, and `grant.approve_denied` is in the Audit trail.
-- `/s` **Given** E7's eater token, **When** it calls approve on `grant_31f0` (which is for E1), **Then** 404 `NOT_FOUND`.
+- `/s` **Given** E10's `grant_6c14` is Requested, **When** `POST /v1/grants/grant_6c14/approve` is sent with the token of `staff_mona`, `staff_lee`, `staff_ali` or `staff_hana`, **Then** each returns 403 `FORBIDDEN`, and `grant.approve_denied` is in the Audit trail.
+- `/s` **Given** E7's eater token, **When** it calls approve on `grant_6c14` (which is for E10), **Then** 404 `NOT_FOUND`.
 - `/r` **Given** the console, **When** any staff user views a Requested Grant, **Then** no Approve control exists anywhere.
 
 #### support-10.10 · The eater is offline
-Shared: Support agent + eater.
+Shared: Support agent + eater (eater-9.27).
 As the Support agent, I see a request keep waiting while the eater is offline, because the app answers Grants only online, so that an approval is never queued and applied later by surprise.
 Covers: WF-10, FR-081, FRD §8.3 (the outbox is for food commands) · care group 4
 - `/r` **Given** `grant_31f0` is Requested and E1's simulator has no network, **When** the eater opens Settings → Privacy → Grants, **Then** the cached request shows with Approve and Decline disabled and the line "Connect to answer this request", and the console still reads "Requested".
@@ -554,124 +617,163 @@ Covers: WF-10, FR-081, FRD §8.3 (the outbox is for food commands) · care group
 #### support-10.11 · Read the approved Days, read-only
 As the Support agent, I read the approved Days and areas in the Diary (read-only) inside the Grant panel, so that I can find the problem and nothing more.
 Covers: WF-10 ("read-only access inside the time box"); map interaction row "Support → eater diary: read within the Grant"; FR-081, FR-046, FR-069, FR-070 · A10
-- `/r` **Given** `grant_31f0` is Active, **When** the agent opens the Diary (read-only) for Day 2026-09-29, **Then** she sees that Day's Entries in time order, each with its state (Confirmed, Corrected, Voided or Restored), Unit, count, Evidence badge, source version and history, plus the day report (Target, consumed, remaining, coverage, Day state), with the same numbers the eater's own day report shows.
-- `/r` **Given** the Diary (read-only), **When** it renders, **Then** the Grant panel has its own border and the title "Diary (read-only) · Days 28–30 Sep · ends 12:20 your time"; it has no edit, delete, export, copy-all or print control, and it carries a faint watermark "staff_mona · grant_31f0".
-- `/r` **Given** the areas are "Entries and day reports" and "My Units", **When** the agent opens My Units, **Then** she sees Unit, Composite and Recipe versions with their components, Evidence and version history, while Templates and Activity read "Not in this Grant".
+- `/r` **Given** `grant_31f0` is Active, **When** the agent opens the Diary (read-only) for Day 2026-09-29 at 10:24 UTC, **Then** she sees:
+  - that Day's Entries in time order, each with its state (Confirmed, Corrected, Voided or Restored), Unit, count, Evidence badge, source version and history;
+  - the day report with consumed kcal, macro grams, coverage and the Day state, with the same numbers as the eater's own day report;
+  - the line "Target — not included in Grants";
+  - no Target, remaining or over value (the eater's request says "Never included: … your Target", support-10.6).
+- `/r` **Given** the Diary (read-only), **When** it renders, **Then** the Grant panel:
+  - has its own border and the title "Diary (read-only) · Days 28–30 Sep · ends 12:20 your time (11:20 UTC)";
+  - has no edit, delete, export, copy-all or print control;
+  - carries a faint watermark "staff_mona · grant_31f0".
+- `/r` **Given** the areas are "Entries and day reports" and "My Units", **When** the agent opens My Units at 10:27 UTC, **Then** she sees Unit, Composite and Recipe versions with their components, Evidence and version history, while Templates and Activity read "Not in this Grant".
 
 #### support-10.12 · Out-of-scope reads are refused
 Shared: Support agent + auditor (Audit trail).
-As the Support agent, I am stopped at the edge of what the eater approved, so that a Grant for three Days never becomes a look at three months.
-Covers: WF-10, FR-081, NFR-07, FRD §8.1 · SR5, SR8 (AC-6)
-- `/r` **Given** `grant_31f0` covers Days 2026-09-28 to 2026-09-30, **When** the agent moves to Day 2026-09-27, **Then** the Diary (read-only) reads "27 Sep is outside this Grant" and shows no data; the API returns 403 `FORBIDDEN`, and `grant.read_denied` is in the Audit trail.
-- `/s` **Given** `grant_31f0`'s areas, **When** `GET /v1/grants/grant_31f0/activity?day=2026-09-29` or `…/templates` is called, **Then** 403 `FORBIDDEN`.
-- `/s` **Given** `grant_31f0` is for E1, **When** a read names a Day, Entry or Unit id of E2, **Then** 404 `NOT_FOUND` and no data.
-- `/m` **Given** E1's diary-day boundary of 04:00 Asia/Riyadh, **When** an Entry eaten on 2026-09-30 at 02:30 local time is checked against the scope, **Then** it belongs to Day 2026-09-29 and is in scope.
+As the Support agent, I am stopped at the edge of what the eater approved, so that a Grant for two Days never becomes a look at two months.
+Covers: WF-10, FR-081, NFR-07, FRD §8.1 · SR5, SR8 (AC-6) · conflict K11
+- `/r` **Given** E4's `grant_7d01` (Days 2026-09-29 to 2026-09-30; area "Entries and day reports") is Active, **When** the agent moves to Day 2026-09-28 at 15:40 UTC, **Then** the Diary (read-only) reads "28 Sep is outside this Grant" and shows no data; the API returns 403 `GRANT_REQUIRED` (no Grant covers this read), and `grant.read_denied` is in the Audit trail.
+- `/s` **Given** `grant_7d01`'s area, **When** `GET /v1/grants/grant_7d01/units` (15:41 UTC) or `…/activity?day=2026-09-29` (15:42 UTC) is called, **Then** 403 `GRANT_REQUIRED`.
+- `/s` **Given** `grant_7d01` is for E4, **When** a read at 15:43 UTC names a Day, Entry or Unit id of E2, **Then** 404 `NOT_FOUND` and no data.
+- `/m` **Given** E1's diary-day boundary of 04:00 Asia/Riyadh and a scope of Days 2026-09-28 to 2026-09-30, **When** an Entry eaten on 2026-09-30 at 02:30 local time is checked against the scope, **Then** it belongs to Day 2026-09-29 and is in scope.
 
 #### support-10.13 · No changes under a Grant
 As the Support agent, I cannot change anything while reading, so that a Grant is never a way to edit someone's history.
 Covers: WF-10 ("read-only"), FR-041, FR-081, FRD §16.2; vocabulary D2 (Grant: "writes never")
-- `/s` **Given** an Active Grant's token, **When** it is used on `POST /v1/consumption`, `…/corrections`, `…/void`, `POST /v1/units` or `POST /v1/recipes`, **Then** each returns 403 `FORBIDDEN`, and Day 2026-09-29's revision is unchanged.
+- `/s` **Given** `grant_7d01`'s token at 15:45 UTC, **When** it is used on `POST /v1/consumption`, `…/corrections`, `…/void`, `POST /v1/units` or `POST /v1/recipes`, **Then** each returns 403 `FORBIDDEN` (the Support agent role has no write permission), and Day 2026-09-29's revision for E4 is unchanged.
 - `/r` **Given** the Diary (read-only), **When** the agent inspects the Grant panel, **Then** it holds no input, button or shortcut that edits data.
 
-#### support-10.14 · Media and the safety screen stay out of every Grant
-As the Support agent, I never see photos, audio, transcripts, safety-screen answers or the tracking-only mode, even under an Active Grant, so that the most sensitive data has no support path at all.
+#### support-10.14 · Media, the Target and the safety screen stay out of every Grant
+As the Support agent, I never see photos, audio, transcripts, the Target, safety-screen answers or the tracking-only mode, even under an Active Grant, so that the most sensitive data has no support path at all.
 Covers: FRD §19.2 ("Access to raw evidence for quality review requires explicit consent and restricted roles"), FR-038, FR-077, FR-078 · R8, R21
-- `/r` **Given** E1's Entry `en_9921` on Day 2026-09-29 was logged from Analysis `an_5512`, which had a photo, **When** the agent opens it under `grant_31f0`, **Then** she sees the Evidence "estimated analogue" and "From a photo analysis", with no image, thumbnail, transcript or link to media.
-- `/r` **Given** E4's `grant_7d01` is Active, **When** the agent opens a day report, **Then** Target reads "No Target", exactly as for an eater who never set one; the mode is not shown.
+- `/r` **Given** E1's Entry `en_9921` on Day 2026-09-29 was logged from Analysis `an_5512`, which had a photo, **When** the agent opens it under `grant_31f0` at 10:25 UTC, **Then** she sees the Evidence "estimated analogue" and "From a photo analysis", with no image, thumbnail, transcript or link to media.
+- `/r` **Given** E4's `grant_7d01` is Active, **When** the agent opens Day 2026-09-29's day report at 15:35 UTC, **Then** it reads "Target — not included in Grants", exactly as for E1 under `grant_31f0`; neither the mode nor any Target value appears.
 - `/s` **Given** a Grant request, **When** its areas include media, audio, transcripts, SafetyScreen or GoalPlanVersion inputs, **Then** 422 `VALIDATION_ERROR` — the schema has no such area.
 
 #### support-10.15 · Every read is listed for the eater and the auditor
-Shared: Support agent + eater + auditor.
-As the Support agent, I know each read I make under a Grant is recorded and listed to the eater in the Grant's history and to the auditor, so that the eater can see what I saw.
+Shared: Support agent + eater (eater-9.25) + auditor (Audit trail).
+As the Support agent, I know each read I make under a Grant is recorded and listed to the eater in the Grant's history and to the auditor, so that the eater can see what I read.
 Covers: WF-10 ("every read audited"; done-when "every read shows in the auditor's trail"), FR-081 · SR3, SR13, SR15
-- `/r` **Given** the agent read Day 2026-09-29 at 10:24 UTC, Entry `en_9921` at 10:25 UTC and My Units at 10:27 UTC under `grant_31f0`, **When** the eater opens Settings → Privacy → Grants → that Grant, **Then** its history lists exactly three lines, in the catalogue's Arabic, whose English keys read: "Mona K. read your Day for 29 Sep · 13:24", "Mona K. read an Entry from 29 Sep · 13:25" and "Mona K. read your Units · 13:27".
-- `/r` **Given** the same reads, **When** `staff_hana` filters the Audit trail by `grant_31f0`, **Then** she sees in order: `grant.requested`, `grant.approved`, `grant.active`, three `grant.read` (record type Day, Entry and Unit list; record ids; 10:24, 10:25 and 10:27 UTC; staff `staff_mona`; outcome `allowed`), and `grant.expired`.
+- `/r` **Given** fixture G1's three reads (Day 2026-09-29 at 10:24, Entry `en_9921` at 10:25, My Units at 10:27 UTC), **When** the eater opens Settings → Privacy → Grants → that Grant, **Then** its history lists exactly three lines, in the catalogue's Arabic, whose English keys read: "Mona K. read your Day for 29 Sep · 13:24", "Mona K. read an Entry from 29 Sep · 13:25" and "Mona K. read your Units · 13:27". The refused attempts after expiry are not listed, because nothing was shown.
+- `/r` **Given** the same Grant after its end, **When** `staff_hana` filters the Audit trail by `grant_31f0`, **Then** she sees, in order:
+  - `grant.requested` (10:05);
+  - `grant.approved` and `grant.active` (10:20);
+  - three `grant.read` (record types Day, Entry and Unit list; their record ids; 10:24, 10:25 and 10:27 UTC; staff `staff_mona`; outcome `allowed`);
+  - `grant.expired` (11:20);
+  - the two `grant.read_denied` attempts of support-10.17 (11:20:01 and 11:20:05 UTC).
 - `/s` **Given** any Grant read, **When** its Audit trail write fails, **Then** the read returns 503 and no data.
 - `/s` **Given** the Audit trail collection, **When** any role, staff member or service tries to update or delete an event, **Then** the Firestore rules test in the emulator refuses it (append-only).
 
 #### support-10.16 · Always know how long is left, in both time zones
 As the Support agent, I see the time left and the end time in my zone and the eater's, with quiet warnings before the end, so that I finish or ask again in time.
-Covers: WF-10 ("inside the time box"), FR-081, FRD §8.1 · care groups 3, 6
+Covers: WF-10 ("inside the time box"), FR-081, FRD §8.1 · care groups 3, 6 · A26
 - `/r` **Given** `grant_31f0` ends at 11:20 UTC and the agent is in Europe/Dublin, **When** the Diary (read-only) is open at 10:33 UTC, **Then** the Grant bar reads "47 min left · ends 12:20 your time (11:20 UTC) · 14:20 eater's time".
-- `/r` **Given** the same Grant, **When** 11:10 UTC passes, **Then** the Grant bar reads "10 minutes left · the diary closes at 12:20 your time"; **when** 11:18 UTC passes, **then** it reads "2 minutes left · the diary closes at 12:20 your time". Each is announced once (polite), with no dialog, no sound and no per-second announcement.
+- `/r` **Given** the same Grant, **When** 11:10 UTC passes, **Then** the Grant bar reads "10 minutes left · the diary closes at 12:20 your time (11:20 UTC)"; **when** 11:18 UTC passes, **then** it reads "2 minutes left · the diary closes at 12:20 your time (11:20 UTC)". Each warning is announced once (polite), with no dialog, no sound and no per-second announcement.
 - `/r` **Given** reduced motion is on, **When** the countdown advances, **Then** it updates in place without animation.
 
 ### 10E · The box ends
 
 #### support-10.17 · Access ends by itself at the end of the box
-Shared: Support agent + eater.
+Shared: Support agent + eater + auditor (Audit trail).
 As the Support agent, I lose access exactly when the Grant expires, enforced by the server, so that no open tab or cached page outlives the eater's permission.
 Covers: WF-10 ("auto-expiry"; done-when "the Grant expires"), FR-081 · SR1, SR4, SR8 (AC-2(2))
 - `/r` **Given** `grant_31f0` expires at 11:20:00 UTC, **When** the agent moves to Day 2026-09-30 at 11:20:05 UTC, **Then** the Grant panel reads "This Grant expired at 12:20 your time (11:20 UTC)", and the diary content is removed from the page, not just greyed out.
-- `/s` **Given** the Grant has expired, **When** a read is sent at 11:20:01 UTC, **Then** 403 `GRANT_NOT_ACTIVE` with state Expired (judged by the server clock), and `grant.read_denied` is in the Audit trail.
-- `/s` **Given** the expiry scheduler is stopped, **When** a read arrives after `expires_at`, **Then** it still fails (every read checks `expires_at`), and `grant.expired` is written when the scheduler resumes.
+- `/s` **Given** the Grant has expired, **When** a read is sent at 11:20:01 UTC, **Then** it gets 403 `GRANT_NOT_ACTIVE` with state Expired (judged by the server clock), and `grant.read_denied` is in the Audit trail.
+- `/s` **Given** the expiry scheduler is stopped in the emulator, **When** a read arrives after `expires_at`, **Then** it still fails (every read checks `expires_at`), and `grant.expired` is written when the scheduler resumes.
 - `/r` **Given** expiry, **When** E1 opens Settings → Privacy → Grants, **Then** the Grant reads "Expired · 14:20", with its history.
 - `/s` **Given** the Diary (read-only)'s HTTP responses, **When** they are inspected, **Then** each carries `Cache-Control: no-store`, so nothing is served from the browser cache after the box ends.
 
 #### support-10.18 · The eater withdraws access early
-Shared: Support agent + eater.
+Shared: Support agent + eater (eater-9.26, eater-9.17).
 As the Support agent, I lose access the moment the eater withdraws a Grant in Settings, so that the eater's "stop" works at once.
 Covers: WF-10, FR-081, AT-29; vocabulary D2 ("Withdrawn (by the eater)") · SR2 ("revoked at any time"), SR13
 - `/r` **Given** E10's `grant_52a3` is Active, **When** the eater taps "Withdraw access" in Settings → Privacy → Grants at 15:26 their time (12:26 UTC), **Then** the agent's next read returns 403 `GRANT_NOT_ACTIVE` with state Withdrawn, the Grant panel reads "Withdrawn by the eater · 13:26 your time (12:26 UTC)", and the diary content is removed.
-- `/r` **Given** the eater withdrew it, **When** the app confirms, **Then** it reads "Support can no longer read your diary", and the Grant's history keeps every read made before 15:26.
-- `/s` **Given** E12's `grant_8e20` is Active, **When** E12 requests account deletion, **Then** the Grant becomes Withdrawn (reason `account_deletion`), and `POST /v1/grants` for E12 returns 409 `VALIDATION_ERROR` (deletion Running) (AT-29).
+- `/r` **Given** the eater withdrew it, **When** the app confirms, **Then** it reads "Withdrawn · 15:26 · The Support agent can no longer read your diary", and the Grant's history keeps every read made before 15:26.
+- `/s` **Given** E12's `grant_8e20` is Active, **When** E12 requests account deletion, **Then** the Grant becomes Withdrawn (reason `account_deletion`), and `POST /v1/grants` for E12 returns 404 `NOT_FOUND` with no Grant created (AT-29; eater-9.17).
 
 #### support-10.19 · End access as soon as I'm done
-Shared: Support agent + eater.
+Shared: Support agent + eater + auditor (Audit trail).
 As the Support agent, I end a Grant as soon as I have the answer, so that I hold access no longer than needed.
 Covers: WF-10, FR-081; vocabulary D2 ("Ended (by the support agent)") · SR8 (AC-6)
-- `/r` **Given** E10's `grant_52a7` is Active with 31 minutes left at 13:33 UTC, **When** the agent presses "End access", **Then** the state is Ended, the diary content is removed, E10's Settings → Privacy → Grants reads "Ended by support · 16:33", and `grant.ended` is in the Audit trail.
+- `/r` **Given** E10's `grant_52a7` is Active with 31 minutes left at 13:33 UTC, **When** the agent presses "End access", **Then**:
+  - the state is Ended;
+  - the diary content is removed;
+  - the Grant panel reads "Ended by you · 14:33 your time (13:33 UTC)";
+  - E10's Settings → Privacy → Grants reads "Ended by the Support agent · 16:33";
+  - `grant.ended` is in the Audit trail.
 - `/s` **Given** `grant_52a7` is Ended, **When** a read is sent, **Then** 403 `GRANT_NOT_ACTIVE` with state Ended.
 
 #### support-10.20 · No extensions — ask again
-Shared: Support agent + eater.
+Shared: Support agent + eater (a separate Requested Grant, as in eater-9.23).
 As the Support agent, I cannot extend a Grant; I ask for a new one, so that every extra hour is the eater's choice.
-Covers: WF-10, FR-081 · SR13 (to change the length, revoke and grant again)
-- `/r` **Given** E10's `grant_6c10` is Active until 16:02 UTC, **When** the agent looks for "Extend", **Then** there is none; from 15:52 UTC the Grant bar offers "Ask the eater for more time", which opens a new request with the same reason, Days and areas.
+Covers: WF-10, FR-081 · SR13 (to change the length, revoke and grant again) · A26
+- `/r` **Given** E10's `grant_6c10` (reason "Imported Activity looks wrong"; Days 2026-09-29 to 2026-09-30; area "Activity"; case `CASE-1236`) is Active until 16:02 UTC, **When** the agent looks for "Extend", **Then** there is none. From 15:52 UTC, the Grant bar offers "Ask the eater for more time", which opens a new request with the same reason, Days, area and case.
 - `/s` **Given** `PATCH /v1/grants/grant_6c10` changing `expires_at` or the scope, **When** any role sends it, **Then** 405 — a Grant cannot change after it is requested.
-- `/r` **Given** that new request sent at 15:55 UTC while `grant_6c10` is still Active, **When** it is processed, **Then** it is accepted as `grant_6c14` (the one-waiting-request rule counts only Requested Grants), and E10's Settings → Privacy → Grants shows it as a separate request.
+- `/r` **Given** that new request is sent at 15:55 UTC while `grant_6c10` is still Active, **When** it is processed, **Then** it is accepted as `grant_6c14` (the one-waiting-request rule counts only Requested Grants), and E10's Settings → Privacy → Grants shows it as a separate request.
 
 #### support-10.21 · An idle console during a Grant shows nothing
+Shared: Support agent + auditor (Audit trail).
 As the Support agent, I find the diary hidden when my console session times out during a Grant, and I reopen it only through a look-up, so that a desk left unattended shows no diary.
 Covers: WF-10, FR-081 · SR6 (automatic logoff), SR8 (AC-12) · A7, A13
-- `/r` **Given** `grant_31f0` is Active and the agent is idle from 10:40 UTC, **When** 10:53 passes, **Then** the warning banner of support-9.1 shows; **when** 10:55 passes, **then** the diary content is removed and sign-in shows.
-- `/r` **Given** she signs in again at 10:58 UTC, **When** she opens the Diary (read-only) URL directly, **Then** it reads "Look up this account first" (404 `NOT_FOUND`); **when** she opens `grant_31f0` from Grants instead, **then** `support.lookup` with method `grant` is recorded, and the Diary (read-only) reopens with its end time 12:20 your time unchanged.
+- `/r` **Given** `grant_6c10` is Active with its Diary (read-only) open and the agent idle from 15:10 UTC, **When** 15:23 UTC passes, **Then** the warning banner of support-9.1 shows; **when** 15:25 UTC passes, **then** the diary content is removed and sign-in shows.
+- `/r` **Given** she signs in again at 15:28 UTC, **When** she opens the Diary (read-only) URL directly, **Then** it reads "Look up this account first" (404 `NOT_FOUND`); **when** she opens `grant_6c10` from Grants instead, **then** `support.lookup` with method `grant` is in the Audit trail, and the Diary (read-only) reopens with its end time "17:02 your time (16:02 UTC)" unchanged.
 
 ### 10F · The Grants list, the end-to-end proof, the Registry status, and failures
 
 #### support-10.22 · The Grants list — a history I can account for
 As the Support agent, I see my Grants in every state with times and cases, so that I can follow up each case and account for my access.
-Covers: WF-10, FR-081 · SR2 ("a historical view of all requests that were approved, dismissed, revoked, or expired")
-- `/r` **Given** `staff_mona`'s Grants at 16:00 UTC on 2026-10-01, **When** she opens Grants, **Then** the rows read: Active (`grant_6c10`, `grant_7d01`), Requested (`grant_6c14`), Expired (`grant_31f0`), Declined (`grant_31f9`), Unanswered (`grant_40aa`), Withdrawn (`grant_52a3`) and Ended (`grant_52a7`). Each row shows the eater's account, case, reason, state, and requested, answered and closed times in her time with UTC. The state filter works, and no diary content appears.
+Covers: WF-10, FR-081 · SR2 ("a historical view of all requests that were approved, dismissed, revoked, or expired") · A15, A21
+- `/r` **Given** `staff_mona`'s Grants in §0.3, **When** she opens Grants at 16:00 UTC on 2026-10-01, **Then** the rows read:
+  - Active: `grant_6c10`, `grant_7d01`;
+  - Requested: `grant_6c14`;
+  - Expired: `grant_31f0`;
+  - Declined: `grant_31f9`;
+  - Unanswered: `grant_40ab`;
+  - Withdrawn: `grant_52a3`;
+  - Ended: `grant_52a7`.
+
+  Each row shows the eater's account, case, reason, state, and the requested, answered and closed times in her time with UTC; "—" marks a time that has not happened. The state filter works, and no diary content appears.
+- `/r` **Given** the Grants API is slowed to 3 s (fault injection), **When** Grants opens, **Then** table-shaped placeholders appear within 300 ms and the rows replace them at 3 s; if loading takes longer than 10 s, the list reads "Still loading — Cancel".
+- `/r` **Given** the Grants API returns 503, **When** Grants opens, **Then** it reads "Couldn't load your Grants. Try again." with the request id `req_…`.
 - `/r` **Given** `staff_lee`, who has no Grants, **When** he opens Grants, **Then** it reads "You have no Grants. Most cases are solved from the account panel in Jobs."
 
 #### support-10.23 · The whole Grant, end to end
-Shared: Support agent + eater + auditor.
-As the Support agent, I run one full Grant — request, the eater approves it in Settings, I read inside the box, it expires, the trail shows it — and see a declined one give nothing, so that WF-10's promise is proved in the served product.
+Shared: Support agent + eater + auditor (Audit trail).
+As the Support agent, I run one full Grant — request, the eater approves it in Settings, I read inside the box, it expires, the trail shows it — and I see a declined one give nothing, so that WF-10's promise is proved in the served product.
 Covers: WF-10 done-when ("support requests a Grant, the eater approves it in Settings, support reads the diary inside the time box, the Grant expires and every read shows in the auditor's trail; a declined Grant gives no access"), FR-081
-- `/r` **Given** E1 on the iOS simulator and `staff_mona` in the console, **When** she requests `grant_31f0` (1 hour; Days 28–30 Sep; Entries and day reports, My Units), the eater approves it in Settings → Privacy → Grants, she reads Day 2026-09-29, and the clock passes `expires_at`, **Then** the read worked inside the box and failed after it with `GRANT_NOT_ACTIVE` (state Expired), the eater's Grant history lists the read, and the auditor's Audit trail shows requested → approved → active → read → expired.
-- `/r` **Given** the next request `grant_31f9`, which the eater declines, **When** the agent tries to read any Day, **Then** 403 `GRANT_NOT_ACTIVE` (state Declined), and the Audit trail shows requested → declined → read_denied.
+- `/r` **Given** E1 on the iOS simulator and `staff_mona` in the console, **When** fixture G1 runs as in §0.3, **Then**:
+  - the request is sent at 10:05 and the eater approves it in Settings → Privacy → Grants at 10:20;
+  - the three reads at 10:24, 10:25 and 10:27 UTC succeed;
+  - the clock passes 11:20 UTC;
+  - the read attempts at 11:20:01 and 11:20:05 UTC fail with `GRANT_NOT_ACTIVE` (state Expired);
+  - the eater's Grant history lists the three reads;
+  - the auditor's Audit trail shows requested → approved → active → read ×3 → expired → read_denied ×2.
+- `/r` **Given** fixture G2 (`grant_31f9`), **When** the eater declines it and the agent tries the read of support-10.7 at 11:45 UTC, **Then** 403 `GRANT_NOT_ACTIVE` (state Declined), and the Audit trail shows requested → declined → read_denied.
 
 #### support-10.24 · Know when the AI is paused for everyone
+Shared: Support agent + platform admin (the kill switch).
 As the Support agent, I see the Registry's kill switch state on every console screen, so that I don't troubleshoot one account for a platform-wide pause.
-Covers: WF-10 ("roll models and config"); blueprint §6 (Registry: "kill switch"); FRD §16.4 ("A kill switch must preserve manual and cached logging"); FR-080; NFR-05; AT-32
-- `/r` **Given** the kill switch for image analysis is On from 09:10 UTC, **When** any Jobs or Grants screen is open, **Then** a quiet status bar reads "Kill switch On for image analysis since 10:10 your time (09:10 UTC) · manual and recent-Unit logging work", and Failed Analyses rows after 09:10 UTC carry the tag "Kill switch On".
+Covers: WF-10 ("roll models and config"); blueprint §6 (Registry: "kill switch"); FRD §16.4 ("A kill switch must preserve manual and cached logging"); FR-080; NFR-05; AT-32 · A11
+- `/r` **Given** the kill switch for image analysis is On from 09:10 UTC, **When** any Jobs or Grants screen is open at 09:30 UTC, **Then** a quiet status bar reads "Kill switch On for image analysis since 10:10 your time (09:10 UTC) · manual and recent-Unit logging work".
+- `/r` **Given** E14's `an_7740` (Failed at 09:20 UTC, while the switch was On) and E5's `RATE_LIMITED` row (16:40 UTC, after it went Off), **When** their Failed Analyses tabs open, **Then** only `an_7740` carries the tag "Kill switch On"; rows from outside 09:10–09:55 UTC never do.
 - `/r` **Given** the kill switch turns Off at 09:55 UTC, **When** 60 seconds pass, **Then** the status bar is gone without a page reload.
 - `/s` **Given** a support token, **When** it calls any Registry write endpoint, **Then** 403 `FORBIDDEN`.
 
-#### support-10.25 · Grant actions that fail or happen offline
-As the Support agent, I am told plainly when Send request or End access fails or the network drops, and the diary never stays on screen without the server, so that a failure never leaves a request half-sent or a diary half-open.
-Covers: WF-10, FR-081, NFR-05 · care group 4 · A21
-- `/r` **Given** the Grants API returns 503 (fault injection), **When** the agent presses Send request, **Then** the form keeps every field and reads "Couldn't send the request. Nothing was sent to the eater. Try again.", and no new row appears in Grants.
+#### support-10.25 · Grant actions and the Diary (read-only) when slow, failing or offline
+As the Support agent, I am told plainly when Send request, a read or End access fails or the network drops, and the diary never stays on screen without the server, so that a failure never leaves a request half-sent or a diary half-open.
+Covers: WF-10, FR-081, NFR-05 · care group 4 · A15, A21
+- `/r` **Given** the Grants API returns 503 (fault injection), **When** the agent presses Send request on a filled form, **Then** the form keeps every field and reads "Couldn't send the request. Nothing was sent to the eater. Try again.", and no new row appears in Grants.
 - `/r` **Given** the browser is offline, **When** the agent opens the Grant form, **Then** Send request is disabled with "Connect to send a request", and the form keeps its fields.
-- `/r` **Given** `grant_31f0` is Active and the Diary (read-only) is open, **When** the browser goes offline, **Then** the diary content is removed at once, and the Grant panel reads "Offline — the diary is never stored on this computer. It reopens when you're back online, until 12:20 your time."
-- `/r` **Given** the agent presses End access while offline, or the call fails, **When** the console reacts, **Then** the diary content is removed at once, the Grant panel reads "Couldn't reach the server. The Grant stays Active until 12:20 your time unless this goes through. Trying again…", and the call is retried when the connection returns; the state becomes Ended when it succeeds.
+- `/r` **Given** E7's `grant_9b30` is Active and the read API is slowed to 3 s (fault injection) at 17:05 UTC, **When** the agent opens Day 2026-09-30 in the Diary (read-only), **Then** placeholder rows reading "Loading 30 Sep…" appear within 300 ms, and the Day replaces them at 3 s.
+- `/r` **Given** the read API returns 503 at 17:10 UTC (fault injection), **When** the agent opens the Day again, **Then** the Diary (read-only) reads "Couldn't load 30 Sep. Nothing was shown. Try again." with the request id `req_…`. The Audit trail records the attempt as `grant.read` with outcome `error`, and the eater's Grant history does not list it.
+- `/r` **Given** `grant_9b30` is Active with the Diary (read-only) open, **When** the browser goes offline at 17:20 UTC, **Then** the diary content is removed at once, and the Grant panel reads "Offline — the diary is never stored on this computer. It reopens when you're back online, until 19:00 your time (18:00 UTC)."
+- `/r` **Given** the agent presses End access while still offline at 17:22 UTC, **When** the console reacts, **Then** the Grant panel reads "Couldn't reach the server. The Grant stays Active until 19:00 your time (18:00 UTC) unless this goes through. Trying again…". When the connection returns at 17:25 UTC, the call is sent, the state becomes Ended, and the panel reads "Ended by you · 18:25 your time (17:25 UTC)".
 
 ---
 
 ## 9 · The experience this persona needs
 
-- **Device and place.** A desk, a large monitor (1440 px and up, proved at 1440×900 and 1920×1080 in support-9.19), keyboard first, with a helpdesk window beside the console (A1). Steady office network and light. The same console stays usable at about 390 px for a quick check away from the desk (§0).
+- **Device and place.** A desk, a large monitor (1440 px and up, A28; proved at 1440×900 and 1920×1080 in support-9.19), keyboard first, with a helpdesk window beside the console (A1). Steady office network and light. The same console stays usable at about 390 px for a quick check away from the desk (§0).
 - **The moments that matter.**
   1. The first ten seconds of a case: one code in, the account panel on screen, the likely cause visible (SR16).
   2. The ask: a Grant request that a stranger reading it on a phone understands at once.
@@ -722,24 +824,24 @@ Size is platform, so every question is asked on every screen this persona uses: 
 
 | question | answer |
 |---|---|
-| Every action answers | Send request → "Requested" (10.2); Approve → "Active" (10.6); End access → "Ended" (10.19); Retry → "Requested" (9.9); Escalate → "Escalated to the platform admin" (9.11); failures say so (10.25) |
+| Every action answers | Send request → "Requested" (10.2); Approve → "Active" (10.6); End access → "Ended by you" (10.19); Retry → "Requested" (9.9); Escalate → "escalated to the platform admin" (9.11); a failed call says that nothing changed: Retry (9.9), Escalate (9.11, 9.14), Save (9.15), Send request and End access (10.25) |
 | Loudness matched | quiet: the kill switch bar, the time-left warnings, the offline strip (10.24, 10.16, 9.21). Error colour only for Failed rows or a deletion with 5 days or fewer left (9.19) |
 | Responds at once | a pressed button shows its working state within 100 ms (9.21, A15) |
 | Change of mind mid-motion | a draft can be left and resumed (9.15, 10.3). A sent request cannot be cancelled by the Support agent, because vocabulary D2 has no such path (conflict K10); it ends when Declined or Unanswered |
 | Animation | none on repeated actions; the countdown updates in place (9.19, 10.16) |
 | One main action, never destructive | Look up (Jobs), Send request (form), End access (Active Grant). None destroys data, and the console has no destructive action |
 | Edges, gaps, baselines | one spacing grid for tables and panels; checked in the care pass on the served console |
-| Chosen values | every value with no source is in the assumptions table (A2–A22), to be tried on the served console |
+| Chosen values | every value with no source is in the assumptions table (A2–A29), to be tried on the served console |
 | First screen at once, back where left | after sign-in, Jobs → Look up opens at once. On purpose, it does not reopen the last account, so every read follows a look-up (A13; 10.21) |
 
 **4 · When it goes wrong, is empty, or is slow**
 
 | question | answer |
 |---|---|
-| Empty | every list says what to do next: Privacy jobs (9.8), failed-job tabs (4.3), duplicates (3.2), Activity (7.1), Grants list (10.22) |
+| Empty | every list says what to do next: Privacy jobs (9.8), Requests received outside the app (9.15), failed-job tabs (4.3), duplicates (3.2), Activity (7.1), Grants list (10.22) |
 | First second while loading | placeholders within 300 ms (4.3); "Looking up…" within 100 ms (9.21) |
-| Long tasks: honest progress, cancel | export and deletion show their stages with dates (9.8, 9.10); "Still loading — Cancel" at 10 s (4.3, 9.21) |
-| Errors next to the problem, no blame | the field errors in 10.3 and 9.3; screen errors with the request id (9.21, 4.3); never "oops" |
+| Long tasks: honest progress, cancel | export and deletion show their stages with dates (9.8, 9.10); "Still loading — Cancel" at 10 s (4.3, 9.21, 10.22); the Diary (read-only) shows "Loading 30 Sep…" (10.25) |
+| Errors next to the problem, no blame | the field errors in 10.3 and 9.3; row errors on the row (9.9, 9.11, 9.14); screen errors with the request id (9.21, 4.3, 10.22, 10.25); never "oops" |
 | Check as typed, fix slips quietly | support codes ignore case, spaces and hyphens (9.2); emails are trimmed and case-insensitive (9.3) |
 | Undo shows what it reversed | n/a for staff data changes, because there are none. Retry and End access cannot be undone and are safe: one repeats a job with the same id, the other only removes access |
 | Warn before unexpected permanent loss | n/a — the console has no destructive action |
@@ -759,7 +861,7 @@ Size is platform, so every question is asked on every screen this persona uses: 
 | Placeholders gone; realistic sample data | synthetic fixtures with Arabic, two time zones and long cases (§0.3) |
 | Collect only what is needed | support codes last 24 h (9.2); the requests log keeps no content (9.15); the completion record keeps no identifiers (9.12) |
 | Start and resume time measured | n/a for this lens — it belongs to the release proof's performance pass. The lens adds no wait to start or resume |
-| Claims only what it does | "Support can read, not change" is true because the server refuses every write under a Grant (10.13) |
+| Claims only what it does | "The Support agent can read, not change" is true because the server refuses every write under a Grant (10.13) |
 
 **6 · Inclusion**
 
@@ -784,38 +886,37 @@ Size is platform, so every question is asked on every screen this persona uses: 
 | story | shared with | what the other persona does or sees |
 |---|---|---|
 | support-9.1 | auditor | sees failed sign-ins, lockouts and idle sign-outs in the Audit trail |
-| support-9.2 | eater | reads the support code in Settings → Privacy |
+| support-9.2 | eater | reads the support code in Settings → Privacy → Support code (eater-9.29) |
 | support-9.3 | auditor | sees `support.lookup` and `support.lookup_rate_limited` |
-| support-9.9 | auditor, platform admin | the auditor sees `support.job_retried`; the platform admin receives the escalation after a second failure |
+| support-9.9 | eater, auditor, platform admin | the eater sees "Running" in Settings → Export (eater-9.14); the auditor sees `support.job_retried`; the platform admin receives the escalation after a second failure |
 | support-9.11 | platform admin, auditor | the platform admin sees the escalation in Jobs → "Escalated" and resolves it; the auditor sees `support.escalated` |
 | support-9.14 | platform admin | receives the "cannot sign in" escalation |
 | support-9.15 | auditor | sees `support.request_logged` |
-| support-9.18 | auditor | filters the Audit trail by staff and day |
+| support-9.16 | nutrition approver, platform admin | `staff_dina` is refused Jobs and Grants; `staff_dina` and `staff_ali` are refused `POST /v1/grants` |
+| support-9.18 | auditor | filters the Audit trail by staff, account and time |
+| support-10.1 | auditor | sees `grant.read_denied` for a read with no Grant |
 | support-10.2 | auditor | sees `grant.requested` |
-| support-10.6 | eater | sees the request in Settings → Privacy → Grants and taps Approve |
-| support-10.7 | eater | taps Decline without giving a reason |
-| support-10.8 | eater | sees the Unanswered request in history |
-| support-10.9 | auditor | sees `grant.approve_denied` |
-| support-10.10 | eater | cannot answer offline and is told to connect |
+| support-10.6 | eater, auditor | the eater sees the request in Settings → Privacy → Grants and taps Approve (eater-9.22); the auditor sees `grant.approved` and `grant.active` |
+| support-10.7 | eater, auditor | the eater taps Decline without giving a reason (eater-9.23); the auditor sees `grant.read_denied` |
+| support-10.8 | eater | sees "Unanswered · no access was given" in history (eater-9.24) |
+| support-10.9 | platform admin, auditor | `staff_ali`'s and `staff_hana`'s tokens are refused approval; the auditor sees `grant.approve_denied` |
+| support-10.10 | eater | cannot answer offline and is told to connect (eater-9.27) |
 | support-10.12 | auditor | sees `grant.read_denied` |
-| support-10.15 | eater, auditor | the eater reads the Grant's history; the auditor reads every `grant.*` event |
-| support-10.17 | eater | sees "Expired" with the history |
-| support-10.18 | eater | taps Withdraw access |
-| support-10.19 | eater | sees "Ended by support" |
+| support-10.15 | eater, auditor | the eater reads the Grant's history (eater-9.25); the auditor reads every `grant.*` event |
+| support-10.17 | eater, auditor | the eater sees "Expired · 14:20"; the auditor sees `grant.read_denied` |
+| support-10.18 | eater | taps Withdraw access (eater-9.26); deletion during a Grant (eater-9.17) |
+| support-10.19 | eater, auditor | the eater sees "Ended by the Support agent"; the auditor sees `grant.ended` |
 | support-10.20 | eater | sees the new request as a separate one |
+| support-10.21 | auditor | sees `support.lookup` with method `grant` |
 | support-10.23 | eater, auditor | the end-to-end WF-10 proof |
+| support-10.24 | platform admin | the kill switch the platform admin turns On and Off |
 
 ---
 
 ## 12 · Conflicts for the model phase
 
-- **K1 · eater ↔ Support agent: what the eater's Grant history shows.**
-  - Transparency (SR13, SR15) argues for listing every staff view, including metadata-only look-ups. But showing look-ups that touched no diary may alarm the eater and clutter Settings.
-  - This lens lists every Grant read, one per line (10.15), and proposes a once-a-day line for metadata views ("Support viewed your account status — no diary data").
-  - The eater lens may prefer Grant reads only.
-- **K2 · eater ↔ Support agent: how the eater learns a request is waiting.**
-  - A push notification needs the notification permission, which the app may not require (R2).
-  - Without it, only the Settings badge and the agent's email reply tell the eater, so a request may wait. This interacts with the 72 h Unanswered window (A6).
+- **K1 · eater ↔ Support agent: what the eater's Grant history shows — aligned in round 2.** The eater lens lists Grant reads only (eater C-14). This lens now does the same (10.15): the history shows `grant.read` events with outcome `allowed`. Metadata look-ups and refused attempts appear only in the Audit trail. The once-a-day metadata line proposed in round 1 is withdrawn.
+- **K2 · eater ↔ Support agent: how the eater learns a request is waiting — answered by the eater lens.** eater-9.21 shows the Settings badge in every case, and one notification only if notifications were already allowed, with no permission prompt (R2). A request may still wait unseen, which is why the 72 h Unanswered window exists (A6).
 - **K3 · platform admin ↔ nutrition approver: who owns the Grant limits.**
   - The limits are durations, maximum Days, the request window, idle sign-out and the email look-up rate. They are neither nutrition Policy (approver-owned, blueprint §6) nor the model Registry.
   - Proposal: a versioned configuration owned by the platform admin and readable by the auditor. The model phase decides where it lives.
@@ -838,7 +939,21 @@ Size is platform, so every question is asked on every screen this persona uses: 
   - Support-9.14 therefore escalates to the platform admin. Someone must still verify identity outside the app (SR9 Art. 12(6), SR11 Art. 3(1)(c)), without an ID copy unless necessary (SR10 ¶74), and run the job within 30 days.
   - The model phase names the role, and the owner may need to decide it.
 - **K10 · vocabulary D2: no path for the Support agent to cancel a Requested Grant.** D2 lists Requested → Declined · Unanswered only. A mistaken request therefore waits for the eater or for its window. Proposal for a dated delta: "Requested → Ended (by the support agent)". Until then, 10.5 shows that there is no cancel control.
-- **K11 · vocabulary D2: error codes for "a request is already waiting" and "deletion Running".** This lens uses 409 `VALIDATION_ERROR` with the waiting Grant or the job in the body (10.4, 10.18, 9.9). A dedicated code would need a dated delta.
+- **K11 · vocabulary D2: codes this lens stretches.**
+  - 409 `VALIDATION_ERROR` is used when a request is already waiting (10.4) and for a second retry of the same job (9.9), with the current state in the body.
+  - `GRANT_REQUIRED` is used for a read outside the Grant's Days or areas (10.12): no Grant covers the read, and the role itself has the read permission, so `FORBIDDEN` (D2: "role lacks the permission") does not fit.
+  - Dedicated codes would need a dated delta.
+  - A new Grant on an account whose deletion was requested now returns 404 `NOT_FOUND`, as in eater-9.17. That is not a stretch.
+- **K12 · eater lens ↔ Support agent: lines in `way/personas/eater/wf1-wf9.md` that still differ from this lens.** This lens follows the map and D2. The eater lens should align these lines:
+  - (a) **"view" against "read".** eater-9.22 says "Every view is listed here", eater-9.25 says "viewed your diary", and eater-9.26 says "can no longer see your diary". The map's word is "read" ("read within the Grant"; D2 "reads are allowed only while Active"), and the Audit trail event is `grant.read`. This lens's copy is "Every read is listed here", "Mona K. read your Day for 29 Sep · 13:24" and "can no longer read your diary".
+  - (b) **Deletion stage words.** eater-9.17 expects each stage to read "done" or "waiting". This lens shows the D2 Privacy job words — Completed, Running, Requested, Failed — plus "Not applicable" (9.10).
+  - (c) **"Re-queue".** eater-9.14 says a Support agent "re-queues" the export. The action is Retry (D2: "retried with the same id"; 9.9).
+  - (d) **Grant fixtures.**
+    - eater-9.23 declines `grant_31f0` at 13:12, and eater-9.26 withdraws it at 13:41 (Asia/Riyadh). Here `grant_31f0` is approved at 10:20 UTC and Expires, the declined Grant is `grant_31f9`, and the withdrawn one is `grant_52a3`.
+    - eater-9.24's `grant_40aa` is Requested for E1 at 10:05 UTC, alongside `grant_31f0`. The one-waiting-request rule (10.4) forbids that, so this lens's Unanswered Grant is `grant_40ab` on E10.
+  - (e) **Story ids.** The eater file cites this lens's round-0 ids (support-9.8 for the retry, support-9.9 and 9.11 for deletion). Use the map in "Fix round 1": 9.9, 9.10 and 9.12.
+  - (f) **The Target line.** eater-1.19's Shared line says a Support agent's view shows "No Target". Under a Grant, every eater's day report reads "Target — not included in Grants" (10.11, 10.14), matching eater-9.22's "Never included: … your Target".
+  - (g) **The reason text.** eater-9.22 quotes the reason as "An entry is missing or appears twice". The catalogue writes "An Entry is missing or appears twice" (10.2).
 
 ---
 
@@ -846,7 +961,7 @@ Size is platform, so every question is asked on every screen this persona uses: 
 
 These are proposals for a dated delta. **Console views** inside the D2 sections:
 - *Jobs:* "Look up an account", the **account panel**, **Privacy help**, **Privacy jobs**, the failed-job tabs **Failed Analyses**, **Sync** (with "Duplicates ignored") and **Activity**, **Requests received outside the app** (states Open · Escalated to the platform admin · Closed), "What to tell the eater", and the filter "Escalated" (shared with the platform admin).
-- *Grants:* the **Grant form**, the **Grant panel** (one Grant's state, scope and times; while the Grant is Active it holds the Diary (read-only)), the **Grant bar** (the strip pinned at the top of every console screen while the agent has an Active Grant, showing the time left and end times), the **Diary (read-only)**, and the Grants list.
+- *Grants:* the **Grant form**, the **Grant panel** (one Grant's state, scope and times; while the Grant is Active it holds the Diary (read-only)), the **Grant bar** (the strip pinned at the top of every console screen while the agent has an Active Grant for the account in view, showing that Grant's time left and end times), the **Diary (read-only)**, and the Grants list.
 
 **Other words:**
 - **Grant areas:** Entries and day reports · My Units · Templates · Activity.
@@ -906,7 +1021,8 @@ These are proposals for a dated delta. **Console views** inside the D2 sections:
 | NFR-12 (least privilege, quotas, bounded retries) | support-9.1, 9.3, 9.9, 9.16, 4.2 |
 | NFR-13 (deletion ≤30 days) | support-9.10–9.12, 9.14 |
 
-**Totals:** 52 stories (journey 3: 2 · journey 4: 3 · journey 7: 1 · journey 9: 21 · journey 10: 25); 179 acceptance lines (journey 3: 5 · journey 4: 9 · journey 7: 2 · journey 9: 85 · journey 10: 78): 138 `/r`, 35 `/s`, 6 `/m`. Every story has at least one `/r` line.
+**Totals:** 52 stories (journey 3: 2 · journey 4: 3 · journey 7: 1 · journey 9: 21 · journey 10: 25); 190 acceptance lines (journey 3: 5 · journey 4: 9 · journey 7: 2 · journey 9: 91 · journey 10: 83): 149 `/r`, 35 `/s`, 6 `/m`. Every story has at least one `/r` line.
+
 
 ## Lens verdict (2026-10-01)
 

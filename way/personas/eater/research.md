@@ -359,3 +359,60 @@ These are tensions between the eater and other personas or within the model; the
 - Whether App Shortcut phrases work in Arabic with Siri (P22 as checked in r1-refute-b) — typed and tapped logging never depend on it.
 - OpenAI's Memory FAQ wording on what ChatGPT does not remember (E22; host blocked).
 - Paper food diaries in Egypt and Saudi Arabia: no source opened.
+
+## Lens verdict (2026-10-01)
+
+**fail** — 16 defects. Scope: checks 4 (Sourced) and 6 (Experience) of `_lens-verifier-brief.md`, with `way/vocabulary.md` (delta D2) applied alongside the map. Verifier: an independent agent. Nothing in this file was fixed.
+
+**What was re-opened today (generic User-Agent; no owner identifier sent).** 37 E-findings were re-opened at their sources: E1–E14, E18 (the Egyptian Cal AI review), E20–E26, E28 (two of the four Kilo reviews), E29–E31 and E33–E43. Quotes, dates and figures match for all of them except the items listed below. PMC pages served a CAPTCHA, so the same articles were read through Europe PMC and NCBI full text. The cycle-1 ids cited are C4, C5, C7, C12, C16, C19, C22, C23, C29, C38, C40, C55, F20, F27, F32–F35, P1–P4, P15, P22, P24, P29, P30, P34, R3, R35, R37 and R38. None of them is refuted or doubtful in `r1-refute-a.md` or `r1-refute-b.md`, and none of the dropped sub-claims (C4 tap counts, C7 "most-cited", C19 "one tap", C38 ad spend, C40 undercount, F32 "20 s", F33 menu count) is used. The experience covers the device, the places, the moment, place and feeling for WF-1…WF-10, and the matching style.
+
+### Sourced (check 4)
+
+1. **E7**: the claim does not follow. Line 45 says: "A review of dietary assessment found shared-plate eating supplied 30–88% of daily energy in the studies it covered (one in Egypt)." The source (PMC6520825) says: "Shared plate eating was found to contribute between 30 and 88% of total daily energy intake [20]". Reference [20] is a single study, Abu-Saad et al. 2009, of a semi-nomadic Bedouin population in southern Israel. The Egyptian study [13] is an ethnographic case study and gives no energy share. The range belongs to one Israeli study, not to "the studies it covered".
+2. **E32 and the §E table row "MyFitnessPal"**: a single review is stated as a fact about the product. Line 149 says: "In the market leader, routine logging got slower and copying is limited to yesterday." Line 208 says: "copy only from yesterday". Both rest on one 3★ review. MFP's own help article "How do I copy a meal from one day to another?" (360032622131, updated 2026-08-26, the source behind C5) says: "Tap the "Copy" button and select a date to copy the items." Either label this as one user's report (the file's own weight rule) or reconcile it with C5.
+3. **The §E table row "Lose It! / Cronometer"** contains an unsourced claim. Line 209 reads: "onboarding questions; convoluted recipe flow on a small phone; no Arabic | E17; C19, C22, C23, C29". "Convoluted recipe flow on a small phone" is not in E17, C19, C22, C23 or C29, nor in any `r1-*.md` file. It carries no `assumption` label.
+4. **E39** contains reasoned claims with no source and no `assumption` label. Line 180 says: "the iOS-first eater is as likely Saudi as Egyptian; Egyptian iPhone eaters often share recipes with Android family members". StatCounter gives operating-system shares only. The comparison between the two countries needs population figures that were not opened, and the recipe-sharing behaviour has no source.
+5. **E5** has the wrong date. Line 38 gives "2023-07-26", which is only the URL slug. The page re-opened today states `datePublished` 2025-02-23 and shows "Feb 23". Give the page's own date.
+
+### Experience (check 6): care questions neither answered nor marked "not applicable" (care.md, platform: every group on every screen)
+
+Line 271 says "the lines below are the eater-specific answers", but care.md requires every question the operation does not raise to be answered "not applicable" with a reason. None of the following is.
+
+6. **Group 1.** EX-01 gives the one-sentence purpose for Today only. There is none for Capture & Plan, My Units, Progress, Settings, Analysis review, Unit editor, Meal planner or Meal review. "If this changes how an existing screen works … did we try it on them?" is neither answered nor marked not applicable.
+7. **Group 2.** These questions are unanswered:
+   - "Would someone who knows none of our internal names understand every label?" The eater sees Entry, Void, Restore, Evidence and Pending.
+   - "Can people tell at a glance what is tappable and what is plain content?" This matters for Unit tiles next to Entry rows.
+   - "Does each colour mean one thing?" EX-35 covers only meaning carried by colour alone.
+8. **Group 3.** "Do edges, gaps and baselines line up exactly, with no uneven spacing anywhere?" is not answered, including for mirrored Arabic layouts and mixed-script rows. EX-39 covers direction only.
+9. **Group 4.**
+   - "What appears in the first second while data loads?" is answered only for Today (EX-18). It is not answered for Progress reports, Analysis review or My Units.
+   - "Do we check each field as it is typed, and quietly fix an obvious slip?" is not answered for the Unit editor's weights, the pot weight, counts, or the profile and Target inputs.
+10. **Group 5.** "Is start and resume time measured … on a slow device and link?" is not answered. EX-18 asks only for no flash. §1 names the smallest iPhone but sets no start or resume measure on it.
+11. **Group 6.** These questions have no EX line and are not marked not applicable:
+    - "Does every interactive element show a visible focus ring?"
+    - "Can the whole flow be done by keyboard?"
+    - "Would this work for … someone who cannot use a mouse?"
+
+    On iOS these mean Full Keyboard Access, Switch Control and Voice Control.
+
+### Vocabulary (map §1 ¶4 and D2)
+
+12. **EX-17 and EX-21** use "draft" for an Analysis. Line 297 says "a draft Analysis can be discarded" and line 304 says "An offline photo stays a Pending draft". D2 says: "'Draft' is used only here" (Unit, Composite and Recipe). Analysis states are Processing → Needs answers → Ready for review → Approved · Discarded · Failed, and Pending.
+13. **Conflict 6** contradicts the D2 Grant states. Line 347 says: "The model must make 'decline' the default when the eater does nothing, and set the request's own expiry." D2 says: "Requested → Declined · Unanswered (no answer before the request window closes)". No answer is **Unanswered**, not Declined, and the time limit is the **request window**.
+14. **Role names** have more than one form. D2 names the roles "Nutrition approver", "Support agent" and "Platform admin". The file also writes:
+    - "approver": line 342 "eater vs auditor/approver", line 344 "approver's dialect Alias … approver default", line 346 "eater vs approver/admin";
+    - "admin": line 346;
+    - "support": line 349 "eater vs auditor/support".
+15. **Some things have two names:**
+    - "suhur" (E11, E12, lines 61–66) and "suhoor" (lines 223 and 237, Conflict 2);
+    - "Day boundary" (lines 63, 71, 237) and "diary-day boundary" (map §6; EX-05, EX-20);
+    - "fixed-target mode" (E18, line 96) and the map's "fixed mode" (§5, WF-7 done-when).
+16. **EX-08's vocabulary list is incomplete.** Line 285 says: "The map's vocabulary (Unit, Template, Entry, Day, Target, Plan, Analysis, Evidence, Correction, Void, Restore, Pending, Activity, Consent, Grant) has one fixed Arabic label each". It leaves out map words the eater sees (Composite, Recipe, Food, Alias). It also leaves out D2's state, error and place names, which also need one fixed Arabic label: for example Needs answers, Ready for review, Unlogged, Infeasible, Unanswered, and the Settings sections.
+
+### Not re-checked today (uncounted)
+
+Apple's customer-review feed returned zero entries for every app tried today, including unrelated ones, and the App Store web pages show only a subset of reviews. So the review quotes in E15, E16, E17, the Saudi MFP half of E18, E19, E27 (including the count "40 of the latest 100"), E32, E44, and the two Arabic Kilo reviews in E28 could not be re-opened. These quotes are not judged wrong.
+
+### Cross-lens (for the model phase join, uncounted)
+
+None found within checks 4 and 6.
