@@ -11,7 +11,7 @@ Every story and every test of Sips & Bytes uses this file and nothing else for i
 1. **One file, one timeline.** Every record carries a time (UTC). A story declares its **start clock**; the loader writes every record whose time is at or before it (`POST /v1/test/seed {at}` in a test build), sets the clock (`PUT /v1/test/clock`), and the story runs. Moving the clock forward inside a story never loads later seed records (J52).
 2. **Givens add, never contradict.** A story's Given may add records only through the public API or the test endpoints (J51), on top of what was loaded. A Given that contradicts a loaded record is a defect of the story.
 3. **Live events continue the trail.** The seeded Audit trail (§11) holds 266 events; an event a story causes is numbered after the last event loaded at its start clock.
-4. **Adapters run as mocks** until the owner's cutover (blueprint §0 line 6): Gemini (scripted outputs per story), USDA FoodData Central (serves §8.1 and §8.7), HealthKit (the simulator's Health store, seeded per §10.5), Sign in with Apple, the processor-notice endpoint. Every mock keeps a request log readable by tests.
+4. **Adapters run as mocks** until the owner's cutover (blueprint §0 line 6): Gemini (scripted outputs per story), USDA FoodData Central (serves §8.1, with releases 15.4 and 15.5, and the import of §10.7), HealthKit (the simulator's Health store, seeded per §10.5), Sign in with Apple, the processor-notice endpoint. Every mock keeps a request log readable by tests.
 5. **Separate datasets** (§13) are loaded only by the stories that name them.
 
 ---
@@ -51,7 +51,7 @@ Every story and every test of Sips & Bytes uses this file and nothing else for i
 
 | lens | default start clock | what it sees |
 |---|---|---|
-| eater (all files) | 2026-10-01T09:00:00Z | Policy v1 In effect; `meal@v6` in Rollout; every 30 Sep Day complete; Thu 1 Oct Provisional |
+| eater (all files) | 2026-10-01T09:00:00Z | Policy v1 In effect; `meal@v6` in Rollout; every 30 Sep Day past its boundary; Thu 1 Oct Provisional |
 | support | 2026-10-01T10:03:00Z | E1 with no Grant yet (`grant_31f0` is requested at 10:05) |
 | platform admin | 2026-10-01T09:00:00Z | both Platform admins; failed jobs as in §10 |
 | nutrition approver | 2026-09-29T07:00:00Z | Policy v1 In effect, no v2 yet; two Nutrition approvers; 3 Label submissions and 9 open flags (§8.6) |
@@ -70,23 +70,24 @@ Every story and every test of Sips & Bytes uses this file and nothing else for i
 | e36 eater-3.35, e578 eater-8.1 | 2026-10-02T11:29:00Z (12:29 London) | Sam's lunch at 12:30 is the story's act |
 | e578 eater-7.16, 8.2, 8.7 | 2026-10-02T13:00:00Z | Sam's Day at 1,200 kcal |
 | e578 eater-5.5 – 5.29 (Faisal's kabsa) | 2026-10-01T18:30:00Z (21:30 Riyadh) | Faisal's Day at 1,400 kcal |
-| e578 eater-8.12 | 2026-09-27T09:00:00Z | the week 2026-09-20 → 26 is complete |
+| e578 eater-8.12 | 2026-09-27T09:00:00Z | the week 2026-09-20 → 26 has ended |
 | e578 eater-7.1 (first Health access) | 2026-09-08T09:05:00Z | Sam has an account and no Health Consent yet |
+| e578 eater-8.22 (Sam's line) | 2026-09-30T12:00:00Z | no Apple Health weight since 24 Sept (the 2026-10-01 sample is not loaded yet) |
 
 ---
 
 ## §3 · Roles, permissions and staff accounts
 
-**Permissions** (fixed; plain sentences on Roles › Permissions; admin-10.58 plus J40): Read the Registry · Propose Registry versions · Move versions between states · Roll back · Use the kill switch · Change quotas · Change prices · Read Metrics · Read failed jobs · Retry failed jobs · Escalate jobs · Read roles · Change roles · Read the Audit trail for Registry, Roles and Jobs · Read the whole Audit trail · Add a review note · View consented evaluation cases · Read reference (Foods, Recipes, Aliases, Policy) · Approve Foods, Recipes and Aliases · Propose and approve Policy versions · Read account state · Request a Grant · Read Grants (all) · Change Grant settings · Record requests received outside the app · Sign launch gates. "Read a diary inside an Active Grant" is not a permission (Grant only).
+**Permissions** (fixed; plain sentences on Roles › Permissions; admin-10.58 plus J40): Read the Registry · Propose Registry versions · Move versions between states · Roll back · Use the kill switch · Change quotas · Change prices · Read Metrics · Read failed jobs · Retry failed jobs · Escalate jobs · Read roles · Change roles · Read the Audit trail for Registry, Roles and Jobs · Read the whole Audit trail · Add a review note · View consented evaluation cases · Read reference (Foods, Recipes, Aliases, Policy) · Approve Foods, Recipes and Aliases · Propose and approve Policy versions · Read account state · Request a Grant · Read Grants (all) · Change Grant settings · Record requests received outside the app · Sign launch gates · Publish wording. "Read a diary inside an Active Grant" is not a permission (Grant only).
 
 **Seeded roles** (label "Seeded · read-only"):
 
 | role | permissions |
 |---|---|
 | Eater | none in the console; given to every app account at sign-up |
-| Nutrition approver | Read reference · Approve Foods, Recipes and Aliases · Propose and approve Policy versions · Read Metrics · Sign launch gates (nutrition-policy review) |
+| Nutrition approver | Read reference · Approve Foods, Recipes and Aliases · Propose and approve Policy versions · Read Metrics · Sign launch gates (nutrition-policy review) · Publish wording (`guidance-1`, the tracking-only guidance; approver-10.53) |
 | Support agent | Read account state · Read failed jobs · Retry failed jobs (one export retry per job) · Escalate jobs · Request a Grant · Record requests received outside the app · Read the Registry (status bar only) |
-| Platform admin | Read the Registry · Propose Registry versions · Move versions between states · Roll back · Use the kill switch · Change quotas · Change prices · Read Metrics · Read failed jobs · Retry failed jobs · Read roles · Change roles · Read the Audit trail for Registry, Roles and Jobs · Change Grant settings · Sign launch gates (privacy review, on the owner's word) |
+| Platform admin | Read the Registry · Propose Registry versions · Move versions between states · Roll back · Use the kill switch · Change quotas · Change prices · Read Metrics · Read failed jobs · Retry failed jobs · Read roles · Change roles · Read the Audit trail for Registry, Roles and Jobs · Change Grant settings · Sign launch gates (privacy review, on the owner's word) · Publish wording (consent texts, `grant-req-1`; after the privacy review is signed) |
 | Auditor | Read the whole Audit trail · Read Grants (all) · Read reference · Read the Registry · Read roles · Read failed jobs · Add a review note |
 
 **Staff accounts** (every one signs in with a password and a 6-digit authenticator code; console languages and zones as listed):
@@ -231,6 +232,10 @@ Huda, Nadia, Khalid and E4 (tracking-only) have no Target. Hala's trial has none
 ### §5.3 · Profiles and weights
 
 - **Onboarding input profiles** (e19 fixtures; typed in the story, not stored in the seed): Hala O1 34 y, 160 cm, 78 kg, "−161", no planned exercise, goal lose (resting 1,449; maintenance 1,738.8; lose 15 % → 1,477.98 → **1,480**); Huda O4 55 y, 156 cm, 60 kg, "−161" (resting 1,139; maintenance 1,366.8; 15 % → 1,161.78 is below the floor → **1,200**); Amal O5 68 y, 152 cm, 52 kg, "−161" (resting 969; maintenance 1,162.8; no Lose; Maintain at the floor **1,200**); Sam O2 weight typed "185 lb" = 83.91458845 kg (185 × 0.45359237, stored unrounded, shown 83.9 kg); Faisal O3 as `tv_faisal_1`.
+- **Typed in a story, not stored in the seed** (the FRD fixtures these stories reproduce; every value recomputed with exact fractions):
+  - **AT-01** (e24 eater-2.13): Sam's new small biscuit on Biscuits, plain (synthetic brand, §8.2); 7 pieces weigh 71.7 g after tare; single weights 9.8 · 10.1 · 10.6 · 10.0 · 10.4 · 10.3 · 10.5 g (sum 71.7); mean 717/70 g = 10.242857… g stored, shown 10.24 g; count 7 kept; one piece = 717/14 kcal = 51.2142… kcal (500 kcal per 100 g).
+  - **AT-03** (e24 eater-2.17): Mona's mixed peas spoon = Rice, cooked 15.1 g (19.63 kcal; P 0.4077, C 4.2582, F 0.0453) + Peas with sauce 14.4 g (12.96; 0.648, 1.584, 0.4608) + Beef, cooked 8.6 g (21.5; 2.236, 0, 1.3244) → total mass 38.1 g; 54.09 kcal, P 3.2917, C 5.8422, F 1.8305 (each part counted once). The three Foods are in §8.1 and §8.2.
+  - **AT-09** (e19 eater-1.35, Hala's Onboarding · Macros at 1,480 kcal): fat 46 %, carbohydrate 32 %, protein 24 % → total 102 %; normalised 46/102 = 45.0980…, 32/102 = 31.3725…, 24/102 = 23.5294… %, shown by largest remainder at two decimals **45.10 · 31.37 · 23.53** (sum 100.00); grams at 1,480 kcal: fat 34,040/459 = 74.16… → 74 g, carbohydrate 5,920/51 = 116.08… → 116 g, protein 1,480/17 = 87.06… → 87 g.
 - **Sam's weights**: 84.2 kg (2026-09-10, by hand) · 83.9 (09-17, Apple Health) · 84.1 (09-24, Apple Health) · 83.5 (10-01, Apple Health).
 - **Mona's weights** (no Health): 83.7 kg (2026-09-05) · 83.6 (09-12) · 83.6 (09-19) · 83.5 (09-26), all by hand.
 - **E4's weights**: 64.2 kg (2026-09-20) · 64.5 (09-27), by hand.
@@ -243,7 +248,7 @@ Huda, Nadia, Khalid and E4 (tracking-only) have no Target. Hala's trial has none
 
 | support · eater lens | account | facts |
 |---|---|---|
-| E1 · SE1 | `acct_9c41e2` | created 2026-08-03T18:20Z; Sign in with Apple, relay `r7k2q9x4@privaterelay.appleid.com` (shown masked `r•••@privaterelay.appleid.com`); Arabic, Arabic-Indic, Gulf; Asia/Riyadh; boundary 04:00; devices: iPhone app 1.0.3 on iOS 26.1 (last sync 2026-10-01T10:02Z) and iPhone app 1.0.2 (last sync 2026-09-29T20:40Z); support codes `SB-7KQ2-94XM` issued 2026-10-01T06:12Z valid to 2026-10-02T06:12Z, `SB-3MRT-7WQD` issued 2026-09-29T06:12Z expired 2026-09-30T06:12Z; Consents per §11 events 26–33, 130, 141, 148 (on 2026-10-01: Diary, Photos, AI `c-ai-4`, all four Health, research Withdrawn, Microphone and label review Not given); photo analyses on 2026-10-01: 3 of 25; Units §7.5; diary §12.3; Sync and Activity §10.3–§10.4; Grants §9 |
+| E1 · SE1 | `acct_9c41e2` | created 2026-08-03T18:20Z; Sign in with Apple, relay `r7k2q9x4@privaterelay.appleid.com` (shown masked `r•••@privaterelay.appleid.com`); Arabic, Arabic-Indic, Gulf; Asia/Riyadh; boundary 04:00; devices: iPhone app 1.0.3 on iOS 26.1 (last sync 2026-10-01T10:02Z) and iPhone app 1.0.2 (last sync 2026-09-30T19:15Z, the sync that carried `cmd_7a1e`); support codes `SB-7KQ2-94XM` issued 2026-10-01T06:12Z valid to 2026-10-02T06:12Z, `SB-3MRT-7WQD` issued 2026-09-29T06:12Z expired 2026-09-30T06:12Z; Consents per §11 events 26–33, 130, 141, 148 (on 2026-10-01: Diary, Photos, AI `c-ai-4`, all four Health, research Withdrawn, Microphone and label review Not given); photo analyses on 2026-10-01: 3 of 25; Units §7.5; diary §12.3; Sync and Activity §10.3–§10.4; Grants §9 |
 | E2 · SE2 | `acct_51ab07` | created 2026-08-10; email sign-in; English; Africa/Cairo; deletion `job_del_2215` · `DEL-26-0915-K3Q8` requested 2026-09-15T07:00Z (10:00 Cairo), due by 2026-10-15, Running (§10.1) |
 | E3 · SE3 | `acct_e07d13` | created 2026-08-12; English; Africa/Cairo; export `job_exp_4410` Failed (§10.1) |
 | E4 | `acct_77d2c0` | created 2026-08-14; English; Asia/Riyadh; boundary 00:00; safety mode **tracking-only** (pregnancy answer, 2026-08-14); weights §5.3; Grant `grant_7d01` (§9) |
@@ -366,11 +371,11 @@ cheese bite «قرصة جبنة» v1 (46.0; as Mona's) · tea with milk «شاي
 | story | inputs | result |
 |---|---|---|
 | eater-5.12 | 3 foul bites, each with its bread | 150 kcal (90 for the filling alone); expanded vector per count 50.0 kcal, P 2.7, C 8.0, F 0.8; a cheese bite adds no second bread (46.0) |
-| eater-5.17 (basis Count) | foul bite 6 · cheese bite 4 · olive 1 · egg bite 8 · tuna bite 1 | kcal 300 + 184 + 5.3 + 308.8 + 33.6 = **831.7** (shown 832); calorie shares 36.0707 · 22.1234 · 0.6372 · 37.1288 · 4.0399 % → largest remainder to one decimal **36.1 · 22.1 · 0.6 · 37.1 · 4.1** (sum 100.0); count shares 30.0 · 20.0 · 5.0 · 40.0 · 5.0 |
+| eater-5.17 (basis Count) | foul bite 6 · cheese bite 4 · olive 1 · egg bite 8 · tuna bite 1 | kcal 300 + 184 + 5.3 + 308.8 + 33.6 = **831.7** (shown 832); calorie shares 36.0707 · 22.1234 · 0.6372 · 37.1288 · 4.0399 % → largest remainder to one decimal **36.1 · 22.1 · 0.6 · 37.1 · 4.1** (sum 100.0); count shares 30.0 · 20.0 · 5.0 · 40.0 · 5.0; the `/m` line reads "Calorie aim about **831.7** with tolerance 0" → 6 / 4 / 1 / 8 / 1, the only zero-deviation answer (with aim 809.7, 53 other count sets would reach it exactly and 6/4/1/8/1 would miss by 22 kcal) |
 | eater-5.21 (AT-17) | foul bite, cheese bite, egg bite, each with bread; Carbohydrate maximum 30 %; Calorie aim about 300 (±10 %) | shares on macro energy: foul bite 32 ÷ 50 = **64.00 %**, cheese bite 18 ÷ 46 = 9/23 = **39.13 %**, egg bite 16.48 ÷ 38.3 = **43.03 %** → Infeasible; changes "Raise the maximum to 39.2 %" and "Use your cheese spoon" (2.0 ÷ 26.3 = **7.60 %**); after raising to 39.2 %, only cheese bites fit: 6 = 276 kcal (24 from 300), **7 = 322 kcal** (22 from 300) → 7 cheese bites, carbohydrate 39.13 %; the egg bite reads "43.0 % — above the maximum" |
 | eater-5.22 (AT-19) | must-include fries ≥ 1; ceiling 500 | example row set 2 fries + 4 grilled chicken bites + 1 hummus bite = 186 + 195.2 + 54.35 = **435.55** kcal (shown 436); with ceiling 80: "must-include fries (93 kcal) are above the 80 kcal ceiling", change "Raise the ceiling to 93 kcal" |
 | eater-5.23 | Faisal: kabsa rice spoon, chicken piece (Available 3), salad spoon, cup of laban; ceiling 500; Protein minimum 60 g; Carbohydrate maximum 30 % | most protein under the other limits **53 g** = 3 chicken + 1 laban (494 kcal; carbohydrate 48 ÷ 494 = 9.72 %); lowest ceiling reaching 60 g with ≤ 3 chicken **646 kcal** = 3 chicken + 2 laban (61 g); 4 chicken alone = 60 g at 456 kcal → changes "Lower the protein minimum to 53 g", "Raise the ceiling to 646 kcal", "Allow 4 chicken pieces"; `changes[]` 53, 646, 4 |
-| eater-5.14 / 5.44 (unchanged) | kabsa rice spoon 212/5 kcal, chicken piece 114; aim about 400; ceiling 500; carbohydrate ≤ 30 % | 4 rice + 2 chicken = 397.6 kcal, carbohydrate 112 ÷ 397.6 = 28.17 % (the lens's own exact-fraction check holds) |
+| eater-5.14 / 5.44 | kabsa rice spoon 212/5 kcal, chicken piece 114 (Available 3); aim about 400 (±10 %, a limit: 360–440); ceiling 500; carbohydrate ≤ 30 % | 12 count sets meet the ceiling, carbohydrate and Available limits; with the aim band, **3** meet every limit: 4 + 2 (397.6 kcal, 2.4 from 400), 1 + 3 (384.4, 15.6 away), 2 + 3 (426.8, 26.8 away) → **4 rice + 2 chicken = 397.6 kcal**, carbohydrate 112 ÷ 397.6 = 28.17 %; next nearest 1 rice + 3 chicken (384.4); 5 + 2 (440.0 kcal, 31.82 %) is never returned |
 | eater-5.32, 5.44 egg duplicates | 2 egg bites | 77.2 kcal (shown 77); aim about 77.2 with tolerance 0 → 2 of one Unit |
 | eater-8.7 | Sam's Day 1,200 + 1 cheese bite offline | "1,246 eaten · 46 Pending", "Remaining 624"; after sync `GET /v1/reports/day` → 1,246 |
 
@@ -407,6 +412,8 @@ cheese bite «قرصة جبنة» v1 (46.0; as Mona's) · tea with milk «شاي
 | Olives, pickled | synthetic | 132.5 · 0 · 5 · 12.5 | |
 | Chicken, roasted · Chicken, grilled (generic) | synthetic | 190 · 25 · 0 · 10 · and 192 · 30 · 0 · 8 | |
 | Beef, stewed | synthetic | 250 · 30 · 0 · 14.5 | |
+| Rice, cooked | synthetic | 130 · 2.7 · 28.2 · 0.3 | AT-03 (eater-2.17) |
+| Beef, cooked | synthetic | 250 · 26 · 0 · 15.4 | AT-03 (eater-2.17) |
 | French fries (generic) | synthetic | 310 · 3.3 · 40 · 15 | |
 | Salad, mixed, with dressing (generic) | synthetic | 54 · 1.0 · 5.0 · 3.3 | |
 
@@ -428,6 +435,7 @@ USDA releases on the mock: **15.4** (loaded 2026-08-01T05:00Z) and **15.5** (pub
 | Date-filled biscuit | per piece: 200 · 5 · 30 · 12 (4/4/9 = 248) | label | label-verified |
 | Basbousa (synthetic brand) | 380 · 5 · 60 · 18 | label | label-verified |
 | Ma'amoul (synthetic brand) | 430 · 6 · 62 · 24 | label | label-verified |
+| Peas with sauce (bisilla, approver's composition) | 90 · 4.5 · 11 · 3.2 (4/4/9 = 90.8, under the threshold) | approver's weighed composition (synthetic) · first-party | measured; AT-03 (eater-2.17) |
 
 ### §8.3 · Tier B recipe records
 
@@ -466,7 +474,7 @@ Mona: Tuna in oil, drained (200 · 29 · 0 · 8 per 100 g) · Milk, whole (her c
   | F-08 | Energy mismatch | Basbousa (synthetic brand): label 380 per 100 g vs 4/4/9 422 (P 5, C 60, F 18) | gap 42 kcal, 11.1 % (not a flag under Policy v2's 12 %) |
   | F-09 | Energy mismatch | Ma'amoul (synthetic brand): label 430 per 100 g vs 4/4/9 488 (P 6, C 62, F 24) | gap 58 kcal, 13.5 % |
 
-  Under the threshold, so never flagged: Biscuits, plain (500 vs 494) · White cheese (62.5 vs 64.0 per serving) · Falafel (333 vs 340.6). Molasses has an unknown protein, so its 4/4/9 is not evaluated.
+  Never flagged: Biscuits, plain (500 vs 494) and White cheese (62.5 vs 64.0 per serving) are under the threshold; Molasses has an unknown protein, so its 4/4/9 is not evaluated. **Tier A rows are not cross-checked** (J77): FDC derives their energy with food-specific factors and counts fiber inside carbohydrate by difference, so Date (generic) (282 vs 4/4/9 313.31, gap 31.31 kcal, 11.10 %), Cumin, ground (400 vs 446, gap 46 kcal, 11.5 %) and Falafel (333 vs 340.6) open no flag. The check runs over label values and approver-entered records only: Label submissions, approver-approved Foods (§8.2) and Tier B recipe records.
 - **Counts on Review** (approver-10.1): Label submission 3 · Estimated analogue 5 · Energy mismatch 4; `GET /v1/admin/flags?open=true` returns the 9 flags.
 
 ---
@@ -513,7 +521,7 @@ All times UTC (the eater's local time in brackets where the stories quote it). R
 | `job_del_2213` · DEL-26-0913-H5W3 | `acct_d13a01` | deletion | 2026-09-13T09:00Z | "photos and audio deleted" failed 2026-09-29T11:20, 11:40, 12:00 (`storage_timeout`) | **Failed** · 3 of 5 · due 2026-10-13 · 12 days left | — |
 | `job_del_2215` · DEL-26-0915-K3Q8 | `acct_51ab07` (E2) | deletion | 2026-09-15T07:00Z | signed out and disabled · private records deleted (2026-09-15) · photos and audio, derived caches, queued commands, prepared exports, Grants withdrawn — Not applicable · processors told (Google) (2026-09-16) · processor confirmation — **Running**, expected by 2026-10-14 · Sign in with Apple token revoked — Not applicable (email) · completion record — Requested | Running · due 2026-10-15 | — |
 | `job_del_2228` · DEL-26-0928-D4Q6 | `acct_0a7b55` | deletion | 2026-09-28T10:00Z | "photos and audio deleted" failed 2026-09-28T10:05 (`storage_timeout`) and 2026-10-05T08:05; next retry 2026-10-05T09:05, same job id | Running · "1 step retrying" | day 7 of 30 on 2026-10-05 |
-| `job_exp_4402` | `acct_9c41e2` | export | 2026-09-15T12:00Z | Completed 12:04 · 184 KB · Entries 212 · Units 12 versions · Recipes 2 · Templates 0 · Rules 1 · Targets 1 · Activity 30 · Weights 0 · Consents 9 (8 Consent records + the age confirmation) · Reports 11 (10 day, 1 period) · Unit pictures 0 | downloaded once 12:10; file kept to 2026-09-22T12:04 (7 days); deleted early 2026-09-20T07:45:05Z by `job_cw_4501` | — |
+| `job_exp_4402` | `acct_9c41e2` | export | 2026-09-15T12:00Z | Completed 12:04 · 184 KB · Entries 216 · Units 12 versions · Recipes 2 · Templates 0 · Rules 1 · Targets 1 · Activity 30 · Weights 0 · Consents 9 (8 Consent records + the age confirmation) · Reports 11 (10 day, 1 period) · Unit pictures 0 | downloaded once 12:10; file kept to 2026-09-22T12:04 (7 days); deleted early 2026-09-20T07:45:05Z by `job_cw_4501` | — |
 | `job_exp_31` | `acct_a41c55` (E7) | export | 2026-09-20T11:55Z | Completed 12:00 | download window over 2026-09-27T12:00Z | — |
 | `job_exp_77` | `acct_a41c55` | export | 2026-09-30T15:02Z | Completed 15:09 · 2.4 MB | downloadable until 2026-10-07T15:09Z | — |
 | `job_exp_88` | `acct_a41c55` | export | 2026-10-01T10:40Z | — | (not yet requested at 09:00) | Running 10:40 → Completed 10:47 |
@@ -542,14 +550,14 @@ E1: command `cmd_7a1e` (a correction from the app 1.0.2 iPhone) **Conflict** · 
 | eater | import | result |
 |---|---|---|
 | E1 | 2026-10-01T04:30Z (07:30 Riyadh) | accepted 1, updated 0, duplicate 2, conflict 0 |
-| Faisal | 2026-10-01T04:30Z (07:30 Riyadh), AT-22 | the Watch walk 07:00–07:45 Riyadh (210 kcal), the running app's copy 07:01–07:44 (205 kcal) and the Watch walk sent again → one Activity of 210 kcal; accepted 1, duplicate 2, conflict 0 |
+| Faisal | 2026-10-01T04:30Z (07:30 Riyadh), AT-22 | the Watch walk 06:00–06:45 Riyadh (03:00–03:45Z; 210 kcal), the running app's copy 06:01–06:44 (205 kcal) and the Watch walk sent again → one Activity of 210 kcal; accepted 1, duplicate 2, conflict 0 |
 | Sam | 2026-10-01T18:00Z | active energy for 2026-10-01: 520 kcal including the 210 kcal walk 07:00–07:45 London (the walk is inside the aggregate; 730 appears nowhere) |
 | `acct_3f88a1` | 2026-09-30T06:00Z | walks on 2026-09-29 and 30 (the Grant `grant_40aa` concerns them) |
 | E10 | 2026-09-29T17:00Z | one walk 40 min, 160 kcal on 2026-09-29 |
 
 ### §10.5 · The simulator's Health store (HealthKit mock, per account)
 
-Faisal and E1: the walks above. Sam: active-energy samples summing 520 kcal on 2026-10-01; body-mass samples of §5.3 (from 2026-09-17); after 2026-09-24 no new body mass (e578 eater-8.22). Every Confirmed Entry of an eater with `health_write_food` Given is written by the confirming iPhone as one food correlation (J123); calorie-only Entries are written with energy only.
+Faisal and E1: the walks above. Sam: active-energy samples summing 520 kcal on 2026-10-01; body-mass samples of §5.3 (2026-09-17, 09-24, and 2026-10-01 written at 2026-10-01T06:00:00Z); a story that needs "no new weight since 24 Sept" (e578 eater-8.22) starts at 2026-09-30T12:00:00Z (§2). Every Confirmed Entry of an eater with `health_write_food` Given is written by the confirming iPhone as one food correlation (J123); calorie-only Entries are written with energy only.
 
 ### §10.6 · Retention runs (Jobs › Retention; hourly at minute 00)
 
@@ -896,7 +904,7 @@ Checks: Complete Days in 2026-09-03 → 09-30 = **10**; in 2026-09-04 → 10-01 
 
 ### §12.3 · E1 (`acct_9c41e2`, Asia/Riyadh, boundary 04:00)
 
-Pattern **E5d** (5 Entries): 07:00 cheese bite × 3 (138), 07:00 tea glass × 1 (20), 13:00 kabsa rice spoon × 8 (339.2), 13:00 chicken piece × 2 (228 on v1; 266 on v2 from 2026-09-10), 19:00 Sukkari date × 3 (72). Days: 2026-08-03 two Entries (19:30 Sukkari date × 3, cup of laban × 1) · 2026-08-04 → 09-14 E5d every Day (42 Days → 210 Entries; 212 in all at the export) · 2026-09-15 → 09-28 E5d · **2026-09-29**: E5d (the 07:00 cheese bites came by command `cmd_44c0`, delivered 3 times at 05:12Z) + `en_9921` (16:00Z, from `an_5512`, 340 kcal, estimated analogue) + cup of gahwa × 2 (20:00) → **7 Entries** · 2026-09-30: E5d · **2026-10-01**: 07:00 cheese bite × 3, tea glass × 1; 10:00 cup of gahwa × 2; 19:00 Sukkari date × 3 → **4 Entries**.
+Pattern **E5d** (5 Entries): 07:00 cheese bite × 3 (138), 07:00 tea glass × 1 (20), 13:00 kabsa rice spoon × 8 (339.2), 13:00 chicken piece × 2 (228 on v1; 266 on v2 from 2026-09-10), 19:00 Sukkari date × 3 (72). Days: 2026-08-03 two Entries (19:30 Sukkari date × 3, cup of laban × 1) · 2026-08-04 → 09-14 E5d every Day (42 Days → 210 Entries) · 2026-09-15 → 09-28 E5d (the export at 2026-09-15T12:00Z = 15:00 Riyadh already holds 15 Sep's 07:00 and 13:00 Entries: 2 + 210 + 4 = **216** Entries) · **2026-09-29**: E5d (the 07:00 cheese bites came by command `cmd_44c0`, delivered 3 times at 05:12Z) + `en_9921` (16:00Z, from `an_5512`, 340 kcal, estimated analogue) + cup of gahwa × 2 (20:00) → **7 Entries** · 2026-09-30: E5d · **2026-10-01**: 07:00 cheese bite × 3, tea glass × 1; 10:00 cup of gahwa × 2; 19:00 Sukkari date × 3 → **4 Entries**.
 
 ### §12.4 · Sam (Europe/London, boundary 00:00; Target 1,870 from 2026-09-20)
 
@@ -930,7 +938,7 @@ Shares on 2026-10-01: 62 · 102 · 126 of 290 → 21.38 · 35.17 · 43.45 % → 
 | name | what | used by |
 |---|---|---|
 | **A400** | 400 eaters `eater-synth-001` … `400` (`acct_5e0001` …) and anonymous sessions `anon-synth-001` … (`acct_anon_0001` …), generated with seed 41 on this seed's configuration; 1,000 meal Analyses in the last 7 days (200 discarded, 50 retried), 100 Shadow calls, 600 confirmed meals, 90 Saved Units; named overrides: 001 sends a model field; 010 Shadow traffic; 011 and 103 AI Consent Withdrawn; 012, 021, 030–032 logging during roll back or kill switch; 040 used 3 of a hard limit of 3 (with Quotas version 2 saved in the story); 041 the 16th image analysis; 042 a voice repeat log; 043 Asia/Riyadh boundary 04:00; 044 12 image analyses; 050 an Analysis; 060 a Day; 070 an eater account offered a staff role; 090 research Given with an approved meal Analysis, 091 not; 101 a failed export; 102 a failed export and a completed deletion; 104 a failed meal job; 105 profile 82.37 kg and 178.6 cm | admin stories; admin-10.67's restore test (400 eaters) |
-| **B1** · **B2** | 25,000 (seed 42) and 1,200,000 (seed 43) synthetic Audit trail events, 2026-07-01 → 2026-09-30, actors from §3 | auditor large-result stories |
+| **B1** · **B2** | 25,000 (seed 42) and 1,200,000 (seed 43) synthetic Audit trail events, 2026-08-01T06:00:00Z (the deployment) → 2026-09-30, actors from §3 acting only while they hold their roles | auditor large-result stories |
 | **X** | one Consent record for `acct_3f88a1` pointing to the missing text version `c-ai-2` | auditor-9.18 |
 | **R-gap** | clock 2026-10-05T06:30Z, last retention run 03:00Z, one audio file aged 24 h 20 min | auditor-9.15 `/r` 2 |
 | **chain-40** | the seeded trail with event 40's outcome altered in storage | auditor-10.15 |
@@ -957,3 +965,34 @@ Shares on 2026-10-01: 62 · 102 · 126 of 290 → 21.38 · 35.17 · 43.45 % → 
 | support G1 · G2 | `grant_31f0` · `grant_31f9` |
 | approver L-17 and other Label submissions | §8.6 |
 | e578 "laban cup", "cheese without bread", "foul spoon (dipped)" | cup of laban, cheese spoon, foul bite (§7) |
+
+---
+
+## Fixes after seed-check (2026-10-01)
+
+An independent recount (`way/research/seed-check.md`, 884 values with `fractions.Fraction`) found 16 defects. Each one is fixed at its root below. Every changed number was recomputed with exact fractions.
+
+| # | defect | change |
+|---|---|---|
+| D1 | AT-22: the 07:30 Riyadh import held a walk that ended at 07:45 | §10.4: the Watch walk runs **06:00–06:45** Riyadh (03:00–03:45Z) and the running app's copy 06:01–06:44. The import stays at 04:30Z, after the walk and before Faisal's 07:30 Breakfast. `join.md` J54 supersedes e578 eater-7.9 and 7.11 (manual walk from 06:00; «هل هو نفس المشي 6:00–6:45 من Apple Health؟») |
+| D2 | E1's Conflict `cmd_7a1e` (2026-09-30T19:15Z) came from a device whose last sync was 2026-09-29T20:40Z | §6.1: the app 1.0.2 iPhone's last sync is **2026-09-30T19:15Z**, the sync that carried `cmd_7a1e`. `join.md` J57 supersedes support §0.3 E1 and support-9.4 (now "20:15 your time (19:15 UTC) · 22:15 eater's time") |
+| D3 | the export count ignored 15 Sep's Entries | §10.1 `job_exp_4402`: **Entries 216**. §12.3 shows the sum 2 + 42 × 5 + 4: 12:00Z is 15:00 Riyadh, so the 07:00 and 13:00 Entries are already in. `join.md` J139 supersedes auditor-9.14's 212 |
+| D4 | Sam's 2026-10-01 Health weight vs §10.5's "no new body mass after 24 Sept" | §10.5: the 2026-10-01 sample is written at 2026-10-01T06:00:00Z. §2 adds the start clock 2026-09-30T12:00:00Z for e578 eater-8.22 (Sam's line), when no sample after 24 Sept is loaded |
+| D5 | "complete" was used for Days that carry no Complete mark | §2: "every 30 Sep Day past its boundary" and "the week 2026-09-20 → 26 has ended" |
+| D6 | no permission covered `wording.published` (event 145) | §3: new permission **Publish wording**. Platform admin holds it for consent texts and `grant-req-1`; Nutrition approver holds it for `guidance-1`. `join.md` J40 lists it |
+| D7 | §0 cited a §8.7 that does not exist | §0 item 4: "serves §8.1, with releases 15.4 and 15.5, and the import of §10.7" |
+| D8 | eater-5.14's "12 count sets that meet every limit" | §7.6: 12 sets meet the ceiling, carbohydrate and Available limits. With the aim band 360–440 as a limit, **3** sets meet every limit: 4 + 2 (397.6), 1 + 3 (384.4), 2 + 3 (426.8). The best and the next nearest are unchanged. `join.md` J55 supersedes the `/m` line |
+| D9 | eater-5.17's `/m` aim 809.7 cannot return 6/4/1/8/1 with the seed's Units | §7.6: the aim is **831.7** with tolerance 0, and 6/4/1/8/1 is the only zero-deviation answer. With 809.7, 53 other sets reach the aim exactly and 6/4/1/8/1 misses by 22 kcal. `join.md` J55 supersedes the line |
+| D10 | `join.md` J104 stated 1,709.78 | J104: 1,870 × 2,134.8 ÷ 2,334.8 = 9,980,190/5,837 = **1,709.81…**, still shown 1,710; the gap is still −19.9 %. J104 now also supersedes e19 eater-1.40 `/m` "1,709.78" |
+| D11 | Date (generic) meets the v1 energy-mismatch rule (282 vs 313.31, 11.10 %) but had no flag | §8.6 and `join.md` J77: **Tier A rows are not cross-checked**. FDC derives their energy with food-specific factors and counts fiber inside carbohydrate by difference. The check covers label values, approver-approved Foods and Tier B recipe records only. Counts are unchanged: Energy mismatch 4, open flags 9 (approver-10.1) |
+| D12 | Cumin, ground meets the v1 rule (400 vs 446, 11.5 %) | the same rule as D11; Cumin is a Tier A row |
+| D13 | B1 and B2 began 31 days before the deployment | §13: "2026-08-01T06:00:00Z (the deployment) → 2026-09-30, actors from §3 acting only while they hold their roles" |
+| D14 | AT-01's values were not in the seed | §5.3 "Typed in a story": 7 pieces, 71.7 g after tare, single weights 9.8 · 10.1 · 10.6 · 10.0 · 10.4 · 10.3 · 10.5 (sum 71.7), mean 717/70 = 10.242857… g shown 10.24 g, count 7, one piece 717/14 kcal on Biscuits, plain |
+| D15 | AT-03's values and its three Foods were not in the seed | §5.3: Rice, cooked 15.1 g + Peas with sauce 14.4 g + Beef, cooked 8.6 g = 38.1 g, giving 54.09 kcal, P 3.2917, C 5.8422, F 1.8305. New rows: §8.1 **Rice, cooked** (130 · 2.7 · 28.2 · 0.3) and **Beef, cooked** (250 · 26 · 0 · 15.4); §8.2 **Peas with sauce** (90 · 4.5 · 11 · 3.2). Each is within 3 % of its 4/4/9 |
+| D16 | AT-09's values were not in the seed | §5.3: 46 / 32 / 24 → total 102; 45.0980… · 31.3725… · 23.5294… shown 45.10 · 31.37 · 23.53 (largest remainder, sum 100.00). Grams at 1,480 kcal: 34,040/459 → 74 g, 5,920/51 → 116 g, 1,480/17 → 87 g |
+
+The verifier's script re-ran on the fixed file: 883 values checked. Its 12 remaining DEFECT rows are fixed statements in the script that restate the old text (the D-rows above); the parts it parses live still pass:
+- the §11 trail and its counts;
+- the §9 Grants;
+- the Unit and planner arithmetic;
+- the AT-01, AT-03 and AT-09 coverage.
