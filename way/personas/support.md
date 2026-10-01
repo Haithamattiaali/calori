@@ -1274,3 +1274,74 @@ These parts hold:
    - Retry (9.9) and Escalate (9.11, 9.14) have no line for a call that fails while online. 9.21 covers them only offline, and §10's "failures say so (10.25)" covers only Grant actions;
    - Requests received outside the app (9.15) has no empty state and no line for a save that fails, and §10's "Empty" row leaves it out.
 10. **A shared story is not marked · lens brief item 5.** support-9.16's acceptance runs on two other personas' sessions: "Given `staff_dina` (Nutrition approver), When she opens `/console/jobs` …" and "`staff_dina` or `staff_ali` (Platform admin) … calls `POST /v1/grants`". It has no "Shared:" line and no row in §11. support-10.9 also sends `staff_ali`'s token but marks only the auditor.
+
+## Fix round 2 (2026-10-01)
+
+Each defect of the re-verify was fixed at its root in the body. Both verdict sections and "Fix round 1" are kept as written. Story ids did not change in this round.
+
+1. **Times (earlier defect 12).**
+   - Every console time now follows the §0 rule. The listed lines were rewritten:
+     - support-9.7: each stage reads "Completed 19:14 your time (18:14 UTC)" and so on;
+     - support-9.8: "download in the app until 2026-10-07 16:09 your time (15:09 UTC) · 18:09 eater's time";
+     - support-10.5: "closes on 2026-10-04 at 11:05 your time (10:05 UTC) · 13:05 eater's time", and 10.2 the same;
+     - the 12:20 end time now reads "12:20 your time (11:20 UTC)" in 10.11, 10.16 (both warnings) and 10.21. 10.21 now uses `grant_6c10`, so its end time reads "17:02 your time (16:02 UTC)". 10.25 now uses `grant_9b30`, so it reads "19:00 your time (18:00 UTC)".
+   - A scan of every story found no "your time" without its UTC time.
+2. **Fixtures.** §0.3 now states that one seed holds every line, and gives each Grant its own history:
+   - (a) `grant_31f0` has exactly three reads (10:24, 10:25, 10:27 UTC) and two refused attempts after expiry (11:20:01, 11:20:05 UTC). 10.15's auditor sequence now ends with those two `grant.read_denied` events, and the eater's history lists only the three reads. The other stories moved to their own Grants:
+     - the out-of-scope reads (10.12) and the write attempts (10.13) to E4's `grant_7d01`;
+     - the idle sign-out (10.21) to E10's `grant_6c10`;
+     - the offline and failure paths (10.25) to E7's new `grant_9b30`;
+     - 10.23 now runs fixture G1 exactly as §0.3 gives it, rather than a second time.
+   - (b) support-9.18 now filters by `staff_mona`, account `acct_9c41e2` and 09:00–09:05 UTC. The three seeded events (look-up 09:00, account panel 09:01, Sync tab 09:02) are named: `support.lookup`, plus the new `support.account_viewed` and `support.jobs_viewed` (§0.2). The failed sign-ins moved to `staff_lee` (9.1).
+   - (c) support-9.4 is now observed at 10:03 UTC, before `grant_31f0` is Requested at 10:05.
+3. **Givens the seed did not hold.**
+   - `staff_omar` now has `grant_a1d4` for E6, Active 08:00–09:00 UTC, and 9.20 checks his Grant bar at 08:30.
+   - Every Grant in §0.3 now has a reason, Days, areas, duration, case and request time, so 10.20's "same reason, Days, area and case" and 10.22's rows can be observed. 10.22 marks a time that has not happened with "—".
+   - E2 now has "email sign-in", which 9.10's "Not applicable" stage needs.
+   - E14 gains `an_7740`, Failed while the kill switch was On. 10.24 now tags only rows from 09:10–09:55 UTC, and says that E5's 16:40 UTC row has no tag.
+4. **4.3 against 7.1.** 4.3's empty line now covers only Failed Analyses ("No failed Analyses in the last 30 days. Next, check Privacy jobs and Consents.") and Sync ("No sync conflicts in the last 30 days. …"). It points to 7.1 for the Activity tab, whose text is the only one for E7's Activity.
+5. **Vague lines.**
+   - 9.11: the platform admin retries at 14:10 UTC, and support sees "escalation resolved by the platform admin at 15:12 your time (14:12 UTC)".
+   - 10.7: "Declined · 12:42 your time (11:42 UTC). Next: check Sync and Privacy jobs for this account.", with links to both tabs.
+   - 9.1: the fifth failure is at 09:32:00 UTC, so the lock to 09:47 follows from A18.
+   - 9.18: the screen reads "You don't have access to this area".
+   - 3.1: the exact Arabic and English texts are given.
+6. **Values with no label.** New assumptions:
+   - A23: 5 days for "due soon", used for the error colour and the sort;
+   - A24: pages of 50 rows;
+   - A25: a 120-character note;
+   - A26: warnings at 10 and 2 minutes, and "Ask the eater for more time" offered from 10 minutes before the end;
+   - A27: look-back windows of 30 and 7 days;
+   - A28: a desk monitor of 1440 px;
+   - A29: 200 % zoom.
+
+   Each story that uses one of these values cites it. §10 now says A2–A29.
+7. **10.12 code.** A read outside the Grant's Days or areas now returns 403 `GRANT_REQUIRED` ("no Grant covers this read"). `FORBIDDEN` stays only where the role lacks the permission, such as writes in 10.13. K11 records the stretch.
+8. **9.11 state.** The escalated deletion row keeps the D2 state: "Deletion · Failed · escalated to the platform admin at 12:05 your time (11:05 UTC) by Mona K.". The escalation is a note beside the state, not a state.
+9. **Unhappy paths.** New lines cover:
+   - the Grants list when slow or failing (10.22);
+   - the Diary (read-only) loading ("Loading 30 Sep…") and a failed read ("Couldn't load 30 Sep. Nothing was shown. Try again.", recorded with outcome `error` and not listed to the eater) (10.25);
+   - Retry failing while online (9.9);
+   - Escalate failing (9.11, 9.14);
+   - the empty state and a failed save of Requests received outside the app (9.15).
+
+   §10's rows for "Empty", "Every action answers", "Errors" and "Long tasks" now name these stories.
+10. **Shared stories.**
+    - 9.16 is marked shared with the nutrition approver and the platform admin.
+    - 10.9 is marked shared with the platform admin as well as the auditor.
+    - §11 was rewritten. It also adds 9.9 (eater), 10.1, 10.6, 10.7, 10.17, 10.19 and 10.21 (auditor), and 10.24 (platform admin), and names the eater stories on the other side.
+
+**Checked against `way/vocabulary.md` and the eater's side (`way/personas/eater/wf1-wf9.md`).** Every changed line was re-read against both. Where the eater file is right, or where the two files disagreed without the map deciding, this lens now matches it:
+- the requester reads "Mona K. · Support agent";
+- the request carries "Never included: photos, voice, your Target and goal settings";
+- the approved request reads "Active · ends 14:20";
+- the support code reads "Valid until 2 Oct, 09:12", and the local-trial text matches;
+- the Unanswered history reads "Unanswered · no access was given";
+- the Retry is visible to the eater as "Running" in Settings → Export;
+- a Grant request after a deletion returns 404 `NOT_FOUND`, as in eater-9.17;
+- the eater's history lists Grant reads only (K1, now aligned);
+- under a Grant, the Target is never shown: "Target — not included in Grants" (10.11, 10.14).
+
+Where the eater file differs from the map or from D2, K12 lists each line for the eater lens to align: "view" against "read", "done/waiting" stage words, "re-queue", reused Grant ids, stale story ids, the "No Target" note and the capital of "Entry".
+
+**Counts after the fix:** 52 stories, 190 acceptance lines (149 `/r`, 35 `/s`, 6 `/m`); 10 defects fixed. No owner identifier was sent to any service, and no outside source was opened in this round.

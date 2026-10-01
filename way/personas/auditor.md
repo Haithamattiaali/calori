@@ -4,7 +4,7 @@ Lens written 2026-10-01 for the /way build of Sips & Bytes, following `way/perso
 
 - **Workflows:** WF-10 read side (Grants, Policy, Registry, reference approvals, Roles) and WF-9 read side (Consents, the age confirmation, Privacy jobs, deletion completion records, retention).
 - **Story ids:** `auditor-10.n` and `auditor-9.n`.
-- **Read first:** `way/blueprint.md` §0–§1, `way/vocabulary.md`, `way/brief/frd-v1.0.md`, and `way/research/r1-rules-trends.md` with `r1-refute-b.md`. None of these is cited below as standing: R34 (refuted), R29's decree type (doubtful) and R18's Cloud Tasks claim (dropped). Also read: `r1-platforms.md` (P4, P11 as corrected, P29, P30), `r1-competitors.md` with `r1-refute-a.md`, the care questions, `way/lessons.md`, and the support, platform-admin and approver lenses, whose fixtures this lens reuses where they overlap.
+- **Read first:** `way/blueprint.md` §0–§1, `way/vocabulary.md`, `way/brief/frd-v1.0.md`, and `way/research/r1-rules-trends.md` with `r1-refute-b.md`. None of these is cited below as standing: R34 (refuted), R29's decree type (doubtful) and R18's Cloud Tasks claim (dropped). Also read: `r1-platforms.md` (P4, P11 as corrected, P29, P30), `r1-competitors.md` with `r1-refute-a.md`, the care questions, `way/lessons.md`, and the support, platform-admin, approver and eater lenses. Where their fixtures, event names or ids differ from this lens's, the difference is listed in §7 (items M1–M14) for the model phase, which builds one shared fixture set and one event catalogue.
 - **Privacy of this run:** no owner identifier was sent to any outside service, and every request used a generic User-Agent.
 
 **Not legal advice.** This file reports what each source says. Counsel decides what applies (FR-082).
@@ -60,7 +60,7 @@ Every source was opened in this run on **2026-10-01**. Quotes are short. A claim
 |---|---|---|---|---|
 | **Records of processing (written register)** | [K1](https://sdaia.gov.sa/en/SDAIA/about/Documents/Personal%20Data%20English%20V2-23April2023-%20Reviewed-.pdf) Art. 31: "the Controller shall maintain records … available whenever requested by the Competent Authority" (purpose, categories, recipients, transfers outside the Kingdom, retention). [K2](https://sdaia.gov.sa/en/SDAIA/about/Documents/ExecutiveRegulations.pdf) Art. 33: keep them "during all the period Personal Data is being processed, and till to five years after the date of end of any Personal Data Processing activity"; they "shall be written" and "accurate and up to date". K2 Art. 20(6): disclosures are recorded with "dates, methods, and purposes" | [E1](https://sharkawylaw.com/wp-content/uploads/2021/05/Data-Protection-Law-Translation-dual-text.pdf) Art. 4(9): "Holding a specific register for the data including the description of the categories of the Personal Data … the persons to whom such data shall be disclosed … the duration … any other data related to the Cross Border Movement … description of the technical and regulatory procedures of the Data Security". E1 Art. 4(12): "Provide the necessary means to prove its compliance … and allow the Center to perform the necessary inspection" | [Art. 30](https://gdpr-info.eu/art-30-gdpr/)(1): purposes, categories, recipients, transfers, "envisaged time limits for erasure", security measures. Art. 30(3)–(4): "in writing, including in electronic form … available to the supervisory authority on request". [Art. 5](https://gdpr-info.eu/art-5-gdpr/)(2): "be able to demonstrate compliance ('accountability')" | a Records of processing view, built from live versioned configuration and exportable (auditor-9.16) |
 | **Consent evidence** | K2 Art. 11(1)(d): "documented through means allowing future verification, such as specifying time and the mean of Consent"; 11(1)(e): "A separate consent … for each Processing purpose" (R22). K2 Art. 12(3): "cease Processing without undue delay"; 12(4): notify recipients | [E2](https://shalakany.com/wp-content/uploads/2025/12/New-Executive-Regulations-for-Egypts-Personal-Data-Protection-Law-.pdf), on the Executive Regulations: "secure internal electronic records, which must include, inter alia, records of consent, descriptions of personal data processed, and applicable retention periods" (`opened (secondary)`) | [Art. 7](https://gdpr-info.eu/art-7-gdpr/)(1): "the controller shall be able to demonstrate that the data subject has consented"; Art. 7(3): withdrawal "as easy" as giving (R31) | every Consent carries purpose, text version, time, method and app version, and a withdrawal shows its effect (auditor-9.1 to 9.8) |
-| **Capacity (adults)** | K2 Art. 11(1)(c): "Consent shall be given by a person who has full legal capacity" (R22) | E1 definitions: "children's data shall be deemed sensitive personal data" (R28) | — | the age confirmation is recorded with the Consents (auditor-9.9) |
+| **Capacity (adults)** | K2 Art. 11(1)(c): "Consent shall be given by a person who has full legal capacity" (R22) | E1 definitions (Sensitive Personal Data): "in all cases, data relating to children is considered to be sensitive data" (R28) | — | the age confirmation is recorded with the Consents (auditor-9.9) |
 | **Rights requests and deletion** | K2 Art. 3(1)(a): act "within a period not exceeding (30) days"; 3(1)(d): "document and keep record of all received requests including oral requests". K2 Art. 8(2)(c): destroy "all copies … including backups" (R23). K1 Art. 18(1): data kept after the purpose ends must not contain "anything that may lead to specifically identifying Data Subject" | E2: "Requests made by data subjects … must be documented and maintained in accordance with the ER's record-keeping requirements" (`opened (secondary)`) | Art. 12(3): one month (R31); [Art. 17](https://gdpr-info.eu/art-17-gdpr/)(1): "without undue delay"; Art. 17(3)(b), (e): no erasure where processing is needed "for compliance with a legal obligation" or "legal claims" | Privacy jobs on a 30-day clock; a completion record without identifiers; Audit trail events kept under the account id, which leads nowhere once the account is deleted (auditor-9.10 to 9.14) |
 | **Access logs for health data** | K1 Art. 23(1): "Restricting the right to access Health Data … to the minimum number of employees". K2 Art. 26(3): "different level of access to data among employees". K2 Art. 26(4): "Document all stages of Health Data Processing and provide the means to identify the person in charge for each stage" (R24) | E1 Art. 4(6): measures to "avoid any Personal Data Breach, damage, alteration or manipulation" | [Art. 32](https://gdpr-info.eu/art-32-gdpr/)(1)(b): "ongoing confidentiality, integrity" | every read inside a Grant names the Support agent and what was read; every refused read or write is logged (auditor-10.3 to 10.13) |
 | **Breach evidence** | K2 Art. 24(1): notify "within a delay not exceeding (72) hours of becoming aware", with "time, date, and circumstances … actual or approximate numbers of impacted Data Subjects". K2 Art. 24(3): "keep a copy of the reports … and document the corrective measures". [K4](https://sdaia.gov.sa/en/SDAIA/about/Documents/PersonalDataBreachIncidents.pdf) Stage Three: "retain copies of the documents submitted to SDAIA … the corrective actions taken, and any relevant proper records" | E1 Art. 7: report "within seventy two hours", including "the approximate number of Personal Data affected"; tell data subjects "within three business days as of the date of reporting". E2: the breach is "documented in a secure digital record" | [Art. 33](https://gdpr-info.eu/art-33-gdpr/)(1): 72 hours "where feasible"; 33(3)(a): "approximate number of data subjects"; 33(5): "The controller shall document any personal data breaches, comprising the facts … its effects and the remedial action taken" | scope a suspected incident by actor and window, count the distinct accounts read, export it verifiably (auditor-10.35). The breach record itself has no home in the map (Conflicts, item 2) |
@@ -157,7 +157,7 @@ Every source was opened in this run on **2026-10-01**. Quotes are short. A claim
 | step | what the Auditor does | stories |
 |---|---|---|
 | 10-A Arrive | sign in; the Audit trail overview (chain, anomalies, Active Grants) | 10.1 |
-| 10-B Grants | list; one Grant's life; the request as the eater saw it; what was read; the eater's decision; Declined, Expired, Unanswered, Withdrawn, Ended; reads without a Grant; writes refused | 10.2–10.13 |
+| 10-B Grants | list; one Grant's life; the request as the eater saw it; what was read; the eater's decision; Declined, Expired, Unanswered, Withdrawn, Ended; reads without a Grant; writes refused; reads outside the Grant's Days or areas | 10.2–10.13, 10.41 |
 | 10-C Never-events | Anomalies; chain verification; read-only for everyone; other roles kept out | 10.14–10.17 |
 | 10-D Versions | Policy history and in force at a moment; Registry history with Shadow, Canary, Rollout and Rolled back; kill switch; Food, Tier B recipe record and Alias approvals | 10.18–10.23 |
 | 10-E Roles | holders now; history and held-at; separation of duties | 10.24–10.26 |
@@ -206,21 +206,22 @@ Retention runs and the steps of a Privacy job are **Job records** (Jobs), not Au
 
 ### Fixtures (synthetic; every acceptance line below uses only these)
 
-**Test clock.** Lines are read at **2026-10-05T09:00:00Z** unless a line says otherwise. The console zone is **Asia/Riyadh (+03:00)**. Ids follow the support lens where that lens defines the same thing (Grant `grant_31f0`, account `acct_9c41e2`, `staff_*`).
+**Test clock.** Lines are read at **2026-10-05T09:00:00Z** unless a line says otherwise. The console zone is **Asia/Riyadh (+03:00)**. Ids and values are this lens's own. Some ids share a name with another lens's fixture (`grant_31f0`, `grant_31f9`, `grant_40aa`, `acct_9c41e2`, `staff_*`) without sharing its values; §7 lists each mismatch (M1–M14).
 
 | fixture | value |
 |---|---|
-| staff and roles | `staff_mona` "Mona K." Support agent · `staff_omar` "Omar S." Support agent · `staff_tariq` Support agent from 2026-09-05 to 2026-09-25 · `staff_dina` Nutrition approver · `staff_yara` Nutrition approver from 2026-09-10 · `staff_ali` Platform admin · `staff_hana` Auditor · `staff_sod_seed`, holding Support agent **and** Platform admin, written **directly into the role store by the test seed** on 2026-09-30, below the roles API. admin-10.59 refuses this combination at save, so the product cannot produce it; it exists to prove the detective check |
-| eater accounts | `acct_9c41e2` (E1 in the support lens; app in Arabic; Sign in with Apple, relay address `r7k2q9x4@privaterelay.appleid.com`, synthetic) · `acct_3f88a1` · `acct_c2d7e5` · `acct_8e14d9` · `acct_d40e17` (deleted) · `acct_b81c40` (deleted) · `acct_e5a930`, `acct_f61c22`, `acct_0a7b55` (deletion open) |
+| staff and roles | `staff_mona` "Mona K." Support agent · `staff_omar` "Omar S." Support agent · `staff_tariq` Support agent from 2026-09-05 to 2026-09-25 · `staff_dina` Nutrition approver · `staff_yara` Nutrition approver from 2026-09-10 · `staff_ali` Platform admin · `staff_hana` Auditor · `staff_sod_seed`, holding Support agent **and** Platform admin, written **directly into the role store by the test seed** on 2026-09-30, below the roles API. The admin lens's separation-of-duties save rule refuses this combination, so the product cannot produce it; it exists to prove the detective check |
+| eater accounts | `acct_9c41e2` (E1 in the support lens; app in Arabic; Sign in with Apple, relay address `r7k2q9x4@privaterelay.appleid.com`, synthetic) · `acct_3f88a1` · `acct_c2d7e5` · `acct_8e14d9` · `acct_d40e17` (deleted; former sign-in email `d40e17.synthetic@example.com`, synthetic, destroyed with the account) · `acct_b81c40` (deleted) · `acct_e5a930`, `acct_f61c22`, `acct_0a7b55` (deletion open) |
 | Grant request fields | as the support lens defines them: reason code (`sync_missing_entry`, `report_mismatch`, `unit_calculation`, `activity_import`, `other` + note), diary days, areas, duration (1 h · 4 h · 24 h), case reference. The eater sees request wording version `grant-req-1` in their app language. The request window before **Unanswered** is **72 h** (support lens A6, `assumption`) |
 | consent text versions | `age-1` · `diary-1` · `c-ai-3` (published 2026-08-25) · `c-ai-4` (published 2026-09-24) · `health-1` · `research-1`; each in English and Arabic |
 | Policy | v1: proposed and approved by `staff_dina` alone (the sole Nutrition approver at the time); effective 2026-09-02T00:00:00+03:00. v2: proposed by `staff_yara`, approved by `staff_dina`; effective 2026-10-05T00:00:00+03:00; changes the energy-mismatch threshold ">10 % and >10 kcal" → ">12 % and >10 kcal" (synthetic). Unchanged in both: calorie floor 1,200 kcal, hard stop 1,000 kcal, raw scans 30 days unless saved, temporary audio 24 h |
-| Registry (task `meal_photo`, names from the admin lens) | `meal_photo@v6`: `gemini-3.8-flash`, prompt v11, schema `analysis.v3`; the launch baseline. `meal_photo@v7`: `gemini-3.8-flash`, prompt v12, schema `analysis.v3`; Proposed → Shadow → Canary 5 % → Rollout 100 % → Rolled back to v6 |
+| Registry (task `meal_photo`; the admin lens names it differently, §7 M8) | `meal_photo@v6`: `gemini-3.8-flash`, prompt v11, schema `analysis.v3`; the launch baseline. `meal_photo@v7`: `gemini-3.8-flash`, prompt v12, schema `analysis.v3`; Proposed → Shadow → Canary 5 % → Rollout 100 % → Rolled back to v6 |
 | reference records | Tier B recipe record `rec_fm_eg` v1 "فول مدمس — EG (olive oil, cumin)": licence "first-party calculation (approver-built)", evidence `ev_1101` (weighed ingredients) and `ev_1102` (cooked-yield weight). Alias `al_saqai` "صقعي", dialect Gulf (stored `afb`), transliteration "Saqai", English "Saqai date" → Food "Dates, Saqai". Alias `al_laban_eg` "لبن", dialect EG (stored `arz`) → Food "Milk, whole" |
-| Privacy jobs (Jobs) | `job_exp_4402`: export for `acct_9c41e2`, requested 2026-09-10T12:00:00Z, Completed 12:04:00Z. `job_del_2201` (`acct_b81c40`, reference `DEL-26-0902-A7K1`): requested 2026-09-02T06:00:00Z, Completed 2026-09-16T06:30:00Z. `job_del_2204` (`acct_e5a930`, `DEL-26-0904-B9T2`): requested 2026-09-04T09:00:00Z, Running. `job_del_2209` (`acct_f61c22`, `DEL-26-0909-C2M8`): requested 2026-09-09T09:00:00Z, Running. `job_del_2212` (`acct_d40e17`, `DEL-26-0912-F3P5`): requested 2026-09-12T08:00:00Z, Completed 2026-09-20T08:00:00Z. `job_del_2228` (`acct_0a7b55`, `DEL-26-0928-D4Q6`): requested 2026-09-28T10:00:00Z, Running; its step "photos and audio deleted" Failed at 2026-09-28T10:05:00Z and 2026-10-05T08:05:00Z (storage timeout); next retry 2026-10-05T09:05:00Z |
+| Privacy jobs (Jobs) | `job_exp_4402`: export for `acct_9c41e2`, requested 2026-09-10T12:00:00Z, Completed 12:04:00Z; categories Entries 212 · Units 9 · Recipes 2 · Targets 1 · Reports 11 (10 day, 1 period) · Consents 7; file 184 KB; link and file kept 14 days, to 2026-09-24T12:04:00Z (`assumption`; §7 M12); downloaded once, 2026-09-10T12:10:00Z; file deleted early at 2026-09-20T07:45:05Z, when the AI Consent was withdrawn. `job_del_2201` (`acct_b81c40`, email sign-in, reference `DEL-26-0902-A7K1`): requested 2026-09-02T06:00:00Z; steps: private records deleted 06:10:00Z · photos and audio deleted 06:20:00Z · derived caches and private cached analysis deleted 06:25:00Z · queued jobs purged 06:26:00Z · prepared exports deleted 06:27:00Z (0 files held) · processors told (Google) 07:00:00Z · processor confirmation received 2026-09-16T06:00:00Z; Completed 2026-09-16T06:30:00Z. `job_del_2204` (`acct_e5a930`, `DEL-26-0904-B9T2`): requested 2026-09-04T09:00:00Z, Running. `job_del_2209` (`acct_f61c22`, `DEL-26-0909-C2M8`): requested 2026-09-09T09:00:00Z, Running. `job_del_2212` (`acct_d40e17`, `DEL-26-0912-F3P5`): requested 2026-09-12T08:00:00Z, Completed 2026-09-20T08:00:00Z. `job_del_2228` (`acct_0a7b55`, `DEL-26-0928-D4Q6`): requested 2026-09-28T10:00:00Z, Running; its step "photos and audio deleted" Failed at 2026-09-28T10:05:00Z and 2026-10-05T08:05:00Z (storage timeout); next retry 2026-10-05T09:05:00Z |
 | backups | the backup lifecycle is **30 days** (`assumption`). FRD §17.2 and NFR-13 require it to be disclosed but give no period; counsel and hosting set it |
 | withdrawal effect (Jobs record for event 37) | AI requests for `acct_9c41e2` between 07:45:00Z on 09-20 and 20:10:00Z on 09-25: 0 · Pending Analyses cancelled: 1 · photos and audio held for analysis deleted: 3 (07:45:04Z) · private cached analysis deleted: 1 (07:45:03Z) · queued uploads purged: 2 · prepared export files deleted: 1, `job_exp_4402`'s file (07:45:05Z) |
 | retention (Jobs → Retention) | runs **hourly**, deleting audio older than 23 h and raw scans older than 29 d 23 h, so nothing passes FR-078's 24 h / 30 days (a chosen default derived from FR-078; a daily run could leave audio nearly 48 h old). Run R-0805 at 2026-10-05T08:00:00Z: raw scans deleted 2, audio deleted 1, oldest remaining raw scan 29 d 22 h, oldest audio 22 h 10 min, Policy v2. **Separate fixture R-gap:** clock 2026-10-05T06:30:00Z, last run 03:00:00Z, one audio file aged 24 h 20 min |
+| separate fixture Y (a fresh emulator served to the console; the 80 seeded events are not used) | `grant_7a02` for `acct_9c41e2`, requested by `staff_mona`, reason `report_mismatch`, diary day 2026-10-04 only, area "Entries and day reports", 1 h, case `CASE-1201`; approved by the eater and Active while the test runs |
 | bulk fixtures (separate emulator datasets) | **B1**: 25,000 synthetic events, seed 42, 2026-07-01 to 2026-09-30, actors from the staff above. **B2**: 1,200,000 synthetic events, seed 43, same period |
 | separate fixture X | one Consent record for `acct_3f88a1` pointing to text version `c-ai-2`, which is absent from the store |
 
@@ -236,14 +237,14 @@ Retention runs and the steps of a Privacy job are **Job records** (Jobs), not Au
 | 6 | 09-01 07:00:00 | staff_dina | policy.version.proposed · v1 | Done |
 | 7 | 09-01 07:30:00 | staff_dina | policy.version.approved · v1 · proposer = approver, "sole Nutrition approver" · effective 2026-09-02T00:00:00+03:00 | Done |
 | 8 | 09-01 08:00:00 | staff_ali | registry.stage.changed · meal_photo@v6 → Rollout 100 % · "launch baseline" | Done |
-| 9 | 09-01 18:20:00 | acct_9c41e2 | age.confirmed · age-1 · onboarding age question | Done |
-| 10 | 09-01 18:21:00 | acct_9c41e2 | consent.given · Diary processing · diary-1 · onboarding | Done |
-| 11 | 09-01 18:22:10 | acct_9c41e2 | consent.given · Send photos, voice and text to Google's AI (Gemini) · c-ai-3 · onboarding | Done |
-| 12 | 09-01 18:25:00 | acct_9c41e2 | consent.given · Health: read workouts · health-1 | Done |
-| 13 | 09-01 18:25:01 | acct_9c41e2 | consent.given · Health: read active energy · health-1 | Done |
-| 14 | 09-01 18:25:02 | acct_9c41e2 | consent.given · Health: read body mass · health-1 | Done |
-| 15 | 09-01 18:25:03 | acct_9c41e2 | consent.given · Health: write food (energy and macros as food correlations, P29) · health-1 | Done |
-| 16 | 09-01 18:26:00 | acct_9c41e2 | consent.given · Optional research · research-1 | Done |
+| 9 | 09-01 18:20:00 | acct_9c41e2 | age.confirmed · age-1 · onboarding age question · app 1.0.3 | Done |
+| 10 | 09-01 18:21:00 | acct_9c41e2 | consent.given · Diary processing · diary-1 · onboarding · app 1.0.3 | Done |
+| 11 | 09-01 18:22:10 | acct_9c41e2 | consent.given · Send photos, voice and text to Google's AI (Gemini) · c-ai-3 · in-app sheet · Capture (first photo) · app 1.0.3 | Done |
+| 12 | 09-01 18:25:00 | acct_9c41e2 | consent.given · Health: read workouts · health-1 · in-app sheet · Activity (first Health connection) · app 1.0.3 | Done |
+| 13 | 09-01 18:25:01 | acct_9c41e2 | consent.given · Health: read active energy · health-1 · in-app sheet · Activity (first Health connection) · app 1.0.3 | Done |
+| 14 | 09-01 18:25:02 | acct_9c41e2 | consent.given · Health: read body mass · health-1 · in-app sheet · Activity (first Health connection) · app 1.0.3 | Done |
+| 15 | 09-01 18:25:03 | acct_9c41e2 | consent.given · Health: write food (energy and macros as food correlations, P29) · health-1 · in-app sheet · Activity (first Health connection) · app 1.0.3 | Done |
+| 16 | 09-01 18:26:00 | acct_9c41e2 | consent.given · Optional research · research-1 · Settings → Privacy · app 1.0.3 | Done |
 | 17 | 09-02 06:00:00 | acct_b81c40 | privacy_job.deletion.requested · job_del_2201 | Done |
 | 18 | 09-04 09:00:00 | acct_e5a930 | privacy_job.deletion.requested · job_del_2204 | Done |
 | 19 | 09-05 06:00:00 | staff_ali | role.assigned · Support agent → staff_tariq | Done |
@@ -262,16 +263,16 @@ Retention runs and the steps of a Privacy job are **Job records** (Jobs), not Au
 | 32 | 09-12 10:15:00 | staff_yara | alias.approved · al_saqai · Gulf | Done |
 | 33 | 09-12 10:20:00 | staff_dina | alias.proposed · al_laban_eg · EG | Done |
 | 34 | 09-12 10:30:00 | staff_yara | alias.approved · al_laban_eg · EG | Done |
-| 35 | 09-15 10:00:00 | staff_ali | access.refused · role.assign Auditor → staff_ali (self-change, admin-10.61) | Refused · FORBIDDEN |
+| 35 | 09-15 10:00:00 | staff_ali | access.refused · role.assign Auditor → staff_ali (self-change; the admin lens's self-change refusal) | Refused · FORBIDDEN |
 | 36 | 09-16 06:30:00 | system | privacy_job.deletion.completed · job_del_2201 | Done |
-| 37 | 09-20 07:45:00 | acct_9c41e2 | consent.withdrawn · Google's AI (Gemini) · c-ai-3 · Settings | Done |
+| 37 | 09-20 07:45:00 | acct_9c41e2 | consent.withdrawn · Google's AI (Gemini) · c-ai-3 · Settings → Privacy · app 1.0.3 | Done |
 | 38 | 09-20 08:00:00 | system | privacy_job.deletion.completed · job_del_2212 | Done |
-| 39 | 09-22 06:05:30 | acct_9c41e2 | consent.withdrawn · Optional research · research-1 · Settings · made on the device 2026-09-21T22:40:00Z, delivered twice | Done |
-| 40 | 09-22 08:00:00 | staff_ali | registry.version.proposed · meal_photo@v7 | Done |
+| 39 | 09-22 06:05:30 | acct_9c41e2 | consent.withdrawn · Optional research · research-1 · Settings → Privacy · app 1.0.2 · made on the device 2026-09-21T22:40:00Z, delivered twice | Done |
+| 40 | 09-22 08:00:00 | staff_ali | registry.version.proposed · meal_photo@v7 · "prompt v12 asks about oil and ghee" | Done |
 | 41 | 09-23 08:00:00 | staff_ali | registry.stage.changed · v7 → Shadow · "candidate gets copies; v6 answers" | Done |
 | 42 | 09-25 08:00:00 | staff_ali | registry.stage.changed · v7 → Canary 5 % · "shadow agreement within threshold" | Done |
 | 43 | 09-25 15:00:00 | staff_ali | role.removed · Support agent ← staff_tariq · "left the team" | Done |
-| 44 | 09-25 20:10:00 | acct_9c41e2 | consent.given · Google's AI (Gemini) · c-ai-4 · Settings | Done |
+| 44 | 09-25 20:10:00 | acct_9c41e2 | consent.given · Google's AI (Gemini) · c-ai-4 · in-app sheet · Capture · app 1.0.3 | Done |
 | 45 | 09-27 08:00:00 | staff_ali | registry.stage.changed · v7 → Rollout 100 % · "canary metrics within threshold" | Done |
 | 46 | 09-27 10:12:00 | staff_ali | registry.kill_switch.on · meal_photo · "AI timeouts" | Done |
 | 47 | 09-27 10:47:00 | staff_ali | registry.kill_switch.off · meal_photo | Done |
@@ -396,7 +397,7 @@ As the Auditor, I see that no staff member read a diary without a Grant, so that
   - 15:00:00Z `staff_omar` "Read refused · no Grant · GRANT_REQUIRED";
   - 15:01:00Z `staff_ali` "Refused · FORBIDDEN".
   - Anomalies shows "Diary reads allowed without a Grant: 0".
-- /s Given the NFR-07 negative-test suite on a fresh emulator When it calls every diary, report and media endpoint with each staff role and no Grant Then every call is refused (GRANT_REQUIRED for the Support agent, FORBIDDEN for every other role), and each refusal writes exactly one event.
+- /s Given the NFR-07 negative-test suite on a fresh emulator When it calls every diary, report and media endpoint with each staff role and no Grant Then every call is refused: the Support agent with 403 `GRANT_REQUIRED`, recorded as `grant.read_refused`; every other role with 403 `FORBIDDEN`, recorded as `access.refused`. Each refusal writes exactly one event.
 - /m Given the rule "allowed staff diary reads without an Active Grant" and a synthetic Audit trail containing one Allowed `grant.read` whose Grant was Expired When evaluated Then it returns that event id.
 
 **auditor-10.10 · An unanswered request ends as Unanswered**
@@ -423,11 +424,21 @@ As the Auditor, I see that a Support agent could not change a diary even while t
 - /r Given event 58 When `staff_hana` opens it from `grant_31f0`'s timeline Then it reads "Write refused · POST /v1/consumption · grant_31f0 (Active) · FORBIDDEN · 10:40:00Z · staff_mona". Anomalies shows "Writes allowed under a Grant: 0".
 - /s Given an Active Grant on a fresh emulator When its token is used on `POST /v1/consumption`, `…/corrections`, `…/void`, `POST /v1/units` or `POST /v1/recipes` Then each returns 403 `FORBIDDEN`, the day revision is unchanged, and each writes one `grant.write_refused` event.
 
+**auditor-10.41 · A read outside the Grant's Days or areas is refused** *(interaction row "Support → eater diary | read within the Grant"; shared with Support agent; numbered 10.41 so that earlier ids stay stable)*
+As the Auditor, I see that while a Grant was Active, a read of a Day or an area it did not cover was refused and logged, so that "within the Grant" means its Days and areas, not only its time box.
+- /r Given separate fixture Y (`grant_7a02` Active, day 2026-10-04 only, area "Entries and day reports") When `staff_mona` requests Day 2026-10-03 and then My Units under `grant_7a02` Then:
+  - both API calls return 403 `FORBIDDEN` with no diary data;
+  - on **Grants → grant_7a02**, `staff_hana` sees two rows, "Read refused · outside the Grant · Day 2026-10-03 not in Days (2026-10-04) · FORBIDDEN" and "Read refused · outside the Grant · area My Units not in Entries and day reports · FORBIDDEN";
+  - reads allowed for `grant_7a02` stay 0.
+- /s Given fixture Y When the emulator test reads Day 2026-10-04 (inside) and Day 2026-10-03 (outside) under `grant_7a02` Then the first returns 200 and writes one `grant.read` (Allowed), and the second returns 403 `FORBIDDEN` and writes one `grant.read_refused` with detail "outside Days".
+- /m Given the rule "diary reads allowed outside a Grant's Days or areas" and a synthetic Audit trail with one Allowed `grant.read` of Day 2026-10-03 under a Grant whose Days are 2026-10-04 When evaluated Then it returns that event id. On the seeded Audit trail the rule shows 0 in Anomalies (10.14).
+
 **auditor-10.14 · Anomalies: what must stay at zero**
 As the Auditor, I open Anomalies and see each never-event rule with its count and the events behind it, so that I check them continuously, not by memory.
 - /r Given the seeded Audit trail at the test clock When `staff_hana` opens **Audit trail → Anomalies** Then each rule shows its count and its "last evaluated" time:
   - diary reads allowed after a Grant stopped being Active 0
   - diary reads allowed without a Grant 0
+  - diary reads allowed outside a Grant's Days or areas 0
   - writes allowed under a Grant 0
   - Grants approved by anyone but the eater 0
   - chain breaks 0
@@ -538,8 +549,8 @@ As the Auditor, I see every assignment and removal and who held a role at a past
 - /r Given **Held at** 2026-08-31T12:00:00Z When applied Then it reads "Nobody held a role at this time — the first assignment was 2026-09-01T06:00:00Z (event 1)".
 
 **auditor-10.26 · Separation of duties, as a check behind the save rule** *(shared with Platform admin)*
-As the Auditor, I see anyone holding roles that FR-081 keeps apart, even if they got there around the roles screen, and every refused self-change, so that the save rule of admin-10.59 and admin-10.61 has a detective check behind it (K3 Art. 9(5); GDPR Art. 38(6)).
-- /r Given `staff_sod_seed` was written straight into the role store by the test seed (below the roles API, which admin-10.59 would refuse) When `staff_hana` opens Anomalies Then two rows link to that account:
+As the Auditor, I see anyone holding roles that FR-081 keeps apart, even if they got there around the roles screen, and every refused self-change, so that the admin lens's separation-of-duties save rule and self-change refusal have a detective check behind them (K3 Art. 9(5); GDPR Art. 38(6)).
+- /r Given `staff_sod_seed` was written straight into the role store by the test seed (below the roles API, whose separation-of-duties save rule would refuse it) When `staff_hana` opens Anomalies Then two rows link to that account:
   - "Support agent held with Platform admin or Nutrition approver: 1 — staff_sod_seed";
   - "Roles held with no assignment event: 1 — staff_sod_seed".
 - /r Given event 35 When `staff_hana` filters Events by `access.refused` and actor `staff_ali` Then the row reads "role.assign Auditor → staff_ali · self-change · FORBIDDEN · 2026-09-15T10:00:00Z".
@@ -688,7 +699,7 @@ As the Auditor, I see every Consent purpose with its current text version and ev
 
 **auditor-9.2 · One account's Consent history**
 As the Auditor, I see one account's age confirmation and Consents over time, so that I can prove what they agreed to, when and how (K2 Art. 11(1)(d); GDPR Art. 7(1)).
-- /r Given `acct_9c41e2` When `staff_hana` opens its Consents Then 11 rows show in event order: 9, 10, 11, 12, 13, 14, 15, 16, 37, 39, 44. Each row names the purpose (or "Age 18+"), the text version, the action, the method ("onboarding" or "Settings"), the time and the app version.
+- /r Given `acct_9c41e2` When `staff_hana` opens its Consents Then 11 rows show in event order: 9, 10, 11, 12, 13, 14, 15, 16, 37, 39, 44. Each row names the purpose (or "Age 18+"), the text version, the action, the method as recorded (onboarding · in-app sheet at first need · Settings → Privacy), the time and the app version, as in the event table (event 39 shows app 1.0.2, the second iPhone).
 
 **auditor-9.3 · The exact words the eater agreed to**
 As the Auditor, I open a consent text version exactly as the app showed it, in English and Arabic, so that "what did they consent to?" has one answer (R2).
@@ -730,7 +741,10 @@ As the Auditor, I see what the app recorded about Health access and what it cann
 **auditor-9.8 · Raw evidence is never opened by staff** *(FRD §19.2; FR-077, FR-079; D2 roles hold no such permission)*
 As the Auditor, I see that no staff member opened an eater's meal photo or audio, and that every attempt was refused, so that raw evidence stays private.
 - /r Given event 78 When `staff_hana` filters Events by `access.refused` and object "Analysis photo" Then one row reads "staff_ali · Analysis an_7781 photo · acct_9c41e2 · FORBIDDEN · 2026-10-03T15:05:00Z". No image appears in the console, and Anomalies "raw evidence opened by staff" is 0.
-- /s Given each staff role on a fresh emulator When it requests a raw photo or audio of any Analysis Then each returns 403 `FORBIDDEN` and writes one `access.refused` event.
+- /s Given a fresh emulator When a raw photo or audio of any Analysis is requested Then:
+  - a Support agent with no Grant gets 403 `GRANT_REQUIRED`, and one `grant.read_refused` event is written (the same outcome as 10.9);
+  - a Support agent with an Active Grant gets 403 `FORBIDDEN`, because media is in no Grant area, and one `grant.read_refused` event is written (as in 10.41);
+  - the Nutrition approver, Platform admin and Auditor each get 403 `FORBIDDEN`, and one `access.refused` event is written.
 
 **auditor-9.9 · The 18+ confirmation and the age gate** *(map interaction row 1; WF-1 done-when "Under 18: no account"; R16, R22)*
 As the Auditor, I see each account's age confirmation and that an under-18 answer created nothing, so that I can show the service is for adults with full legal capacity.
@@ -759,7 +773,7 @@ As the Auditor, I open a completion record that proves every step finished and h
   - deletion reference `DEL-26-0902-A7K1`;
   - requested 2026-09-02T06:00:00Z;
   - completed 2026-09-16T06:30:00Z (14 days);
-  - the steps, each with its completion time: private records deleted · photos and audio deleted · derived caches and private cached analysis deleted · queued jobs purged · prepared exports deleted · processors told (Google) · Sign in with Apple token revoked (or "not applicable — not used");
+  - the steps with their times: private records deleted 06:10:00Z · photos and audio deleted 06:20:00Z · derived caches and private cached analysis deleted 06:25:00Z · queued jobs purged 06:26:00Z · prepared exports deleted 06:27:00Z (0 files held) · processors told (Google) 07:00:00Z · processor confirmation received 2026-09-16T06:00:00Z · "Sign in with Apple: not applicable (email sign-in)";
   - "backups expire by 2026-10-16T06:30:00Z", labelled "(30-day backup lifecycle — `assumption`, to be disclosed)".
 - /m Given the completion-record schema When validated Then no field from the identifier deny-list is present (account id, email, phone, name, device id, IP, Apple id); adding one fails the test.
 - /s Given `job_del_2201` run to completion on the emulator When the test searches the Firestore and Cloud Storage emulators for `acct_b81c40` outside the Audit trail Then nothing is found (NFR-13 "verify deletion propagation").
@@ -778,16 +792,16 @@ As the Auditor, I still see Grant history about a deleted account, under an id t
   - the account shows as "acct_d40e17 · account deleted 2026-09-20";
   - events 22–25 remain;
   - Verify chain stays intact.
-- /r Given **Find account** with the reason "test" and that account's former email When looked up Then the result reads "No account matches…", because the sign-in identity and profile were destroyed with the account.
+- /r Given **Find account** with the reason "test" and the former email `d40e17.synthetic@example.com` When looked up Then the result reads "No account matches…", because the sign-in identity and profile were destroyed with the account.
 
 **auditor-9.14 · An eater's export job, not its contents**
 As the Auditor, I see that an eater's export ran and what it covered, without opening it, so that the right of access is evidenced and the data stays private (FR-075; WF-9 done-when).
 - /r Given `job_exp_4402` When `staff_hana` opens it Then it shows:
   - requested 12:00:00Z and completed 12:04:00Z on 2026-09-10;
-  - the categories with item counts: Entries, Units (portions), Recipes, Targets, Reports (day and period), Consents;
-  - the file size;
-  - the link expiry, and "file deleted 2026-09-20T07:45:05Z (AI Consent withdrawn)";
-  - whether it was downloaded.
+  - the categories with item counts: Entries 212 · Units (portions) 9 · Recipes 2 · Targets 1 · Reports 11 (10 day, 1 period) · Consents 7;
+  - the file size, 184 KB;
+  - "link and file kept until 2026-09-24T12:04:00Z (14 days, `assumption`)", then "file deleted early at 2026-09-20T07:45:05Z (AI Consent withdrawn)";
+  - "downloaded 1 time · 2026-09-10T12:10:00Z".
   - There is no download or preview control.
 
 **auditor-9.15 · Retention runs**
@@ -901,10 +915,10 @@ As the Auditor, I am told when a Consent points to a text version that cannot be
 |---|---|---|
 | auditor-10.3 | Support agent, eater | the WF-10 done-when, end to end |
 | auditor-10.6, 10.7, 10.10, 10.11 | eater, Support agent | the eater's decision, silence and withdrawal create the events |
-| auditor-10.12, 10.13 | Support agent | Ended by the Support agent; a write refused inside an Active Grant |
+| auditor-10.12, 10.13, 10.41 | Support agent | Ended by the Support agent; a write refused inside an Active Grant; a read outside the Grant's Days or areas refused |
 | auditor-10.22, 10.23 | Nutrition approver | Food, Tier B recipe record and Alias approvals |
 | auditor-10.20, 10.21 | Platform admin | Registry stages, rollback, kill switch |
-| auditor-10.25, 10.26 | Platform admin | role history; the detective check behind admin-10.59 and admin-10.61 |
+| auditor-10.25, 10.26 | Platform admin | role history; the detective check behind the admin lens's separation-of-duties save rule and self-change refusal |
 | auditor-9.5, 9.9 | eater | withdrawal effect; the age gate |
 
 ---
@@ -1070,7 +1084,7 @@ All 24 defects in the lens verdict above are fixed at their root. Throughout, th
 
 Fixture ids follow the support lens wherever it defines the same thing (`grant_31f0`, `acct_9c41e2`, `staff_*`). Registry ids follow the admin lens (`meal_photo@v6`, `meal_photo@v7`).
 
-Count before the fix: 55 stories and 112 acceptance lines. Count after: 58 stories and 118 acceptance lines. One story was dropped (the old 10.12, self-request) and four were added: 10.12 Ended, 10.13 write refused, 10.23 Alias approvals, 9.9 the age gate. Stories were renumbered; no other file references these ids.
+Count before the fix: 55 stories and 112 acceptance lines. Count after: 58 stories and 118 acceptance lines. One story was dropped (the old 10.12, self-request) and four were added: 10.12 Ended, 10.13 write refused, 10.23 Alias approvals, 9.9 the age gate. Stories were renumbered. *(Corrected in fix round 2: other files do reference these ids, because the eater lens cites them; see §7 M13.)*
 
 | # | defect | what changed |
 |---|---|---|
