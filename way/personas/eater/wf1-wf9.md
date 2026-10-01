@@ -866,7 +866,7 @@ As the eater, I withdraw an Active Grant whenever I want, so that my "stop" work
 Covers: WF-10 ("→ it expires"; done-when "the Grant expires"); interaction row "Support → eater diary … time box … auto-expiry"; FR-081
 Shared: eater + support agent (support-10.17), auditor (auditor-10.8).
 As the eater, I see an approved Grant end by itself at the time I was promised, so that access never outlives what I agreed to.
-- `/r` **Given** `grant_31f0` was Active and ended at 14:20 Asia/Riyadh (11:20 UTC), **When** SE1 opens Settings → Privacy → Grants at 14:21, **Then** the Grant reads "Expired · 14:20" with its three reads in its history, and no "Withdraw access" control remains (support-10.17).
+- `/r` **Given** `grant_31f0`'s time box closed at 14:20 Asia/Riyadh (11:20 UTC), **When** SE1 opens Settings → Privacy → Grants at 14:21, **Then** the Grant reads "Expired · 14:20" with its three reads in its history, and no "Withdraw access" control remains (support-10.17).
 - `/s` **Given** the Grant has expired, **When** the Support agent's read arrives at 11:20:01 UTC, **Then** the API returns 403 `GRANT_NOT_ACTIVE` with state Expired, judged by the server clock (support-10.17, auditor-10.8).
 - `/r` **Given** the Grant has expired, **When** Today opens, **Then** the Settings button shows no badge for it.
 
