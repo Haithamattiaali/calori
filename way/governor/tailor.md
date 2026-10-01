@@ -56,3 +56,28 @@ All ten lines are present and each has a source column. That part of the row pas
 
 - Lines 8 and 10 rest on "his answer". No exact wording of that answer is in `way/`; only §0 and the journey restate it. Recording his words with the date would make these two lines checkable.
 - Line 9 could also name the brief's hard "do nots": "Do not sell health/nutrition data, use it for behavioral advertising, or enable model-training use without a separate explicit opt-in" (FR-079), and "No model response may write totals directly" (§15.2).
+
+## Re-audit 2026-10-01
+
+Checked 2026-10-01 04:11Z against commit `b183a45` ("way: tailor — governor gaps fixed (sources, ops services, loop armed, PR base noted)"). Records read: `way/blueprint.md`, `way/journey.md`, `way/ledger.md`, `way/lessons.md`, `way/map-first.md`, `way/brief/frd-v1.0.md`, git (`git ls-remote origin`, `git log`, `git diff 041c843 b183a45 -- way/blueprint.md`). Only `way/` and git were read. The scheduler and GitHub were not read.
+
+1. **Branch and PR on the remote: fixed.**
+   Git: `git ls-remote origin` returns `b183a45… HEAD` and `b183a45… refs/heads/claude/magical-cerf-axi3k1`. `git rev-parse HEAD @{u}` gives `b183a45` for both, and `git status` says "Your branch is up to date with 'origin/claude/magical-cerf-axi3k1'". `git ls-remote origin 'refs/pull/*'` returns nothing, so no PR exists. Record: line 10 now says "this session's branch `claude/magical-cerf-axi3k1` (pushed 2026-10-01). The remote has no `main` branch yet, so a draft PR has no base: creating `main` is a push to another branch and waits for his word (asked once, at the gate)." Git agrees: the remote has only that one branch. The record matches git.
+
+2. **Keep-going loop armed: fixed, as far as `way/` and git can show.**
+   Record: blueprint "Environment facts", "The keep-going loop, armed 2026-10-01: … a self check-in (`send_later`, trigger `trig_01TqQZcLTZVn6idwgPjS7Hd6`, first fire 2026-10-01T05:11Z, re-armed after each fire while work remains) is the fallback when a turn ends with nobody there. … every session resumes from the pushed branch and `way/`". This covers (a), a named wake with its id, and (b), a resume point outside the container: the branch is on origin (see 1). Limits: the trigger was not read from the scheduler, because this audit reads only `way/` and git. Its first fire (05:11Z) is after this check. The journey still does not mention the loop. That was not part of the gap.
+
+3. **§0 line 6: partly fixed. The `floor.md` part is still open.**
+   - Operations row: fixed. Line 6 now lists "operations: Cloud Tasks, Secret Manager, Cloud Logging/Monitoring, Firebase Crashlytics and Remote Config". It names them as deferred, with the reason: "the operations services are hosting-side and wait with the dropped ship rows (no hosting target), their code seams (async job queue, secrets from the environment, structured redacted logs, remote-config-shaped registry) are built from the first slice". Its source is "brief §15.1 (Component table incl. the Operations row)". This matches frd line 306 and the ledger's dropped ship, go-live, operate and measure rows.
+   - `floor.md`: still open. The source now reads "the /way skill's `floor.md` (adapters line)". This says where the file lives. But the file is still not in `way/` or git (`grep -rn floor.md way` finds only this citation), and the adapter-and-mock rule is not labelled "recommended default". The gap asked for one of those two fixes, and neither was made. Smallest fix: add "recommended default" to that source, or copy the adapters line into `way/`.
+
+4. **§0 line 1(c) "web": fixed.**
+   Record: line 1 source now reads "(a)(b) brief §1.4, §15.1; (c) the console is brief FR-080 ("role-based administrator console", no surface named) — **web is the recommended default**". The brief supplies the console, and web is now sourced as the recommended default.
+
+### Notes (not counted)
+
+- **New in `b183a45`: line 1(c) adds "auditor" without a source.** Line 1 now reads "admin console for the nutrition approver, support, platform admin and auditor". The brief names no auditor role (`grep -i auditor way/brief/frd-v1.0.md` finds nothing). FR-081 names only "support", "nutrition-approver" and "platform-admin" privileges. The only record of an auditor is `way/map-first.md` line 17, "**Auditor / privacy reviewer** (hidden) | … | FR-081, FR-082, NFR-13". Line 2 still says "4 human personas (eater, nutrition approver, support agent, platform admin)". Give "auditor" a source ("inferred, map-first") and make line 2 match.
+- The earlier note on lines 8 and 10 is now addressed. They read "his answer, 2026-10-01: chose "Fast (Recommended)"" and "…: chose "GitHub only, no hosting yet"".
+- This re-audit section is not committed.
+
+**Re-audit verdict: 1 gap still open. Gap 3, part 2: §0 line 6 cites "the /way skill's `floor.md`", which is not in `way/` or git, and the line is not labelled "recommended default".**
