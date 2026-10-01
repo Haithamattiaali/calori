@@ -938,3 +938,74 @@ As platform admin, I read times in my own time zone with the zone shown, and the
 | AT-30 | 10.13, 10.14 |
 | AT-32 | 10.30, 10.31 |
 | WF-10 done-when ("an admin rolls a model version back and manual logging keeps working") | 10.24, 10.30 |
+
+## Lens verdict (2026-10-01)
+
+**fail**: 26 defects. Checked by a lens verifier that did not write this file, against `way/blueprint.md` §0–§1, `way/brief/frd-v1.0.md`, `way/personas/_lens-brief.md`, `care.md`, the r1 research files and both refutations.
+
+**What holds.** The file has 66 stories, all `admin-10.n`, and each has at least one `/r` line. All 29 A-sources were re-opened on 2026-10-01 with a generic User-Agent, and every quoted phrase was found. That includes A1's "July 21, 2027 or later" for `gemini-3.5-flash-lite` on the Agent Platform page, which differs from the Gemini API date the refuter used for P2 (as A2 says), and Art. 26(3) of the SDAIA Executive Regulations behind R24's "separated duties". Every cycle-1 finding cited either stands or is cited as corrected (P5, P6, P11, P15, R18). The admin part of WF-10's done-when ("an admin rolls a model version back and manual logging keeps working") is covered by 10.24 and 10.30.
+
+**Traced**
+1. **admin-10.62** traces to nothing. Its line reads "`assumption` (no brief line; see §6)". Neither the map nor the FRD asks for separate staff and eater accounts, and FR-081 governs reading *other* people's diaries. It is drift until the model phase adopts it.
+2. **admin-10.22, 10.33, 10.34, 10.49, 10.57, 10.58, 10.61, 10.65** cite only research or care, with no map or FRD line: "A7." (10.22); "A15, A29 (assumption for our load); care group 4." (10.33); "A14, A15, A16." (10.34); "Care group 4." (10.49); "A21, A23." (10.57, 10.58); "A24, A27 …" (10.61); "Care group 4; A10." (10.65). Their content belongs to §16.4, FR-080, map §2 "roles" or blueprint §0 line 3, and the trace line must say which.
+
+**Complete (missing steps)**
+3. **§16.4 "Maintain a regression set of food photos, scale readings, bilingual labels, Arabic voice commands, ingredient variants, and adversarial instructions" and NFR-10 "At least 200 consented target-cuisine test cases and 100 bilingual labels at launch".** No story adds or curates cases, checks the set's composition against these minimums, or brings consented cases in (FR-076 optional research use; §19.2 "Access to raw evidence for quality review requires explicit consent and restricted roles"). 10.12 only runs "a synthetic regression set of 300 cases".
+4. **The §16.4 stamps.** The brief says "Store model ID, prompt version, extraction schema version, nutrition algorithm version, and source versions with each analysis". 10.25 refuses a write only when it is "without all four stamps" (Registry version, model id, prompt version, schema version), so the nutrition algorithm version and the source versions are missing. The §15.3 line "log the actual processing configuration" is not stamped either; that is the location 10.11 shows.
+5. **Config rollback.** In map §3 the Admin → registry row has the value event "config live / rolled back", and map §6 puts "per-user daily AI quotas" in the admin-versioned Registry. But 10.35 makes "`quotas@v4` … live" at once, and no story rolls a quotas version back. Only model Registry versions roll back (10.24).
+6. **FR-001 "Cloud AI requires authenticated or anonymous-session access, consent, and quotas".** 10.35 sets "anonymous sessions to hard 3 and 10", but no runtime line shows an anonymous session reaching its limit. 10.36 tests only a signed-in eater.
+7. **§19.1 provider data governance** ("assess abuse-monitoring logs, request logging, caching, and grounding … configure store=false"). No story records, shows or changes these provider settings, although §1.2 lists "P14: the 24-hour cache and abuse-monitoring logs" among the findings the lens rests on.
+8. **AT-29 "Account deletion and consent withdrawal propagate to media, queues, private cached analysis, and exports".** 10.51 retries a failed export or analysis job without re-checking that the account still exists, that the AI Consent still stands or that AI is on. No story covers a failed job whose eater has since deleted the account or withdrawn Consent. In that case a retry would send the data again or build an export for a deleted account.
+9. **§8 coverage overstates NFR-12.** The row reads "NFR-12 | 10.35, 10.53, 10.55–10.61", but NFR-12's "secret rotation, dependency scans, backups, and tested restore" have no story and no note naming who owns them.
+
+**Observable**
+10. **admin-10.28**, line 3: "Then it is analysed normally" is vague. Name the response: the status, and a draft stamped `intent@v4`.
+11. **admin-10.18**, line 1: "When they open **Capture & Plan**, Then no Analysis request is made for them". Opening the tab never requests an Analysis, so this line cannot fail. The When must attempt a capture, and the Then must name what the eater sees.
+12. **admin-10.64**, line 2: "names the task in the string catalogue's Arabic label and keeps 'AI' terms consistent with the eater app". No Arabic string is given and "consistent" has no reference value, so this story about Arabic contains no Arabic console text.
+13. These lines name no screen or interface:
+    - 10.20, line 3: "When a 13th is added, Then it is refused". Where, and with what message?
+    - 10.21, line 3: where does the reason "Too few Analyses to judge (A13)" show?
+    - 10.22, both lines: "new eaters are added" and "return to it rather than being drawn again". Through which interface?
+    - 10.24, line 2: the v7 and v6 stamps. Read through `GET /v1/analyses/{id}`?
+    - 10.34, line 3: "When shadow or canary metrics are viewed". Which screen?
+14. **admin-10.45**, line 2: "the total is suppressed or rounded too". The rounding rule is not named, so a verifier cannot decide whether a rounded total still lets the hidden figure be derived (A26).
+15. **admin-10.65 contradicts admin-10.33.** 10.33 says "the row reads 'Not sent: no connection. Try again.' with a retry button"; 10.65 says "The kill switch shows 'Will try when online'". The first is a manual retry. The second implies a queued switch that fires later by itself. A verifier cannot know which to observe, and a queued emergency action could fire after the situation has changed.
+16. **admin-10.33**: "each target is at least 44 × 44 pt". The console is a web page, so give the size in CSS px.
+
+**Sourced**
+17. §1.3 and §4 state the persona's routine and place with no source and no `assumption` label:
+    - "Each morning: read the Registry overview, then the Quality and Jobs screens";
+    - "Mostly at a desk, on a desktop browser, in long sessions";
+    - "On call, from a phone (about 390 px), sometimes on a weak home or mobile network, often at night";
+    - the "What they hate" list, which infers admins' feelings from incident reports and guidance (A11–A27) that say nothing about what admins hate.
+
+    Only the Ramadan load is labelled.
+18. **admin-10.20**, line 3: "no more than 12 guard metrics may be configured (A11)". This turns A11's hedge "perhaps no more than a dozen" into a hard limit, and the limit is not in the §3 starting-values table or in §7.
+
+**Vocabulary**
+19. "Paused" names three things:
+    - a canary halted by a regression ("Paused · validation failures 30 % vs 1 %", 10.21; "Canary is paused on a regression", 10.23);
+    - AI turned off (`reason: "paused"`, 10.28; "photo and voice analysis show a paused note", 10.30; "Paused while AI is off", 10.34);
+    - 10.32's "canary v7 at 10 % paused underneath".
+
+    The third leaves 10.32's expected "Canary · 10 %" ambiguous, because a canary paused on a regression should not read as running.
+20. One stage has three names: map §3's "shadow → canary → rollout", and the lens's "Full" ("Promote to full") and "Live" ("Live v7"; "Stage names are 'Draft · Shadow · Canary · Live/Full'"). "Draft" also names an Analysis draft, as the lens's own §6.1 notes. The question is routed to §6, but the acceptance lines already use both names.
+21. Task keys and screen names differ, against map ¶4 ("the screen, the code and the logs use these words"): `intent` / "Text and voice intent", `scale` / "Scale reading", `transcribe` / "Voice transcription", `meal_photo` / "Meal photo". This makes §4's "Names match the screen" untrue.
+22. Words outside map ¶4 are used as fixed copy, and some have more than one name:
+    - "price book" (10.40 title, §1.3), "Prices" (the screen), "meter" and "cost meter";
+    - "model catalogue", "the catalogue" and **Registry › Models**;
+    - "Registry version", "candidate", "guard metric", "staff account" and the console section names.
+
+    §6 conflict 2 routes only the section names and "Registry version".
+
+**Experience**
+23. Several care questions are neither answered nor marked not applicable, although a platform build asks every group:
+    - Group 2: "Would someone who knows none of our internal names understand every label?" The console shows `registry.read` (10.3), "(A13)" (10.21) and "(FR-081)" (10.59) as copy. Also unanswered: "Can people tell at a glance what is tappable".
+    - Group 3: "Does the screen respond at the instant of touch?", "Can the person change their mind in the middle of a motion?" and "Does the first screen appear at once, back where the person left off?"
+    - Group 5: "Do we collect only the data this feature needs?"
+    - Group 6: "At the largest text size, does anything clip or overlap?" This covers browser zoom and text size at 390 px.
+24. §4 says "the admin's quiet window for promotions moves to late morning". No story or requirement carries this; nothing warns about a promotion during the eaters' peak. A29 says nothing about late morning either; its quote is "From 10 p.m. to 2 a.m.".
+25. §4's inclusion requirements have no acceptance line in any story, so no verifier can observe them. These are "the whole promote/rollback/kill-switch flow works by keyboard", the screen-reader label "Meal photo, AI on, toggle" and "4.5:1 contrast in light and dark". Separately, 10.28 makes "Turn off" the sheet's main button, while §4 says "One main action per view, and it is never the destructive one". The lens should state which button is the default on each of the three confirmations.
+
+**Ids**
+26. **admin-10.51** (export retry), **10.52** (deletion deadline, "4 days left (due 2026-10-05)") and **10.54** (retention purge) serve WF-9: export, and "delete account removes private data and media within the policy window". With journey = WF number they are admin-9.x stories, or the lens must say why they sit under WF-10. The lens brief asks for "one journey per workflow the persona touches", and this file has only journey 10.

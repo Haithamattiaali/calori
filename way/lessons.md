@@ -4,3 +4,4 @@
 - 2026-10-01 · tailor · download.swift.org is denied by this container's network policy and there is no Docker daemon, so Swift compiles only on the CI macOS runner; batch iOS changes so each CI run proves several things.
 - 2026-10-01 · map · Network access was widened by the owner mid-run; the refuters were told at once so the assumption findings are re-opened instead of carried.
 - 2026-10-01 · map · A refuter put the owner's email in an outbound User-Agent header to Open Food Facts; every research or verifier brief now says: never send the owner's identifiers to any service — use a generic identifier.
+- 2026-10-01 · lenses · The admin lens failed its verifier on 26 defects, mostly names (three words for one state), missing FRD stories (§16.4, §19.1, NFR-10/12) and claims with no source; future lens briefs should require a coverage table from FR lines to story ids and a one-name-per-thing check before returning.
