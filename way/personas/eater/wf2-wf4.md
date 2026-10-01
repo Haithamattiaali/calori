@@ -1367,3 +1367,27 @@ This was a scoped check of commit `7a19864`. That commit changed two lines in th
 
 ## Second fix by the session (2026-10-01), after the closing check
 eater-4.30 line 2: with one-tap logging on, the pick itself logs, with the Undo banner, as eater-4.44 does; no extra "Log" tap is named, so the line has one passing behaviour.
+
+## Lens verdict — closing 2 (2026-10-01)
+
+**pass**: 0 defects. The closing check's 1 defect is fixed, and the rewritten line adds no new defect.
+
+This was a scoped check of commit `5e069c5`. In the body of this file, that commit changed only eater-4.30 line 2. It also appended the closing verdict and the second fix note. The check used `way/personas/_lens-verifier-brief.md` and its addendum, with `way/vocabulary.md` as binding. The changed line was checked against eater-4.44 line 2, eater-2.43, eater-4.21 and FRD §2.3. Unchanged material was not re-audited. No outside source was opened, and no request was sent anywhere.
+
+### The closing defect
+
+| # | status | the changed line |
+|---|---|---|
+| 1 | fixed | 4.30 line 2: "nothing is logged before she picks; because one-tap logging is on, picking "boiled egg" logs boiled egg × 3 at once with the Undo banner (as eater-4.44), with no bread added".<br>**One passing behaviour.** "until she picks one and taps Log" is gone. The line now names a single step: the pick logs, at once, with Undo. A build that waits for a further tap after the pick fails the line. So does a build that logs before the pick.<br>**Against 4.44 line 2** ("both log at once with one Undo banner naming both; an ambiguous word (eater-2.43) still asks first"): the line agrees. The ambiguous word asks first. Once answered, the command names one approved Unit, and it logs at once with the Undo banner, as FRD §2.3 allows ("An explicit command referencing unambiguous approved units may use opt-in one-tap logging with a visible Undo action").<br>**Against 2.43 line 2** ("nothing is logged until she answers"): the line agrees. 2.43 does not say what happens after the answer, so it does not conflict.<br>**Against 4.21** ("he taps Approve (the only main button)"): the line names no button now. "Log" no longer appears in it, and Analysis review's commit is not renamed. The pick is an answer to the question, not a second main button. |
+
+### Defects
+
+None.
+
+### Cross-lens (for the model phase join), uncounted
+
+- The closing check's note on eater-3.6 (`wf3-wf6.md`) is now closed. Its line 4 reads "nothing is logged until Sam picks one chip", so the pick logs the item, which matches 4.30 and 4.44.
+
+### Note, uncounted
+
+- This wording was not changed by `5e069c5`, and the closing check accepted it. For the same situation (one word that fits two Units), 4.30 asks "Which one?" and lists both Units, while 2.43 asks "cheese bite or cheese spoon?". The behaviour is the same in both, and neither is a button. When the string catalogue is built, it should fix one template for this question so that both lines read the same text.

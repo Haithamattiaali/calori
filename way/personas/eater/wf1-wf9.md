@@ -1255,3 +1255,28 @@ The check used `way/personas/_lens-verifier-brief.md` and its addendum, with `wa
 
 ## Second fix by the session (2026-10-01), after the closing check
 eater-1.8 and the onboarding table: the first unfinished step of the Target flow is Onboarding · Account for a local-trial eater (eater-1.49), Profile for a signed-in eater with nothing filled in (1.45), and where she stopped otherwise (1.44) — one rule, no exception missing.
+
+## Lens verdict — closing 2 (2026-10-01)
+
+**pass**: 0 defects. The closing check's 1 defect is fixed, and the changed lines add no new defect.
+
+This was a scoped check of commit `5e069c5`. In the body of this file, that commit changed two places: eater-1.8 line 1 and the onboarding table's Onboarding · Profile row. It also appended the closing verdict and the second fix note. The check used `way/personas/_lens-verifier-brief.md` and its addendum, with `way/vocabulary.md` as binding. The changed lines were checked against eater-1.7, 1.44, 1.45 and 1.49, and against the table's Onboarding · Account row. Unchanged material was not re-audited. No outside source was opened, and no request was sent anywhere.
+
+### The closing defect
+
+| # | status | the changed lines |
+|---|---|---|
+| 1 | fixed | 1.8 line 1: "opens the Target flow at its first unfinished step — Onboarding · Account while she is in the local trial (eater-1.49), Onboarding · Profile when she has an account and nothing is filled in (eater-1.45), the step where she stopped otherwise (eater-1.44)".<br>Table, Onboarding · Profile row: "both open the Target flow at its first unfinished step (Onboarding · Account first for a local-trial eater)".<br>**Against 1.7 and 1.49.** 1.8's Hala, with her 250 kcal Entry, is the Hala of 1.7, who tapped "Keep it on this iPhone for now" in 1.7 line 1. She is in the local trial, so 1.8 now expects Onboarding · Account. 1.49 line 2 expects the same: "When she taps "Set a Target" on Today, Then Onboarding · Account opens". The two lines now share one passing behaviour.<br>**Against the Onboarding · Account row** ("reached from … "Set a Target" in a local trial"): the row agrees with the Profile row's new parenthesis and with 1.8.<br>**Against 1.45** ("When Hala taps "Set a Target", Then Onboarding · Profile opens"): this is 1.8's account branch. 1.45 line 2 marks her Entry Pending, which means it is queued for the server, so that Hala is not the local-trial Hala, whose Entries never reach `/v1/consumption` (1.7 `/s`).<br>**Against 1.44** ("resumes at Onboarding · Macros"): this is 1.8's last branch. A local-trial eater cannot stop partway through the flow, because Onboarding · Account comes first and the profile is kept in the account (1.49 line 2), so the branches do not overlap. |
+
+### Defects
+
+None.
+
+### Cross-lens (for the model phase join), uncounted
+
+- eater-3.2 in `wf3-wf6.md` still reads "a "Set a Target" link to Settings → Goals" (line 4). 1.8 cites eater-3.2 for its rule. This is unchanged from the closing check.
+
+### Notes, uncounted
+
+- 1.45's Given ("no network") does not say that Hala has an account. Only its Pending mark implies one. Saying "signed in" in the Given would let a verifier choose the fixture without inferring it.
+- No line covers a local-trial eater who taps "Set a Target" with no network. In that case Onboarding · Account opens, but no account can be created offline. 1.45 says why for an eater with an account only. This step was not changed by `5e069c5`.
