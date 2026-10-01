@@ -1048,3 +1048,7 @@ Source: `way/personas/added-stories.md` ("Proposed for D6", "Conflicts for the m
 **J156 · The activity credit offer has its own route.** `GET /v1/targets/activity-credit-offer` returns the newer Policy's credit when it differs from the eater's Target version, and `POST /v1/targets/activity-credit-offer/approve` creates the new Target version (`target.version.approved`). Field names: `credit_factor` (fraction) and `credit_cap_kcal` everywhere — `events.md` is aligned.
 
 **J157 · Retention keeps role history provable.** The `audit_trail.retention_run` summary event carries `roles_held_at_anchor` (each user's roles at the anchor). The Anomalies rule "roles held with no assignment event" treats a role listed there as assigned.
+
+**J158 · The publish carries the proposal's `asks_again`.** `POST /v1/admin/wording` for a Proposed version must send the same `asks_again` the proposal stored; a different value is 422 `VALIDATION_ERROR`, field `asks_again` (change it by proposing a new version). Reason: J154 — the flag is decided once, by the publisher, and recorded.
+
+**J159 · Who reads Settings › Wordings.** Holders of "Publish wording" (Platform admin for consent texts and `grant-req-n`; Nutrition approver for `guidance-n`, J40) and the Auditor (read-only) may read `GET /v1/admin/wording/versions`; any other staff role gets 403 `FORBIDDEN` with `access.refused`. Reason: FR-081 least privilege; the Auditor reviews consent texts (auditor-9.3).

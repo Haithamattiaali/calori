@@ -29,7 +29,7 @@ The nine defaults first proposed here as D6-A1…A9 are now decisions (J149, wit
 ## admin-10.72 · Change the Grant settings; a Grant already sent keeps its own
 As the Platform admin, I change the Grant durations and the request window in one versioned place, with a reason, so that support access rules change on purpose and never under a Grant already sent.
 
-Trace: J2, J149 (bounds), J155 (Replaced), FR-081, `seed.md` §4.6, model E20 (`grant_settings_version`) and E21, §3 `grants`, `contracts/openapi.yaml` `getGrantSettings` / `saveGrantSettings` / `getGrant` / `requestGrant`, events.md §2.9 `grant_settings.version.saved`, support-10.2 and 10.3 · gap G1
+Trace: J2, J149 (bounds), J155 (Replaced), FR-081, `seed.md` §4.6, model E20 (`grant_settings_version`) and E21, §3 `grants`, `contracts/openapi.yaml` `getGrantSettings` / `listGrantSettingsVersions` / `saveGrantSettings` / `getGrant` / `requestGrant`, events.md §2.9 `grant_settings.version.saved`, support-10.2 and 10.3 · gap G1
 
 **Start clock 2026-10-01T10:21:00Z.** Loaded:
 - Grant settings version 1 In use (seed §4.6, event 21): durations 1 h (default) · 4 h · 24 h, request window 72 h.
@@ -222,7 +222,7 @@ As the Platform admin, I publish counsel's reviewed consent text as a new Wordin
 Trace: J26, J40, J149 (the 409), J153, J154, J23, J24, J32 (`c-ai-5` is counsel's residency wording), FR-076, FR-082, model E11, E12, E42, §3 `privacy.publish_wording` and `gates.sign`, `contracts/openapi.yaml` `publishWording` (`PublishWording`, `Wording`), `getWording`, `signLaunchGate`, `listConsents` (`PurposeConsent`), `createAnalysis`, `listWordings`, `proposeWording`, events.md `wording.proposed`, events.md §2.5 and §2.7 · gap G6
 
 **Start clock 2026-10-01T09:00:00Z** (the Platform admin's default, seed §2). Loaded:
-- **Settings › Wordings** (J153) shows family `c-ai`: `c-ai-5` Proposed since 2026-09-30T10:00:00Z (by `staff_ali`, `asks_again: false`, seed §4.7), `c-ai-4` Published since 2026-09-24T08:00Z (event 145) and `c-ai-3` Superseded; `GET /v1/admin/wording/versions?family=c-ai` returns the same three states.
+- **Settings › Wordings** (J153) shows family `c-ai`: `c-ai-5` Proposed since 2026-09-30T10:00:00Z (by `staff_ali`, `asks_again: false`, seed §4.7), `c-ai-4` Published since 2026-09-24T08:00Z (event 145) and `c-ai-3` Superseded; `GET /v1/admin/wording/versions?family=c-ai` returns the same three states when called with `staff_ali`'s token.
 - **Settings › launch gates** holds the privacy review of `c-ai-4` only (signed 2026-09-24 by counsel R. Haddad (synthetic), event 144).
 - `c-ai-5`'s stored English and Arabic texts are counsel's synthetic wording; they change only the residency sentence of `c-ai-4` (J32).
 - `staff_ali` (Ali N., Platform admin) holds "Publish wording" and "Sign launch gates". `staff_hana` (Hana Q., Auditor) reads the events.
@@ -235,7 +235,7 @@ Trace: J26, J40, J149 (the 409), J153, J154, J23, J24, J32 (`c-ai-5` is counsel'
   - Given that start, When `staff_ali` signs on Settings › launch gates the privacy review of `c-ai-5` (`POST /v1/admin/launch-gates/privacy_review/sign` with `version_reviewed: "c-ai-5"` and `signer_name: "R. Haddad"`),
   - Then the gate reads "Privacy review signed by R. Haddad on 2026-10-01" for `c-ai-5` (J26).
   - When he then publishes `c-ai-5` on Settings › Wordings with "Ask eaters again" off, Then `POST /v1/admin/wording` returns 201 with `state: "published"`, `asks_again: false`, `published_by: "staff_ali"` and `review_gate: "privacy_review"`.
-  - Settings › Wordings lists `c-ai-5` Published and `c-ai-4` Superseded (J153), and `GET /v1/admin/wording/versions?family=c-ai` returns `published` for `c-ai-5` and `superseded` for `c-ai-4` and `c-ai-3`.
+  - Settings › Wordings lists `c-ai-5` Published and `c-ai-4` Superseded (J153), and `GET /v1/admin/wording/versions?family=c-ai` with `staff_ali`'s token returns `published` for `c-ai-5` and `superseded` for `c-ai-4` and `c-ai-3`.
   - `staff_hana` sees in Audit trail › Events:
     - `launch_gate.signed`: actor `staff_ali`, role Platform admin; detail `gate: privacy_review`, `signer` R. Haddad, `version_reviewed: c-ai-5`; outcome Done;
     - followed by `wording.published`: actor `staff_ali`; detail `key: c-ai-5`, `version: 5`, the languages English and Arabic, and `asks_again: false` (J154: recorded in the Audit trail); outcome Done.
@@ -252,7 +252,7 @@ Trace: J26, J40, J149 (the 409), J153, J154, J23, J24, J32 (`c-ai-5` is counsel'
   - When she taps "Give consent", Then `GET /v1/me/consents` returns `ai_processing` with `state: "given"`, `record.text_version: "c-ai-5"`, `record.method: "first_need_sheet"` and `record.context` Capture & Plan (J24).
   - `staff_hana` sees one `consent.given` with `purpose: ai_processing`, `text_version: c-ai-5` and `method: first_need_sheet`.
 - `/r` **A version marked to ask again blocks the purpose** (J154).
-  - Given `c-ai-5` published as above, `staff_ali` proposes `c-ai-6` (a synthetic text with a changed purpose) through `POST /v1/admin/wording/proposals` with `asks_again: true` — `staff_hana` sees `wording.proposed` with `key: c-ai-6`, `version: 6`, `asks_again: true` — then signs its privacy review and publishes `c-ai-6`. `wording.published` carries `asks_again: true`, and `c-ai-5` becomes Superseded.
+  - Given `c-ai-5` published as above, `staff_ali` proposes `c-ai-6` (a synthetic text with a changed purpose) through `POST /v1/admin/wording/proposals` with `asks_again: true` — `staff_hana` sees `wording.proposed` with `key: c-ai-6`, `version: 6`, `asks_again: true` — then signs its privacy review and publishes `c-ai-6` with `asks_again: true` (the value its proposal carries; J158). `wording.published` carries `asks_again: true`, and `c-ai-5` becomes Superseded.
   - When `GET /v1/me/consents` is called with Faisal's token, Then `ai_processing` reads `state: "given"`, `record.text_version: "c-ai-3"`, `text_version_in_force: "c-ai-6"` and `asks_again: true`.
   - When he next sends typed words on Capture & Plan, Then the Consent sheet shows `c-ai-6`'s stored Arabic text exactly, with the Arabic catalogue text of "Give consent" and "Not now" (J146).
   - `POST /v1/analyses` with his token returns 403 `CONSENT_REQUIRED`, and the analyzer mock receives no request.
@@ -583,3 +583,73 @@ The contract still validates (OpenAPI 3.1, 149 paths).
 1. admin-10.72 reads version 1 as `replaced` through `GET /v1/admin/grant-settings/versions` (J155).
 2–3. admin-10.73 starts from the seeded Proposed `c-ai-5` (seed §4.7) and reads it through `GET /v1/admin/wording/versions`; the admin opens it rather than entering texts; `c-ai-6` is proposed through `POST /v1/admin/wording/proposals` and `wording.proposed` is read.
 4. The open-items text now says what is closed.
+
+## Lens verdict — closing 2 (2026-10-01)
+
+**fail** — 3 defects. All 4 closing defects are fixed. Three changed lines bring new slips. This check covers only the lines the second closing fix changed: the header, admin-10.72, admin-10.73 and the open-items section. Each changed line is read against the rest of those two stories. The model it is read against:
+- `way/vocabulary.md` D2–D6 (lines 43–44: Wording "Proposed → Published · Superseded; flag `asks_again`", Grant settings version "In use → Replaced · Rolled back");
+- `way/join.md` J2, J40, J52, J153–J155;
+- `way/seed.md` §3, §4.6, §4.7;
+- `way/events.md` §2.7 `wording.proposed`;
+- `contracts/openapi.yaml`: `listGrantSettingsVersions`, `listWordings`, `proposeWording`, `publishWording` and the `GrantSettingsVersion`, `GrantSettingsState`, `Wording`, `WordingState` and `PublishWording` schemas.
+
+**The 4 closing defects (each changed line as it now reads)**
+1. admin-10.72, version 1 Replaced through the API — **fixed.** "and `GET /v1/admin/grant-settings/versions` with her token returns version 2 with `state: "in_use"` and version 1 with `state: "replaced"` (J155)."
+   - The route exists (`listGrantSettingsVersions`, "newest first; read-only for the Auditor", `x-stories: [admin-10.72]`).
+   - The states are in `GrantSettingsState` (`in_use, replaced, rolled_back`), and the order matches newest first.
+   - The reader `staff_hana` is named, and J2 makes Grant settings "read-only for the Auditor".
+   - Seed §4.6 holds version 1 only, so after the save the list has exactly these two.
+   - The line agrees with the story's screen lines "The page's version list reads "Version 1 · Replaced" (J155)." and "she reads … version 1 as Replaced".
+2. admin-10.73, `c-ai-5` read as Proposed — **fixed.**
+   - The Given: "**Settings › Wordings** (J153) shows family `c-ai`: `c-ai-5` Proposed since 2026-09-30T10:00:00Z (by `staff_ali`, `asks_again: false`, seed §4.7), `c-ai-4` Published since 2026-09-24T08:00Z (event 145) and `c-ai-3` Superseded; `GET /v1/admin/wording/versions?family=c-ai` returns the same three states."
+   - After the publish: "and `GET /v1/admin/wording/versions?family=c-ai` returns `published` for `c-ai-5` and `superseded` for `c-ai-4` and `c-ai-3`."
+   - The proposal: "`staff_ali` proposes `c-ai-6` … through `POST /v1/admin/wording/proposals` with `asks_again: true` — `staff_hana` sees `wording.proposed` with `key: c-ai-6`, `version: 6`, `asks_again: true`".
+   - The Trace now adds "`listWordings`, `proposeWording`, events.md `wording.proposed`".
+   - These match `WordingState` (`proposed, published, superseded`) and `wording.proposed`'s detail fields (`key`, `version`, languages, `asks_again`). Seed §4.7's main seed holds `c-ai-3`, `c-ai-4` and `c-ai-5` only (`c-ai-2` is in fixture X), so "three" holds.
+   - `staff_hana` holds "Read the whole Audit trail". `staff_ali` holds "Publish wording", which `proposeWording` requires (J40).
+3. admin-10.73's Given and seed §4.7 — **fixed.**
+   - "`c-ai-5`'s stored English and Arabic texts are counsel's synthetic wording; they change only the residency sentence of `c-ai-4` (J32)."
+   - "When `staff_ali` opens the Proposed `c-ai-5` on **Settings › Wordings** ("Ask eaters again" off, as stored)".
+   - The 409 request now reads "`en` and `ar` equal to the stored Proposed texts, `asks_again: false`".
+   - Seed §4.7 reads "**Proposed** 2026-09-30T10:00:00Z by `staff_ali`, `asks_again: false`; its privacy review is not signed at the default clock". That record is before the 09:00:00Z start clock (J52).
+   - Nothing in the story still says "holds no `c-ai-5` row", "enters" or "supplied by the test".
+4. Stale open items — **fixed.**
+   - The header now reads: "The open items once listed here were closed by the session (end of file)."
+   - The section now reads "## Open items for the model phase / None open: each was closed by the session (see "Open items closed by the session" at the end of the file)."
+   - The four closures still hold:
+     - `wording.published` and `audit_trail.retention_run` carry `asks_again` and `roles_held_at_anchor`;
+     - `target.version.approved` names `POST /v1/targets/activity-credit-offer/approve`;
+     - `Grant.grant_settings_version` cites admin-10.72;
+     - `request_closes_at` reads "the request window of the Grant settings version";
+     - the `c-ai-4` review is at 07:55:00Z;
+     - the contract has 149 paths.
+   - Not counted: "end of file" is loose. Three verdict and fix sections now follow that section, and the heading quoted by name is what finds it.
+
+**Defects**
+1. **admin-10.72 — its Trace line does not name the route the changed line now calls.**
+   - The new line calls `GET /v1/admin/grant-settings/versions` (`listGrantSettingsVersions`, whose `x-stories` is `[admin-10.72]`).
+   - The Trace still lists only "`contracts/openapi.yaml` `getGrantSettings` / `saveGrantSettings` / `getGrant` / `requestGrant`".
+   - The same fix added its new routes to admin-10.73's Trace ("`listWordings`, `proposeWording`"). admin-10.72's Trace should add `listGrantSettingsVersions`.
+2. **admin-10.73 — the `c-ai-6` publish no longer names its `asks_again`.**
+   - Before the fix the line read "publishes `c-ai-6` with "Ask eaters again" on". It now reads "… with `asks_again: true` — … — then signs its privacy review and publishes `c-ai-6`. `wording.published` carries `asks_again: true`". The flag moved to the proposal, and the publish is left without one.
+   - J154 says `asks_again` is "set by the publisher". `PublishWording` requires `asks_again` (`required: [command_id, text_version, en, ar, asks_again]`).
+   - The `c-ai-5` path in the same story names it at both steps: "("Ask eaters again" off, as stored)" and "publishes `c-ai-5` on Settings › Wordings with "Ask eaters again" off".
+   - A verifier cannot build the `c-ai-6` publish request from the line, and the observed `wording.published` `asks_again: true` depends on that request. The publish should say "with "Ask eaters again" on (as stored)".
+3. **admin-10.73 — the two new `GET /v1/admin/wording/versions` reads name no caller.**
+   - The Given has "`GET /v1/admin/wording/versions?family=c-ai` returns the same three states". The publish line has "`GET /v1/admin/wording/versions?family=c-ai` returns `published` for `c-ai-5` …".
+   - The file's own rule says: "**Readers.** Each line names who reads what, and that reader holds the permission (`seed.md` §3)."
+   - Unlike the public `GET /v1/wording` (security `{}` or `eaterBearer`), `listWordings` is staff-only and lists `'403': [FORBIDDEN]`. So the caller decides the outcome.
+   - admin-10.72's changed line shows the form: "with her token". Each read should name its caller, for example `staff_ali` (holds "Publish wording").
+
+### Cross-lens and model documents (for the model phase) — not counted
+- **No permission names who may read Settings › Wordings or `GET /v1/admin/wording/versions`.**
+  - Seed §3 and J40 list no Wording read permission ("deny by default", J40's reason).
+  - `listWordings` names none either, though its `x-stories` includes auditor-9.3, so an Auditor is expected to read it.
+  - For Grant settings, J2 settles this ("read-only for the Auditor"). For Wordings nothing does.
+- **The `proposeWording` / `publishWording` question raised at closing is still open.** `proposeWording` stores `asks_again`, and `publishWording` requires it again (J154: "set by the publisher"). The model should say which value wins when the two differ, and whether a publish of a stored Proposed version must resend `en`, `ar` and `asks_again`.
+
+## Third closing fix by the session (2026-10-01)
+1. admin-10.72's Trace names `listGrantSettingsVersions`.
+2. admin-10.73 publishes `c-ai-6` with `asks_again: true`, the value its proposal carries (J158 below).
+3. Both `GET /v1/admin/wording/versions` reads name `staff_ali`'s token.
+Model gaps decided in `join.md` J158–J159: a publish must carry the Proposed version's `asks_again`; Settings › Wordings is readable by holders of "Publish wording" and by the Auditor.
