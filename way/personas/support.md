@@ -915,9 +915,9 @@ Size is platform, so every question is asked on every screen this persona uses: 
 | support-10.21 | auditor | sees `support.lookup` with method `grant` |
 | support-10.23 | eater, auditor | the end-to-end WF-10 proof |
 | support-10.24 | platform admin | the kill switch the platform admin turns On and Off |
+| support-10.25 | eater, auditor | the eater's Grant history does not list a read that ended in an error; the auditor sees that attempt as `grant.read` with outcome `error` |
 
 ---
-| support-10.25 | eater, auditor | the eater's Grant history does not list a read that ended in an error; the auditor sees that attempt as `grant.read` with outcome `error` |
 
 ## 12 · Conflicts for the model phase
 
