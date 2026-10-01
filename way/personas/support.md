@@ -268,7 +268,7 @@ Covers: FR-080, FR-081, FRD §8.1, §19.2 · SR5, SR11 Art. 26(3) · A17
   - language Arabic; numerals Arabic-Indic;
   - time zone Asia/Riyadh; diary-day boundary 04:00;
   - devices "iPhone · app 1.0.3 · iOS 26.1 · last sync 11:02 your time (10:02 UTC) · 13:02 eater's time" and "iPhone · app 1.0.2 · last sync 2026-09-29 21:40 your time (20:40 UTC) · 23:40 eater's time";
-  - Consents, each Given or Withdrawn;
+  - Consents, each Not given, Given or Withdrawn;
   - AI analyses today 3 of 10;
   - Privacy jobs: none;
   - Grants: none Requested or Active (`grant_31f0` is requested at 10:05 UTC);

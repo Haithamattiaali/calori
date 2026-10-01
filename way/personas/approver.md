@@ -878,7 +878,7 @@ Words already fixed by `vocabulary.md` are used as written. These are **not yet*
 - With the Support agent: 10.2, 10.66.
 - With the Platform admin: 10.2, 10.23, 10.66.
 
-Totals: 70 stories, 228 acceptance lines (191 runtime, 19 system, 19 module).
+Totals: 70 stories, 228 acceptance lines (192 runtime, 18 system, 18 module).
 
 
 ## Lens verdict (2026-10-01)
@@ -1457,7 +1457,7 @@ What this fix does, and how it fits the other lines:
 ### Final 2's not-counted items
 
 - **The new source outside §1.1: fixed.** §1.1 now holds: "**AP14 · USDA FoodData Central record FDC 321358 "Hummus, commercial" (Foundation Foods) gives a derivation per nutrient.** `opened` · https://fdc.nal.usda.gov/portal-data/external/321358 · 2026-10-01 · …".
-- **The totals line: partly fixed.** It now reads "Totals: 70 stories, 228 acceptance lines (191 runtime, 19 system, 19 module)".
+- **The totals line: partly fixed.** It now reads "Totals: 70 stories, 228 acceptance lines (192 runtime, 18 system, 18 module)..
   - The recount of the story section gives 70 stories and 228 lines: 192 `/r`, 18 `/s` and 18 `/m`. So 70 and 228 are right.
   - The breakdown was not updated: 191 + 19 + 19 = 229. It should read "(192 runtime, 18 system, 18 module)".
   - Not counted, because none of the brief's seven checks covers totals.
