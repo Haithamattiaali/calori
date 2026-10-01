@@ -437,7 +437,7 @@ As the Eater, I can see where each Activity came from, so that I can trust or qu
 
 #### eater-7.6 · Weight from Health becomes my weight observations
 As the Eater, I let Health bring in my weight, so that Progress shows it without typing. · Trace: FR-062 ("body-mass data"), FRD §17 WeightObservation, FR-072
-- `/r` Given Body mass is shared and Health holds 81.3 kg at 2026-10-01 06:50, When Progress → Weight opens, Then 81.3 kg shows with the label "Apple Health"; with display unit lb it shows 179.2 lb.
+- `/r` Given Sam later turns on Body mass in Settings → Activity and Health holds 81.3 kg at 2026-10-01 06:50, When Progress → Weight opens, Then 81.3 kg shows with the label "Apple Health"; with display unit lb it shows 179.2 lb.
 - `/r` Given the same, When `GET /v1/reports/period` is called, Then the weight observation has `source: "healthkit"`, a UTC time and the capture zone.
 
 #### eater-7.7 · Changed or deleted in Health: changed or removed here, once
@@ -578,15 +578,15 @@ As the Eater, I see what the meal added right after I confirm it, so that I know
 
 #### eater-8.2 · The Day report: Target, consumed, remaining, macros, Evidence and coverage
 As the Eater, I read the whole Day in one place, so that I know where I stand and how sure the numbers are. · Trace: FR-069, FR-070, FRD §13.1, §14 Today; map WF-8 done-when ("target, consumed, remaining, shares summing to 100.0 %, coverage")
-- `/r` Given the Day after 8.1, When Day report opens from Today's remaining figure, Then it reads "Daily total 1,200 kcal · Target 1,870 · Remaining 670"; Protein 72 g · 288 kcal · 24.0 %; Carbohydrate 138 g · 552 kcal · 46.0 %; Fat 40 g · 360 kcal · 30.0 %; "Carbohydrate: above your 30 % target"; and "Macros known for all 1,200 kcal".
+- `/r` Given the Day after 8.1, When the Day report opens from Today's remaining figure, Then it reads "Daily total 1,200 kcal · Target 1,870 · Remaining 670"; Protein 72 g · 288 kcal · 24.0 %; Carbohydrate 138 g · 552 kcal · 46.0 %; Fat 40 g · 360 kcal · 30.0 %; "Carbohydrate: above your 30 % target"; and "Macros known for all 1,200 kcal".
 - `/r` Given the Day includes 2 hummus bites (Estimated analogue, low 45.0 – high 75.0 kcal each), Then each Entry shows its Evidence badge and the total shows "low 1,173 – high 1,233 (estimate)"; a Day with no estimated Entry shows no range.
 - `/r` Given the same Day, When `GET /v1/reports/day` is called, Then it returns the same totals, shares, range, `revision` and target version.
 
 #### eater-8.3 · Shares always add to 100.0 %, on one convention
 As the Eater, I see shares that add up, so that a chart that says 99.9 % never makes me doubt the rest. · Trace: FRD §10.1, §10.2 (largest-remainder display; zero energy → "not applicable"); map WF-8 done-when
 - `/m` Given P 20 g, C 25 g, F 10 g (80 / 100 / 90 kcal), When display shares are computed, Then they are 29.6 / 37.1 / 33.3 % (sum 100.0), while rounding each value alone would give 99.9; stored values stay unrounded.
-- `/r` Given a Day with only black coffee and water (0 kcal), When Day report opens, Then shares read "Not applicable" and no macro chart is drawn.
-- `/r` Given any Day report or meal report, Then the share heading reads "Share of macro-derived energy (4/4/9)".
+- `/r` Given a Day with only black coffee and water (0 kcal), When the Day report opens, Then shares read "Not applicable" and no macro chart is drawn.
+- `/r` Given any Day report or meal report on Today, Then the share heading reads "Share of macro-derived energy (4/4/9)".
 
 #### eater-8.4 · When a label's calories differ from 4/4/9 (AT-15)
 As the Eater, I keep the label's calories as the headline and see why the macro shares differ, so that I trust both. · Trace: AT-15, FR-030, FR-069, FRD §10.1, §10.2 (mismatch trigger); E15, E16
@@ -601,7 +601,7 @@ As the Eater who logs a calorie-only food, I see that the Day's macros are incom
 
 #### eater-8.6 · Over my Target is a number, not a verdict
 As the Eater, I see an over-Target Day as a plain number, so that the report informs without judging. · Trace: FRD §14.2 ("Avoid punitive red warnings for ordinary eating"), §11.4, FR-070; EX-35, EX-42
-- `/r` Given Sam's Day of 2,000 kcal against 1,870, When Day report opens, Then it reads "Over by 130" in the same style as "Remaining" (no red fill, no warning icon), with words, not colour alone.
+- `/r` Given Sam's Day of 2,000 kcal against 1,870, When the Day report opens, Then it reads "Over by 130" in the same style as "Remaining" (no red fill, no warning icon), with words, not colour alone.
 - `/r` Given Today, Day report and Progress in English and Arabic, Then none of the catalogue words for "bad", "cheat", "failed", "skip" or "make up for" appears.
 
 #### eater-8.7 · Pending Entries in the Day
@@ -611,14 +611,14 @@ As the Eater offline, I see what is not synced yet, so that I know which part of
 
 #### eater-8.8 · Reports always reconcile with my Entries
 As the Eater, I can add up the Entries I see and get the Day total, so that no number moves without a visible cause. · Trace: FR-070 ("Arithmetic must reconcile with the effective ledger"), FR-042, NFR-01, FRD §17.2; E15, E16, E19; EX-14 · **Shared: Eater · Platform admin** (admin-10.26) **· Nutrition approver** (approver-10.28, approver-10.58)
-- `/r` Given any Day, When Day report opens, Then the Day total equals the sum of the Entries listed on Today and in the Day report, to the displayed precision.
+- `/r` Given any of Sam's Days, When the Day report opens, Then the Day total equals the sum of the Entries listed on Today and in the Day report, to the displayed precision.
 - `/s` Given the Day's events replayed from scratch, Then the rebuilt projection equals the stored one, with zero discrepancy.
 - `/r` Given a Registry version Rolled back (admin) or a newer Food version Approved, with the old one Superseded (approver), after the Day, When `GET /v1/reports/day` is called for that Day, Then totals and `revision` are unchanged.
 
 #### eater-8.9 · A late correction changes its own Day, not today
 As the Eater, I correct yesterday and only yesterday moves, so that today's report stays true. · Trace: FR-047, AT-14, FR-044; WF-6
 - `/r` Given Mona corrects lunch on 2026-09-30 while on 2026-10-01, Then the Day report for 2026-09-30 and the 7-day view change, and today's Day report is unchanged.
-- `/r` Given the correction, When the API response is read, Then the affected Day projections list only 2026-09-30.
+- `/r` Given the correction, When `POST /v1/consumption/{id}/corrections` returns, Then the affected Day projections list only 2026-09-30.
 
 ### B · Periods
 
@@ -658,13 +658,13 @@ As the Eater, I see how my intake compared with my Target, so that I get a fact,
 
 #### eater-8.16 · My week starts where my region's week starts
 As the Eater, I see weeks that start on my region's first day, so that "this week" matches my working week. · Trace: FR-072, FRD §1.3 ("daily/weekly reports"); E14; EX-05; research.md §6, conflict 4
-- `/r` Given the device calendar's first weekday is Saturday, When the 28-day view opens, Then its week separators fall before Saturdays; given Monday (Sam, United Kingdom), Then before Mondays.
+- `/r` Given Mona's device calendar has Saturday as its first weekday, When the 28-day view opens, Then its week separators fall before Saturdays; given Monday (Sam, United Kingdom), Then before Mondays.
 - `/r` Given Settings → Units & language → first day of week changed to Sunday, Then the separators move to Sundays, and Day values are unchanged.
 *Note:* the first weekday for Egypt and Saudi Arabia comes from the device calendar; the values per country are `assumption`.
 
 #### eater-8.17 · Wrong custom dates are caught
 As the Eater, I am told at once when my custom dates cannot work, so that I never get an empty or misleading report. · Trace: FR-072, FRD §18.2; care.md group 4; EX-23
-- `/r` Given Custom with an end before the start, Then "End date is before start date" appears beside the end date and the view does not load.
+- `/r` Given Progress → Custom with an end before the start, Then "End date is before start date" appears beside the end date and the view does not load.
 - `/r` Given an end after today, Then the picker stops at today; given more than 366 days, Then "Choose up to 366 days" (the limit is `assumption`).
 - `/r` Given `GET /v1/reports/period?from=2026-09-26&to=2026-09-20`, Then it returns `VALIDATION_ERROR` naming `to`.
 
@@ -676,24 +676,24 @@ As the Eater in Ramadan, I see iftar, the late meal and suhoor in one Day, so th
 
 #### eater-8.19 · My weight over the period, with its source
 As the Eater, I see my weight observations over the period with where each came from, so that I read a trend, not one scale reading. · Trace: FR-072 (weight trend), FRD §17 WeightObservation ("not a guaranteed body-fat measure"), FR-062
-- `/r` Given weights 82.0 (2026-09-10, by hand), 81.7 (09-17, Apple Health), 81.9 (09-24, Apple Health) and 81.3 (10-01, Apple Health), When Progress → Weight for 28 days opens, Then the four points show with their source labels in kg (or lb by setting).
-- `/r` Given the Weight section, Then no body-fat or "fat lost" figure appears.
+- `/r` Given Sam's weights 82.0 (2026-09-10, by hand), 81.7 (09-17, Apple Health), 81.9 (09-24, Apple Health) and 81.3 (10-01, Apple Health), When Progress → Weight for 28 days opens, Then the four points show with their source labels in kg (or lb by setting).
+- `/r` Given Progress → Weight, Then no body-fat or "fat lost" figure appears.
 
 #### eater-8.20 · Add my weight by hand; an unusual reading is flagged, not deleted
 As the Eater, I type my weight, and a reading that looks wrong is flagged for me to decide, so that one bad reading never bends the trend silently. · Trace: FRD §17 WeightObservation (`outlier_state`), §14 Progress ("outlier weights"), §14.1 (both numeral systems)
-- `/r` Given Mona types «٨١٫٣ كجم», When saved, Then it is stored as 81.3 kg and shown as «٨١٫٣».
-- `/r` Given 88.0 kg on 2026-09-20 between 81.7 (09-17) and 81.9 (09-24), Then the point reads «غير معتاد — راجعيه» ("Unusual — check") with «احتفظي به» ("Keep") and «استبعده من الاتجاه» ("Exclude from trend"); it stays in the list either way, and while flagged it is left out of the trend line. The rule for "unusual" is `assumption`.
+- `/r` Given Mona (no Health connected) types «٦٨٫٤ كجم», When saved, Then it is stored as 68.4 kg and shown as «٦٨٫٤».
+- `/r` Given she types 74.9 kg for 2026-09-20 between 68.6 (09-17) and 68.2 (09-24), Then the point reads «غير معتاد — راجعيه» ("Unusual — check") with «احتفظي به» ("Keep") and «استبعده من الاتجاه» ("Exclude from trend"); it stays in the list either way, and while flagged it is left out of the trend line. The rule for "unusual" is `assumption`.
 - `/r` Given 0, a negative value or 500 kg, Then the field shows the fix beside it and nothing is saved; the same value sent to `POST /v1/weights` (*proposed*) returns `VALIDATION_ERROR` naming `kg`.
 
 #### eater-8.21 · A trend statement only with enough evidence (P1)
 As the Eater, I get a trend statement only when there is enough data, so that a few readings never become a claim. · Trace: FR-060 (P1: "proposed minimum 14 days, 10 self-marked complete diary days, and 4 weight observations. Otherwise show 'insufficient evidence'"), FR-059; R42 (the adaptive approach; its refuted detail is not used) · **P1**
-- `/r` Given a 28-day period with 9 Complete Days and 4 weights, When the Weight section opens, Then it reads "Insufficient evidence for a trend: 9 of 10 Complete Days needed · 4 of 4 weights · 28 of 14 days", and no trend number is shown.
+- `/r` Given Mona's 28-day period with 9 Complete Days and 4 weights, When Progress → Weight opens, Then it reads "Insufficient evidence for a trend: 9 of 10 Complete Days needed · 4 of 4 weights · 28 of 14 days", and no trend number is shown.
 - `/r` Given at least 14 days, 10 Complete Days and 4 weights, Then a trend statement appears worded as an estimate with its range (FR-059), never as a promise.
 
 #### eater-8.22 · No weight data, or Health access changed
 As the Eater with no weights yet, or whose Health access changed, I see what is missing and what to do, so that an empty chart never looks like a broken app. · Trace: FRD §14 Progress ("Insufficient data … permission changes"), FR-067; EX-19, EX-27
-- `/r` Given Body mass is not shared and no weight was typed, When Progress → Weight opens, Then it reads "No weight yet" with "Add weight" and "Connect Apple Health", never "denied".
-- `/r` Given Health weights stopped arriving after 2026-09-24, Then it reads "No new weight from Apple Health since 24 Sept" in quiet text.
+- `/r` Given a new eater who has not shared Body mass and has typed no weight, When Progress → Weight opens, Then it reads "No weight yet" with "Add weight" and "Connect Apple Health", never "denied".
+- `/r` Given Sam's Health weights stopped arriving after 2026-09-24, When Progress → Weight opens, Then it reads "No new weight from Apple Health since 24 Sept" in quiet text.
 
 ### D · Target history
 
@@ -710,12 +710,12 @@ As the Eater, I export a period report in a file my coach or spreadsheet can rea
 - `/r` Given the week 2026-09-20 – 09-26, When Mona taps «صدّري الفترة» ("Export period") → CSV, Then the share sheet offers a CSV with one row per Day: `date` (ISO), `target_version`, `target_kcal`, `consumed_kcal` (empty for Unlogged), `protein_g`, `carbohydrate_g`, `fat_g`, `coverage` (complete, partial or unlogged), `provisional`, `active_energy_kcal` (empty when no data) and `weight_kg`, in Western digits whatever her display setting.
 - `/r` Given JSON is chosen instead, Then the file holds the same values as the CSV.
 - `/r` Given `GET /v1/reports/period?from=2026-09-20&to=2026-09-26&format=csv` (*proposed* parameter), Then it returns `text/csv` whose rows equal the screen's values.
-- `/r` Given any account, Then "Export period" shows no upgrade prompt or lock.
+- `/r` Given any account on Progress, Then "Export period" shows no upgrade prompt or lock.
 
 #### eater-8.25 · Export with no network, or when it fails
 As the Eater, I am told why an export cannot be made now, so that I never get half a file. · Trace: FR-075, FRD §18.2; care.md group 4; EX-21
-- `/r` Given airplane mode, Then "Export period" is disabled with the reason "Needs a connection".
-- `/r` Given the server returns 503, Then "Couldn't make the export. Try again." appears, and no partial file is offered.
+- `/r` Given airplane mode, When Progress opens, Then "Export period" is disabled with the reason "Needs a connection".
+- `/r` Given `GET /v1/reports/period` returns 503, When "Export period" is tapped on Progress, Then "Couldn't make the export. Try again." appears, and no partial file is offered.
 
 ### F · Empty, offline, slow, inclusion and modes
 
@@ -731,7 +731,7 @@ As the Eater, I see my last reports with a note when offline, and placeholders w
 #### eater-8.28 · Reports in Arabic, right to left, by VoiceOver and at large text
 As the Eater who reads Arabic or uses VoiceOver, I read my reports in my way, so that charts run in my direction and every number is spoken. · Trace: FRD §14.1, §14.2, NFR-08; E40, E41; EX-33, EX-36, EX-39
 - `/r` Given Mona in Arabic, When the 7-day view opens, Then Days run right to left with the earliest on the right, bars and macro shares fill from the right, and digits keep their order («١٬٦٥٠»).
-- `/r` Given VoiceOver, Then the chart's summary reads "7 days, 5 logged, average 1,692 calories, 2 unlogged", and each Day bar can be read on its own.
+- `/r` Given VoiceOver in English on the week of 8.12, Then the chart's summary reads "7 days, 5 logged, average 1,692 calories, 2 unlogged", and each Day bar can be read on its own.
 - `/r` Given the largest accessibility text size, Then Day report rows wrap with no clipping in English and Arabic.
 
 #### eater-8.29 · Reports with numbers hidden
