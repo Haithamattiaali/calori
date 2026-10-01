@@ -351,8 +351,8 @@ As the Nutrition approver, I enter a Food from its label or the brand's official
   - entered: 250 kcal per 50 g serving, protein 5 g, total carbohydrate 30 g, fat 12 g, fibre 0;
   - left blank: sugars and sodium.
 - `/r` FR-012: Given the same Food, Then every value typed from the label carries the marker "declared". When the approver then fills the missing sugars with 4 g estimated from a similar Approved Food (match quality B, AP3), that value carries "estimate" with its method. Foods shows each marker beside its value.
-- `/r` FR-012: Given a Tier A row from USDA Foundation Foods (AP1: "number of samples … analytical approaches used"), Then Foods marks its values "measured". Given the Tier A row "Falafel" (FDC 2707408), an FNDDS food whose values are calculated from ingredient values (F5), Then Foods marks its values "estimate".
-- `/r` Given the biscuits Food is approved after its preview, Then its Evidence in Foods reads "label-verified", because an approver entered every value from the attached label (FR-026).
+- `/r` FR-012: Given a Tier A row from USDA Foundation Foods (AP1: "number of samples … analytical approaches used"), Then Foods marks its analysed nutrients (protein, fat, fibre, sugars, minerals) "measured" and its carbohydrate (by difference) and energy (Atwater factors) "calculated from measured values", each with its method shown beside it (AP1). Given the Tier A row "Falafel" (FDC 2707408), an FNDDS food whose values are calculated from ingredient values (F5), Then Foods marks its values "estimate".
+- `/r` Given the biscuits Food with every value typed from the label and sugars left "unknown" (no estimate added), When it is approved after its preview, Then its Evidence in Foods reads "label-verified" (FR-026). Given the same Food after sugars 4 g "estimate" is added, Then Approve is blocked beside sugars with "An estimated value can't carry label-verified — remove it or leave it unknown", because label-verified means every stored value came from the label.
 - `/r` Given both 250 kcal and 1,046 kJ are entered, Then Foods stores both as printed and recomputes neither from the other (AP2).
 - `/r` Given any Food with a serving, e.g. "Grilled chicken sandwich" from a Saudi restaurant menu (F20), When Save is pressed in Foods without "What 'serving' means" (one piece · one pack · sandwich · double · full meal · side · sauce · beverage), Then Save is blocked beside that field (brief §6.2).
 - `/r` Given protein "-3" or kcal "abc", Then Foods shows "Enter a number 0 or above" beside that field, keeps the other values as typed, and Save returns `VALIDATION_ERROR`.
@@ -600,10 +600,11 @@ As the Nutrition approver, I set the activity multiplier behind every maintenanc
   - "Non-exercise activity multiplier × 1.2" (brief §11.3);
   - "Activity-adjusted mode: count 50 % of eligible exercise, up to 300 kcal a day" (`assumption`s shared with the eater lens's EA7).
 - `/m` Given resting energy 1,779 kcal, multiplier 1.2 and 200 kcal planned exercise, When maintenance is computed, Then it is 2,334.8 kcal (brief §11.3).
-- `/r` Given multiplier 1.2 In effect, When an eater on the simulator with a measured resting value of 1,779 kcal and 200 kcal planned exercise opens Settings → Goals, Then maintenance reads 2,334.8 kcal with the activity assumption "× 1.2, exercise included". The Target the eater approves records multiplier 1.2 and Policy v1.
+- `/r` Given multiplier 1.2 In effect, When an eater on the simulator with a measured resting value of 1,779 kcal and 200 kcal planned exercise opens Settings → Goals, Then maintenance reads 2,334.8 kcal with the activity assumption "× 1.2, exercise included"; after the eater approves the Target, Settings → Goals → Target history shows that Target with "Activity × 1.2 · Policy v1", and `GET /v1/targets/current` returns `activity_multiplier: 1.2` and `policy_version: 1`.
 - `/r` Given the approver proposes a multiplier of 1.0 or 0.9 in Policy, Then "Must be above 1.0 — maintenance adds activity to resting energy" appears beside the field. Given "abc", Then "Enter a number" appears.
 - `/r` Given a credit factor of 120 % or a cap of −50 kcal in Policy, Then "Enter 0 to 100 %" or "Enter 0 or above" appears beside that field.
-- `/r` Given credit 50 % up to 300 kcal In effect, When an eater in activity-adjusted mode on the simulator imports a 400 kcal net workout, Then Today shows an exercise credit of 200 kcal. With an 800 kcal workout, it shows 300 kcal.
+- `/r` Given credit 50 % up to 300 kcal In effect, When an eater on the simulator switches Settings → Activity to activity-adjusted mode, Then the switch shows "Count 50 % of eligible exercise, up to 300 kcal a day" and takes effect only after the eater taps "Approve" (brief §12.2: "a visible user-approved credit factor and cap"); before approval Today shows no exercise credit.
+- `/r` Given credit 50 % up to 300 kcal In effect and approved by the eater, When an eater in activity-adjusted mode on the simulator imports a 400 kcal net workout, Then Today shows an exercise credit of 200 kcal. With an 800 kcal workout, it shows 300 kcal.
 - `/r` Given a proposed multiplier of 1.3, When the approver opens the Approve preview in Policy, Then it reads "New Targets use × 1.3 from the effective-from; approved Targets are not changed", with the de-identified count of Targets computed with × 1.2.
 
 #### approver-10.70 · Default macro split and target review interval
@@ -874,7 +875,7 @@ Words already fixed by `vocabulary.md` are used as written. These are **not yet*
 - With the Support agent: 10.2, 10.66.
 - With the Platform admin: 10.2, 10.23, 10.66.
 
-Totals: 70 stories, 229 acceptance lines (191 runtime, 19 system, 19 module).
+Totals: 70 stories, 226 acceptance lines (191 runtime, 19 system, 19 module).
 
 
 ## Lens verdict (2026-10-01)
@@ -1150,7 +1151,7 @@ Checked by a second lens verifier against `_lens-verifier-brief.md`, `_lens-brie
 
 ## Fix round 2 (2026-10-01)
 
-Fixed in the file itself, with `way/vocabulary.md` (D2) re-read against every changed line. New stories 10.69 and 10.70 sit after 10.68 in step F. The file now has 70 stories and 229 acceptance lines (191 `/r`, 19 `/s`, 19 `/m`); every story has a `/r` line and a Trace line.
+Fixed in the file itself, with `way/vocabulary.md` (D2) re-read against every changed line. New stories 10.69 and 10.70 sit after 10.68 in step F. The file now has 70 stories and 226 acceptance lines (191 `/r`, 19 `/s`, 19 `/m`); every story has a `/r` line and a Trace line.
 
 1. **10.33** (earlier defect 5) now runs on a named record, the Tier B recipe record "كشري · Koshari (EG)".
    - The cited-factor path shows "≈140 kcal/100 g (estimate) · heuristic low/high scenario 131–151", from the source's factor range 0.51–0.59, with the yield assumption.
@@ -1191,3 +1192,93 @@ Fixed in the file itself, with `way/vocabulary.md` (D2) re-read against every ch
     - 10.62 shows a synthetic staff name, not a staff id.
     - 10.48 separates "shown source (screen text)" from "lens trace (not shown)".
     - A scan of every quoted screen string in the acceptance lines finds no FR, NFR, AT, R, F, AP, EA or staff id.
+
+## Lens verdict — re-verify 2 (2026-10-01)
+
+**fail** — 4 defects, all new in lines that fix round 2 wrote. All 17 defects from the re-verify are fixed.
+
+Checked by a third lens verifier against `_lens-verifier-brief.md`, `_lens-brief.md`, `way/blueprint.md` §0–§1, `way/vocabulary.md` (delta D2, binding), `way/brief/frd-v1.0.md`, `way/research/r1-*.md` with both refutations, and `way/lessons.md`. The eater lens was read only where a story meets it. The scope is the re-verify's 17 defects plus the lines fix round 2 changed (`git diff 57ac9e5 ca352e6`). Unchanged material that already passed was not audited again.
+- **Ids pass.** `approver-10.1` to `approver-10.70` run without gaps; 10.69 and 10.70 are journey 10 = WF-10. Every story has a `/r` line and a Trace line.
+- **Counts.** 70 stories is right. The acceptance-line count is **226 (190 `/r`, 18 `/s`, 18 `/m`)**, not 229 (191/19/19). The file's count also includes the three layer-legend lines in the header (lines 8–10). The re-verify's "208 (173/19/16)" was off by the same 3. None of the seven checks covers this, so it is not counted, but the §8 totals line and fix round 2's note should read 226.
+- **Arithmetic recomputed in the changed lines, and right:**
+  - 10.13: 8 + 80 + 27 = 115; 20 / 95 = 21.05 %;
+  - 10.29: 88 + 10 + 2 + 75 + 1 = 176;
+  - 10.33: 2,538 × 0.51 / 0.55 / 0.59 = 1,294.38 / 1,395.90 / 1,497.42 g, giving 151.42 / 140.41 / 130.89 kcal per 100 g;
+  - 10.67: 206.67 / 231.67 / 256.67;
+  - 10.69: 1,779 × 1.2 + 200 = 2,334.8; 50 % of 400 = 200; 50 % of 800, capped, = 300;
+  - 10.70: 1,870 × 0.30 / 4 = 140.25, × 0.40 / 4 = 187.00, × 0.30 / 9 = 62.33; 32 + 40 + 30 = 102; 2026-10-01 + 14 days = 2026-10-15.
+- **The new screen-source texts in 10.48–10.52 match their findings as r1-refute-b re-opened them:**
+  - R33: "Prescribe 1200–1500 kcal/d for women … a 500-kcal/d or 750-kcal/d energy deficit";
+  - R32: "Calorie goals must be at least 1000 calories/day", and the disclaimer that excludes "pregnant or breastfeeding women";
+  - R41: "1.2-1.6 g/kg/d";
+  - R38: "cut‑off ≥ 2".
+
+  No refuted or doubtful finding is cited.
+- No source was fetched in this run, and no owner identifier was sent anywhere.
+
+### The 17 re-verify defects
+
+| # | status | the line that shows it |
+|---|---|---|
+| 1 | fixed | 10.33 "with a yield factor of 0.55 cited to a named source and edition, and the source's range 0.51–0.59 (synthetic), When it is saved in Recipes, Then Recipes shows: "≈140 kcal/100 g (estimate) · heuristic low/high scenario 131–151""; "If the source gives a single factor and no range, Recipes shows the estimate with "no range given by the source""; eater side: "an EG eater on the simulator types "100 g كشري" on Capture & Plan and opens the chip's source details in Analysis review". |
+| 2 | fixed | 10.41 "a preview reads "Gulf eaters who type صقعي, Saqai or Saqai date will resolve to Dates, Saqai", with Approve and Cancel"; 10.42 "approves the preview ("Gulf eaters' لبن will resolve to Laban drink; EG unchanged")"; 10.43 "a preview reads "Gulf eaters' لبن will resolve to Yogurt, plain; the current Alias becomes Superseded; past Entries unchanged", with Approve and Cancel"; 10.46 "confirms the preview ("Gulf eaters' لبن will no longer resolve to Yogurt, plain; past Entries unchanged")"; §5.3 "Aliases: 10.11, 10.41–10.43, 10.46". |
+| 3 | fixed | 10.29 and 10.33 "· **Shared: Nutrition approver · Eater**"; 10.57 "**Shared: Nutrition approver · Eater · Auditor**"; §8 "With the Eater: … 10.29, 10.33, … 10.57". Every story's Shared mark now matches §8's lists. |
+| 4 | fixed | 10.69 "Trace: IR-pol · FR-057 ("using a reviewed activity policy")"; 10.70 "Default macro split … Target review: 14 days after approval"; 10.48 rows "activity multiplier", "activity-adjusted credit", "default macro split", "target review"; §7.15 "Policy values the map's §6 list lacks". The new stories have faults of their own: defects 1 and 2. |
+| 5 | fixed | §8 "NFR-07 / NFR-08 \| 10.2 / 10.7 (NFR-10 and NFR-11 are not covered; see §7.11)"; §7.11 quotes NFR-11; 10.19 "Trace: FR-080 ("de-identified quality metrics") · IR-res". |
+| 6 | fixed | §4 "**Review** shows one stacked card per row, with a sort control above the cards" and "**Every other table** … scrolls sideways inside its own frame"; 10.1 "Review follows the console's one narrow-width rule (§4)"; 10.6 "picks Impact in the sort control above the cards, Then the cards read 41, 17, 1 from the top, and nothing in Review scrolls sideways"; 10.22 "the table keeps its columns and scrolls sideways inside its own frame, while the page does not". |
+| 7 | fixed | 10.60 "B approved A's proposal as v3, When B opens B's own proposal in Policy, Then it reads "Based on v2; v3 is now in effect""; "Given A presses Approve on B's proposal before B has rebased it, Then … 409 `STALE_REVISION` with v3 as current". This agrees with 10.57's two-holder rule. |
+| 8 | fixed | 10.11 "22 g/100 g against the analogue's 34 g/100 g … "Water differs by 12 g per 100 g (more than 10)""; "At 22 against 30 (a difference of 8 g per 100 g), no warning shows"; "the reading is an `assumption`"; §7.16. |
+| 9 | fixed | 10.29 "water 88 g, protein 10 g, fat 2 g, total carbohydrate 75 g (fibre included), ash 1 g and 335 kcal … the failed check "Sum of proximates 176 g/100 g — outside 95–105 g"". |
+| 10 | fixed | 10.67 "frying oil, the Approved Food "Oil, frying" at 900 kcal/100 g (synthetic)"; "the Approved Alias "طعمية" (EG) points to it, When an EG eater (Settings → Units & language)"; 10.20 "the Approved Tier B recipe record "طعمية · Ta'meya (fried)" (10.67)"; 10.44 "which points to the Tier B recipe record of 10.67". |
+| 11 | fixed | 10.24 "left blank: sugars and sodium"; "fills the missing sugars with 4 g estimated from a similar Approved Food". The new line has a fault of its own: defect 3. |
+| 12 | fixed | 10.13 "label reads 95 kcal … total carbohydrate 20 g (of which sugar alcohols 8 g and fibre 2 g) … 4/4/9 on total carbohydrate, 115 kcal". At AP6's 2 kcal/g for those 10 g, 115 − 20 = 95, so the kept reason explains the label exactly. |
+| 13 | fixed | 10.24 "Given the Tier A row "Falafel" (FDC 2707408), an FNDDS food whose values are calculated from ingredient values (F5), Then Foods marks its values "estimate"". The new "measured" line has a fault of its own: defect 4. |
+| 14 | fixed | AP5 "Cronometer runs a curation team that reviews every submitted food, and asks submitters for two photos". |
+| 15 | fixed | 10.66 "on a Unit with Evidence label-verified in My Units"; 10.16 "the eater's Unit with Evidence label-verified shows the reason"; 10.56 "— the privacy policy must change first" names no role. |
+| 16 | fixed | 10.24 "so that local products and menu items get Evidence "label-verified""; "Given any Food with a serving … without "What 'serving' means" … Then Save is blocked beside that field (brief §6.2)". No "kind" and no "label-grade" is left. |
+| 17 | fixed | 10.49 "Below the lowest intake the AHA/ACC/TOS 2013 guideline prescribes (1,200 kcal) — say why"; 10.51 "Outside the AHA/ACC/TOS 2013 guideline's 500–750 kcal deficit — say why"; 10.52 "Below the 1.2 g/kg the GLP-1 nutrition advisory proposes — say why"; 10.55 "At most two questions per pass"; 10.56 "(24 hours)"; 10.62 "Nutrition-policy review signed by Mona Adel on 2026-10-01". A scan of every quoted string in the story lines finds no FR, NFR, AT, R, F, C, P, AP or EA id. The one hit, 10.42's "alias by dialect (F27)", is a Trace quote of the map, not screen text. |
+
+### Defects
+
+**Complete**
+
+1. **10.69 against FRD §12.2 ("Apply a visible user-approved credit factor and cap").** The story makes the credit factor and cap the approver's Policy value. Its runtime line then applies that value to an eater with no approval step: "Given credit 50 % up to 300 kcal In effect, When an eater in activity-adjusted mode on the simulator imports a 400 kcal net workout, Then Today shows an exercise credit of 200 kcal". No line says:
+   - whether the Policy value is the default the eater sees and approves, or the limit of what an eater may approve;
+   - what a new Policy credit value does for an eater who approved the old one. The multiplier line says it ("approved Targets are not changed"); the credit has no such line.
+
+   §7.15 raises the missing map rows, but not this question.
+
+**Observable**
+
+2. **10.69, third line: "The Target the eater approves records multiplier 1.2 and Policy v1."** This sentence names no screen or interface. The line's Settings → Goals shows "maintenance reads 2,334.8 kcal with the activity assumption", not what the approved Target records. Name where a verifier reads it, such as a goals API or a line on screen.
+3. **10.24's new lines contradict each other on the same Food.**
+   - Line 2: "When the approver then fills the missing sugars with 4 g estimated from a similar Approved Food (match quality B, AP3), that value carries "estimate"".
+   - Line 4: "Given the biscuits Food is approved after its preview, Then its Evidence in Foods reads "label-verified", because an approver entered every value from the attached label (FR-026)".
+
+   On that Food the sugars did not come from the label. The stated reason is therefore false, and the Evidence claims more than the record holds (§5.5: "It claims only what it does"). Either approve a version without the estimated sugars, or say what Evidence a label Food with one estimated value shows.
+
+**Sourced**
+
+4. **10.24, third line: "Given a Tier A row from USDA Foundation Foods (AP1 …), Then Foods marks its values "measured"."** AP1, the line's own source, says two of those values are calculated, not analysed:
+   - "Carbohydrate content, referred to as "carbohydrate by difference" … is expressed as the difference between 100 and the sum of the percentages of water, protein, total lipid (fat), ash, and alcohol";
+   - energy is "'Metabolizable Energy (Atwater General Factor)'".
+
+   AP1 also stores a below-LOQ component "as 0", which 10.21 shows as "below LOQ (<0.03)", not as a measured value. The line names no row either. To fix it:
+   - name the row by its FDC id;
+   - mark only the analysed values "measured";
+   - say which value basis carbohydrate by difference and energy carry.
+
+### Cross-lens (for the model phase join)
+
+Not counted (`way/lessons.md`, 2026-10-01).
+- **The credit approval.** eater-1.40 (`way/personas/eater/wf1-wf9.md`) has the eater confirm "Count 50 % of eligible exercise, up to 300 kcal a day" (EA7) before Continue. That is the approval 10.69 leaves out (defect 1); join the two there.
+- **The mode's name.** 10.69 says "Activity-adjusted mode" and "an eater in activity-adjusted mode". The eater's screen in eater-1.40 says "Activity-adjusted target".
+- **10.13's old fixture.** eater-2.35 (`way/personas/eater/wf2-wf4.md`) still uses it: "120 kcal per 30 g serving with protein 2 g, carbohydrate 15 g and fat 3 g", against 95 kcal by 4/4/9, and cites approver-10.13. 10.13 now uses 95 against 115 kcal, because a label above 4/4/9 cannot be explained by reduced factors (re-verify defect 12).
+
+## Diagnosis and fix by the session (2026-10-01)
+After two fix rounds, 4 defects remained (re-verify 2). Cause in one sentence: round 2 added new detail (the activity Policy, value markers) without checking each new line against the FRD clause and the source it rests on. The session fixed the 4 itself:
+1. 10.69: the eater approves the credit factor and cap before activity-adjusted mode takes effect (brief §12.2), observed on Settings → Activity and Today.
+2. 10.69: what the Target records is observed on Settings → Goals → Target history and `GET /v1/targets/current`.
+3. 10.24: label-verified only when every stored value came from the label; an estimated sugars value blocks it.
+4. 10.24: Foundation Foods analysed nutrients are "measured"; carbohydrate by difference and energy by Atwater factors are "calculated from measured values" (AP1).
+Note: the totals line counts 226 acceptance lines, not 229 (three legend lines were counted).

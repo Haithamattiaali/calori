@@ -781,8 +781,8 @@ As the Eater, I photograph a recipe page or say the recipe and get an ingredient
 
 #### eater-4.39 · Speak Arabic, English or both, and see the words first
 As the Eater, I speak Arabic, English or both in one sentence and see the transcript before anything happens, so that I can fix a misheard word. · FR-036 ("visible transcription … allow replay or text editing before an uncertain entry commits"), FRD §14.1 · E42, E43, P15, EX-40
-- `/r` Given Faisal's AI and Microphone Consents are Given, When he says «ضيف ٣ cheese bites و cup laban», Then the transcript shows «ضيف ٣ cheese bites و cup laban» as editable text with "Play back", and only then the chips "cheese bite × 3" and "cup of laban × 1".
-- `/r` Given he changes "cup laban" to "2 cup laban" in the transcript, When the chips update, Then cup of laban reads × 2 before anything is logged.
+- `/r` Given Faisal's AI and Microphone Consents are Given, When he says «ضيف ٣ cheese bites و cup laban», Then the transcript shows «ضيف ٣ cheese bites و cup laban» as editable text with "Play back", and only then the chips "3 × لقمة جبن" and "1 × كوب لبن" (his Units, through their English Aliases "cheese bite" and "cup laban"), as in eater-3.10.
+- `/r` Given he changes "cup laban" to "2 cup laban" in the transcript, When the chips update, Then the chip reads "2 × كوب لبن" before anything is logged.
 - `/r` Given `POST /v1/analyses` with an audio file, When it responds, Then it holds the transcript text and the parsed items, and no audio.
 - `/s` Given the recording, When the retention job runs 24 h after transcription, Then the audio object is gone and the Analysis keeps only the transcript (FR-078).
 
@@ -794,7 +794,7 @@ As the Eater, «لقمتين», «رغيف ونص», "18" and «١٨» mean exac
 
 #### eater-4.41 · My food is never quietly turned into another food
 As the Eater, the app never turns the food I named into a different food without saying so, so that my molokhia is molokhia. · FRD §14.1 ("Voice must not translate a requested food into a different food silently"), FR-025
-- `/r` Given Mona says «فول بالزيت الحار», When **Analysis review** opens, Then the chip is foul with the preparation "spicy oil" and keeps her words; if no record matches, it reads «فول بالزيت الحار» with "Choose the food".
+- `/r` Given Mona has no Unit, Food or Alias for «بصارة», When she says «طبق بصارة», Then the chip keeps her word «بصارة» with "Choose the food", "Make a unit" and "Calories only", and is never shown as another dish (for example "fava bean soup").
 - `/r` Given Sam says "molokhia", When **Analysis review** opens, Then the chip is Molokhia, and any stand-in shows as "estimated analogue" with the word "molokhia" kept.
 - `/s` Given the analyzer mock returns a food whose names and Aliases don't match the spoken word and isn't flagged as an analogue, When the server validates, Then the chip goes to review instead of being shown as a match.
 
@@ -807,15 +807,15 @@ As the Eater who speaks Gulf Arabic, when the transcript is unsure I see which w
 #### eater-4.43 · Typed in Latin letters, with both kinds of digits
 As the Eater, I can type Arabic food names in Latin letters and mix Arabic-Indic and Western digits, so that I write the way I write. · FR-036 (code-switching), FRD §14.1 ("both Arabic-Indic and Western numerals, decimal input") · E41, E44
 - `/r` Given Mona's Aliases "ful" (foul spoon) and "shai bel laban" (glass of milk tea), When she types "2 ful w shai bel laban", Then **Analysis review** reads "foul spoon × 2" and "glass of milk tea × 1".
-- `/r` Given she types "٣ cheese bites + 2 فول", When **Analysis review** opens, Then both numbers are read: cheese bite × 3 and foul spoon × 2.
+- `/r` Given she types "٣ cheese bites + 2 ful", When **Analysis review** opens, Then both numbers are read: «٣ × قرصة جبنة» and «٢ × معلقة فول».
 - `/m` Given typed input, When it is normalised, Then Arabic-Indic digits, the Arabic decimal mark and tatweel are converted before parsing.
 
 #### eater-4.44 · My approved Units by voice or text: a quick confirm, or one tap with Undo
-As the Eater, "three cheese bites and a cup of laban" shows the expanded items for one quick confirm — or logs at once with Undo if I chose one-tap logging — with no new AI estimate, so that repeat logs stay fast. · FRD §2.3, FRD §16.5, map §1.6 (one-tap logging on/off), NFR-02 · EX-02, EX-13 (continues in the eater's WF-3 journey, eater-3.x)
+As the Eater, "three cheese bites and a cup of laban" shows the expanded items for one quick confirm — or logs at once with Undo if I chose one-tap logging — with no new AI estimate, so that repeat logs stay fast. · FRD §2.3, FRD §16.5, map §1.6 (one-tap logging on/off), NFR-02 · EX-02, EX-13 (continues in eater-3.6, eater-3.9 and eater-3.14)
 - `/r` Given one-tap logging is off, When Sam types "3 cheese bites and a cup of laban", Then a compact confirm reads "cheese bite × 3 (includes 24 g bread) · cup of laban × 1" with "Log", and one tap logs both.
 - `/r` Given one-tap logging is on in **Settings → Food rules**, When he types the same, Then both log at once with one Undo banner naming both; an ambiguous word (eater-2.43) still asks first.
 - `/s` Given both items are approved Units, When the request is handled, Then no nutrition inference runs, and the image quota count does not change (admin-10.43).
-- `/r` Given the Kill switch is On for Text, When he types "3 cheese bites", Then one line reads "Sentences can't be read right now — pick from your units", his Units whose names match the typed words are listed with count steppers, and tapping cheese bite and then Log records 3 cheese bites (as `wf3-wf6.md`).
+- `/r` Given the Kill switch is On for Text, When he types "3 cheese bites", Then one line reads "Sentences can't be read right now — pick from your units", his Units whose names match the typed words are listed with count steppers, and tapping cheese bite and then Log records 3 cheese bites (as eater-3.14).
 
 ### J · A safe pipeline
 
@@ -863,7 +863,7 @@ As the Eater, I can capture, review and approve with one thumb, in Arabic, at th
 - `/r` Given VoiceOver, When focus lands on a chip, Then it reads "cheese bite, 3, your unit, measured, 138 kilocalories, includes 24 grams bread", and a question reads as a question with its choices.
 - `/r` Given light and dark appearance, When the chips' text, kcal figures and Evidence badges are measured on the served screen, Then contrast is at least 4.5:1, and each badge carries its word, not only a colour (EX-34, EX-35).
 - `/r` Given Reduce Motion, When the progress steps of eater-4.11 run, Then they fade rather than slide.
-- `/r` Given the Undo banner after Approve, When VoiceOver is off, Then it stays 8 s (a fixture value to be re-chosen on the served screen, care group 3); with VoiceOver on, it stays until the eater acts (as eater-3.x in `wf3-wf6.md`).
+- `/r` Given the Undo banner after Approve, When VoiceOver is off, Then it stays 8 s (a fixture value to be re-chosen on the served screen, care group 3); with VoiceOver on, it stays until the eater acts (as eater-3.5).
 
 #### eater-4.53 · "Hide numbers" in Capture & Plan and Analysis review
 As the Eater who has turned numbers off, I can still capture, review and approve, seeing foods and counts without calories, so that the camera never shows me numbers I find harmful. · map §1.6 ("'hide numbers' view", R37), FRD §14.2 · EX-43 (the same setting as eater-3.42)
