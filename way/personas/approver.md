@@ -946,3 +946,120 @@ New stories 10.65–10.68 sit inside their steps, so the old ids keep the number
     - every other check or warning is inline beside its field (10.11, 10.25);
     - there are no other dialogs.
 23. The ~390 px width is exercised: 10.1 (stacked rows, no page scroll, targets ≥ 24 × 24 CSS px), 10.6 (the table scrolls inside its frame) and 10.66 (photo zoom buttons). AP13 (WCAG 2.5.8) is added. Reduced motion is in 10.7. §5 group 6 answers target size and reduced motion.
+
+## Lens verdict — re-verify (2026-10-01)
+
+**fail** — 17 defects: 2 earlier defects are only partly fixed (5 and 22), and 15 are new.
+
+Checked by a second lens verifier against `_lens-verifier-brief.md`, `_lens-brief.md`, `way/blueprint.md` §0–§1, `way/vocabulary.md` (delta D2, binding), `way/brief/frd-v1.0.md`, `way/research/r1-*.md` with both refutations, `care.md`, and the eater lens where a story meets it.
+- Counts confirmed: 68 stories, 208 acceptance lines (173 `/r`, 19 `/s`, 16 `/m`). Every story has a `/r` line and a Trace line.
+- **Ids pass:** `approver-10.1` to `approver-10.68` run without gaps, and journey 10 = WF-10.
+- Every error code used is a D2 code. No refuted or doubtful finding is cited outside the header's exclusion list.
+- The AP1–AP13 sources were re-opened on 2026-10-01 with a generic User-Agent: the FDC page, both INFOODS PDFs, the two NCC pages, the four Cronometer articles (help-centre API), eCFR 101.9, NN/g, the APG grid, WCAG 2.1.1, 2.1.4 and 2.5.8, Gmail help, the W3C bidi article and the IANA registry. Every quote is on its page, including AP1's new fibre sentence, AP6's corrected "soluble non-digestible carbohydrates", AP3's "C: Poor, single match" sub-class and AP13.
+- The arithmetic of 10.13–10.15, 10.25, 10.31, 10.33, 10.34, 10.51, 10.52, 10.54, 10.55, 10.65 and 10.67 was recomputed and is right.
+
+### The 23 earlier defects
+
+| # | status | the line that shows it |
+|---|---|---|
+| 1 | fixed | 10.3 "Trace: WF-10 · IR-ref · FR-080"; 10.7 "WF-10 · FR-080 · NFR-08"; 10.29 "IR-ref · FR-025 · FR-031 · brief §17"; 10.32 "IR-ref · FR-028 … · FR-023"; 10.44 "IR-res · FR-015"; 10.47 "IR-ref · FR-015". All 12 named stories now trace to WF-10, an interaction row or an FR line. |
+| 2 | fixed | 10.34 "Every cross-check needs a note; there is no threshold." |
+| 3 | fixed | §7.5 "at least 5 distinct eaters used the same normalised text in the last 28 days"; 10.10 "Given only 3 distinct eaters typed it in that window, Then no flag exists for it."; 10.12 "it holds only a reference record and an enumerated preparation, no eater-typed text" |
+| 4 | fixed | 10.31 "its licence line in Recipes reads "Own calculation · ingredients CC0 1.0 (USDA FoodData Central — cite)"" and "The licence gate of 10.26 applies to every ingredient"; 10.39 "the preview shows Evidence "recipe-calculated", the licence line from 10.31" |
+| 5 | **partly fixed** | 10.67 "Recipes shows "≈232 kcal/100 g (estimate) · heuristic low/high scenario 207–257""; 10.33 "never "exact" and never "95 % confidence"". Still open: defect 1 below. |
+| 6 | fixed | 10.65 "the choice "Carbohydrate: total (fibre included) · available (fibre excluded)" is required before Save"; 10.25 "total carbohydrate 73 (fibre included) … Sum of proximates 177 g/100 g" |
+| 7 | fixed | 10.24 "each label value carries the marker "declared" … that value carries "estimate" with its method … analysed values carry "measured"". The new line has its own faults: defects 11 and 13. |
+| 8 | fixed | 10.15 "Given the highlighted fat digit is not yet confirmed, Then Approve in Review is disabled"; "Then 422 `VALIDATION_ERROR` (field `fat`, "unconfirmed"), and no label-verified version exists" |
+| 9 | fixed | 10.66 "Given a Support agent, Platform admin and Auditor token … Then each gets 403 `FORBIDDEN`"; "load from signed URLs. Each URL expires after a short lifetime"; "`POST /v1/label-submissions` without it returns 403 `CONSENT_REQUIRED`" |
+| 10 | fixed | 10.68 "Given loss choices 5 %, 10 % and 15 % with default 15 %, When the approver adds a choice of 20 % in Policy, Then it is rejected"; "exactly the choices 5 %, 10 % and 15 % are offered, with 15 % preselected" |
+| 11 | fixed | 10.56 "Given audio at 36 h, Then Approve in Policy is blocked … Given 0, −1 or "abc", Then "Enter whole hours from 1 to 24"" |
+| 12 | fixed | 10.12 "an eater's Analysis (mock AI) proposes "Tuna, canned" with preparation "in oil, drained""; 10.29 "the seeded legacy Food "Barley, pearled" v1 (Approved before the checks existed …)"; 10.14 "the seeded legacy Food "Biscuits, plain" v1". 10.29's Given has a new fault: defect 9. |
+| 13 | fixed | 10.22 "When `POST /v1/analyses` receives "100 g falafel" for a test eater, Then the candidate is FDC 2707408 with `usda_release: "15.5"`"; 10.57 "When an eater on the simulator asks for a loss target in Settings → Goals" |
+| 14 | fixed | 10.5 "Settings → Language to العربية"; 10.62 "in Settings → Launch gates"; 10.7 "Given focus anywhere outside the table, the same keys type or do nothing"; 10.2 "it lists Review, Foods, Recipes, Aliases, Policy, Metrics and Settings" |
+| 15 | fixed | AP4 "This is a tool for researchers and dietitians, not NCC's own curators … That the approver works the same way is an `assumption`"; "Cronometer calls NCC's database its best: "an entry from our highest quality data source (NCCDB)"", with its link (re-opened: the quote is there) |
+| 16 | fixed | AP5 gives a full support.cronometer.com link for each article; AP6 "A general factor of 2 calories per gram for soluble non-digestible carbohydrates shall be used" (word for word on eCFR) |
+| 17 | fixed | 10.10 "· F5, F11"; no story cites an implication; header "neither are research *implications* that lean on them" |
+| 18 | fixed | No "Tier B record", "Recipe record" or "Tier B Recipe record" is left. 10.35 "It is a Food, not a Tier B recipe record"; 10.36 "Recipes lists two Tier B recipe records"; 10.8 "Propose a Tier B recipe record" |
+| 19 | fixed | 10.22 "USDA release 15.5"; 10.23 "`GET /v1/admin/usda-releases/15.5`"; no "FDC release", "Tier A release" or `reference-releases` is left |
+| 20 | fixed | 10.35 "Approved with Evidence "recipe-calculated", and its source reads "Frontiers in Nutrition 2025, ESHA-calculated"" |
+| 21 | fixed | 10.9 "Claim from approver A"; 10.40 "the gate "Launch dishes"" in Settings → Launch gates; 10.19 "opens Metrics"; 10.64 "`GET /v1/reference/attributions`"; states are D2's (10.57 "Approved · in effect from 2026-10-15"); flag, Label submission, value basis and carbohydrate convention are raised in §6 and §7.8. Other unlisted words remain: defects 15 and 16. |
+| 22 | **partly fixed** | 10.28 "a preview opens: … with Approve and Cancel"; 10.11 "shows an inline warning beside the water field"; 10.29 "confirms the preview ("used by 3 Units; past Entries unchanged")". Still open: defect 2 below. |
+| 23 | fixed | 10.1 "in a 390 px browser … every action target in Review is at least 24 × 24 CSS px (AP13)"; 10.66 "zoom-in and zoom-out buttons … each at least 24 × 24 CSS px"; 10.7 "Given the operating system's reduced-motion setting is on … without sliding". The narrow width has a new conflict: defect 6. |
+
+### Defects
+
+**Left over from fix round 1**
+
+1. **10.33 (earlier defect 5, FR-029).** The story says "With a cited factor or a low/high yield it becomes an estimate with its range". The cited-factor line shows neither: "Given a yield factor of 0.85 cited to a named source and edition, When the record is approved, Then it keeps Evidence "recipe-calculated", and Recipes and the eater's source details show the assumption". FR-029 asks for "an estimate/range and the material assumption instead of "exact calories"" whenever the cooked yield is missing. The line needs to say:
+   - what the cited-factor record shows ("estimate", a range, or why there is no range);
+   - which screen "the eater's source details" are on (none is named).
+2. **10.46 and 10.41–10.43 (earlier defect 22).** §5.3 now says "a preview with Approve or Cancel opens before every Approve that changes what eaters resolve … (… an Alias …) and before every Retire". The Alias stories do not follow it:
+   - 10.46's Retire has no preview: "When the approver retires it in Aliases with a reason, Then it shows Retired".
+   - The Alias approvals in 10.41 ("proposes and approves an Alias"), 10.42 and 10.43 ("Replace" makes the old Alias Superseded) change what eaters resolve, and they show no preview either.
+   - §5.3's list of stories leaves all four out.
+
+**Traced**
+
+3. **10.29, 10.57 and 10.33 run on the eater's side without the shared mark.** The lens brief says "Mark stories shared with another persona with both names". These lines happen on the eater's side:
+   - 10.29 "When they open My Units on the simulator";
+   - 10.57 "When an eater on the simulator asks for a loss target in Settings → Goals";
+   - 10.33 "the eater's source details".
+
+   None carries "**Shared: Nutrition approver · Eater**", and §8's shared list leaves them out.
+
+**Complete**
+
+4. **FR-057: "Produce an estimated maintenance value using a reviewed activity policy".** No story reviews or sets the activity policy, and 10.48's Policy table has no row for it. The eater lens already reads it as a Policy value: `way/personas/eater/wf1-wf9.md`, eater-1.25, has "`multiplier` 1.2 … and `policy_version` v1". That file also proposes three more values for this Policy: a default macro split, a 14-day review interval, and an activity credit of 50 % up to 300 kcal. Either add the story and the 10.48 rows, or raise it in §7 for a delta. The map's §6 Policy list lacks it too.
+5. **§8 claims "NFR-07 / NFR-08 / NFR-11 | 10.2 / 10.7 / 10.19".** NFR-11 asks to "Measure weighed/recipe-grounded error separately from unweighed photo-only estimates". 10.19 shows each badge's share of Entries, not an error. Either write the story, or drop the claim and raise NFR-11 next to NFR-10 in §7.11.
+
+**Observable**
+
+6. **10.1 and 10.6 contradict each other at 390 px.**
+   - 10.1: "Given the same seed in a 390 px browser, When Review opens, Then each row is one stacked card".
+   - 10.6: "Given Review at 390 px, When the table is wider than the screen, Then only the table scrolls sideways inside its own frame".
+
+   At the same width, Review cannot be both stacked cards and a table that scrolls sideways.
+7. **10.60's Given contradicts itself, and fix round 1 introduced it.** The line reads "Given approvers A and B each proposed from v2, and B approved A's v3, When A opens A's own proposal in Policy, Then it reads "Based on v2; v3 is now in effect"". A's proposal is v3, which is already in effect, so it cannot be out of date. The 409 line ("A's proposal is sent for approval without rebasing") has the same flaw. The out-of-date proposal is B's: B approved A's v3, so B's own proposal from v2 is the one left behind. The text before the fix round had the roles right.
+8. **10.11's water warning cannot be judged pass or fail.** The line reads "Given the approver enters the target food's water as 22 g/100 g against the analogue's 30 g/100 g, Then … "Water differs by more than 10 %"".
+   - Counted in g/100 g, the difference is 8, which is not over 10.
+   - Counted relative to the analogue, it is 27 %, which is over 10.
+
+   The INFOODS sentence ("the difference in the water content is higher than 10 %") does not settle which, and the story does not say.
+9. **10.29's Given cannot produce its Then.** The line reads "with water 88 g and 335 kcal per 100 g, When the approver opens it in Foods, Then its source details show the failing proximate check".
+   - The proximate sum also needs protein, fat, carbohydrate and ash, and the Given leaves them out.
+   - 10.25 says "Given water or ash is unknown … the proximate check reports "not applicable"".
+   - No check in 10.25 compares energy with dry mass.
+
+   Name all the values, or name the check that fails.
+10. **10.67's last line names no Alias and no dialect.** The line reads "Given the record is Approved, When an eater on the simulator types "100 g طعمية" on Capture & Plan, Then Analysis review shows "≈232 kcal (207–257)"". Other stories put "طعمية" on another Food:
+    - 10.20 "the Approved Food "طعمية" with transliteration Alias "taamia"";
+    - 10.44 "the Approved Alias "طعمية" EG";
+    - F5 maps طعمية to FDC Falafel as an analogue.
+
+    Which record resolves depends on data the Given does not name. 10.39 shows how to name it: "Approved with Aliases "فول مدمس" (EG, MSA) … for an EG eater".
+11. **10.24's FR-012 line contradicts its own Given.** The first line "enters fibre 0" and expects "fibre "0"". The FR-012 line, on "the same Food", then "adds a missing fibre value borrowed from FDC 2707408". Fibre is not missing in that Food; sugars and sodium are.
+
+**Sourced**
+
+12. **10.13's kept reason cannot explain the label.** The label is 120 kcal and 4/4/9 gives 95 kcal, yet the kept reason is "sugar alcohols and fibre counted at reduced factors". Reduced factors only bring energy below 4/4/9 on total carbohydrate. AP6 says so: 4/4/9 on "total carbohydrate (less the amount of non-digestible carbohydrates and sugar alcohols)", and "2 calories per gram for soluble non-digestible carbohydrates". A qualified approver would not accept this reason for a label 26 % *above* 4/4/9. Use a label below 4/4/9, or a reason that can raise energy.
+13. **10.24 marks FNDDS values "measured".** The line reads "On the Tier A Food "Falafel", analysed values carry "measured"". FDC 2707408 is an FNDDS survey food (F5). r1-refute-a describes those values as built from ingredient values ("Ingredient values come from "USDA FoodData Central … or other sources""), not analysed. Use a Foundation Foods row as the "measured" example (AP1: "number of samples … analytical approaches used").
+14. **AP5's heading claims more than its source.** The heading reads "Cronometer runs a curation team that reviews every submitted food and requires two photos". The opened article says "Please include clear photos of both the front of the package … and the nutrition information". That is a request, not a requirement.
+
+**Vocabulary**
+
+15. **Two names for one thing.**
+    - 10.66: "presses "Submit for review" on a label-verified Food in My Units". My Units holds the eater's Units; "Food" is the reference record (map §1 ¶4).
+    - 10.56: "needs the privacy reviewer's sign-off". D2's roles are Eater · Nutrition approver · Support agent · Platform admin · Auditor, and the map calls the Auditor "the privacy reviewer/DPO seat". §7.2 can decide who owns retention, but the screen text must name a D2 role.
+16. **Words that are not in the map, in D2 or in §6's list (10.24).**
+    - "Given the kind "Restaurant item" is chosen in Foods". This makes Food kinds a new concept. The map fixes only "the units' kinds", and §6 does not raise Food kinds.
+    - "so that local products and menu items carry label-grade Evidence". "Label-grade" is not in the fixed badge set, and no 10.24 line says which badge the Food gets.
+
+**Experience**
+
+17. **Screen text shows this build's internal ids.**
+    - 10.49 "Outside the cited range (R33) — say why";
+    - 10.55 "At most two questions per pass (FR-035)" and "(FR-051)";
+    - 10.56 "(24 h, FR-078)";
+    - 10.62 "nutrition-policy review (FR-082)".
+
+    Care group 2 asks "Would someone who knows none of our internal names understand every label?". An approver cannot open R33 or an FR number as a citation. 10.50 gets this right: "NIDDK planner limit".

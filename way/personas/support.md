@@ -1050,3 +1050,111 @@ Every defect was fixed in the body of this file. The verdict above is kept as wr
 - Every care question is answered, or marked n/a with its reason.
 
 **Counts after the fix:** 52 stories, 179 acceptance lines (138 `/r`, 35 `/s`, 6 `/m`). No owner identifier was sent to any service. The only new source opened in this round was the local IANA time zone database.
+
+## Lens verdict — re-verify (2026-10-01)
+
+**fail**: 10 defects.
+
+The verifier did not write this lens. It re-read `way/blueprint.md` §0–§1, `way/vocabulary.md` (delta D2, binding), `way/brief/frd-v1.0.md`, `way/personas/_lens-brief.md`, `care.md` ("The questions", "By size") and both refutations. It checked each fix of round 1 against the body above, then ran the full check again.
+
+These parts hold:
+- The counts are right: 52 stories (journey 3: 2 · 4: 3 · 7: 1 · 9: 21 · 10: 25) and 179 acceptance lines (138 `/r`, 35 `/s`, 6 `/m`). Every story has a `/r` line.
+- Every Covers line names a WF step, an interaction row or an FR/AT/NFR line, and every id carries its WF number.
+- Every cited cycle-1 finding (R2–R4, R7, R8, R21–R25, R31) stands in `r1-refute-b.md`, and R4's quote contains "other support flows".
+- Three sources were re-opened today with a generic User-Agent:
+  - SR6 §164.308(a)(5)(ii)(C): "Log-in monitoring (Addressable). Procedures for monitoring log-in attempts and reporting discrepancies." This was read through eCFR's API, because the page itself serves a CAPTCHA.
+  - SR12's complaint describes two incidents: the months-long viewing (June–August 2017, ¶17) and the email look-up (January 2018, ¶20). So "in another case" holds.
+  - SR2's approve-requests page, which the first verifier could not open, is last updated 2026-09-24 and says "Receive requests through email", "Receive requests through Pub/Sub" and "To approve a request, click Approve".
+- SR17's offsets match the local tzdata 2025b (Riyadh +3; Cairo +3 to 29 Oct, then +2; Dublin +1 to 25 Oct).
+- No owner identifier was sent to any service.
+
+### The 21 earlier defects
+
+1. **Fixed.** support-9.15 Covers: "map interaction row "Eater → API: export; delete account → Privacy job (≤30 days; R4, R23, R31)" · SR11 Art. 3(1)(a)(d), SR9 Art. 12(3)". §14: "FR-082 … a release gate, not a product story".
+2. **Fixed.** support-9.7: "Consent withdrawal · Send photos, voice and text to Google's AI · Completed … with stages: new Analyses refused … queued photo and voice uploads removed … cached private analyses deleted …".
+3. **Fixed.** support-9.8: "Export · Running · requested 11:40 your time (10:40 UTC) · 13:40 eater's time" and "Export · Completed 2026-09-20 · download no longer available since 2026-09-27".
+4. **Fixed.** support-9.9: "Export · Failed · retried once by Mona K." with no Retry button, offering only "Escalate to the platform admin".
+5. **Fixed.** support-9.14: "Use 'Forgot password' on the app's sign-in screen …", then "Open · due by 2026-10-31", then "Escalated to the platform admin · due by 2026-10-31".
+6. **Fixed.** support-9.1: "Enter the 6-digit code from your authenticator app", "Email or password is incorrect" with `staff.sign_in_failed`, and "Too many attempts. Try again at 10:47 your time (09:47 UTC)." with `staff.sign_in_locked`.
+7. **Fixed.** support-9.21: "Offline — showing data from 11:42 your time (10:42 UTC)". support-10.25: "Couldn't send the request. Nothing was sent to the eater. Try again." The gaps that remain are new defect 9.
+8. **Fixed.** support-9.11: "When `staff_ali` opens Jobs with the filter "Escalated", Then the row shows `DEL-26-0905-P7T2`, the Failed stage, due by 2026-10-05 …".
+9. **Fixed.**
+   - support-9.3: "`support.lookup_rate_limited` with staff `staff_mona`, count 31, window 60 min".
+   - support-4.3: "placeholders appear within 300 ms … at 3 s … longer than 10 s".
+   - support-10.16: "10 minutes left · the diary closes at 12:20 your time".
+   - support-10.15: all three history lines.
+10. **Fixed for (a), (b) and (c).**
+    - E1 now has its Consent "Given" and "3 of 10 AI analyses used".
+    - E2 now has only its deletion.
+    - support-10.4 now uses "`staff_lee`".
+    - New contradictions are defect 2.
+11. **Fixed.** A13: "or opening one of my own Active Grants from the Grants section". support-10.21: "it reads "Look up this account first" (404 `NOT_FOUND`); when she opens `grant_31f0` from Grants instead, then `support.lookup` with method `grant` is recorded".
+12. **Partly fixed.** support-10.19 now reads "Ended by support · 16:33", and §0 states the one rule. Several console times still break the rule; see defect 1.
+13. **Fixed.** §2: "A tool that cannot over-share also protects the agent (`assumption`)" and "That eaters would dislike not knowing who looked is an `assumption`."
+14. **Fixed.** "diary day" no longer appears. Days read "Days 2026-09-28 to 2026-09-30". "diary-day boundary" is kept only as the map's setting name (blueprint §1 ¶6).
+15. **Fixed.** The states are D2's (§0.1). The eater's buttons are "Approve" and "Decline", the history says "Mona K. read your Day for 29 Sep", and reads fail with "`GRANT_NOT_ACTIVE` with state …". No `GRANT_REVOKED`, `GRANT_EXPIRED` or `LOOKUP_REQUIRED` remains.
+16. **Fixed.** "Diary view" and "Settings → Help" no longer appear. §13 defines "the **Grant panel**" and "the **Grant bar**" and lists "**Privacy help**".
+17. **Fixed.** support-9.19 checks "a 1440×900 window and then a 1920×1080 window", "token `--grant-active`", "computed transition and animation durations are 0 s" and "none uses the error colour".
+18. **Fixed.** support-9.1: "a banner (not a dialog) reads "You'll be signed out in 2 minutes." with a "Stay signed in" button". §10 names both timers and their warnings.
+19. **Fixed.**
+    - support-10.3 and support-9.15: "the draft is restored; signing out clears it".
+    - support-9.2: "`sb 7kq2 94xm`, `SB7KQ294XM` or ` SB-7KQ2-94XM ` … the field shows `SB-7KQ2-94XM`", plus a `/m` line.
+20. **Fixed.** The failed-job stories are now support-3.1, 3.2, 4.1–4.3, 7.1 and 10.24, and K8 asks the map to own the step.
+21. **Fixed.** "Shared:" lines and §11 rows were added for 10.8, 10.17–10.20, 9.1, 9.3, 9.9, 9.11, 9.15, 10.2, 10.9, 10.12 and 9.14. One story is still unmarked; see defect 10.
+
+### Defects
+
+1. **Earlier defect 12 is only partly fixed · observable and experience.** §0 says "Every console time reads "HH:MM your time (HH:MM UTC)"", and the fix log says "Every console time was rewritten to the rule." These console lines still break it:
+   - support-9.7 gives the stage times in UTC only: "Completed 18:14 UTC; … Completed 18:15 UTC; … Completed 18:20 UTC".
+   - support-9.8 gives the eater's time only, with no "your time (UTC)": "download in the app until 2026-10-07 18:09 eater's time".
+   - support-10.5 has no UTC: "when it closes on 2026-10-04 11:05 your time."
+   - The 12:20 end time has no UTC in five stories:
+     - support-10.11: "Diary (read-only) · Days 28–30 Sep · ends 12:20 your time"
+     - support-10.16 (twice): "the diary closes at 12:20 your time"
+     - support-10.21: "its end time 12:20 your time unchanged"
+     - support-10.25 (twice): "until 12:20 your time"
+2. **The fixtures contradict each other again · observable.** One seed cannot satisfy all of these lines:
+   - (a) `grant_31f0`. support-10.15 says the eater's history "lists exactly three lines". It also says the auditor sees "in order: `grant.requested`, `grant.approved`, `grant.active`, three `grant.read` … and `grant.expired`". Four other stories give the same Grant a different history:
+     - support-10.12 adds a `grant.read_denied` event for Day 2026-09-27.
+     - support-10.21 records `support.lookup` with method `grant` and then reopens the Diary (read-only) at 10:58 UTC. That is a fourth read.
+     - support-10.25 ends the Grant: "the state becomes Ended when it succeeds". Its "until 12:20 your time" is `grant_31f0`'s end. Fixture G1, 10.17 and 10.22 say the Grant Expired at 11:20 UTC.
+     - support-10.23 runs `grant_31f0` again with a single read: "requested → approved → active → read → expired".
+   - (b) support-9.18 filters the Audit trail "by `staff_mona` and that day" (2026-10-01) and expects "three events". On the same day, the same seed gives `staff_mona`:
+     - five failed sign-ins and a lockout (9.1);
+     - email look-ups (9.3, 9.14);
+     - a retry (9.9) and an escalation (9.11);
+     - a logged request (9.15);
+     - seven Grants and their reads.
+   - (c) support-9.4 shows E1's panel with "Grants: none Requested or Active" and gives no time. On 2026-10-01 E1 has `grant_31f0` Requested or Active from 10:05 to 11:20 UTC, and `grant_31f9` Requested from 11:30 to 11:42 UTC.
+3. **Givens that the seed does not hold · observable.**
+   - support-9.20: "Given `staff_omar` set Settings → language to Arabic … the Grant bar's countdown fills from the right." `staff_omar` has no Grant in §0.3, and §13 shows the Grant bar only "while the agent has an Active Grant".
+   - support-10.20 and support-10.22 need data that §0.3 does not give:
+     - 10.20 says "opens a new request with the same reason, Days and areas", but `grant_6c10` has no reason, Days or areas.
+     - 10.22 says "Each row shows the eater's account, case, reason, state, and requested, answered and closed times". E10's Grants and `grant_7d01` have no case or reason. `grant_6c10`, `grant_6c14` and `grant_7d01` have no request time.
+   - support-9.10: "Sign in with Apple token revoked — Not applicable (email sign-in)". E2's fixture names no sign-in method.
+   - support-10.24: "Failed Analyses rows after 09:10 UTC carry the tag "Kill switch On"".
+     - No fixture has a Failed Analysis between 09:10 and 09:55 UTC.
+     - As written, the line would also tag E5's 16:40 UTC `RATE_LIMITED` row, which came after the switch went Off. The window should be "while the kill switch was On".
+4. **support-4.3 against support-7.1 · observable.** For E7, 4.3 says "each failed-job tab … reads "No failed … in the last 30 days"". 7.1 says E7's Activity tab "reads "No Activity imported in 7 days. Missing data is unknown, not proof of no exercise."" That is one tab and one fixture with two texts and two windows. The "…" also leaves 4.3's own text unspecified.
+5. **Vague lines · observable.**
+   - support-9.11: "escalation resolved by the platform admin at …" (his time, in her time zone, with UTC)". Neither the Given nor the Then gives a time.
+   - support-10.7: "the panel suggests the metadata checks to try next" names no check and no text.
+   - support-9.1: "5 failed attempts … within 15 minutes, starting at 09:32 UTC … Try again at 10:47 your time (09:47 UTC)". A18 locks the account "for 15 min" after the fifth failure, so 09:47 is right only if all five attempts fall at 09:32. The Given does not say so.
+   - support-9.18 `/r`: "When she opens `/console/audit-trail`, Then 403 `FORBIDDEN`". In the browser, 9.16 says the screen reads "You don't have access to this area", but this line names no screen text.
+   - support-3.1: "the text (Arabic first) says that the iPhone with the older app shows both versions …". This paraphrases the text. Every other "What to tell the eater" line gives the exact words.
+6. **Values with no source and no assumption label · sourced, care group 3.** §10 says "every value with no source is in the assumptions table (A2–A22)". These values are not in it:
+   - the error colour from "5 days or fewer" before a deletion's due date (9.19);
+   - "Due in n days" for rows due within 5 days (9.15);
+   - the 50-row page and "Load 50 more" (4.3);
+   - the "120-character outcome note" (9.15);
+   - the Grant warnings at 10 and 2 minutes (10.16);
+   - "Ask the eater for more time" from 10 minutes before the end (10.20);
+   - the look-back windows of 30 days (3.2, 4.3) and 7 days (7.1).
+7. **support-10.12 · vocabulary (D2).** D2 defines `FORBIDDEN` as "(role lacks the permission)". 10.12 returns it for reads outside the Grant's Days or areas: "the API returns 403 `FORBIDDEN`", and "`…/activity?day=2026-09-29` or `…/templates` … 403 `FORBIDDEN`". The Support agent role does have the read permission; the refusal is because the Grant does not cover the read. D2's `GRANT_REQUIRED` fits; otherwise a new code needs a delta. K11 lists the lens's other code stretches but not this one.
+8. **support-9.11 · vocabulary (one list of states).** §0.1 gives a Privacy job the states "Requested · Running · Completed · Failed", and uses "Escalated to the platform admin" only for "Request received outside the app". 9.11 uses it as a deletion row's status: after the escalation, "the row reads "Escalated to the platform admin · 12:05 your time (11:05 UTC) · Mona K."", and the row no longer shows Failed. Either keep the D2 state and show the escalation beside it, or add the status by a delta.
+9. **Unhappy paths still missing · complete, care group 4.** Round 1 added 9.21 and 10.25, but these screens and actions still have no designed state:
+   - the Grants list (10.22) has no slow or error state;
+   - the Diary (read-only) has no loading state and no screen text when a read fails (10.15 `/s` only says "the read returns 503 and no data");
+   - Retry (9.9) and Escalate (9.11, 9.14) have no line for a call that fails while online. 9.21 covers them only offline, and §10's "failures say so (10.25)" covers only Grant actions;
+   - Requests received outside the app (9.15) has no empty state and no line for a save that fails, and §10's "Empty" row leaves it out.
+10. **A shared story is not marked · lens brief item 5.** support-9.16's acceptance runs on two other personas' sessions: "Given `staff_dina` (Nutrition approver), When she opens `/console/jobs` …" and "`staff_dina` or `staff_ali` (Platform admin) … calls `POST /v1/grants`". It has no "Shared:" line and no row in §11. support-10.9 also sends `staff_ali`'s token but marks only the auditor.
