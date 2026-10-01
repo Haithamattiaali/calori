@@ -6,8 +6,8 @@ routes), `way/join.md` (paths, field names, error rules, through §22 / delta D6
 `way/events.md`, `way/seed.md` (every example) and FRD §17–§18. Where those files disagree with an older lens
 line, they win and the contract follows them.
 
-**Size on 2026-10-01:** 146 paths, 169 operations (78 for the eater app, 87 for staff, 4 in test builds only),
-354 schemas.
+**Size on 2026-10-01:** 149 paths, 172 operations (78 for the eater app, 87 for staff, 4 in test builds only),
+355 schemas.
 
 ## How the contract is used
 

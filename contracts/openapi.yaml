@@ -10824,13 +10824,15 @@ components:
           items: {$ref: '#/components/schemas/PolicyVersion'}
     Price:
       type: object
-      description: A row in effect never changes.
+      description: 'A row in effect never changes. Thinking tokens are billed at the output rate; cached input tokens at
+        `cached_input_usd_per_mtok` when the provider states one, else at the input rate (admin-10.47).'
       required: [price_id, model_id, input_usd_per_mtok, output_usd_per_mtok, effective_from]
       properties:
         price_id: {type: string}
         model_id: {type: string}
         input_usd_per_mtok: {$ref: '#/components/schemas/Decimal'}
         output_usd_per_mtok: {$ref: '#/components/schemas/Decimal'}
+        cached_input_usd_per_mtok: {$ref: '#/components/schemas/Decimal'}
         effective_from: {$ref: '#/components/schemas/Instant'}
         effective_to: {$ref: '#/components/schemas/Instant'}
         source: {type: string}
@@ -10844,6 +10846,7 @@ components:
         model_id: {type: string, maxLength: 80}
         input_usd_per_mtok: {$ref: '#/components/schemas/Decimal'}
         output_usd_per_mtok: {$ref: '#/components/schemas/Decimal'}
+        cached_input_usd_per_mtok: {$ref: '#/components/schemas/Decimal'}
         effective_from: {$ref: '#/components/schemas/Instant'}
         source: {type: string, maxLength: 200}
       additionalProperties: false
