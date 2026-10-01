@@ -717,7 +717,7 @@ As the Eater, "start a new day" opens a new Day and leaves the old one as it was
 #### eater-4.30 · Unclear intent: one question, nothing logged by default
 As the Eater, when it isn't clear what I mean, I am asked once and nothing is logged by default, so that a stray photo never becomes a meal. · FR-039, FR-035, FR-045, FRD §2.3 (one-tap only for "An explicit command referencing unambiguous approved units")
 - `/r` Given a photo with no words and no choice made, When Mona taps "Done", Then one question asks "Log it, plan with it, save as a unit, or just estimate?", and **Today** is unchanged.
-- `/r` Given Mona has two saved Units whose names match "egg" — "egg bite" (with its 8 g bread) and "boiled egg" (one whole egg, no bread) — and one-tap logging on in **Settings → Food rules**, When she types "eggs 3", Then **Analysis review** asks one question, "Which one?", listing both Units, and nothing is logged until she picks one and taps Log; picking "boiled egg" logs boiled egg × 3 with no bread added (FRD §5.1, FR-022). An ambiguous word asks first even with one-tap logging on (as eater-4.44 and eater-2.43).
+- `/r` Given Mona has two saved Units whose names match "egg" — "egg bite" (with its 8 g bread) and "boiled egg" (one whole egg, no bread) — and one-tap logging on in **Settings → Food rules**, When she types "eggs 3", Then **Analysis review** asks one question, "Which one?", listing both Units, and nothing is logged before she picks; because one-tap logging is on, picking "boiled egg" logs boiled egg × 3 at once with the Undo banner (as eater-4.44), with no bread added (FRD §5.1, FR-022). An ambiguous word asks first even with one-tap logging on (as eater-4.44 and eater-2.43).
 
 ### G · A shared table
 
@@ -1333,3 +1333,37 @@ What passed:
 ## Fix by the session (2026-10-01), after the re-verify
 1–2. eater-4.30 line 2 no longer invents a "no verb" rule: it shows the real rule shared with eater-4.44 and eater-2.43 — an ambiguous word asks first even with one-tap logging on. The fixture gives Mona two egg Units ("egg bite" with bread, "boiled egg" whole), so "eggs 3" is ambiguous; choosing the whole egg adds no bread (FRD §5.1, FR-022), and the line can fail if one-tap logs it at once.
 3. eater-4.40 line 2's Given creates Mona's "honey spoon" and "baladi loaf" Units.
+
+## Lens verdict — closing (2026-10-01)
+
+**fail**: 1 defect. All 3 defects from the re-verify are fixed. The 1 defect is new, and it is in the rewritten eater-4.30 line 2.
+
+This was a scoped check of commit `7a19864`. That commit changed two lines in the body of this file, eater-4.30 line 2 and eater-4.40 line 2, and appended the re-verify and the fix note. The check used `way/personas/_lens-verifier-brief.md` and its addendum, with `way/vocabulary.md` (D2, D3) as binding. Each changed line was checked against the stories it touches: eater-2.12, 2.22, 2.27, 2.28, 2.43, 4.21 and 4.44, the seed, FRD §2.3, FRD §5.1 and FR-022. Unchanged material was not re-audited. No outside source was opened, and no request was sent anywhere.
+
+### The 3 re-verify defects
+
+| # | status | the changed line |
+|---|---|---|
+| 1 | fixed | 4.30 line 2: "An ambiguous word asks first even with one-tap logging on (as eater-4.44 and eater-2.43)." The "no verb" rule is gone. 4.44 line 2 reads "both log at once with one Undo banner naming both; an ambiguous word (eater-2.43) still asks first". So one rule now holds in both: one-tap logging logs unambiguous approved Units at once (FRD §2.3), and a word that fits two Units asks first. |
+| 2 | fixed | 4.30 line 2: "Given Mona has two saved Units whose names match "egg" — "egg bite" (with its 8 g bread) and "boiled egg" (one whole egg, no bread) … Then **Analysis review** asks one question, "Which one?", listing both Units … picking "boiled egg" logs boiled egg × 3 with no bread added". "eggs" is no longer read as egg bite. Both Units are offered, just as 2.43 offers "cheese bite or cheese spoon?" for "3 cheese". The whole egg adds no bread, so nothing is inferred from the egg count (FR-022). A build that one-tap-logs an ambiguous word fails the line. |
+| 3 | fixed | 4.40 line 2: "Given Mona has saved the Units "honey spoon" and "baladi loaf", When she says «معلقتين عسل ورغيف ونص»". Baladi loaf is a seed row ("baladi loaf · رغيف بلدي \| piece · simple \| one loaf \| 230"). The Given creates honey spoon, the «معلقة عسل» of 2.12. So «معلقتين عسل» names exactly one spoon, and 2.28 line 3's "which spoon" question does not arise. |
+
+### Defects (new, in the changed lines)
+
+1. **eater-4.30, line 2: after the answer, the line does not settle whether picking logs or Log must also be tapped. It also calls Analysis review's button "Log".**
+   - The line says "nothing is logged until she picks one and taps Log", and in the same sentence "picking "boiled egg" logs boiled egg × 3".
+   - One-tap logging is on. Once Mona answers, the command names one approved Unit. By eater-4.44 line 2 ("both log at once with one Undo banner"), the pick itself would then log, with Undo. The line's first clause asks for a further tap instead. A verifier cannot tell whether a build that logs on the pick passes or fails.
+   - The line puts that further tap on **Analysis review** and calls it "Log". eater-4.21 calls that screen's commit "Approve (the only main button)", and this line read "with Approve" before the fix. "Log" is the button of 4.44's compact confirm, not of Analysis review. One thing gets one name (criterion 5).
+
+### Cross-lens (for the model phase join), uncounted
+
+- The re-verify's note on eater-3.6 (`wf3-wf6.md`) is closed. Its verbless "three cheese bites and a cup of laban" logs at once because each word matches exactly one Saved Unit, which is the rule 4.30 and 4.44 now share. Its line 3 ("nothing is logged until Sam picks one chip") reads as the pick logging the item. That matches 4.44 and does not match 4.30's extra "Log" tap (defect 1).
+- The other cross-lens items of the re-verify were not re-checked.
+
+### Note, uncounted
+
+- The fix note says "The fixture gives Mona two egg Units". The seed table was not changed. It has no "boiled egg", and its egg bite gets bread only through 2.22's rule, which Mona's seed row does not set. 4.30 line 2's own Given states both Units and the 8 g, so the line stands without a seed change.
+
+
+## Second fix by the session (2026-10-01), after the closing check
+eater-4.30 line 2: with one-tap logging on, the pick itself logs, with the Undo banner, as eater-4.44 does; no extra "Log" tap is named, so the line has one passing behaviour.

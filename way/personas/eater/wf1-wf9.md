@@ -19,7 +19,7 @@ Written 2026-10-01 by the eater lens, steps 2, 3 and 5 of `way/personas/_lens-br
 | Onboarding · Under 18 | the end screen for an age under 18 | Onboarding · Age |
 | Onboarding · Consents | where the diary lives; the AI Consent; Optional research | Onboarding · Age |
 | Onboarding · Account | create an account (Sign in with Apple or email) or sign in | Onboarding · Consents; "Create account" on the account line of Settings; "Set a Target" in a local trial |
-| Onboarding · Profile | age, height, weight, equation version, region and units, foods I don't eat | "Set a Target" on Today or Settings → Goals — both open the Target flow at its first unfinished step |
+| Onboarding · Profile | age, height, weight, equation version, region and units, foods I don't eat | "Set a Target" on Today or Settings → Goals — both open the Target flow at its first unfinished step (Onboarding · Account first for a local-trial eater) |
 | Onboarding · Safety screen | optional questions that choose tracking-only or protein-first | Onboarding · Profile; Settings → Goals |
 | Onboarding · Energy | resting energy, maintenance, planned exercise | Onboarding · Safety screen |
 | Onboarding · Target | lose, maintain or gain; the conservative choices; the proposed Target; my own value | Onboarding · Energy |
@@ -177,7 +177,7 @@ As the eater with food already on the table, I log within two screens of opening
 Covers: WF-1 "Tracking works before a target exists"; FRD §14 Today mandatory states ("Empty, partial day … missing macros"); FR-008 · E17, E18 · EX-19, EX-27, EX-42
 Shared: eater WF-3 journey (eater-3.2).
 As the eater with no Target yet, I see what I ate with no made-up budget and one calm way to set a Target, so that the app neither nags nor pretends.
-- `/r` **Given** Hala has a 250 kcal Entry and no Target, **When** Today opens, **Then** the headline reads "250 consumed · No Target yet" with a "Set a Target" link that opens the Target flow at its first unfinished step (Onboarding · Profile when nothing is filled in, eater-1.45; the step where she stopped otherwise, eater-1.44) (eater-3.2), with no "left" or "over" figure and no macro progress bars; consumed macro grams are listed instead.
+- `/r` **Given** Hala has a 250 kcal Entry and no Target, **When** Today opens, **Then** the headline reads "250 consumed · No Target yet" with a "Set a Target" link that opens the Target flow at its first unfinished step — Onboarding · Account while she is in the local trial (eater-1.49), Onboarding · Profile when she has an account and nothing is filled in (eater-1.45), the step where she stopped otherwise (eater-1.44) (eater-3.2), with no "left" or "over" figure and no macro progress bars; consumed macro grams are listed instead.
 - `/r` **Given** the same eater, **When** Today is opened on 3 later Days, **Then** no card, badge or notification asks for a Target; the "Set a Target" link stays beside "No Target yet".
 - `/r` **Given** an empty Today (no Entries, no Target), **When** it opens, **Then** it shows what to do next with two buttons, "Log what you ate" and "Make your first unit" (EX-19, eater-3.2).
 
@@ -1210,3 +1210,48 @@ What holds:
 2. eater-9.5: the Photos-withdrawn line now names data and result (typed "3 cheese bites" reaches Analysis review; Log from My Units adds one Entry).
 3. eater-9.13: the AI-withdrawal log record holds only the allowed fields of the line above, so the two lines agree.
 4. One rule for "Set a Target": from Today or Settings → Goals it opens the Target flow at its first unfinished step (Profile when nothing is filled in; where she stopped otherwise) — eater-1.8, the onboarding table, 1.44 and 1.45 agree.
+
+## Lens verdict — closing (2026-10-01)
+
+**fail**: 1 defect. Re-verify defects 1, 2 and 3 are fixed. Defect 4 is fixed in every place it named, but the rule now written into eater-1.8 leaves out the local trial.
+
+This was a scoped check of commit `baaac88`. Its changed lines are:
+- in How to read, the Words entry;
+- the onboarding table's Onboarding · Profile row;
+- eater-1.3 line 3, 1.6 line 3 and 1.8 line 1;
+- eater-9.1 lines 1 and 3, 9.5 line 3, 9.8 line 1 and 9.13 line 2;
+- C-20.
+
+The check used `way/personas/_lens-verifier-brief.md` and its addendum, with `way/vocabulary.md` (D2, D3) as binding. Each changed line was checked against the stories it touches: eater-1.7, 1.44, 1.45, 1.49, 4.44 (in `wf2-wf4.md`) and 9.13 line 1, and the proposed interfaces. Unchanged material was not re-audited. No outside source was opened, and no request was sent anywhere.
+
+### The 4 re-verify defects
+
+| # | status | the changed line |
+|---|---|---|
+| 1 | fixed | How to read: "Consent Not given → Given · Withdrawn (D3)" and "A Consent purpose the eater has not decided is in the state **Not given** (vocabulary D3)".<br>1.3: "Optional research reads "Not given", and Diary processing reads "Not given · your diary is only on this iPhone"".<br>1.6: "the Photos row reads "Not given"".<br>9.1: "or "Not given" when no Consent exists" and "the other rows read "Not given", never blank".<br>9.8: ""Optional research" reads "Not given"".<br>C-20: "Resolved by delta D3".<br>No "Never given" is left in the body. Each line reaches Not given without the Consent ever being given, so D3's order holds. |
+| 2 | fixed | 9.5 line 3: "typing "3 cheese bites" in its "Add words" field reaches Analysis review as "cheese bite × 3", and "Log from My Units" → cheese bite → Log adds one Entry to Today". The line now names its data (cheese bite × 3, one Entry) and where each shows (Analysis review, Today). |
+| 3 | fixed | 9.13 line 2: "it holds only the allowed fields of the line above (request id, route, status, duration, model version, cost, validation code) and no field naming the purpose or the action". The field list is line 1's. The route, `POST /v1/me/consents`, names neither the purpose nor the action. |
+| 4 | fixed where named; one gap remains (defect 1) | 1.8: "a "Set a Target" link that opens the Target flow at its first unfinished step (Onboarding · Profile when nothing is filled in, eater-1.45; the step where she stopped otherwise, eater-1.44)".<br>Table: ""Set a Target" on Today or Settings → Goals — both open the Target flow at its first unfinished step".<br>Both agree with 1.44 ("resumes at Onboarding · Macros") and with 1.45 ("Onboarding · Profile opens"). The link no longer goes to Settings → Goals. |
+
+### Defects
+
+1. **eater-1.8, line 1, against eater-1.49, line 2: in the local trial, "Set a Target" opens two different screens.**
+   - 1.8 now says the link "opens the Target flow at its first unfinished step (Onboarding · Profile when nothing is filled in …)" and gives no exception.
+   - 1.49 line 2 reads: "Given the local trial, When she taps "Set a Target" on Today, Then Onboarding · Account opens with "Your Target and profile are kept in your account"". The table's own Onboarding · Account row agrees: it is reached from ""Set a Target" in a local trial".
+   - 1.8's Given ("Hala has a 250 kcal Entry and no Target") does not say whether Hala is signed in. The 250 kcal Entry it reuses comes from 1.7 line 4, and that Hala is in the local trial: she tapped "Keep it on this iPhone for now" in 1.7 line 1.
+   - For that Hala, with nothing filled in, 1.8 expects Onboarding · Profile and 1.49 expects Onboarding · Account. No build can pass both lines.
+   - The fix note says "One rule … eater-1.8, the onboarding table, 1.44 and 1.45 agree", but it leaves out 1.49. Either the rule needs its trial branch (Account first), or 1.8's Given needs a signed-in Hala.
+
+### Cross-lens (for the model phase join), uncounted
+
+- eater-3.2 in `wf3-wf6.md` still reads "a "Set a Target" link to Settings → Goals". 1.8 cites eater-3.2 for its new rule.
+- auditor.md's Consent counts show Microphone and Photos as ""No records yet"". C-20 no longer notes that the auditor lens has its own label for a purpose with no record.
+- The other cross-lens items of the re-verify were not re-checked.
+
+### Note, uncounted
+
+- 9.1 line 1 shows "Not given" "when no Consent exists", and "Read the text" "when never given". D3 makes Not given the state of a Consent before the eater decides. The model phase decides whether that Consent has a stored record. The screen shows the same either way.
+
+
+## Second fix by the session (2026-10-01), after the closing check
+eater-1.8 and the onboarding table: the first unfinished step of the Target flow is Onboarding · Account for a local-trial eater (eater-1.49), Profile for a signed-in eater with nothing filled in (1.45), and where she stopped otherwise (1.44) — one rule, no exception missing.
