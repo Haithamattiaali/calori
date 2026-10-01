@@ -25,7 +25,8 @@ Written 2026-10-01 at Tailor. Brief: `way/brief/frd-v1.0.md` (the owner's FRD v1
 ### Environment facts that shape the hows (read 2026-10-01)
 
 - This session runs in a Linux cloud container: Node 22, Python 3.11, Java (Firebase emulators possible), Docker, Postgres client; **no Xcode, no Swift, no gcloud, no `gh`** (GitHub through its MCP tools).
-- The iOS surface is compiled and proved on **GitHub Actions macOS runners** (free: the repo is public); its walks run on the iOS simulator there and return screenshots as run artifacts.
+- The iOS surface is compiled and proved on **GitHub Actions macOS runners** (free: the repo is public); its walks run on the iOS simulator there and return screenshots as run artifacts. No Swift toolchain can be installed here (download.swift.org is denied by the network policy; no Docker daemon), so every Swift compile is a CI run — the client stays thin and the nutrition core lives on the server (brief §15.1).
+- The Claude Design canvas is reachable from this session (the Design artifact type), so the prototype boards are drawn there.
 - The keep-going loop: this cloud session works the ledger turn by turn and resumes from git and `way/` (`/build-loop` lives on his Mac, not here).
 - The repo is public: synthetic data only, no secrets in the tree, ever.
 
