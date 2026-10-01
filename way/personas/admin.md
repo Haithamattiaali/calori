@@ -1409,3 +1409,119 @@ All 26 defects are fixed in the file itself. Story ids were renumbered: journey 
     The analysis-job retry stays in WF-10 as 10.56, because FR-080 places failed AI jobs in the console's AI governance.
 
 Counts after round 1: 75 stories (admin-9: 4; admin-10: 71) and 197 acceptance lines. Every story has at least one `/r` line.
+
+## Lens verdict — re-verify (2026-10-01)
+
+**fail**: 13 defects, all new. All 26 earlier defects are fixed. A lens verifier that did not write this file checked it against `way/blueprint.md` §0–§1, `way/vocabulary.md` (delta D2, now binding), `way/brief/frd-v1.0.md`, `way/personas/_lens-brief.md`, `care.md`, the r1 research files and both refutations.
+
+**What holds.**
+- The file has 75 stories (admin-9: 4; admin-10: 71) with 197 acceptance lines. Every story has at least one `/r` line, and the ids run without gaps.
+- A script check found a map, FRD, blueprint or D2 trace on every story's trace line.
+- All 29 A-sources were re-opened on 2026-10-01 with a generic User-Agent and no owner identifiers. Every quoted phrase was found, including A7's new "if you reduce the percentage to 0% … will return to the group they were originally assigned". The one exception is A8; see defect 7.
+- The cycle-1 findings cited either stand or are cited as corrected (P5, P6, P11, P15, R18). P14 and R23 match r1-refute-b.
+
+### The 26 earlier defects: each one is fixed
+
+| # | fixed by (quoted) |
+|---|---|
+| 1 | 10.61: "`PUT /v1/admin/users/eater-synth-070/roles` returns 422 `VALIDATION_ERROR` (vocabulary D2: "a staff account is never an eater account")". The new 10.62 traces to "FR-081 ("Separate support privileges from nutrition-approver and platform-admin privileges")". |
+| 2 | 10.25 "§16.4; A7."; 10.36 "§16.4, blueprint §0 ("the admin console proved in a browser at desktop and ~390 px")"; 10.37 "§16.4, NFR-05"; 10.54 "FR-080."; 10.60 "Blueprint §0 line 3 (roles screen), FR-080"; 10.61 "Blueprint §0 line 3 (roles → users), FR-080, NFR-12"; 10.64 "FR-081 (separation of privileges), map §2"; 10.1 "FR-080, §16.4, map §6 Registry". |
+| 3 | 10.13: "Below the launch minimum: consented target-cuisine cases 0 of 200 · bilingual labels 40 of 100 …". 10.14: "only `eater-synth-090`'s case is listed". |
+| 4 | 10.28: "`nutrition_algorithm_version`; `source_versions` …; `processing_location`" and "When an Analysis is written with any of these stamps missing, Then the write is refused. `/m`". |
+| 5 | 10.39: "the quotas panel on **Registry** reads "Quotas version 3 in use · rolled back from version 4"". |
+| 6 | 10.41: "When `anon-synth-001` makes a 4th `meal` request with its anonymous-session token, Then it returns 429 `RATE_LIMITED` with `resets_at`." |
+| 7 | 10.12: ""Request storage: off (store=false on every request)" and "Grounding with Google Search: off", both enforced by code". |
+| 8 | admin-9.3: "the retry is refused with 422 `VALIDATION_ERROR` "This account was deleted. The export won't be retried."" and "the retry is refused with 403 `CONSENT_REQUIRED`". |
+| 9 | §9: "NFR-12 (quotas, bounded retries, least privilege, secret rotation, dependency scans, backups, tested restore) \| 10.38, 10.57, 10.58–10.64, 10.65, 10.66, 10.67". |
+| 10 | 10.31: "it returns 200 with an Analysis that is Ready for review; the Analysis is stamped `text@v4`." |
+| 11 | 10.21: "When they take a meal photo on **Capture & Plan** in the iOS simulator, Then: the app shows the Consent explanation with the manual logging paths and sends no Analysis request". |
+| 12 | 10.69: "the Meal row reads «الوجبة» and «مفتاح الإيقاف: غير مُفعَّل»", and the string table. |
+| 13 | The "13th" line is gone. 10.24: "the same reason is in **Audit trail** and in a banner on every console section until dismissed". 10.25: "read through `GET /v1/analyses/{id}`". 10.27: "Then, read through `GET /v1/analyses/{id}`: that Analysis completes stamped `meal@v7`". 10.37: "the Canary panel reads "No traffic while the kill switch is On"". |
+| 14 | 10.50: "the 7-row and the next-smallest row (40) are both hidden (complementary suppression)". |
+| 15 | 10.36: "the row reads "Not sent: no connection. Try again." … when the connection returns, nothing is sent until `admin.a` presses Try again". "Will try when online" is gone. |
+| 16 | 10.36: "each control's hit area is at least 44 × 44 CSS px". |
+| 17 | §1.3: "What I assume about the persona's routine, `assumption` (no observational source was found in this run)". §5: "… is an `assumption` (§1.3)". |
+| 18 | §3: "Canary checks \| about six; a dozen is A11's soft guideline, not a limit". |
+| 19 | §3: "Nothing is called "paused"." The only remaining "paus…" is inside A13's quote. |
+| 20 | §3: "Registry version states: **Proposed** → **Shadow** → **Canary** → **Rollout** → **Rolled back**." "Draft", "Live" and "Full" no longer appear. |
+| 21 | §3: "`meal` · **Meal** … `voice` · **Voice** (transcription)". |
+| 22 | 10.45 "the prices panel on **Metrics**"; 10.5 "the models list on **Registry**". "Price book", "model catalogue", "candidate", "guard metric" and "console user" no longer appear. |
+| 23 | §5 groups 1–6 are numbered as in care.md: 2.5 "No internal names", 2.9 "Tappable at a glance", 3.3 "Response at the instant of touch", 3.4 "Changing your mind mid-way", 3.9 "The first screen", 5.6 "Collect only what is needed", 6.1 "Largest text size". Some answers now contradict the stories (new defect 13). |
+| 24 | A29: "It is used here only for the eater's late diary-day boundary (admin-10.44) … no rollout window is derived from it." |
+| 25 | 10.71: "When `admin.a` uses only Tab, Shift+Tab, Enter, Space and Esc"; "it announces "Meal, kill switch Off, switch""; "axe-core … reports no contrast failure below 4.5:1". 10.31: "the focused default button "Cancel"". |
+| 26 | "### Journey admin-9 — privacy jobs that failed (WF-9, the platform admin's part)", stories admin-9.1 to 9.4. |
+
+### New defects
+
+**Traced**
+1. **Stale pointers to §6.** §3 reads "New words are proposed in §6 for the model phase to fix", and 10.44 reads "`assumption`: the brief does not say which day a quota uses (see §6)". §6 is the shared-stories table; the conflicts are in §7 (conflicts 1 and 2). An assumption whose pointer leads nowhere cannot be traced to where it is routed.
+
+**Complete (missing steps)**
+
+2. **§19.2 operational logs.** The coverage row reads "§19.2 (logs without raw evidence; consented, role-restricted raw evidence) \| 10.14, 10.19, 10.51, 10.65". No acceptance line reads the operational logs. Nothing checks that they hold "request IDs, timing, status, model version, cost, and validation codes", or that they leave out "raw meal images, private diaries, audio". 10.65's `/s` line searches the logs only for credential values. Care 5.4 ("They never carry photos, transcripts or diaries (§19.2)") has no acceptance line either.
+
+3. **Manual roll back from Shadow or Canary, and Shadow numbers that fail.**
+   - §3 says "A version taken out of Shadow, Canary or Rollout by a roll back (by hand or automatically) is **Rolled back**". But no story rolls back a Shadow or Canary version by hand. 10.24 covers only the automatic roll back, and 10.27 only a roll back from Rollout.
+   - 10.20 covers "Needs 60 more requests…" and "with every number within its limit … Ready for Canary". No line says what **Registry › Meal** shows when a Shadow number is outside its limit. The lens brief requires that unhappy path.
+
+4. **The first Platform admin on a fresh deployment.**
+   - 10.59 seeds the five roles "Seeded · read-only", and 10.2 denies by default.
+   - 10.64 says "Another platform admin must change your roles".
+   - No story says how the first staff account comes to hold Platform admin, so as written nobody can ever assign a role.
+
+**Observable**
+
+5. **Acceptance lines that cannot pass as written, or contradict themselves:**
+   - **10.25, line 2:** "Given Canary at 20 %, When the share is set to 0 % and later to 10 %, Then … at 10 %, the eaters who had `meal@v7` before return to it". At 10 % only about half of the earlier 20 % group can hold version 7. The checkable claim is that every eater stamped `meal@v7` at 10 % was in the earlier group and no new eater is drawn (A7).
+   - **10.71, line 1:** "they can propose Meal version 7, move it to Canary, move it to Rollout". This skips evaluation and Shadow. But 10.17 allows no Shadow without a passing report, and 10.22's Canary starts from "Ready for Canary" after Shadow (10.20). A verifier following the line would find "Move to Canary" disabled. §5 itself names "the whole Propose → Shadow → Canary → Rollout flow".
+   - **10.13, line 1:** the 40 bilingual labels are among the 300 synthetic cases, yet the screen reads "bilingual labels 40 of 100 · synthetic cases don't count toward the minimum". Say which minimum excludes synthetic cases (NFR-10 attaches "consented" to the target-cuisine cases).
+
+6. **Then lines that name no data or interface:**
+   - 10.26, line 2: "the Canary and control groups are released". Nothing a verifier can read.
+   - 10.24, line 1: "within 10 s, new requests from Canary eaters are stamped `meal@v6`". No interface is named; elsewhere the fix uses "read through `GET /v1/analyses/{id}`".
+   - 10.43, line 2: "the estimated cost on **Metrics** includes every provider call made". No number of calls or expected cost is given, so pass and fail cannot be told apart.
+   - 10.33, line 2: "photo and voice capture show that analysis is off". No text and no control state are named.
+
+**Sourced**
+
+7. **A8's link does not carry its quotes.**
+   - https://firebase.google.com/docs/remote-config/templates, re-opened 2026-10-01, has no "use those values immediately for all apps and users".
+   - That quote and "Each time you update parameters, Remote Config creates a new versioned Remote Config template…" are on https://firebase.google.com/docs/remote-config/templates/client (last updated 2026-10-01), as "Click and confirm this only if you are sure you want to roll back to that version and use those values immediately for all apps and users."
+   - The claim holds, but the link must change. A8 backs 10.8, 10.26, 10.27, 10.30, 10.39 and 10.68.
+
+**Vocabulary (map ¶4 and D2)**
+
+8. **"Budget" names two things.**
+   - The map uses it for the eater's food budget: WF-7 "activity mode → budget", the FRD's "remaining intake budget" (FR-066) and "Food budget remains the approved target" (§12.1).
+   - The lens uses it for AI spend: "a daily budget" (G3), "quotas and the daily budget" (§3), "a daily budget of soft $40 and hard $60" (10.48), care 2.4, 2.11 and 3.2, and §7 conflicts 2 and 8.
+   - It is not in §7 conflict 1's list of words that need a delta.
+
+9. **The AI task "Recipe" reuses the map's word for another thing.**
+   - Map ¶4's **Recipe** is the eater's versioned Recipe (D2: "Unit / Composite / Recipe … Saved (version n)"). D2's console section **Recipes** holds Tier B recipe records, which 10.58 uses as "Approve Foods, Recipes and Aliases".
+   - By the lens's own pattern ("On screen it is "Meal version 7""), Registry would show "Recipe version 3" for the recipe task while My Units shows "Recipe version 3" for an eater's Recipe. That is one label for two things.
+   - §7 conflict 1 routes the task names but does not name this clash.
+
+10. **Version names, states and transitions outside D2, not routed in §7:**
+    - "Previous Rollout version: 6 (roll-back target)" (10.26, 10.27). D2's Registry version states have no state for a version replaced by a newer Rollout.
+    - "Quotas version 4" is in use, and "Quotas version 3 in use · rolled back from version 4" (10.38, 10.39). D2 defines no versioned quotas thing; its Registry version is "model id + prompt + schema per task".
+    - "Stopped after 5 attempts · needs engineering" (10.57) is a job state beyond D2's "Failed".
+    - 10.34's "Try again" takes a Failed Analysis to "Processing and then Ready for review", and 10.56 retries a failed analysis job into "one Analysis, Ready for review". D2 lists Analysis Failed as an end state; only the Privacy job is "retried with the same id".
+
+11. **One kind of refusal has two error codes.**
+    - Role-change rules are refused with 422 `VALIDATION_ERROR` for the last platform admin (10.64), an eater account (10.61) and a seeded role (10.59).
+    - A self-change gets 403 `FORBIDDEN` (10.64: "a self-change by API returns 403 `FORBIDDEN`").
+    - 10.62's separation-of-duties check names no code at all ("the server's role check refuses the same combination by API").
+    - D2 defines `FORBIDDEN` as "role lacks the permission", but the refused admin's role does hold "Change roles". This is the "two error codes for one refusal" D2 was written to stop.
+
+**Experience**
+
+12. **Values not chosen on purpose (care group 3), and one rule with no story:**
+    - The §3 rows "Retirement warning / block for new Proposed versions \| ≤90 days / ≤30 days" and "Pressed-state feedback … \| ≤100 ms" are never exercised. No story refuses a Proposed version on a model that retires within 30 days, or shows the warning at 90 days; 10.6 tests 19 days only. Yet care 3.8 says "Every value in the §3 table is tried in the served product".
+    - Stories use values that have no starting value: the Canary's "set duration" (10.24), and the quotas and daily budget on a fresh deployment. Yet care 2.7 says "the starting values in §3 mean nothing needs setting first".
+
+13. **Care answers that contradict the stories:**
+    - Group 4.8: "A half-filled version is kept as Proposed (10.8)". 10.8 says nothing about half-filled forms, and 10.11 says the opposite: an empty prompt version or a timeout of 0 s returns 422 `VALIDATION_ERROR`, and "nothing is saved". The question "is their work protected?" is unanswered for the Propose form.
+    - Group 4.7: "Confirmations are kept only for changes that hit every eater at once". But Move to Canary (10.22) confirms a change that reaches about 5 % of eaters.
+    - Group 2.11: the retirement and re-check banners "show on every section". But 10.6 puts the retirement banner "at the top" of **Registry**, and 10.12 says "the Registry banner names it".
+
+**Ids**: no defects.
