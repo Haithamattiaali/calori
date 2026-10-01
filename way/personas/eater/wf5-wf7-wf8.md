@@ -22,20 +22,22 @@ These are the only names this file uses for screens, states and actions. Every o
 | kind | name | where it comes from |
 |---|---|---|
 | tabs | Today · Capture & Plan · My Units · Progress | map §1.4 |
-| screens | Today · Capture · Analysis review · Meal planner · Meal review · Day report · Progress · Settings; *proposed:* Activity detail, Plans (list in Capture & Plan), Target history (section of Progress) | FRD §14; FR-069 "selected-day report" |
+| places | tabs as above; screens Analysis review · Meal planner · Meal review · Settings (sections Goals · Food rules · Activity · Units & language · Privacy · Export); inside tabs: the camera on Capture & Plan, the saved Plans list on Capture & Plan, the Activity sheet opened from Today's Activity row, the Day report opened from Today's remaining figure, and Progress sections Weight and Target history | `way/vocabulary.md` (D2) Places; "meal and day report", "target history" (map §1.3, §1.4); the Activity sheet and the saved Plans list are *proposed* (§6) |
 | photo choice | "Plan a meal" · "Log what I ate" | FRD §2.4 |
 | Meal planner actions | "Find counts" (*proposed*) · "Save plan" (*proposed*) | FRD §14 Meal planner |
-| Plan confirmation actions | "Ate as planned" · "Change amounts" · "Not eaten" · Meal review: "Save consumed" · *proposed:* "Log leftovers", "Reopen" | FRD §2.5, §14 |
-| solve result (`solution_status`) | "Fits all limits" (`optimal`) · "Fits all limits · best found in time" (`feasible`) · "No plan fits" (`infeasible`) · "No answer in time" (`unknown`) | FRD §9.1 (CP-SAT statuses, [S10]; the label mapping is *proposed*) |
-| counts edited by hand on a result | "Breaks a limit: <limit>" | *proposed*; never "Fits" |
-| Plan lifecycle (`status`) | "Saved — not counted" (`saved`) · "Eaten" (`eaten`) · "Not eaten" (`not_eaten`) | FRD §14 "pending confirmation" is renamed, because the map reserves **Pending** for not-yet-synced (see §7, item 1) |
+| Plan confirmation actions | "Ate as planned" · "Change amounts" · "Not eaten" · Meal review: "Save consumed" · *proposed:* "Log leftovers" | FRD §2.5, §14 |
+| Plan states (API `state`) | **Proposed** (`proposed`) · **Infeasible** (`infeasible`) → **Saved** (`saved`) → **Confirmed** (`confirmed`, as **Ate as planned** or **Changed**) · **Not eaten** (`not_eaten`). A Plan has no consumed calories until Confirmed. On screen the state word comes first, then one plain sentence, e.g. "Proposed — fits all your limits", "Infeasible — no plan fits these limits", "Saved — not counted until you confirm" | `way/vocabulary.md` (D2) States; FRD §14 "pending confirmation" = Saved |
+| solver result (API `solution_status`, FRD §17 MealPlan) | `optimal` · `feasible` (time limit reached with a plan) · `infeasible` · `unknown` (time limit, no plan) — CP-SAT statuses (FRD §9.1, [S10]); the timeout outcome has no Plan state yet (§7, item 1) | FRD §9.1, §17 |
+| a limit check on a Plan | "met" · "above your maximum" / "below your minimum" (a check result, not a Plan state) | FR-053, FR-055 |
+| Entry states | Pending → Confirmed; Corrected; Voided → Restored | `way/vocabulary.md` (D2) |
+| errors | `VALIDATION_ERROR` · `PLAN_INFEASIBLE` · `POLICY_FLOOR` · `STALE_REVISION` · `AI_UNAVAILABLE` · `RATE_LIMITED` · `CONSENT_REQUIRED` · `NOT_FOUND` | `way/vocabulary.md` (D2) Errors |
 | limits | Calorie target (about, with a tolerance) · Calorie ceiling (strict) · Carbohydrate maximum · Protein minimum · Exclude · Must include · Available · Preference shares (basis: count · mass · calories) · Whole counts / Allow halves / Allow grams | FR-049–FR-051, FRD §9.1 |
-| Activity | **Activity** (our record) · Health workout (the HealthKit record it came from) · active energy · Activity mode: **Fixed** / **Activity-adjusted** · credit factor · credit cap | map §1.4; FRD §12.1, §12.2 |
+| Activity | **Activity** (our record; Pending → Confirmed, Voided → Restored by analogy with Entry, §7, item 16) · Health workout (the HealthKit record it came from) · active energy · Activity mode: **Fixed** / **Activity-adjusted** · credit factor · credit cap | map §1.4; FRD §12.1, §12.2 |
 | reports | meal report · Day report · period report (7 days · 28 days · Custom) | FR-069, FR-072 |
-| Day coverage | Complete · Partial · Unlogged; today: Provisional | FR-073, FR-074, FR-060 |
+| Day states | Provisional (today) · Complete · Partial · Unlogged; Complete and Partial are the eater's own mark | `way/vocabulary.md` (D2); FR-073, FR-074, FR-060 |
 | Target comparison | "Intake vs Target" (never "vs plan": the map's **Plan** is the meal Plan) | FR-072, FR-074; see §7, item 2 |
 | weight | Weight (data: weight observation) · "Unusual — check" | FRD §17 WeightObservation |
-| views and modes | Hide numbers · tracking-only · diary-day boundary | map §1.6, §5 |
+| views and modes | Hide numbers · tracking-only · diary-day boundary · Kill switch (On/Off, platform admin) | map §1.6, §5; `way/vocabulary.md` (D2) |
 
 ### 0.2 Fixtures (all synthetic)
 
