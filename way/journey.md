@@ -20,3 +20,14 @@
 - Deltas: D2 (one vocabulary for roles, states, errors, places), D3 (Consent "Not given").
 - Lessons: lenses revised in parallel drift; cross-lens mismatches are joined once in the model phase; a session fix must be re-read against every story it touches.
 - Next: governor audit of the lenses, then Model and architecture (start with the join: one fixture set, one event catalogue, the conflicts lists).
+
+## 2026-10-01 · Model and architecture
+- The join (J1–J160), one seed, one event catalogue (120 events); 230 interaction rows; 70 entities; 22 modules; decisions A1–A24 with sources; the contract (149 paths, 172 operations, 355 schemas, valid OpenAPI 3.1); the SDK list with a full-set resolve and audit.
+- Deltas: D4 (the join's names), D5 (six stories), D6 (J149–J157), D7 (contract changes after its first write).
+- Governor: 8 gaps → fixed; re-audit left 2 (google-cloud-storage audit, stale contract notes) → fixed; final re-audit running.
+
+## 2026-10-01 · Plan to the end
+- 74 slices (64 build + care pass C01–C10) in six lanes; 629 of 629 stories placed once; 172 of 172 operations provided once; dependency map and critical path in model §6; the ledger has one row per slice.
+- Three planner calls decided: tab bar grows one tab per slice (no dead door) — kept; lanes rebalanced — kept; S07b (Target) below the MVP line — **overruled**: the owner's goal is weight loss, so S07d + S07b join the MVP (11 slices, 108 stories); S08 (Day report screen) stays below.
+- Governor audit of the plan running.
+- Next: the first look — briefs per MVP screen, the Design canvas (go-wide, then exact), the clickable prototype, the one yes.
