@@ -81,6 +81,8 @@ Every story has at least one `/r` line.
 
 **AP13 · Touch targets at the narrow console.** `opened` · WCAG 2.2 Understanding 2.5.8 Target Size (Minimum) https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html · 2026-10-01 · "The size of the target for pointer inputs is at least 24 by 24 CSS pixels".
 
+**AP14 · USDA FoodData Central record FDC 321358 "Hummus, commercial" (Foundation Foods) gives a derivation per nutrient.** `opened` · https://fdc.nal.usda.gov/portal-data/external/321358 · 2026-10-01 · total fat, total dietary fibre and iron "Analytical"; protein (N × 6.25), carbohydrate by difference and both Atwater energies "Calculated"; sugars total and the fatty-acid totals "Summed".
+
 ### 1.2 The approver's day, from the findings
 
 - **Who and how often.** The approver is a qualified nutrition reviewer (brief §3.3, §23.2), staffed as a fractional reviewer (brief §23.1: "fractional nutrition/privacy reviewers"). The work therefore comes in batches. A session opens on what changed since the last one, ordered by how many eaters it affects. How many sessions a week is an `assumption`.
@@ -351,7 +353,7 @@ As the Nutrition approver, I enter a Food from its label or the brand's official
   - entered: 250 kcal per 50 g serving, protein 5 g, total carbohydrate 30 g, fat 12 g, fibre 0;
   - left blank: sugars and sodium.
 - `/r` FR-012: Given the same Food, Then every value typed from the label carries the marker "declared". When the approver then fills the missing sugars with 4 g estimated from a similar Approved Food (match quality B, AP3), that value carries "estimate" with its method. Foods shows each marker beside its value.
-- `/r` FR-012: Given the Tier A row FDC 321358 "Hummus, commercial" from USDA Foundation Foods, When its values are opened in Foods, Then each value carries the marker that follows the release's own derivation for that nutrient: "Analytical" → "measured" (total fat, total dietary fibre, iron), "Calculated" → "estimate" with the method shown (protein, carbohydrate by difference, energy by Atwater factors) (fdc.nal.usda.gov food 321358, derivation per nutrient, opened 2026-10-01). Given the Tier A row "Falafel" (FDC 2707408), an FNDDS food whose values are calculated from ingredient values (F5), Then Foods marks its values "estimate".
+- `/r` FR-012: Given the Tier A row FDC 321358 "Hummus, commercial" from USDA Foundation Foods, When its values are opened in Foods, Then each value carries the marker that follows the release's own derivation for that nutrient: "Analytical" → "measured" (e.g. total fat, total dietary fibre, iron); every other derivation ("Calculated", "Summed" and any other) → "estimate", with the release's derivation shown beside it (e.g. protein and carbohydrate by difference "Calculated", sugars total 0.34 g "Summed") (AP14). Given the Tier A row "Falafel" (FDC 2707408), an FNDDS food whose values are calculated from ingredient values (F5), Then Foods marks its values "estimate".
 - `/r` Given the biscuits Food with every value typed from the label and sugars left "unknown" (no estimate added), When it is approved after its preview, Then its Evidence in Foods reads "label-verified" (FR-026). Given the same Food after sugars 4 g "estimate" is added, Then Approve is blocked beside sugars with "An estimated value can't carry label-verified — remove it or leave it unknown", because label-verified means every stored value came from the label.
 - `/r` Given both 250 kcal and 1,046 kJ are entered, Then Foods stores both as printed and recomputes neither from the other (AP2).
 - `/r` Given any Food with a serving, e.g. "Grilled chicken sandwich" from a Saudi restaurant menu (F20), When Save is pressed in Foods without "What 'serving' means" (one piece · one pack · sandwich · double · full meal · side · sauce · beverage), Then Save is blocked beside that field (brief §6.2).
@@ -876,7 +878,7 @@ Words already fixed by `vocabulary.md` are used as written. These are **not yet*
 - With the Support agent: 10.2, 10.66.
 - With the Platform admin: 10.2, 10.23, 10.66.
 
-Totals: 70 stories, 226 acceptance lines (191 runtime, 19 system, 19 module).
+Totals: 70 stories, 228 acceptance lines (191 runtime, 19 system, 19 module).
 
 
 ## Lens verdict (2026-10-01)
@@ -1402,3 +1404,7 @@ Not counted (`way/lessons.md`, 2026-10-01).
 - **The new credit offer has no eater story.** 10.69's "New activity credit available: 40 % up to 250 kcal — Review" in Settings → Activity has no counterpart in eater-7.18 (Settings → Activity → Activity mode), which also still makes the credit and cap "each editable". Decide the screen string, and whether a Policy value is a default or a bound.
 - **Target history strings.** 10.69 shows "Activity × 1.2 · Policy v1". eater-8.23 rows show a source such as "Estimated by the app: maintenance 2,200, −15 %". Choose one row format.
 - **The Targets API.** This is still open: 10.69 uses `GET /v1/targets/current`, and eater-7.18 and eater-1.42 use `GET /v1/targets` *(proposed)*.
+
+
+## Third fix by the session (2026-10-01), after final check 2
+10.24's marker rule covers every USDA derivation: "Analytical" → measured; any other derivation (Calculated, Summed, …) → estimate with the release's derivation shown; sugars (Summed) is named as an example. The record is registered as source AP14 with its link and what it shows; the totals line reads 228.
