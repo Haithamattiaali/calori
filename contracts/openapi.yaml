@@ -9051,6 +9051,10 @@ components:
               task: {$ref: '#/components/schemas/Task'}
               estimated_usd: {$ref: '#/components/schemas/Decimal'}
               requests: {type: integer, minimum: 0}
+              input_tokens: {type: integer, minimum: 0, description: 'Uncached input tokens (model E38).'}
+              cached_input_tokens: {type: integer, minimum: 0, description: 'Billed at the cached-input rate when a Price states one, else at the input rate.'}
+              output_tokens: {type: integer, minimum: 0}
+              thinking_tokens: {type: integer, minimum: 0, description: 'Billed at the output rate (admin-10.47).'}
     Count:
       type: string
       description: 'How many of a Unit: a positive exact number as a string — whole by default, halves only when the eater
