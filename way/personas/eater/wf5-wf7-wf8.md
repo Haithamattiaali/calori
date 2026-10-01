@@ -1482,3 +1482,40 @@ Nothing new. The earlier lists stand.
 ## Second fix by the session (2026-10-01), after closing check 2
 1–2. eater-7.4 line 4: a Day with no Activity, a stated 120 kcal sample; the Activity row reads "120 kcal active" (the row's own total form, as 7.16); `GET /v1/activity?diary_day_id=…` (the file's one name for the call, §6) returns exactly one record with the sample's `provider_record_id`; `GET /v1/reports/day` returns `active_energy_kcal: 120`.
 3. eater-8.32 line 4: the cereal bar's detail shows its fiber ("· of which fiber 6 g"), as the story promises.
+
+
+## Lens verdict — closing 3 (2026-10-01)
+
+**pass**: 0 defects. All three closing-2 defects are fixed, and the two rewritten lines agree with every story they touch.
+
+An agent that did not write this file checked it, as a scoped check under `way/personas/_lens-verifier-brief.md` and its addendum, with `way/vocabulary.md` binding. The scope was the two lines changed in "Second fix by the session, after closing check 2" (commit 602c769): 7.4 line 4 and 8.32 line 4. They were checked against 7.1, 7.4 lines 1–3, 7.5, 7.16 and §6's API names, and against 8.32 lines 1–3 and 5. The diff of 602c769 touches only those two lines and the fix note. Nothing else was re-audited. "Line n" means a story's nth acceptance line.
+
+### The 3 closing-2 defects
+
+| # | status | the line now |
+|---|---|---|
+| 1 | **fixed** | 7.4 line 4: "`GET /v1/activity?diary_day_id=…` (*proposed*)". This is §6's name ("`GET /v1/activity?diary_day_id=`") in the same form as 7.5 line 2. `?day=` now appears only in the dated fix and verdict notes, never in a story. |
+| 2 | **fixed** | The Given now fixes the figure: "Sam's Day has no Activity yet and a 120 kcal active-energy sample is added". So the expected row text "120 kcal active" is the Day's whole total. It has the same "N kcal active" form as 7.16 line 1 ("200 kcal active · …"), and "+120" is gone. The API check now names its fields: the record's `provider_record_id` (as in 7.5 line 2, FR-063 "provider record ID") is the sample's, and `GET /v1/reports/day` returns `active_energy_kcal: 120`. The second field is the name 7.2 line 3 and 7.20 line 3 already use. |
+| 3 | **fixed** | 8.32 line 4: the cereal bar's detail reads "Carbohydrate 30 g (as the source states it: includes fiber) · of which fiber 6 g". These are line 1's words, and the bar's label gives the same figure ("of which fiber 6 g"). Both details now have one shape (carbohydrate, its convention, fiber), and the story's "fiber beside it" holds on every screen that shows carbohydrate. |
+
+### Checked, not counted
+
+- **7.4 line 4 and 7.1 (access).** The Given does not restate that Active energy is shared. The file's Sam already shares it: 7.1 line 2 has "he allows Workouts and Active energy only", and 7.6 keeps that state ("Sam later turns on Body mass"). 7.4 lines 1–3 rely on the same state. The `CONSENT_REQUIRED` path in 7.1 line 3 does not arise.
+- **7.4 line 4 and 7.16 (Fixed mode).** Sam is in Fixed mode (§0.2). 7.16 line 1 shows the row in that mode as "200 kcal active · not added to your food Target (Fixed)". In this file "reads" names what a place shows, not all of it: 7.4 line 1 has the same row read "Synced 07:30", which 7.16 does not mention. So "120 kcal active" with the Fixed suffix after it satisfies both lines.
+- **7.4 line 4 and 7.10 (one record per sample).** The line needs the sample kept as its own Activity record. Three sources support this: map §1.3, row "HealthKit → app → API | import workouts, active energy, body mass | Activity, Weight"; FR-063; and FRD §17 ActivityEvent "provider/source IDs". 7.10's `/m` line totals the Day as the provider aggregate. With one 120 kcal sample and no workout, that total is 120. No line conflicts with it.
+- **§6 bookkeeping (older than this fix).**
+  - §6's `GET /v1/activity?diary_day_id=` row lists "used in 7.5, 7.11–7.14" and not 7.4.
+  - `active_energy_kcal` is in neither FRD §18 nor §6. It is used in 7.2 and 7.20 and now in 7.4.
+  - Neither are the Activity record fields, such as `provider_record_id` (7.5 line 2).
+  - So §7 item 23 ("Every row of §6") does not send these names to a dated delta.
+  - The fix only reused names the file already had, one name each. This is not a defect of the two lines, but the model phase should add them to §6.
+- **8.32 line 4 and line 1 (sugars).** The bar's meal report (line 1) shows "· sugars 12 g", and its detail line does not quote sugars. Since "reads" is not exhaustive, the detail may show them. The story promises fiber beside carbohydrate, not sugars on the detail. Line 2 (sugars kept apart) and line 5 (`sugars_g`) still hold.
+- **8.32 line 4 and lines 3 and 5.** Line 4 shows no net figure, which fits line 3's default ("Show net carbohydrate" off). Its two conventions are line 5's `carbohydrate_basis` values `includes_fiber` and `excludes_fiber` (§6). Both fixtures add up exactly: 4·4 + 4·30 + 9·6 = 190 and 4·6 + 4·34 + 9·1 = 169. "Food record" is the map's "**Food** (reference record)" (§1 ¶4), not a second name, and this fix did not change it.
+
+### Counts
+
+A recount gives 103 stories and 328 lines (292 `/r`, 28 `/m`, 8 `/s`), the same as §9.4. The fix rewrote two lines and added none.
+
+### Cross-lens (for the model phase join; not counted)
+
+Nothing new. The earlier lists stand.

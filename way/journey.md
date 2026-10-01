@@ -13,3 +13,10 @@
 - Governor: 6 gaps, fixed, re-audit left 2 parts, fixed. Map closed.
 - Swift 6.4 installed locally for the client core's `swift test`.
 - Next: persona lenses in parallel.
+
+## 2026-10-01 · Persona lenses
+- Five lenses: Eater (fanned out: research + 4 journey files), Nutrition approver, Support agent, Platform admin, Auditor — 623 stories in all (eater 367, admin 75, approver 70, auditor 59, support 52), every one with a runtime acceptance line.
+- Every lens failed its first verifier (16–27 defects each); fix rounds, then the session's own diagnosis after two rounds; every file's last verdict is pass.
+- Deltas: D2 (one vocabulary for roles, states, errors, places), D3 (Consent "Not given").
+- Lessons: lenses revised in parallel drift; cross-lens mismatches are joined once in the model phase; a session fix must be re-read against every story it touches.
+- Next: governor audit of the lenses, then Model and architecture (start with the join: one fixture set, one event catalogue, the conflicts lists).
