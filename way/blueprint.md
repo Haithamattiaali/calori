@@ -25,14 +25,102 @@ Written 2026-10-01 at Tailor. Brief: `way/brief/frd-v1.0.md` (the owner's FRD v1
 ### Environment facts that shape the hows (read 2026-10-01)
 
 - This session runs in a Linux cloud container: Node 22, Python 3.11, Java (Firebase emulators possible), Docker, Postgres client; **no Xcode, no Swift, no gcloud, no `gh`** (GitHub through its MCP tools).
-- The iOS surface is compiled and proved on **GitHub Actions macOS runners** (free: the repo is public); its walks run on the iOS simulator there and return screenshots as run artifacts. No Swift toolchain can be installed here (download.swift.org is denied by the network policy; no Docker daemon), so every Swift compile is a CI run — the client stays thin and the nutrition core lives on the server (brief §15.1).
+- The iOS surface is compiled and proved on **GitHub Actions macOS runners** (free: the repo is public); its walks run on the iOS simulator there and return screenshots as run artifacts. Update 2026-10-01: he widened the environment's network access to unrestricted, so the Swift 6.4 Linux toolchain is installed here for `swift build`/`swift test` of the client's platform-neutral core; SwiftUI, HealthKit and simulator walks still need the CI macOS runner. The nutrition core lives on the server (brief §15.1).
 - The Claude Design canvas is reachable from this session (the Design artifact type), so the prototype boards are drawn there.
 - The keep-going loop, armed 2026-10-01: this cloud session takes the next open ledger row on every turn; background agents' completion notices start the next turn; a self check-in (`send_later`, trigger `trig_01TqQZcLTZVn6idwgPjS7Hd6`, first fire 2026-10-01T05:11Z, re-armed after each fire while work remains) is the fallback when a turn ends with nobody there. It holds only at the yes and at a true blocker; every session resumes from the pushed branch and `way/` (`/build-loop` lives on his Mac, not here).
 - The repo is public: synthetic data only, no secrets in the tree, ever.
 
 ## §1 The map
 
-(written at Map)
+Final map, 2026-10-01. Built from the first map (`way/map-first.md`, from the brief) and research cycle 1 (`way/research/r1-*.md`; refutation in `way/research/r1-refute-a.md`, `r1-refute-b.md`). Research changes are cited by finding id: C = competitors, F = food sources, P = platforms, R = rules and trends. A finding marked `assumption` in its file is cited with "(assumption)".
+
+### 1 · The operation in one paragraph
+
+An **adult** (18+; R13, R16, R22) who eats home-cooked, mixed and culturally specific food — Egyptian, Saudi, wider Arab — wants to lose, keep or gain weight without re-weighing and re-explaining the same food every day. Today they weigh a habitual portion, photograph plates, describe recipes and ask a chatbot for totals, and the chatbot forgets, drifts, double-counts and resets (brief §1.1). The big trackers do not fix this for them: no personal portion unit (C6), weak cooked-yield handling outside Cronometer (C22), crowd-sourced numbers people distrust (C9, C50), little offline (C26, C35), history edits limited to delete-and-undo (C39), and no real Arabic (C16, C29, C36). In Sips & Bytes the eater defines a bite, spoonful, cup or mixed portion **once** — a versioned personal **Unit** with its evidence — then logs "three cheese bites and a cup of laban" in a few taps, by voice or from Siri and a widget (C46, C54, P22–P24); copies a previous meal or day and saves meal **Templates** (C5, C23, C45); photographs a table, adds words for what the camera cannot see (C32, C49, R40) and plans a meal under a calorie cap and macro limits that a solver verifies; confirms what was actually eaten; corrects history without silently rewriting it; and reads a meal report and a day report that reconcile exactly with an append-only ledger, written back to Apple Health (C12, C56, P29). AI only interprets; reviewed sources supply numbers (Tier A USDA FoodData Central, CC0, F1–F5; Tier B approver-built recipe records for regional dishes, F12–F19); deterministic code calculates; the eater approves what is recorded. Behind the app a nutrition approver curates reference foods, dialect-tagged Arabic aliases (F11, F27) and versioned safety policy (calorie floors R32–R35); a platform admin rolls models forward and back (P1–P5); a support agent helps without seeing a diary unless access is granted just in time; an auditor reads the trail. It is a general-wellness product, never medical advice (R6, R16). **Success** = a repeat log in ≤10 s median and the fewest taps per path (C4, C34), ≥70 % of week-two logs reusing a unit or template, zero unexplained ledger discrepancies, and the eater's intake trend within the approved target (brief §1.5).
+
+### 2 · Personas, and the hidden-persona hunt
+
+| persona | who | surface | from |
+|---|---|---|---|
+| **Eater** | adult 18+ tracking intake for weight or exercise; "six bites", not grams; English, Arabic (Egyptian, Gulf, MSA) and code-switching; logs at the table, one-handed, often in a hurry | iOS app (+ Siri, widget) | brief §1.2; R13, R16; C46 |
+| **Nutrition approver** | qualified reviewer: approves reference food records and Tier B recipe records for regional dishes, dialect-tagged aliases, the versioned safety policy (calorie floors, deficit caps, tracking-only rules) | admin console | brief §3.3, FR-080; F12–F19, F27; R32–R35 |
+| **Support agent** | answers eater issues; sees failed jobs and account state; diary access only by a just-in-time, time-boxed, approved, audited grant | admin console | FR-081 |
+| **Platform admin** | rolls model IDs, prompt and schema versions and configuration through shadow → canary → rollout, with a kill switch; per-user quotas; roles | admin console | brief §16.4, FR-080; P1–P5 |
+| **Auditor** (hidden, found by the first map) | reads only: just-in-time access grants, consent changes, deletion completion records, policy and registry history — the privacy reviewer/DPO seat the launch markets ask for | admin console, read-only | FR-081/082; R24, R25 |
+| Household member (hidden) | shares recipes; own portion weights | — | **P1** (brief §1.2) — drop list |
+| Owner who pays (hidden) | a paid AI tier through in-app purchase | — | brief §23.3 "proposed"; R9 — drop list for v1, with per-user quotas instead |
+| Minor (hidden, excluded) | under 18 | — | R16 forbids Gemini for under-18 services; R13 rates calorie tracking 9+ → an age gate keeps them out |
+| System actors | AI analyzer (Gemini 3.8 Flash for images and recipes, 3.5 Flash-Lite candidate for text intent; P1–P5) · nutrition resolver (approved records → Tier A → recipe calculation → analogue) · planner (OR-Tools CP-SAT) · HealthKit (on device: reads activity and weight, writes food correlations; P29–P30) · outbox sync · retention and deletion jobs · model registry | API, iOS | brief §15–16 |
+
+### 3 · The interaction table
+
+| from → to | action | artifact | rule | value event |
+|---|---|---|---|---|
+| Eater → app | confirm age 18+, give separate consents (diary processing; sending photos/voice/text to Google's AI, named; each Health type; mic; photos; optional research) | Consent records (version, time, method) | explicit, per purpose, one-tap withdrawal, no feature paywalled behind consent (R2, R3, R21, R22, R31) | consents recorded |
+| Eater → app | answer the optional safety screen (SCOFF-style items, pregnancy, breastfeeding, GLP-1) | SafetyScreen | ≥2 SCOFF yes, pregnancy or breastfeeding → tracking-only; GLP-1 → protein-first, no added deficit (R35, R37, R38, R41) | mode chosen |
+| Eater → app | set a target | GoalPlanVersion | Mifflin–St Jeor estimate ±10 % (R36); policy defaults; floor 1,200 kcal, hard stop below 1,000 (R32–R34); deficit cap; approval | target approved |
+| Eater → app | create or recalibrate a Unit; weigh the cooked pot for a Recipe | Unit / Composite / Recipe versions | versioned, evidence status, acyclic, mass balance, cooked yield first-class (C22) | unit approved |
+| Eater → AI analyzer | photo, label, voice, or photo + words | Analysis (draft) | schema-constrained output, server validation, no temperature (P5), ≤2 questions, text in images is untrusted, Health data never sent (R7) | draft ready |
+| Analyzer → resolver | candidate foods | Food reference versions | resolver order FR-025; AI cannot verify; alias by dialect (F27) | numbers resolved |
+| Eater → ledger | consume: tap a recent Unit, copy a meal or day, log a Template, Siri, widget, approve an Analysis, confirm a Plan | Entry (event) | one idempotent consume command for every surface (C46, P22–P24); server-resolved snapshot | entry accepted, day revised |
+| Ledger → HealthKit | write the entry as a food correlation; rewrite on correction, delete on void | HealthKit sample ids on the Entry | only after the Health consent (P29, R1, R7) | Health updated |
+| Eater → planner | plan from available foods + constraints | Plan | solver verifies with unrounded values; infeasible explained; floor policy respected | plan proposed |
+| Eater → ledger | correct / void / restore / move day | Entry (supersedes) | expected revision; scope choice: this entry vs future default | effective entry replaced |
+| HealthKit → app → API | import workouts, active energy, body mass | Activity, Weight | dedupe; activity mode; "no data" never shown as "denied" (P30) | activity reconciled |
+| Ledger → Eater | meal and day report; 7/28/custom periods; coverage | Day projection | target version per day; 4/4/9 shares; coverage | progress understood |
+| Eater → API | export; delete account | Privacy job | in-app, no email or phone, ≤30 days, processors told, Sign in with Apple revoked, completion record (R4, R23, R31) | export delivered / deletion recorded |
+| Approver → reference | approve a food record or a Tier B recipe record; add a dialect-tagged alias | Food version, Alias | evidence + licence on every record (F1, F8); cross-check NNI/SFDA, never copy (F12–F19) | record approved |
+| Approver → policy | version calorie floors, deficit caps, thresholds, retention | Policy version | qualified review | policy live |
+| Admin → registry | roll a model/prompt/schema version; kill switch | Registry version | shadow → canary → rollout; frozen model ids, no `latest` (P1–P4) | config live / rolled back |
+| Support → eater account | request just-in-time diary access | Access grant | approval + time box + audit | issue resolved |
+| Auditor → trail | read | Audit events | read-only | trail reviewed |
+
+### 4 · Workflows and the vocabulary
+
+- **WF-1 Onboard and set a target** — age gate → consents → profile → optional safety screen → resting energy → maintenance → target and macros (floor policy) → activity mode → approve. Tracking works before a target exists (brief §3.2).
+- **WF-2 Define a Unit** — simple, composite (bread rules), or Recipe with weighed ingredients and **weigh-the-pot** cooked yield; by typing, scale photo or label photo; approve a version.
+- **WF-3 Log what I ate** — tap a recent Unit, **copy a meal or day**, log a **Template**, speak or type, **Siri or a widget**; one-tap with Undo; offline outbox; meal and day report; written to Apple Health.
+- **WF-4 Capture and analyse** — photo / label / scale / voice / **photo + words** → draft → ≤2 questions → resolve → review. An input path into WF-2, WF-3 and WF-5.
+- **WF-5 Plan a meal and confirm it** — available foods + constraints → solver → Plan → Ate as planned / Change / Not eaten.
+- **WF-6 Correct history** — correct, void, restore, move day; scope this entry or future default.
+- **WF-7 Activity** — HealthKit and manual exercise → dedupe → activity mode → budget.
+- **WF-8 Reports and progress** — meal and day report; 7/28/custom periods; coverage; weight trend; target history.
+- **WF-9 Privacy** — consents, export, delete account.
+- **WF-10 Govern the reference and the AI** — approve food and recipe records and aliases, version policy, roll models and config, just-in-time access with audit.
+
+Vocabulary — one name per thing; the screen, the code and the logs use these words: **Unit** · **Composite** · **Recipe** · **Food** (reference record) · **Alias** (with dialect: EG, Gulf, MSA) · **Template** (a saved meal) · **Entry** · **Day** · **Target** · **Plan** · **Analysis** · **Evidence** (label-verified · recipe-calculated · measured · estimated analogue · user-defined) · **Correction** · **Void** · **Restore** · **Pending** · **Activity** · **Consent** · **Policy** · **Grant** (just-in-time access). Tabs: **Today · Capture & Plan · My Units · Progress**. Arabic labels are fixed once in the string catalogue and never vary between screens.
+
+### 5 · Done-when per workflow
+
+- WF-1: a new adult finishes onboarding in English or Arabic, sees resting energy (±10 % note), maintenance, a target not below the policy floor, macro grams and assumptions, approves; Today shows the target and the activity mode. A safety-screen answer of pregnancy gives tracking-only mode with neutral wording. Under 18: no account.
+- WF-2: "cheese bite" saved as 5.4 g cheese + 1.5 g oil + 8 g bread; a Recipe saved with a weighed cooked yield gives AT-06's numbers; My Units lists them; Today's total unchanged.
+- WF-3: a recent Unit logs in ≤2 taps from Today; "copy yesterday's breakfast" logs one meal; meal report and day report appear and reconcile; Undo removes exactly one entry; offline logs sync once; the entry appears in Apple Health and disappears on void.
+- WF-4: a plate photo + "fried in ghee" returns editable chips with evidence badges and a range; nothing is consumed until approved; Arabic voice "١٨ مش ١٥" becomes a correction.
+- WF-5: cap 500 kcal + carbs ≤30 % → counts satisfying unrounded constraints, or "infeasible" naming the blocking constraint; "Ate as planned" records exactly one meal.
+- WF-6: "18 not 15" shows old, new and delta and replaces the effective entry; yesterday's correction leaves today untouched.
+- WF-7: one workout from Health + a matching manual entry → one contribution; in fixed mode the food target does not grow.
+- WF-8: the day report shows target, consumed, remaining, shares summing to 100.0 %, coverage; a week with 2 missing days shows coverage, not zeros.
+- WF-9: export downloads entries, units, recipes, targets and consents; delete account removes private data and media within the policy window and leaves a completion record without identifiers.
+- WF-10: an approver approves a Tier B recipe record (e.g. فول مدمس) with its evidence and licence; the eater's resolver uses it; an admin rolls a model version back and manual logging keeps working; a support grant expires and its use shows in the auditor's trail.
+
+### 6 · The what-else pass (configuration points, never future code branches)
+
+- **User settings:** language (en/ar), numerals (Arabic-Indic/Western), dialect (EG/Gulf/MSA — drives لبن/laban resolution, F27), display units (g/oz, kg/lb, kcal/kJ), diary-day boundary, activity mode, one-tap logging on/off, "hide numbers" view (R37), Health write on/off.
+- **User rules:** accompaniment (bread per dipped bite, exceptions), preparation defaults (tea milk, laban unsweetened), with precedence: this entry > named variant > household default.
+- **Policy (approver-versioned):** calorie floor 1,200 kcal, hard stop 1,000 kcal, deficit cap (smaller of 15 % and 500–750 kcal), gain +10 %, GLP-1 protein-first 1.2–1.6 g/kg, tracking-only triggers, energy-mismatch threshold (>10 % and >10 kcal), component-sum tolerance, planner increments, clarification limit 2, retention (raw scans 30 days, audio 24 h).
+- **Registry (admin-versioned):** model ids per task, prompt and schema versions, rollout stage, kill switch, per-user daily AI quotas.
+- **Reference (approver-curated):** foods with evidence + licence, Tier B recipes, aliases with dialect.
+- **Fixed vocabulary:** the evidence badge set and the units' kinds (C1 lets admins configure values, not invent concepts).
+
+### 7 · Open questions — research could not close them; none blocks the build
+
+| question | why it matters | owner, when |
+|---|---|---|
+| Data-residency region (Dammam me-central2 vs one region; R18–R20, R26, R28) | Saudi/Egyptian cross-border rules for health data | owner + counsel, before hosting is chosen (ship rows are dropped now) |
+| Licences from SFDA and NNI (F12–F19) | turns cross-checks into authoritative local numbers | owner, any time; records upgrade by a delta |
+| Egypt PDPC licence for sensitive data before an Egyptian launch (R28, R29) | legal launch gate, window closes ~1 Nov 2026 | owner, before launch |
+| Free vs paid split (brief §23.3, R9, C7, C21) | the loudest complaints are paywalled basics | owner, after MVP |
+| Blocked research hosts (USDA FDC, Open Food Facts, Apple/Google docs, app stores) | many findings were `assumption` | **closed 2026-10-01**: he widened network access; the refuters re-opened the sources |
 
 ## §2 The blueprint
 
