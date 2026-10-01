@@ -707,3 +707,100 @@ Tensions with other personas or inside the model, for the model phase — never 
 | Also used | FR-009, FR-016, FR-036, FR-076, FR-071, AT-06, AT-08, AT-21, AT-32, NFR-01, NFR-02, NFR-05, NFR-06, NFR-08, FRD §7.2, §10.1–10.2, §13.1, §14, §16.5, §18 | as cited in each story |
 
 **Count:** 69 stories (43 in WF-3, 26 in WF-6).
+
+---
+
+## Lens verdict (2026-10-01)
+
+**fail**: 16 defects.
+
+The verifier did not write this lens. It was checked against `way/blueprint.md` §0–§1, `way/vocabulary.md` (delta D2, binding), `way/brief/frd-v1.0.md`, `way/personas/_lens-brief.md`, care.md ("The questions", "By size"), `way/research/r1-*.md` with both refutations, and `way/personas/eater/research.md`, which was read as context and is verified separately.
+
+These parts hold:
+- The count is right: 69 stories (43 in WF-3, 26 in WF-6) and 256 acceptance lines (201 `/r`, 51 `/s`, 4 `/m`). Every story has a `/r` line. Every id is `eater-<WF>.<n>`, numbered without gaps.
+- Every story traces to the map or the FRD. These all have stories:
+  - every WF-3 and WF-6 step in map §4, and both done-when clauses in §5;
+  - FR-039 to FR-043, FR-045 to FR-047, FR-069, FR-070, FR-014, FR-031 and §2.3.
+- The fixture arithmetic reconciles everywhere it was checked:
+  - the Day totals: 290 and 1,580; 1,098 and 772;
+  - 4/4/9 for every Unit;
+  - the largest-remainder shares: 33.4/33.3/33.3, 8.1/48.4/43.5 and 21.4/35.2/43.4;
+  - every correction delta from 6.3 to 6.23.
+- Every cycle-1 finding the file cites stands in the refutations: C5, C12, C15, C23, C34, C35, C45, C55, C56, F27, P15, P22–P24, P28–P30, P34, P36, R3, R7 and R37. Only the parts the refutations kept are used.
+  - C26, C27, C46, C54 and the dropped parts of C4 appear only in the line that says they are left out.
+  - The gap on Siri phrases in Arabic (P22) is labelled `assumption`.
+- Every name marked *(proposed)* is listed in Conflicts item 15: Day picker, Entry details, the Templates list, Unarchive, the Settings placements and the five endpoints.
+- Every shared story is marked, and the other lens files have the matching stories:
+  - approver-10.28 and approver-10.42;
+  - the admin lens's "Rollouts and roll backs … exactly as they were" and "the kill switch never blocking food logging";
+  - the support lens's Jobs → Sync row.
+
+### Defects
+
+1. **FR-044, the time zone · complete. The coverage table is not true here.** FR-044 says: "The selected day and time zone remain visible." eater-3.1 says the opposite for the usual case: "with the device back in Asia/Riyadh the header names no zone". After Start new day, eater-3.32 shows only "Thu 1 Oct, empty". So the coverage row "FR-044 · … selected Day and zone visible" claims more than the stories give. Either show the zone (in the header or the Day picker), or record the narrowing in the Conflicts list.
+
+2. **AT-26, mixed names in a correction · complete. The coverage table is not true here.** AT-26 says: "Arabic '18, not 15' and mixed English-Arabic food names are transcribed and resolved as correction, not new consumption." The coverage row points to 6.2 and 6.5. Neither has a mixed name:
+   - 6.2 uses "18 not 15" and «١٨ مش ١٥», with no food name;
+   - 6.5 uses Arabic only: «التلبينة كانت ١٨ مش ١٥» and «١٨ مو ١٥».
+   Mixed names appear only as consumption (3.10: "ضيف ٣ cheese bites و cup laban"). No line takes a correction that names its food in mixed English and Arabic and resolves it as a correction.
+
+3. **FRD §8.2, "Apply that measurement to today's lunch" · complete.** §8.2 defines four phrases. Three have a typed or spoken acceptance line: "18 not 15" (6.5), "add another 3" (6.6) and "I changed my spoon weight" (6.10, «لقمة العيش بقت ٩ جرام»). The fourth has none. eater-6.11 promises "so that 'apply that to yesterday's lunch' is possible", but its lines only open My Units → "Apply to past entries…" and tick a list. No line says what typing or saying "apply that measurement to today's lunch" does. And no line covers today's lunch at all; 6.11 tests 30 Sep.
+
+4. **FRD §2.6, the biscuits preview · complete.** §2.6 uses the biscuits example for the full preview: "old and new quantities, meal difference, daily difference, and whether the correction applies only to this entry or also creates a future default." The file shows that example only partly:
+   - eater-6.7 shows "125 → 50 kcal (75 less)", with no meal line, no Day line and no scope line;
+   - 6.2 shows only "25 g → 10 g".
+   This also breaks the file's own rule in 6.3: "a change of count has no future default; a change of weight offers one". 25 g → 10 g is a change of weight.
+
+5. **Step C, slow and timed-out sentences (AT-32, NFR-03) · complete.** eater-3.14 cites AT-32: "AI times out. Recent units and manual logging still work; pending analysis is not reported as consumed". Its lines cover the Kill switch, the quota, a withdrawn Consent, and "50 recent-Unit logs" while a mock analyzer times out. No line covers a sentence typed or spoken into quick-add while its Analysis is Processing, or after it times out and becomes Failed. Two things are missing:
+   - what the eater sees while it runs, and whether they can cancel (NFR-03; care group 4: "When a task takes long, does progress move honestly … and offer cancel?");
+   - proof that nothing is consumed afterwards.
+   D2's Analysis states Processing and Failed appear in no story.
+
+6. **WF-6 step A, a spoken or typed correction when sentence reading is unavailable · complete.** 6.2 and 6.5 depend on sentence reading. No line says what typing or saying "18 not 15" does in any of these cases:
+   - the Kill switch is On;
+   - the AI quota is used up;
+   - the Consent for Google's AI is Withdrawn;
+   - the phone is offline.
+   3.14 and 3.25 cover these cases for logging only. FRD §7.2 says an AI outage "shall not block … ledger access". eater-6.21 ("When she corrects «١٥ معلقة تلبينة» to 18", offline) does not say how she makes the correction.
+
+7. **WF-6, permission denied · complete.** FRD §18 asks for "ownership verification on every private operation", and NFR-07 and the lens brief's "permission denied" path ask for it to be tested. The file never tests these cases:
+   - Mona's token with Sam's entry_id on `POST /v1/consumption/{id}/corrections`, `/void`, `/restore` *(proposed)* or `GET /v1/consumption/{id}/history` *(proposed)*;
+   - a request with no token (`UNAUTHENTICATED`).
+   Only 3.8 tests another eater's id, and only on consume.
+
+8. **Editing an Entry's eaten time · traced and complete.** Three lines treat the eaten time as something the eater can already edit:
+   - eater-6.17: "unless Sam also edits the time";
+   - eater-6.24: "When its eaten time is changed, Then the sample appears at the new time";
+   - eater-3.33: "the time can be changed before Log".
+   No story defines this edit. Nothing says where it is offered, what its preview shows, which Day the Entry lands on when the new time crosses the boundary, or which API carries it. FRD §18 lists a correction as "Replace quantity, unit, or diary day" only.
+
+9. **Step E, empty states · complete.** No line shows these screens when they have nothing in them:
+   - the Templates list in My Units, and the Templates section of quick-add, before any Template exists;
+   - "Copy from another Day" or "Copy this Day" (3.16, 3.18) on a Day or meal with no food Entries;
+   - the Home Screen widget for an eater with no recent Units yet (3.22).
+   The lens brief says "Include the unhappy paths: empty, …". Care group 4 asks: "What does this screen show when there is nothing in it yet, and does it say what to do next with the button to do it?"
+
+10. **eater-6.15, C10 · sourced.** The line says: "unlike a tracker whose undo lasts about 30 seconds (C10, weak: from a competitor blog)". `r1-refute-a.md` puts this exact point on its list of high-impact assumptions (item 3: "C10's Undo window rests on a competitor blog") and says such points "may enter the records only with the label `assumption`". The line says "weak" instead. 3.5 and 6.14 also cite C10 without the label.
+
+11. **eater-3.8, the wrong code for a refusal · vocabulary.** The line says: "names Sam's unit_version_id, Then it returns `UNIT_NOT_FOUND` exactly as for an id that never existed". D2 gives this case its own code: "`NOT_FOUND` (also for another user's ids — never reveal existence)". The other eater file `wf2-wf4.md` (line 139) answers a request for another eater's Unit with 404 `NOT_FOUND`. This file lists `NOT_FOUND` on line 14 but never uses it. So one refusal now has two codes, which is the problem D2 was written to fix.
+
+12. **State names outside D2 · vocabulary.**
+    - eater-3.21: the Siri snippet reads "Logged 3 cheese bites · waiting to send", while Today shows the same Entry as Pending. That is two words for one D2 state.
+    - eater-6.22: "the Entry is marked 'Needs your choice'". D2 has no such Entry state (its states are Pending → Confirmed, Corrected, Voided → Restored), and Conflicts item 15 does not list it.
+    - Conflicts item 6: "an offline command naming a Superseded Unit version". In D2, Superseded is a state of Food, Tier B recipe record, Alias and Policy versions, never of a Unit. A Unit's states are Draft → Saved (version n) → Archived.
+
+13. **Four FRD names not marked proposed · vocabulary.** Line 12 calls these "FRD names used as written": the **quick-add** control, the **count stepper**, the **correction preview** and the Day's **timeline**. None is in §1 ¶4 or in D2; D2's Places list names Analysis review, Unit editor, Meal planner, Meal review and Settings. Conflicts item 15 does not list them either. D2 says: "A word not here and not in §1 ¶4 is added by a dated delta first." The file already marks two other names taken from the FRD as proposed (Day picker, Entry details). Treat these four the same way.
+
+14. **Lines that cannot be observed as written · observable.**
+    - eater-3.5: "with VoiceOver off its length is a value chosen on the served screen (care group 3; `assumption` until then)". There is no value to check.
+    - eater-3.12: "Given an Analysis with three unclear words". It names no words and no eater, so it cannot be seeded.
+    - eater-3.29: "Then new Entries follow his 03:00 boundary from the next Day". It names no Entry time, no Day and no screen. It also does not say where the last Day under the 12:00 boundary ends once the 03:00 boundary returns.
+    - eater-3.31: "Then the Entry takes the device's current zone without a question". It names no screen or field where the zone can be read.
+
+15. **eater-3.20, the tap count · observable.** The line says: "When Mona taps it in quick-add … tapping Log … — two taps in the recorded walk". The walk starts inside quick-add. WF-3's done-when counts taps "from Today", and opening quick-add is itself a tap. The story's "so that 'usual breakfast, but two cheese bites today' is still two taps" cannot hold either: its own second line needs a − tap before Log.
+
+16. **Matching style not checked · experience.** research.md Part 2 §4 sets these style rules, and no line in WF-3 or WF-6 checks them:
+    - "Calm. No confetti, no streak flames, no sounds" and "Discreet. Nothing on screen or sound draws the family's attention to logging (E24)". No line checks that a log, an Undo or an over-target Day makes no sound and shows no celebration.
+    - "Arabic text about 10% larger optically and with line height for dots and marks (E41)", and EX-33 ("Arabic gets its extra line height").
+    - "Dark mode is a true dark (E28)".
+    eater-3.41 checks text size, contrast, VoiceOver, the keyboard, Reduce Motion and mirroring, but none of these.
