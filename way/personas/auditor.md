@@ -25,7 +25,7 @@ What the Auditor reads:
 
 **The job.** The Auditor has to show a regulator, management or a complaining eater that access was lawful, documented and limited. They also catch what must never happen before anyone else does.
 
-This is a hidden persona, found by the first map (`way/map-first.md` §2, from FR-081/082). FRD §23.2 names the seat: "Privacy/security reviewers approve consent, retention, access, and target-market compliance" (see Conflicts, item 1).
+This is a hidden persona, found by the first map (`way/map-first.md` §2, from FR-081/082). FRD §23.2 names the seat: "Privacy/security reviewers approve consent, retention, access, and target-market compliance" (see §7 A1).
 
 ---
 
@@ -63,7 +63,7 @@ Every source was opened in this run on **2026-10-01**. Quotes are short. A claim
 | **Capacity (adults)** | K2 Art. 11(1)(c): "Consent shall be given by a person who has full legal capacity" (R22) | E1 definitions (Sensitive Personal Data): "in all cases, data relating to children is considered to be sensitive data" (R28) | — | the age confirmation is recorded with the Consents (auditor-9.9) |
 | **Rights requests and deletion** | K2 Art. 3(1)(a): act "within a period not exceeding (30) days"; 3(1)(d): "document and keep record of all received requests including oral requests". K2 Art. 8(2)(c): destroy "all copies … including backups" (R23). K1 Art. 18(1): data kept after the purpose ends must not contain "anything that may lead to specifically identifying Data Subject" | E2: "Requests made by data subjects … must be documented and maintained in accordance with the ER's record-keeping requirements" (`opened (secondary)`) | Art. 12(3): one month (R31); [Art. 17](https://gdpr-info.eu/art-17-gdpr/)(1): "without undue delay"; Art. 17(3)(b), (e): no erasure where processing is needed "for compliance with a legal obligation" or "legal claims" | Privacy jobs on a 30-day clock; a completion record without identifiers; Audit trail events kept under the account id, which leads nowhere once the account is deleted (auditor-9.10 to 9.14) |
 | **Access logs for health data** | K1 Art. 23(1): "Restricting the right to access Health Data … to the minimum number of employees". K2 Art. 26(3): "different level of access to data among employees". K2 Art. 26(4): "Document all stages of Health Data Processing and provide the means to identify the person in charge for each stage" (R24) | E1 Art. 4(6): measures to "avoid any Personal Data Breach, damage, alteration or manipulation" | [Art. 32](https://gdpr-info.eu/art-32-gdpr/)(1)(b): "ongoing confidentiality, integrity" | every read inside a Grant names the Support agent and what was read; every refused read or write is logged (auditor-10.3 to 10.13) |
-| **Breach evidence** | K2 Art. 24(1): notify "within a delay not exceeding (72) hours of becoming aware", with "time, date, and circumstances … actual or approximate numbers of impacted Data Subjects". K2 Art. 24(3): "keep a copy of the reports … and document the corrective measures". [K4](https://sdaia.gov.sa/en/SDAIA/about/Documents/PersonalDataBreachIncidents.pdf) Stage Three: "retain copies of the documents submitted to SDAIA … the corrective actions taken, and any relevant proper records" | E1 Art. 7: report "within seventy two hours", including "the approximate number of Personal Data affected"; tell data subjects "within three business days as of the date of reporting". E2: the breach is "documented in a secure digital record" | [Art. 33](https://gdpr-info.eu/art-33-gdpr/)(1): 72 hours "where feasible"; 33(3)(a): "approximate number of data subjects"; 33(5): "The controller shall document any personal data breaches, comprising the facts … its effects and the remedial action taken" | scope a suspected incident by actor and window, count the distinct accounts read, export it verifiably (auditor-10.35). The breach record itself has no home in the map (Conflicts, item 2) |
+| **Breach evidence** | K2 Art. 24(1): notify "within a delay not exceeding (72) hours of becoming aware", with "time, date, and circumstances … actual or approximate numbers of impacted Data Subjects". K2 Art. 24(3): "keep a copy of the reports … and document the corrective measures". [K4](https://sdaia.gov.sa/en/SDAIA/about/Documents/PersonalDataBreachIncidents.pdf) Stage Three: "retain copies of the documents submitted to SDAIA … the corrective actions taken, and any relevant proper records" | E1 Art. 7: report "within seventy two hours", including "the approximate number of Personal Data affected"; tell data subjects "within three business days as of the date of reporting". E2: the breach is "documented in a secure digital record" | [Art. 33](https://gdpr-info.eu/art-33-gdpr/)(1): 72 hours "where feasible"; 33(3)(a): "approximate number of data subjects"; 33(5): "The controller shall document any personal data breaches, comprising the facts … its effects and the remedial action taken" | scope a suspected incident by actor and window, count the distinct accounts read, export it verifiably (auditor-10.35). The breach record itself has no home in the map (§7 A2) |
 | **The DPO seat** | K2 Art. 32(3)(b): "Supervising impact assessment procedures, audit and control reporting … documenting assessment results"; (d) "Notifying the Competent Authority of Personal Data Breach incidents"; (f) "Monitoring and updating the records of personal data processing activities". [K3](https://sdaia.gov.sa/en/SDAIA/about/Documents/RulesforAppointingPersonalDataProtectionOfficer.pdf) Art. 8(4): "Preparing periodic reports regarding Controller activities related to processing of Personal Data"; K3 Art. 9(5): "shall not assign tasks that may conflict with DPO tasks or affect DPO's independence". R25: a DPO is required here | E1 Art. 9(1), from the **Arabic text**: «إجراء التقييم والفحص الدوري لنظم حماية البيانات الشخصية ومنع اختراقها، وتوثيق نتائج التقييم», that is, a regular evaluation and inspection "**and documenting the results of the evaluation**". The firm's English rendering says "approving"; the Arabic says documenting (توثيق). E1 Art. 9(6): "Monitoring the registration and the update of the Personal Data register" | [Art. 38](https://gdpr-info.eu/art-38-gdpr/)(6): other tasks must "not result in a conflict of interests" | a period report (auditor-10.36); the Auditor role combines with no other role (auditor-10.26) |
 
 **Dates and status.**
@@ -77,13 +77,13 @@ Every source was opened in this run on **2026-10-01**. Quotes are short. A claim
 |---|---|---|
 | [C3 Access Approval](https://docs.cloud.google.com/assured-workloads/access-approval/docs/overview) (2026-09-24) | "require your explicit approval whenever they need to access your Customer Data … Active access approval requests may be revoked at any time … a historical view of all requests that were approved, dismissed, revoked, or expired" | the same shape as our Grant. The data owner approves and can withdraw, and every outcome stays visible, including a request left unanswered (auditor-10.10, 10.11) |
 | [C2 Access Transparency](https://docs.cloud.google.com/assured-workloads/access-transparency/docs/overview) (2026-09-24) | "log entries include details such as the affected resource and action, the time of the action, the reason for the action, and information about the accessor" | each read inside a Grant names the resource, the time, the Grant's reason and the accessor (auditor-10.5) |
-| [C1 Cloud Audit Logs](https://docs.cloud.google.com/logging/docs/audit) (2026-09-30) | "Log entries written by Cloud Audit Logs are immutable." Admin Activity logs "are always written; you can't configure, exclude, or disable them". "Except for BigQuery, Data Access audit logs are disabled by default … you must explicitly enable them." | our Audit trail is append-only and nobody can switch it off (auditor-10.16). Infrastructure reads of Firestore and Cloud Storage are invisible until hosting enables Data Access logs (Conflicts, item 6) |
+| [C1 Cloud Audit Logs](https://docs.cloud.google.com/logging/docs/audit) (2026-09-30) | "Log entries written by Cloud Audit Logs are immutable." Admin Activity logs "are always written; you can't configure, exclude, or disable them". "Except for BigQuery, Data Access audit logs are disabled by default … you must explicitly enable them." | our Audit trail is append-only and nobody can switch it off (auditor-10.16). Infrastructure reads of Firestore and Cloud Storage are invisible until hosting enables Data Access logs (§7 A6) |
 | [H1 GitHub audit log](https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization) (undated) | qualifiers `actor:`, `action:`, `operation:` and `created:`, with ISO 8601 times plus "a UTC offset ( +00:00 )"; "you cannot search for entries using text"; "By default, only events from the past three months are displayed"; export "as JSON data or … CSV" following the current filters; hard limits of "100 MB compressed file, or 10 minutes export processing time" | structured filters that state themselves, explicit offsets, and an export that equals the filtered view (auditor-10.27, 10.32) |
 | [M1 Microsoft Purview export](https://learn.microsoft.com/en-us/purview/audit-log-export-records) (2026-06-19) | the CSV has "a column named AuditData … formatted as a JSON object", which the reader splits with Power Query. Past the row limit, "the exported .csv file doesn't include all results and might omit some audit logs" | today's pain is detail buried in JSON and silent truncation. Ours has one column per field and never ships a file that is silently partial (auditor-10.32, 10.33) |
 | [O1 OWASP Logging Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html) | record "when, where, who and what"; keep event time apart from logging time for devices "only periodically or intermittently online"; exclude "Sensitive personal data … e.g. health"; "Build in tamper detection"; "All access to the logs must be recorded and monitored"; always log "Authorization (access control) failures", "Data import and export including screen-based reports" and "personal data usage consent"; "It should not be possible to completely deactivate application logging" | the event fields, the refused attempts, the Auditor's own exports and the hash chain (auditor-10.5, 10.15, 10.37, 9.6) |
 | [N1 NIST SP 800-53 Rev 5.2.0](https://raw.githubusercontent.com/usnistgov/oscal-content/main/nist.gov/SP800-53/rev5/json/NIST_SP-800-53_rev5_catalog.json) (2026-05-11) | AU-3: "What type of event … When … Where … Source … Outcome … Identity"; AU-7(b): "Does not alter the original content or time ordering of audit records"; AU-9: protect audit information "from unauthorized access, modification, and deletion"; AU-9(4): access by a subset of privileged users; AU-10: "irrefutable evidence"; AC-2(7)(b)–(c): "Monitor privileged role or attribute assignments … Monitor changes to roles"; AC-5: separation of duties | the event schema, an order-preserving export, Auditor-only read access, role history and separation checks (auditor-10.24 to 10.26) |
-| [U1 ICO breach guide](https://ico.org.uk/for-organisations/report-a-breach/personal-data-breach/personal-data-breaches-a-guide/) | "You must also keep a record of any personal data breaches, regardless of whether you are required to notify" | breach evidence is needed even when nothing is notified (Conflicts, item 2) |
-| [A1 AccessOwl](https://www.accessowl.com/blog/user-access-reviews-best-practices) (2026-03-19, vendor) | "manual exports from each app, consolidating spreadsheets"; "Don't forward the raw export … reviewers default to 'looks fine'"; "record who reviewed it, when, what they decided … and why. Keep the original export too"; "That cover sheet is what the auditor reads first"; "We run our reviews quarterly" | context instead of raw rows, and a report whose first page summarises (auditor-10.36). A review sign-off is a write (Conflicts, item 3) |
+| [U1 ICO breach guide](https://ico.org.uk/for-organisations/report-a-breach/personal-data-breach/personal-data-breaches-a-guide/) | "You must also keep a record of any personal data breaches, regardless of whether you are required to notify" | breach evidence is needed even when nothing is notified (§7 A2) |
+| [A1 AccessOwl](https://www.accessowl.com/blog/user-access-reviews-best-practices) (2026-03-19, vendor) | "manual exports from each app, consolidating spreadsheets"; "Don't forward the raw export … reviewers default to 'looks fine'"; "record who reviewed it, when, what they decided … and why. Keep the original export too"; "That cover sheet is what the auditor reads first"; "We run our reviews quarterly" | context instead of raw rows, and a report whose first page summarises (auditor-10.36). A review sign-off is a write (§7 A3) |
 
 ### 1.3 The Auditor's day, the place, the moments of trust
 
@@ -176,7 +176,7 @@ Every source was opened in this run on **2026-10-01**. Quotes are short. A claim
 
 The Auditor works in the console sections **Audit trail · Grants · Policy · Registry · Foods · Recipes · Aliases · Roles · Jobs · Settings**, all read-only.
 
-Inside **Audit trail**, this lens proposes the views **Events · Anomalies · Consents · Summary · Records of processing · Exports**. These view names are not yet in D2 (Conflicts, item 15). Admin API paths (`/v1/admin/…`) are proposals in the style of FRD §18. Error codes are D2's: `FORBIDDEN`, `GRANT_REQUIRED`, `GRANT_NOT_ACTIVE`, `CONSENT_REQUIRED`, `AGE_REQUIREMENT`, `NOT_FOUND`, `VALIDATION_ERROR`.
+Inside **Audit trail**, this lens proposes the views **Events · Anomalies · Consents · Summary · Records of processing · Exports**. These view names are not yet in D2 (§7 A14). Admin API paths (`/v1/admin/…`) are proposals in the style of FRD §18. Error codes are D2's: `FORBIDDEN`, `GRANT_REQUIRED`, `GRANT_NOT_ACTIVE`, `CONSENT_REQUIRED`, `AGE_REQUIREMENT`, `NOT_FOUND`, `VALIDATION_ERROR`.
 
 ### The audit event (the inside, proposed from N1 AU-3 and O1)
 
@@ -787,7 +787,7 @@ As the Auditor, I see a stuck step plainly, so that a deletion is never shown as
   - its age reads "day 7 of 30".
 
 **auditor-9.13 · A deleted account in the Audit trail**
-As the Auditor, I still see Grant history about a deleted account, under an id that no longer leads to a person, so that evidence survives without identifying anyone (K1 Art. 18(1); GDPR Art. 17(3)(b), (e). This is a recommended default; see Conflicts, item 4).
+As the Auditor, I still see Grant history about a deleted account, under an id that no longer leads to a person, so that evidence survives without identifying anyone (K1 Art. 18(1); GDPR Art. 17(3)(b), (e). This is a recommended default; see §7 A4).
 - /r Given `acct_d40e17` was deleted by `job_del_2212` When `staff_hana` opens `grant_27b4` Then:
   - the account shows as "acct_d40e17 · account deleted 2026-09-20";
   - events 22–25 remain;
@@ -809,7 +809,7 @@ As the Auditor, I see each retention run and the oldest item left, so that I can
 - /r Given run R-0805 When `staff_hana` opens **Jobs → Retention** Then it reads "2026-10-05T08:00:00Z · raw scans deleted 2 · audio deleted 1 · oldest remaining raw scan 29 d 22 h · oldest audio 22 h 10 min · Policy v2 · schedule hourly".
 - /r Given the separate fixture R-gap (clock 06:30:00Z, last run 03:00:00Z, one audio aged 24 h 20 min) When Retention opens Then it says "No retention run since 03:00:00Z — expected hourly", and Anomalies "audio older than 24 h" is 1.
 
-**auditor-9.16 · Records of processing, built from what is live** *(proposed view; see Conflicts, item 8)*
+**auditor-9.16 · Records of processing, built from what is live** *(proposed view; see §7 A8)*
 As the Auditor, I read and export a records-of-processing view assembled from live, versioned configuration, so that a regulator's request is answered from facts, not a stale document (K1 Art. 31; K2 Art. 33; E1 Art. 4(9); GDPR Art. 30).
 - /r Given the consent purposes, Policy v2 and the Registry When `staff_hana` opens **Audit trail → Records of processing** Then each purpose row shows:
   - the purpose and the data categories;
@@ -925,41 +925,62 @@ As the Auditor, I am told when a Consent points to a text version that cannot be
 
 ## 7 · Conflicts for the model phase
 
+Rule for this list, decided by the session: a lens passes on its own stories. Mismatches with other lenses' fixtures, event names, task keys or ids are settled once, in the model phase, by one shared fixture set and one event catalogue. This lens does not chase lenses that are still changing.
+- **Part A** lists open design questions.
+- **Part B** lists each known mismatch with another lens, as the second verifier found them at about 06:00Z on 2026-10-01 and as this lens read them.
+
+### A · Design questions
+
 1. **Read-only seat versus FRD §23.2.** The FRD says "Privacy/security reviewers **approve** consent, retention, access, and target-market compliance". The map makes the Auditor read-only and gives retention Policy to the Nutrition approver. Who approves consent text versions and retention values is undecided.
-2. **The breach record has no home.** These all require a documented breach record with notifications and corrective actions:
+2. **The breach record has no home.** These sources all require a documented breach record with notifications and corrective actions:
    - K2 Art. 24(3);
    - K4 Stage Three;
    - GDPR Art. 33(5);
-   - U1 ("regardless of whether you are required to notify");
+   - U1: "regardless of whether you are required to notify";
    - E2.
 
-   The map has none, and the Auditor cannot write. Options: a breach record the DPO writes in the console, or one kept outside the product. 10.35's export feeds either.
-3. **A review sign-off is a write.** The evidence of a periodic review is "who reviewed it, when, what they decided … and why" (A1). K2 Art. 32(3)(b) asks the DPO for "documenting assessment results"; E1 Art. 9(1) in Arabic asks for «توثيق نتائج التقييم», documenting the evaluation's results. Proposal: the Auditor's only write is a review note appended to the Audit trail, never an edit of an event.
-4. **Erasure versus the Audit trail.** Grant and Consent events about a deleted account stay as evidence (GDPR Art. 17(3)(b), (e); K1 Art. 18(1) allows keeping data that cannot identify the person). Recommended default: events keep the account id, and deletion destroys the sign-in identity and profile, so the id leads nowhere (9.13).
-   - **Open:** the Audit trail's retention period. No source fixes one for access logs; N1 AU-11 leaves it to the organisation, and K2 Art. 33(1)'s five years is for records of processing. Counsel decides.
-5. **Identity in Grant requests.** The support lens shows the Support agent the account, the eater's language and zone; this lens sees account ids and reaches an identity only by a logged lookup with a reason (10.34). Both lenses must agree on the fields of a Grant request.
-6. **Infrastructure reads are outside the Audit trail.** Google Cloud Data Access audit logs are "disabled by default" (C1). Direct Firestore or Cloud Storage reads by an engineer would not show unless hosting enables them and correlates them (N1 AU-6(3)). The ship rows are dropped (§0 line 10). Until a hosting delta, "no read outside a Grant" holds for the product's API only.
-7. **Consent text versions need an owner.** Who writes and publishes the English and Arabic consent wording, and the Grant request wording (`grant-req-1`)? The map is silent; FRD §23.2 points at privacy reviewers.
-8. **Records of processing as a view.** The map lists records of processing as pre-launch governance work (r1 implications), not a screen. 9.16 derives it from live configuration. Fields not in configuration need an owner: controller contact, DPO details, security measures.
-9. **One person, two accounts.** D2 says "a staff account is never an eater account". A person may still hold both under two accounts. Then the rule "no staff member can approve their own request" (blueprint §1.2) needs a link between the two accounts, which the map lacks. This lens dropped its self-request story (formerly 10.12) for that reason.
-10. **The Grant request window.** The request window (72 h) is support lens A6's `assumption`, with no source. It needs an owner and a home (Policy is approver-owned and nutrition-focused). The same goes for the allowed durations (1 h · 4 h · 24 h).
-11. **Raw-evidence quality review.** FRD §19.2 allows "Access to raw evidence for quality review" with "explicit consent and restricted roles". D2 has no role with that permission, so 9.8 treats every attempt as refused. If a role is added, it needs a Consent link and a new anomaly rule.
-12. **Arabic in regulator exports.** Whether SDAIA or the PDPC expect Arabic labels in an extract is an `assumption`. Proposal: stable machine keys, with an optional Arabic label row.
-13. **The eater's own view of reads.** The support lens shows the eater the access history inside a Grant. Its counts must equal this lens's timeline (10.3).
-14. **Breach-notice timing differs by regime.** Egypt tells data subjects within three business days of reporting; KSA says "without undue delay". This belongs to the runbook outside the product, but the evidence export must serve both.
-15. **Names this lens uses that are not yet in D2** (each needs a dated delta or a rename):
-    - the Audit trail views Events, Anomalies, Consents, Summary, Records of processing, Exports, and the action Find account;
-    - event actions such as `grant.read_refused` and `grant.write_refused`;
-    - the outcome words Allowed, Refused, Done, Failed.
-16. **Differences from other lenses still to align** (not settled here):
-    - **Grant states and codes.** The support lens's states (`requested`, `approved`, `expired_unanswered`, `revoked`, `withdrawn` for the agent's own cancellation) and codes (`GRANT_DECLINED`, `GRANT_EXPIRED`, `GRANT_REVOKED`, `GRANT_OUT_OF_SCOPE`, `GRANT_READ_ONLY`, `FORBIDDEN_ROLE`) predate D2. This lens uses D2's Unanswered, Withdrawn (by the eater), Ended (by the Support agent), `GRANT_NOT_ACTIVE`, `GRANT_REQUIRED` and `FORBIDDEN`.
-    - **A Support agent cancelling their own unanswered request.** D2 has no state for it.
-    - **Staff id styles.** The support lens uses `staff_mona`; the admin lens uses `admin.a@example.test`.
-    - **Policy fixtures.** The approver lens's Policy v1 carries a separate signed "nutrition-policy review" (approver-10.x). D2 records only proposer and approver.
-    - **Registry wording.** The admin lens says "Draft" and "full"; D2 says Proposed and Rollout.
-17. **The seeded separation-of-duties violation** (`staff_sod_seed`) can be produced only below the roles API. The anomaly rule in 10.26 is a **detective control** behind admin-10.59's preventive save rule. The model phase should keep both.
+   The map has no breach record, and the Auditor cannot write. Either the DPO writes it in the console, or it is kept outside the product. Either way, 10.35's export feeds it.
+3. **A review sign-off is a write.** The evidence of a periodic review is "who reviewed it, when, what they decided … and why" (A1). K2 Art. 32(3)(b) asks the DPO for "documenting assessment results". E1 Art. 9(1), in Arabic, asks for «توثيق نتائج التقييم», documenting the results of the evaluation. Proposal: the Auditor's only write is a review note appended to the Audit trail, never an edit of an event.
+4. **Erasure versus the Audit trail.** Grant and Consent events about a deleted account stay as evidence. This rests on GDPR Art. 17(3)(b) and (e), and on K1 Art. 18(1), which allows keeping data that cannot identify the person. Recommended default: events keep the account id, and deletion destroys the sign-in identity and profile, so the id leads nowhere (9.13).
+   - **Open:** the Audit trail's retention period. No source fixes one for access logs: N1 AU-11 leaves it to the organisation, and K2 Art. 33(1)'s five years covers records of processing. Counsel decides.
+5. **Identity in Grant requests.** The Support agent sees the account, the eater's language and their time zone. The Auditor sees account ids, and reaches an identity only through a logged lookup that needs a reason (10.34). The Grant request's fields need one definition.
+6. **Infrastructure reads are outside the Audit trail.** Google Cloud's Data Access audit logs are "disabled by default" (C1). An engineer's direct read of Firestore or Cloud Storage would not show unless hosting enables these logs and correlates them (N1 AU-6(3)). The ship rows are dropped (§0 line 10). Until a hosting delta, "no read outside a Grant" holds for the product's API only.
+7. **Consent and request wording need an owner.** Nobody is named to write and publish the English and Arabic consent wording, or the Grant request wording `grant-req-1`. FRD §23.2 points at privacy reviewers.
+8. **Records of processing as a view.** The map does not mention records of processing. The pre-launch governance list in the Implications of `way/research/r1-rules-trends.md` does: "Governance work before launch … Records of processing." 9.16 proposes deriving the record from live configuration. Fields that are not in configuration need an owner: controller contact, DPO details and security measures.
+9. **One person, two accounts.** D2 says "a staff account is never an eater account", yet one person may hold both under two accounts. The rule "no staff member can approve their own request" (blueprint §1.2) then needs a link between the two accounts, and the map has none.
+10. **Grant timing values.** The request window (72 h) and the allowed durations (1 h · 4 h · 24 h) come from the support lens's assumptions, with no source. They need an owner and a home; Policy is approver-owned and focused on nutrition.
+11. **Raw-evidence quality review.** FRD §19.2 allows "Access to raw evidence for quality review" with "explicit consent and restricted roles". D2 has no role with that permission, so 9.8 treats every attempt as refused. If such a role is added, it needs a Consent link and a new anomaly rule.
+12. **Arabic in regulator exports.** It is an `assumption` whether SDAIA or the PDPC expect Arabic labels in an extract. Proposal: stable machine keys, with an optional row of Arabic labels.
+13. **Breach-notice timing differs by regime.** Egypt requires telling data subjects within three business days of reporting; KSA says "without undue delay". That belongs in the runbook outside the product, but the evidence export must serve both.
+14. **Names not yet in D2.** Each needs a dated delta or a rename:
+    - the Audit trail views Events, Anomalies, Consents, Summary, Records of processing and Exports;
+    - the action Find account;
+    - the event actions (see B, M6);
+    - the outcome words Allowed, Refused, Done and Failed.
+15. **The seeded separation-of-duties violation** (`staff_sod_seed`) can only be produced below the roles API. The anomaly rule in 10.26 is a **detective control** behind the admin lens's preventive separation-of-duties save rule. Keep both.
+16. **Out-of-scope reads have no D2 code of their own.** 10.41 uses `FORBIDDEN`, as the support lens does. If the event catalogue needs to tell "outside Days" apart from "outside areas", it does so in the event's `detail`, not with a new code.
+
+### B · Mismatches with other lenses (settle once, in the shared fixture set and event catalogue)
+
+| # | what | this lens | the other lens |
+|---|---|---|---|
+| M1 | `grant_31f0` read times | events 55–57 at 10:24:00, 10:26:30, 10:31:00Z | support G1: reads at 10:24, 10:25, 10:27 UTC; eater-9.25 requires both views to show "the same 3 reads at the same times" |
+| M2 | `grant_31f9` | `staff_omar`, Requested 12:00, Declined 12:06 (events 61–62) | support G2: E1 by `staff_mona`, Requested 11:30, Declined 11:42 UTC |
+| M3 | `grant_40aa` | `acct_3f88a1`, Requested 2026-10-01T10:09Z → Unanswered 2026-10-04T10:09Z (events 53, 79) | support E10: `acct_f1e0c3`, Requested 2026-09-27 10:05 → Unanswered 2026-09-30 10:05 UTC |
+| M4 | reason label | "An entry is missing or appears twice" (10.4) | support catalogue: "An Entry is missing or appears twice" |
+| M5 | licence on «فول مدمس — EG» | "first-party calculation (approver-built)" (`rec_fm_eg`, 10.22) | approver-10.31: "Own calculation · ingredients CC0 1.0 (USDA FoodData Central — cite)" |
+| M6 | Audit trail event names | no `grant.active`; `grant.read_refused`; a staff member's attempt to approve is `access.refused` (10.6); 10.3 counts 8 events for `grant_31f0` | support §0.2: `grant.active`, `grant.read_denied`, `grant.approve_denied`; support-10.15 expects `grant.active` in `grant_31f0`'s sequence |
+| M7 | admin story ids | this lens now cites the admin rules by description ("the separation-of-duties save rule", "the self-change refusal"), not by id | the admin lens renumbered: per the verifier, the separation-of-duties save rule is now admin-10.62 and the self-change refusal admin-10.64 (formerly 10.59 and 10.61) |
+| M8 | Registry task key and schema | `meal_photo`, `meal_photo@v6`, `meal_photo@v7`, schema `analysis.v3` | admin lens: task `meal`, `meal@v6`, `meal@v7`, "schema version 3" (admin-10.1, 10.25) |
+| M9 | a Platform admin's diary read | 403 `FORBIDDEN` (event 77, 10.9) | admin-10.63, which is shared with the Auditor: 404 `NOT_FOUND`. D2 can be read either way ("FORBIDDEN (role lacks the permission)" against "NOT_FOUND … never reveal existence") |
+| M10 | where the age gate refuses | on the server: 422 `AGE_REQUIREMENT`, one `age.refused` event, and a refusal count (9.9) | eater-1.2: "zero requests were sent", so the gate never leaves the iPhone. If that holds, 9.9's /s line and its refusal count change |
+| M11 | Consent text ids, methods and Health purposes | `diary-1`, `research-1`, `c-ai-3`/`c-ai-4`; methods as in events 9–16, 37, 39, 44; Health purposes read workouts, read active energy, read body mass, write food (the map backs these) | eater fixture: `c-diary-1`, `c-research-1`; method "in-app sheet · Capture" (eater-9.3); Health, Microphone and Photos asked at first need (eater-1.6); Health "write dietary energy" and no "read active energy" |
+| M12 | lifetime of the export link and file | 14 days (`assumption`), so that 9.5 can delete a file still held on 2026-09-20 | support A8: 7 days |
+| M13 | stale cross-references to this lens | ids were renumbered in fix round 1; story 10.41 was appended in round 2 so that no id moved | the eater lens cites auditor ids about 30 times (`eater/wf1-wf9.md`, `eater/wf2-wf4.md`). Some now point elsewhere: eater-9.12 → "auditor-9.13" (the export job is now 9.14); eater-9.16 → "auditor-9.9, 9.10" (deletion is now 9.10, 9.11); eater-9.11 → "auditor-9.14" (retention is now 9.15); eater-9.7 → "auditor-9.8" (9.8 now refuses every raw-evidence attempt); eater-9.28 → "G-2026-0046" (now `grant_6e21`). The eater lens marks 9.1, 9.2, 9.4 and 9.6 as shared with this lens; §6 here marks only 9.5 and 9.9 as shared with the eater |
+| M14 | staff id styles and pre-D2 names elsewhere | `staff_*` | the support lens uses `staff_mona`; the admin lens `admin.a@example.test`; the approver lens "staff A-07". The approver lens's Policy v1 also carries a separate signed "nutrition-policy review", while D2 records only proposer and approver. The eater lens still uses pre-D2 names (`AGE_GATE_REQUIRED`, `FORBIDDEN_ROLE`, `GRANT_DECLINED`, `GRANT_REVOKED`, `expired_unanswered`) where D2 sides with this lens |
 
 ---
+
 
 ## 8 · Coverage
 
@@ -974,7 +995,7 @@ As the Auditor, I am told when a Consent points to a text version that cannot be
   | FR-078 | 9.10–9.12, 9.15 |
   | FR-079 | 9.8 |
   | FR-080 | 10.18–10.24 |
-  | FR-081 | 10.3–10.17, 10.26 |
+  | FR-081 | 10.3–10.17, 10.26, 10.41 |
   | FR-082 | 9.15, 9.16 |
   | NFR-02 (as the nearest figure) | 10.27 |
   | NFR-07 | 10.9 |
@@ -984,14 +1005,14 @@ As the Auditor, I am told when a Consent points to a text version that cannot be
   | §16.4 | 10.20, 10.21 |
   | §17.2 | 9.11 |
   | §19.2 | 10.5, 9.8 |
-  | §23.2 | Conflicts, item 1 |
+  | §23.2 | §7 A1 |
 
 - **Map lines:**
 
   | map line | stories |
   |---|---|
   | interaction row 1 (age and Consents) | 9.1, 9.2, 9.9 |
-  | the Grant rows | 10.2–10.13 |
+  | the Grant rows | 10.2–10.13, 10.41 |
   | "Auditor → trail" | all |
   | WF-9 done-when | 9.11, 9.14 |
   | WF-10 done-when | 10.3, 10.7, 10.20 |
@@ -1002,7 +1023,7 @@ As the Auditor, I am told when a Consent points to a text version that cannot be
   - AT-10, a retry delivered three times gives one event (10.6, 9.6);
   - AT-29, withdrawal and deletion propagate to media, queues, private cached analysis and exports (9.5, 9.11, 9.14).
 - **Research cited:** R2, R3, R4, R7, R16, R20–R26, R28, R29 (as corrected), R30, R31; P4, P11 (as corrected), P29, P30; and K1–K4, E1, E2, G1, U1, O1, N1, C1–C3, H1, M1, A1 in §1.0.
-- **Counts:** 58 stories (40 in journey 10, 18 in journey 9) · 118 acceptance lines (/m 9 · /s 14 · /r 95).
+- **Counts:** 59 stories (41 in journey 10, 18 in journey 9) · 121 acceptance lines (/m 10 · /s 15 · /r 96).
 
 ---
 
@@ -1235,3 +1256,33 @@ What passed:
     §6 also marks only 9.5 and 9.9 as shared with the eater. The eater lens marks 9.1, 9.2, 9.4 and 9.6 as shared with this lens as well.
 
 **Not counted here.** The eater lens still uses names that predate D2: `AGE_GATE_REQUIRED`, `FORBIDDEN_ROLE`, `GRANT_DECLINED`, `GRANT_REVOKED`, `expired_unanswered`. They contradict 10.6, 10.7, 10.10, 10.11 and 9.9. D2 sides with this lens, so they are defects of the eater lens.
+
+## Fix round 2 (2026-10-01)
+
+This round follows the rule the session decided: a lens passes on its own stories. Mismatches with other lenses (fixtures, event names, task keys, ids) are settled once, in the model phase, with one shared fixture set and one event catalogue. So:
+- defects 1–5 are fixed at their root in this lens;
+- defects 6–13 are **moved to §7 B** (M1–M14), without editing this lens to match lenses that are still changing.
+
+Both verdict sections and fix round 1 are kept.
+
+Counts:
+- **Before:** 58 stories and 118 acceptance lines.
+- **After:** **59 stories** (41 in journey 10, 18 in journey 9) and **121 acceptance lines** (/m 10 · /s 15 · /r 96).
+
+The new story is numbered **10.41** and placed after 10.13, so no existing id moved.
+
+| # | defect | what changed |
+|---|---|---|
+| 1 | no read outside the Grant's Days or areas while Active | **new auditor-10.41.** Separate fixture Y (`grant_7a02`, Active, day 2026-10-04 only, area "Entries and day reports") has `staff_mona` read Day 2026-10-03 and My Units: both refused with 403 `FORBIDDEN`, both visible on the Grant's page. A /s line covers inside versus outside; a /m line proves the new rule. 10.14 gains the rule "diary reads allowed outside a Grant's Days or areas 0". §3, §6 and §8 cite 10.41. §7 A16 records that D2 has no separate code for this |
+| 2 | 10.9 and 9.8 contradict each other | one outcome per actor in both stories. A Support agent with no Grant gets **403 `GRANT_REQUIRED`**, recorded as `grant.read_refused`. A Support agent with an Active Grant asking for media gets 403 `FORBIDDEN`, because media is in no area. Every other role gets 403 `FORBIDDEN`, recorded as `access.refused`. Event 78 (Platform admin, `FORBIDDEN`) is consistent with both |
+| 3 | fixture gaps | **`job_exp_4402`** now has categories with counts (Entries 212 · Units 9 · Recipes 2 · Targets 1 · Reports 11 · Consents 7), 184 KB, a link and file kept 14 days to 2026-09-24T12:04Z (`assumption`; differs from support A8, §7 M12), "downloaded once 12:10Z", and the early deletion at 07:45:05Z on 09-20, so 9.5 and 9.14 agree. **`job_del_2201`** now has a time for every step, plus "processor confirmation received 2026-09-16T06:00Z" and "Sign in with Apple: not applicable (email sign-in)"; 9.11 shows them. **Events 9–16, 37, 39 and 44** now carry a method and an app version (event 39 is app 1.0.2); 9.2 reads them as recorded. **Event 40** carries a reason. **`acct_d40e17`** has the former email `d40e17.synthetic@example.com`, which 9.13 uses |
+| 4 | the E1 quote was not E1's text | §1.1 "Capacity" now quotes the Sharkawy dual text: "in all cases, data relating to children is considered to be sensitive data" |
+| 5 | the records-of-processing pointer credited the map | §7 A8 now points to the Implications of `way/research/r1-rules-trends.md` ("Governance work before launch … Records of processing") and says the map does not mention it |
+| 6 | fixture ids shared with other lenses but not their values | **moved to §7 B:** M1 (`grant_31f0` read times), M2 (`grant_31f9`), M3 (`grant_40aa`), M4 (reason label), M5 (licence on فول مدمس). The test-clock note and "Read first" no longer claim the ids follow other lenses; they point to §7 B |
+| 7 | event names clash; the old conflict list was stale | **moved to §7 B M6** (`grant.active`, `grant.read_denied`, `grant.approve_denied` against this lens's names, and the 8-event count). The stale claims that the support and admin lenses predate D2 were removed. M14 records the eater lens's remaining pre-D2 names |
+| 8 | stale admin story ids | this lens now cites the admin rules by description: the fixture, event 35, 10.26, §6 and §7 A15. The renumbering is recorded in **§7 B M7** |
+| 9 | Registry task key (`meal_photo` against `meal`) | **moved to §7 B M8.** The fixture no longer says "names from the admin lens" |
+| 10 | Platform admin diary read: `FORBIDDEN` here, `NOT_FOUND` in admin-10.63 | **moved to §7 B M9**, with D2's two readings |
+| 11 | age refusal on the server here, on the device in the eater lens | **moved to §7 B M10**, noting which lines of 9.9 change if the eater lens holds |
+| 12 | Consent text ids, methods and Health purposes | **moved to §7 B M11.** The methods inside this lens are now fixture values (item 3) |
+| 13 | renumbering broke references, and fix round 1 said it could not | fix round 1's sentence is corrected in place ("other files do reference these ids"). The eater lens's stale references and its extra shared-story marks are listed in **§7 B M13**. 10.41 was appended so that no id moved in this round |

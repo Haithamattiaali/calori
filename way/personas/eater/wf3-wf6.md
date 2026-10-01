@@ -831,3 +831,66 @@ These parts hold:
     - "Arabic text about 10% larger optically and with line height for dots and marks (E41)", and EX-33 ("Arabic gets its extra line height").
     - "Dark mode is a true dark (E28)".
     eater-3.41 checks text size, contrast, VoiceOver, the keyboard, Reduce Motion and mirroring, but none of these.
+
+## Fix round 1 (2026-10-01)
+
+Each defect was fixed in the story it names. Every changed line was re-read against `way/vocabulary.md` (D2) and against the stories it touches here, in the other eater files (`wf1-wf9.md`, `wf2-wf4.md`, `wf5-wf7-wf8.md`) and in `support.md`, `approver.md` and `admin.md`. Counts after the fix: 69 stories (unchanged) and 276 acceptance lines (was 256; now 219 `/r`, 53 `/s`, 4 `/m`). Every line reads Given … When … Then.
+
+1. **FR-044, the zone.** Today's header now always names the selected Day **and** its zone. eater-3.1 shows "Thu 1 Oct · London time"; when the phone is in another zone it adds a second line, "Your phone: London time", and drops that line when the zones match. The zone also appears in 3.28 ("Cairo time"), 3.32 (after Start new day, "Thu 1 Oct · Cairo time") and 3.33 (past Day). Research EX-07 asked for the zone only when it differs; FR-044 is binding, and that narrowing is recorded as Conflicts item 19. The coverage row now names the stories that show the zone.
+2. **AT-26, mixed names.** eater-6.5 gains a line in which two corrections each open the correction preview at 15 → 18 with no consumption chip: Sam types "make the تلبينة 18 not 15", and Mona says «الـ talbina كانت ١٨ مش ١٥». The check is the same as eater-4.27. The coverage row quotes both phrases.
+3. **FRD §8.2, "apply that measurement to today's lunch".** eater-6.11's "so that" now names today's lunch. A new line covers the typed phrase «طبّق المقاس ده على غدا النهارده»: only today's Lunch Entry is ticked, the preview shows 120 → 135 for Lunch and for the Day, nothing changes before Confirm, and Wed 30 Sep is unchanged. The two lines after it now say "the 'Apply to past entries…' list", so they no longer point at the new preview.
+4. **FRD §2.6, the biscuits preview.** The fixtures add Sam's Unit "biscuit serving" (version 1: 25 g of plain biscuits = 125 kcal) and his Wed 30 Sep Day of 1,540 kcal. eater-6.7 now shows the full preview: old 25 g · 125, new 10 g · 50, Snack 125 → 50, Day 1,540 → 1,465, and the choice between "This Entry only" and "This Entry and future logs". A second line gives each choice's result. 6.2 uses the same Entry. A change of weight now offers a future default, as 6.3 says it should.
+5. **Slow and failed sentences (AT-32, NFR-03).** eater-3.14 now covers "slow, failed" sentences, and its trace quotes AT-32, NFR-03 and the D2 Analysis states. Two new lines:
+   - The analyzer mock answers after 10 s. Within 1 s the Analysis is **Processing**, with "Reading your words…" and Cancel. Recent Units still log. Cancel leaves the Analysis **Discarded** with the Day unchanged.
+   - The mock returns a timeout. The Analysis is **Failed**, with "Try again", and the typed words are kept. Nothing is logged afterwards on its own: the Day stays at 290 kcal.
+6. **A correction when sentences can't be read.** eater-6.2 gains a line for four cases: Kill switch On, AI quota used up, the Consent "Send photos, voice and text to Google's AI (Gemini)" Withdrawn, and offline. In each, "18 not 15" changes nothing, one line says why, and the Day's Entries are listed. Tapping one opens its correction preview with the count stepper. The manual path is now explicit:
+   - eater-6.3: "taps Correct in its Entry details and sets the count stepper to 18";
+   - eater-6.21: the offline correction is made through Correct in Entry details.
+7. **Permission denied.** eater-6.25 is now "mine alone". Two new lines cover the corrections, void, restore *(proposed)* and history *(proposed)* endpoints:
+   - Mona's token with Sam's entry_id: 404 `NOT_FOUND`, with the same body as for a random id, and Sam's Day and revision unchanged;
+   - no token: 401 `UNAUTHENTICATED`.
+   The Support agent's write attempts now name 403 `FORBIDDEN`, as the support lens does. A coverage row "FRD §18 ownership, NFR-07" was added.
+8. **Editing the eaten time.** The edit is now defined in two places, and the claims that relied on it point to it:
+   - **New logs** (eater-3.33): the count stepper has a Time row. On a past Day it defaults to the current clock time on that Day and offers only times inside that Day.
+   - **Existing Entries** (eater-6.17, now "Move an Entry to another Day, or change its time"): Correct → Time. The preview reads "Time 21:00 → 22:30 · kcal unchanged". If the new time crosses the boundary, the preview adds the move to the other Day and both Days' change. The `/s` line sends eaten_at through `POST /v1/consumption/{id}/corrections`, with the Day assigned from the boundary in effect.
+   - A move alone never changes the time.
+   - FRD §18 does not list eaten_at, so Conflicts item 9 records it as a proposed field.
+9. **Empty states.** Four new lines:
+   - 3.16: copying from an Unlogged Day shows "Nothing logged on Mon 28 Sep", other Days to choose, and no Log button.
+   - 3.18: "Copy this Day" on a Day with only an Activity and a Voided Entry shows "No food to copy from this Day".
+   - 3.19: My Units → Templates and the quick-add Templates section, before any Template exists, show "No Templates yet…" with "Go to Today".
+   - 3.22: the widget for an eater with no recent Units reads "Log your first food in Sips & Bytes" and opens quick-add.
+10. **C10.** C10 is removed from the traces of 3.5 and 6.14. In 6.15 it is now labelled `assumption`, citing r1-refute-a: the 30-second window rests only on a competitor blog.
+11. **`NOT_FOUND`.** In eater-3.8, another eater's unit_version_id now returns 404 `NOT_FOUND`, with the same status and body as a random id. The API bullet lists `NOT_FOUND` and `UNAUTHENTICATED`. One gap is cross-file: eater-4.23 answers a non-existent Food id with `UNIT_NOT_FOUND`. It is recorded as Conflicts item 18 for the model to settle, so that a random id and a foreign id get the same code.
+12. **State names.**
+    - 3.21: the offline Siri snippet now reads "Logged 3 cheese bites · Pending".
+    - 6.22: the Entry "stays Confirmed at 18" and carries a note, "Changed on two iPhones — choose which to keep". The note is a message, not a state. The refused change to 12 is neither Pending nor counted. The support lens calls that command "Pending on the device"; D2 names no state for a refused command, which is recorded in Conflicts item 8.
+    - Conflicts item 6 now says "a Unit version that is no longer the latest (version 1 after version 2 was Saved)". It no longer uses "Superseded", a word D2 does not give Units.
+13. **The four FRD names.** Quick-add, count stepper, correction preview and timeline are now marked *(proposed)*:
+    - in "How to read", together with the three names that were already proposed;
+    - at each one's first use in the stories (3.1, 3.2, 3.3, 3.13);
+    - in Conflicts item 15, for a dated delta.
+14. **Lines that could not be observed.**
+    - 3.5: with VoiceOver off, the banner and its Undo are still on screen after 6 s with no touch. The 6 s is a floor for the check, labelled `assumption`.
+    - 3.12: the three unclear words are named: «حتة كنافة وحتة بسبوسة وشوية محشي». Two questions are asked, and «محشي» offers "Calories only" and "Make a unit".
+    - 3.29: turning off "Ramadan days" at 14:00 on Wed 10 Mar 2027 has a check. A log at 02:30 on 11 Mar lands on Wed 10 Mar, and one at 03:30 lands on Thu 11 Mar: the Day ends at the first 03:00. February's totals are unchanged in Progress.
+    - 3.31: the zone can now be read: Entry details show "Time zone: Europe/London", and so does time_zone in the history API.
+15. **Tap count for a Template.** eater-3.20 now counts from Today:
+    - quick-add → Template → Log is three taps;
+    - each count changed adds a tap (the second line says "two more taps");
+    - with one-tap logging on, it is two taps.
+    The "so that" was changed to match.
+16. **The matching style.** eater-3.41 gains four lines:
+    - over Target, Undo: the screenshots after a log that goes over Target and after Undo show no confetti, badge, streak or celebration (`/r`);
+    - a UI-test sound spy records no sound played (`/s`);
+    - the Arabic line is at least 10 % taller than the English one, and dots and marks are not clipped (E41, EX-33);
+    - in dark mode, Today's background is pure black (#000000) (E28).
+
+**Also fixed in this round (found while re-reading against the other eater files).**
+- The Consent names now match `wf1-wf9.md`:
+  - "Send photos, voice and text to Google's AI (Gemini)" replaces "the Consent for Google's AI";
+  - "Health: write dietary energy" in Settings → Privacy replaces the setting "Write meals to Apple Health" in Settings → Activity. That changes 3.39, 3.40 and 6.24, and the Settings placements in Conflicts item 15.
+- Switching the Health Consent off now offers "Keep what's already in Health" or "Remove what Sips & Bytes wrote to Health", as eater-9.4 does. This replaces the earlier `assumption` in 3.40 and in Conflicts item 4.
+- Conflicts item 4 adds one point: the Consent is named for dietary energy, but the correlation also carries protein, carbohydrates and fat.
+- The withdrawn-AI and microphone-off messages in quick-add now use the wording of eater-9.2 and eater-2.5.
+- The fixtures' "kcal left" now reads "kcal remaining", matching the stories.
