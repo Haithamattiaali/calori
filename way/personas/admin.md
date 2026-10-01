@@ -142,7 +142,7 @@ Place, partly sourced:
 
 Moments that decide their trust. These are inferred from the sources above, `assumption` as to how the persona feels:
 1. Stopping a misbehaving AI at once while logging keeps working (brief §16.4, NFR-05).
-2. Promoting a version on numbers they can trust (A11, A13).
+2. Moving a version to Rollout on numbers they can trust (A11, A13).
 3. Moving off a model before it retires (A1).
 4. A cost jump (A18).
 5. A role that grants too much (FR-081).
@@ -153,7 +153,7 @@ Moments that decide their trust. These are inferred from the sources above, `ass
 
 - **G1 · Current and correct.** Every AI task runs a frozen, evaluated model id, prompt version and schema version. A new model reaches eaters only after offline evaluation, Shadow and Canary, and before the old one retires (§16.1, §16.4).
 - **G2 · Harm stops at once.** A kill switch or a roll back takes effect within the chosen propagation time without a release. Manual, recent-Unit, Template and cached logging never depend on AI (§7.2, §16.4, NFR-05).
-- **G3 · Cost is bounded and visible.** Per-user daily quotas, a daily budget, and estimated cost per accepted Unit and per confirmed meal (§16.5, §23.3).
+- **G3 · Cost is bounded and visible.** Per-user daily quotas, a daily budget, and estimated cost per Saved Unit and per confirmed meal (§16.5 "cost per accepted unit and confirmed meal", §23.3).
 - **G4 · Least privilege.** No role can read a diary; only an eater-approved Grant opens one (FR-081, NFR-12, map §3).
 - **G5 · Quality is seen without seeing people.** Acceptance by Evidence type, validation failures and failed jobs, with no identifiers and no small groups (FR-080).
 - **G6 · Privacy jobs finish on time.** Failed exports, deletions and retention purges are retried safely or escalated before their deadline (WF-9, FR-078, NFR-13, AT-29).
@@ -176,7 +176,7 @@ Moments that decide their trust. These are inferred from the sources above, `ass
 - **Registry version states:** **Proposed** → **Shadow** → **Canary** → **Rollout** → **Rolled back**.
   - Map §3 names the stages "shadow → canary → rollout".
   - The version in Rollout is the one every eater gets.
-  - A version that leaves Shadow, Canary or Rollout without being replaced by promotion is **Rolled back**.
+  - A version taken out of Shadow, Canary or Rollout by a roll back (by hand or automatically) is **Rolled back**.
   - When a newer version reaches Rollout, the one it replaces is shown as "previous Rollout version". It is the roll-back target.
 - **Kill switch** (vocabulary D2): one per task, **On** or **Off**. When On, AI requests for that task fail fast with `AI_UNAVAILABLE` and nothing is queued to send later. The screen reads "Kill switch On" or "Kill switch Off". Nothing is called "paused".
 - **Console sections** (vocabulary D2), as this persona uses them:
@@ -305,7 +305,7 @@ As platform admin, I open **Registry** and see every AI task with its Rollout ve
   - the newer-version cell reads "None · Propose a version" with that button. `/r`
 - Given **Registry** loaded at 22:10 and the network then drops, When the page is viewed at 22:12, Then:
   - a bar reads "Offline · showing data from 22:10";
-  - Propose, Promote and Roll back are disabled with "Needs a connection";
+  - Propose, Move to … and Roll back are disabled with "Needs a connection";
   - when the connection returns, the bar disappears and the state reloads from the server. `/r`
 
 #### admin-10.2 · No role, no access
@@ -323,7 +323,7 @@ As platform admin, I need staff accounts without Registry permissions to get a c
   - a link leads back to their sections. `/r`
 - Given `auditor.a` holds Auditor, When they open **Registry**, Then:
   - the overview is read-only;
-  - no Propose, Promote, Roll back or kill-switch control is rendered. `/r`
+  - no Propose, Move to …, Roll back or kill-switch control is rendered. `/r`
 - Given `auditor.a`'s token, When `PUT /v1/admin/kill-switch/meal` is sent with `{"on": true}`, Then it returns 403 `FORBIDDEN` and **Registry** still reads "Kill switch Off" for Meal. `/r`
 
 #### admin-10.4 · No client can pick a model or reach the admin API
@@ -576,7 +576,7 @@ As platform admin, I return a task to its previous Rollout version in one action
 - Given an Analysis that started on version 7 at 10:00:00, When the roll back happens at 10:00:01, Then, read through `GET /v1/analyses/{id}`:
   - that Analysis completes stamped `meal@v7`;
   - the next one is stamped `meal@v6`. `/r`
-- Given the roll back, When `eater-synth-012` logs a recent Unit with `POST /v1/consumption` during it, Then the Entry is accepted and the Day revision rises by one. `/r`
+- Given the roll back, When `eater-synth-012` logs a recent Unit with `POST /v1/consumption` during it, Then the Entry is Confirmed and the Day revision rises by one. `/r`
 
 #### admin-10.28 · Every Analysis carries its full configuration
 As platform admin, I need every Analysis stamped with the model id, prompt version, extraction schema version, nutrition algorithm version, source versions and the actual processing location, so that any result can be traced and reproduced. §16.4 ("Store model ID, prompt version, extraction schema version, nutrition algorithm version, and source versions with each analysis"), §15.3 ("log the actual processing configuration"), §17 AIAnalysis. *Shared: Eater (reads their own Analysis).*
@@ -612,7 +612,7 @@ As platform admin, I turn the kill switch on for one task without a release, so 
   - it returns 503 with code `AI_UNAVAILABLE` at once;
   - the provider mock's request log shows no call. `/r` `/s`
 - Given the kill switch On for `meal` only, When the same eater posts typed text to `POST /v1/analyses` for `text`, Then:
-  - it returns 200 with an Analysis in review;
+  - it returns 200 with an Analysis that is Ready for review;
   - the Analysis is stamped `text@v4`. `/r`
 
 #### admin-10.32 · Turn the kill switch on for every task
@@ -626,7 +626,7 @@ As platform admin, I can turn the kill switch on for every task at once, so that
 #### admin-10.33 · Manual and cached logging keep working while the kill switch is On
 As platform admin, I can rely on the kill switch never blocking food logging, so that the switch is safe to use at once. §7.2, §16.4, NFR-05, AT-32. *Shared: Eater.*
 - Given the kill switch On for every task, When `eater-synth-031` uses `POST /v1/consumption` to log a recent Unit, copy yesterday's breakfast, log a Template and enter a typed amount, Then:
-  - each returns an accepted Entry and a new Day revision;
+  - each returns a Confirmed Entry and a new Day revision;
   - `GET /v1/reports/day` reconciles. `/r`
 - Given the kill switch On for every task, When the eater opens **Capture & Plan** in the iOS simulator, Then:
   - photo and voice capture show that analysis is off;
@@ -704,12 +704,12 @@ As platform admin, I need an eater over the hard limit to get a typed answer wit
 - Given the same eater in the iOS simulator, When they take a meal photo on **Capture & Plan**, Then:
   - a note gives the reset time;
   - logging from **My Units**, a Template or a typed amount still works. `/r`
-- Given the same eater, When they call `POST /v1/consumption` with a recent Unit, Then it is accepted. `/r`
+- Given the same eater, When they call `POST /v1/consumption` with a recent Unit, Then it returns a Confirmed Entry. `/r`
 
 #### admin-10.41 · An anonymous session reaches its own limit
 As platform admin, I need local-trial anonymous sessions held to their own lower limit, so that cloud AI before sign-in stays bounded. FR-001 ("Cloud AI requires authenticated or anonymous-session access, consent, and quotas").
 - Given an anonymous hard limit of 3 image Analyses, When `anon-synth-001` makes a 4th `meal` request with its anonymous-session token, Then it returns 429 `RATE_LIMITED` with `resets_at`. `/r`
-- Given the same session in the iOS simulator, When the person logs a typed amount on **Today**, Then the Entry is accepted locally and counts in the Day. `/r`
+- Given the same session in the iOS simulator, When the person logs a typed amount on **Today**, Then `POST /v1/consumption` with the anonymous-session token returns a Confirmed Entry that counts in the Day. `/r`
 - Given `anon-synth-001` signs in during the same Day, When the next `meal` request is sent, Then it is counted against the signed-in limit (25), and the 3 analyses already made are carried over. `/r`
 
 #### admin-10.42 · The soft limit counts and does not block
@@ -748,15 +748,15 @@ As platform admin, I cannot expose eaters to a model that has no price on **Metr
   - the move is refused with "No price for this model. Add one on Metrics.";
   - Shadow is still allowed, with the cost shown as "No price". `/r`
 
-#### admin-10.47 · Read cost per accepted Unit and per confirmed meal
-As platform admin, I read the estimated cost per accepted Unit and per confirmed meal, including discarded Analyses, retries and Shadow calls, so that I see the real price of AI per useful outcome. §16.5; A19.
+#### admin-10.47 · Read cost per Saved Unit and per confirmed meal
+As platform admin, I read the estimated cost per Saved Unit (the brief's "accepted unit") and per confirmed meal, including discarded Analyses, retries and Shadow calls, so that I see the real price of AI per useful outcome. §16.5; A19.
 - Given the last 7 days hold:
   - 1,000 meal Analyses, of which 200 were discarded and 50 retried;
   - 100 Shadow calls;
-  - 600 confirmed meals and 90 accepted Units,
+  - 600 confirmed meals and 90 Saved Units,
 
   When **Metrics** opens its cost view on "Last 7 days", Then it shows:
-  - the estimated cost, the cost per confirmed meal and the cost per accepted Unit, split by task and by Registry version;
+  - the estimated cost, the cost per confirmed meal and the cost per Saved Unit, split by task and by Registry version;
   - the line "Estimated from token counts and the prices on Metrics; this is not your bill". `/r`
 - Given an Analysis's usage metadata, When it is priced, Then input, output, thinking and cached tokens are each priced at their own rate. `/m`
 - Given no Analyses in the period, When the page opens, Then it reads "No AI use in this period", not "$0.00 per meal". `/r`
@@ -847,9 +847,9 @@ As platform admin, I read the fixed permissions in plain words on **Roles › Pe
   - "Read the Registry", "Propose Registry versions", "Move versions between states", "Roll back", "Use the kill switch";
   - "Change quotas", "Change prices", "Read Metrics", "Read failed jobs", "Retry failed jobs";
   - "Read roles", "Change roles", "Read the Audit trail for Registry, Roles and Jobs", "View consented evaluation cases";
-  - "Approve Food records and Aliases", "Version Policy";
+  - "Approve Foods, Recipes and Aliases", "Propose and approve Policy versions";
   - "Read account state", "Request a Grant", "Read the whole Audit trail". `/r`
-- Given the list, When the row "Read a diary inside an approved Grant" is shown, Then it reads "Only through a Grant · can't be added to a role". `/r`
+- Given the list, When the row "Read a diary inside an Active Grant" is shown, Then it reads "Only through a Grant · can't be added to a role". `/r`
 
 #### admin-10.59 · The five personas' roles are seeded
 As platform admin, I find the five persona roles in place on a fresh deployment, so that the console is safe from day one. Map §2 (five personas), FR-080, FR-081, blueprint §0 line 3.
@@ -868,13 +868,16 @@ As platform admin, I create a role that starts with nothing and tick the permiss
 - Given a role name that is already used, When it is saved, Then the name field reads "A role with this name exists". `/r`
 
 #### admin-10.61 · Assign or remove a role, see the effect first, and have it apply at once
-As platform admin, I see what a user gains or loses before I save, and the change applies on their very next request, so that access changes are deliberate and immediate. Blueprint §0 line 3 (roles → users), FR-080, NFR-12 ("least privilege"); A21, A23.
+As platform admin, I see what a user gains or loses before I save, and the change applies on their very next request, so that access changes are deliberate and immediate. Blueprint §0 line 3 (roles → users), FR-080, NFR-12 ("least privilege"), vocabulary D2 (staff and eater accounts); A21, A23.
 - Given `approver.a` holds Nutrition approver, When `admin.a` adds "Release reviewer" on **Roles › Users**, Then:
   - before Save, a preview reads "Gains: Read the Registry";
   - after Save, **Audit trail** records it. `/r`
 - Given `admin.b` holds Platform admin and has the console open, When `admin.a` removes that role, Then:
   - `admin.b`'s next API call returns 403 `FORBIDDEN`;
   - their console shows "Your access changed. Reload to continue." `/r`
+- Given `eater-synth-070`, an eater account, When `admin.a` tries to give it Platform admin on **Roles**, Then:
+  - Save is refused with "An eater account can't hold a staff role";
+  - `PUT /v1/admin/users/eater-synth-070/roles` returns 422 `VALIDATION_ERROR` (vocabulary D2: "a staff account is never an eater account"). `/r`
 
 #### admin-10.62 · Duties that must stay apart are kept apart
 As platform admin, I am stopped from combining roles that must stay apart, so that support never also approves records or runs the Registry, and the auditor stays independent. FR-081 ("Separate support privileges from nutrition-approver and platform-admin privileges"); R24. `assumption`: the Auditor-with-a-writing-role block rests on R24's "separated duties".
@@ -886,7 +889,7 @@ As platform admin, I am stopped from combining roles that must stay apart, so th
 
 #### admin-10.63 · No role can read a diary
 As platform admin, I can never give any role a permission to read a diary, so that diary access exists only through a Grant the eater approved. FR-081, map §3 (Grant), WF-10 done-when. *Shared: Support agent, Auditor.*
-- Given the role editor, When `admin.a` looks for "Read a diary inside an approved Grant", Then it is not offered, and `PUT /v1/admin/roles/{id}` including it returns 422 `VALIDATION_ERROR`. `/r`
+- Given the role editor, When `admin.a` looks for "Read a diary inside an Active Grant", Then it is not offered, and `PUT /v1/admin/roles/{id}` including it returns 422 `VALIDATION_ERROR`. `/r`
 - Given `admin.a`'s token, When it calls a diary endpoint for `eater-synth-060`, for example `GET /v1/reports/day?user=eater-synth-060`, Then it returns 404 `NOT_FOUND`. `/r`
 
 #### admin-10.64 · Nobody changes their own roles, and one platform admin always remains
@@ -1152,7 +1155,7 @@ Every question in `care.md` "The questions" is answered below, or marked not app
 | admin-10.2 | every console persona | deny by default |
 | admin-10.3 | Support agent, Nutrition approver | the no-access page |
 | admin-10.23, 10.49 | Nutrition approver | acceptance by Evidence type |
-| admin-10.63 | Support agent, Auditor | diary access only through an approved Grant |
+| admin-10.63 | Support agent, Auditor | diary access only through an Active Grant the eater approved |
 
 ## 7 · Conflicts for the model phase
 
@@ -1160,7 +1163,8 @@ Every question in `care.md` "The questions" is answered below, or marked not app
    - the version states Proposed, Shadow, Canary, Rollout, Rolled back;
    - the task names Meal, Label, Scale, Recipe, Text, Voice;
    - the panel words "models list", "prompt editor", "regression set" (the brief's §16.4 term), "quotas panel", "prices panel" and "launch gates" (Settings, per D2);
-   - "quota", "Canary check".
+   - "quota", "Canary check";
+   - the evaluation-run states "Evaluating", "Cancelled" and "Finished" (10.15).
 
    Vocabulary D2 already fixes the sections, the version states and the kill-switch states. This lens uses D2's sections (Registry, Metrics, Jobs, Roles, Audit trail, Settings) and its version states (Proposed → Shadow → Canary → Rollout · Rolled back). The words left above need a dated delta, or a replacement.
 2. **Which day a quota uses** (10.44).
@@ -1170,7 +1174,7 @@ Every question in `care.md` "The questions" is answered below, or marked not app
 3. **Who sees failed jobs with identity.**
    - FR-080 puts failed jobs in the console, and map §2 gives support "failed jobs and account state".
    - I show the admin de-identified jobs (admin-9.1–9.4, 10.55) and leave account-linked views to support.
-4. **The kill switch and an open review screen** (10.33). New model calls stop at once, but an Analysis already in review can still be approved. The eater lens owns that copy.
+4. **The kill switch and an open review screen** (10.33). New model calls stop at once, but an Analysis that is Ready for review can still be approved. The eater lens owns that copy.
 5. **Shadow sends extra copies of eaters' inputs to Google** (10.21). Either the eater's Consent to send photos, voice and text to Google's AI covers evaluation copies, or Shadow is limited to eaters with the research Consent. This is for the eater lens and the Consent wording.
 6. **Arabic voice and "no preview models in Canary or Rollout"** (10.7).
    - `gemini-3.5-transcribe` is preview on Agent Platform, `global` only, and lists only ar-EG (P15 as narrowed). My rule keeps it in Shadow.
@@ -1181,7 +1185,7 @@ Every question in `care.md` "The questions" is answered below, or marked not app
    - Residency belongs to the owner and counsel (map §1.7; P11 as corrected).
    - I keep it read-only.
 8. **The budget turns the kill switch on for every task** (10.48). The eater lens may prefer a gentler order: image tasks first, Text kept on.
-9. **Staff and eater accounts.** Round 0 required separate staff and eater accounts. No map or brief line asks for it, so it was dropped as a story. The model phase decides whether one login may hold both an Eater role and a console role. If it may, the no-diary rule (10.63) still holds, because no role grants diary reading.
+9. **Staff and eater accounts:** settled by vocabulary D2 ("a staff account is never an eater account"). Round 0 had this as a separate story with no source. It is now one acceptance line in admin-10.61, traced to D2.
 10. **The Nutrition approver's access to Metrics** (10.49). The approver lens may want per-Food breakdowns, and these must keep the small-group rule (10.50).
 11. **Who holds "View consented evaluation cases"** (10.14). No seeded role holds it. Viewing raw evidence needs a custom role (§19.2 "restricted roles"). The approver and auditor lenses may claim it.
 
@@ -1233,3 +1237,175 @@ Every question in `care.md` "The questions" is answered below, or marked not app
 | AT-29 | admin-9.1, 9.3, 10.14 |
 | AT-30 | 10.16, 10.17 |
 | AT-32 | 10.33, 10.34 |
+
+## Lens verdict (2026-10-01)
+
+**fail**: 26 defects. Checked by a lens verifier that did not write this file, against `way/blueprint.md` §0–§1, `way/brief/frd-v1.0.md`, `way/personas/_lens-brief.md`, `care.md`, the r1 research files and both refutations.
+
+**What holds.** The file has 66 stories, all `admin-10.n`, and each has at least one `/r` line. All 29 A-sources were re-opened on 2026-10-01 with a generic User-Agent, and every quoted phrase was found. That includes A1's "July 21, 2027 or later" for `gemini-3.5-flash-lite` on the Agent Platform page, which differs from the Gemini API date the refuter used for P2 (as A2 says), and Art. 26(3) of the SDAIA Executive Regulations behind R24's "separated duties". Every cycle-1 finding cited either stands or is cited as corrected (P5, P6, P11, P15, R18). The admin part of WF-10's done-when ("an admin rolls a model version back and manual logging keeps working") is covered by 10.24 and 10.30.
+
+**Traced**
+1. **admin-10.62** traces to nothing. Its line reads "`assumption` (no brief line; see §6)". Neither the map nor the FRD asks for separate staff and eater accounts, and FR-081 governs reading *other* people's diaries. It is drift until the model phase adopts it.
+2. **admin-10.22, 10.33, 10.34, 10.49, 10.57, 10.58, 10.61, 10.65** cite only research or care, with no map or FRD line: "A7." (10.22); "A15, A29 (assumption for our load); care group 4." (10.33); "A14, A15, A16." (10.34); "Care group 4." (10.49); "A21, A23." (10.57, 10.58); "A24, A27 …" (10.61); "Care group 4; A10." (10.65). Their content belongs to §16.4, FR-080, map §2 "roles" or blueprint §0 line 3, and the trace line must say which.
+
+**Complete (missing steps)**
+3. **§16.4 "Maintain a regression set of food photos, scale readings, bilingual labels, Arabic voice commands, ingredient variants, and adversarial instructions" and NFR-10 "At least 200 consented target-cuisine test cases and 100 bilingual labels at launch".** No story adds or curates cases, checks the set's composition against these minimums, or brings consented cases in (FR-076 optional research use; §19.2 "Access to raw evidence for quality review requires explicit consent and restricted roles"). 10.12 only runs "a synthetic regression set of 300 cases".
+4. **The §16.4 stamps.** The brief says "Store model ID, prompt version, extraction schema version, nutrition algorithm version, and source versions with each analysis". 10.25 refuses a write only when it is "without all four stamps" (Registry version, model id, prompt version, schema version), so the nutrition algorithm version and the source versions are missing. The §15.3 line "log the actual processing configuration" is not stamped either; that is the location 10.11 shows.
+5. **Config rollback.** In map §3 the Admin → registry row has the value event "config live / rolled back", and map §6 puts "per-user daily AI quotas" in the admin-versioned Registry. But 10.35 makes "`quotas@v4` … live" at once, and no story rolls a quotas version back. Only model Registry versions roll back (10.24).
+6. **FR-001 "Cloud AI requires authenticated or anonymous-session access, consent, and quotas".** 10.35 sets "anonymous sessions to hard 3 and 10", but no runtime line shows an anonymous session reaching its limit. 10.36 tests only a signed-in eater.
+7. **§19.1 provider data governance** ("assess abuse-monitoring logs, request logging, caching, and grounding … configure store=false"). No story records, shows or changes these provider settings, although §1.2 lists "P14: the 24-hour cache and abuse-monitoring logs" among the findings the lens rests on.
+8. **AT-29 "Account deletion and consent withdrawal propagate to media, queues, private cached analysis, and exports".** 10.51 retries a failed export or analysis job without re-checking that the account still exists, that the AI Consent still stands or that AI is on. No story covers a failed job whose eater has since deleted the account or withdrawn Consent. In that case a retry would send the data again or build an export for a deleted account.
+9. **§8 coverage overstates NFR-12.** The row reads "NFR-12 | 10.35, 10.53, 10.55–10.61", but NFR-12's "secret rotation, dependency scans, backups, and tested restore" have no story and no note naming who owns them.
+
+**Observable**
+10. **admin-10.28**, line 3: "Then it is analysed normally" is vague. Name the response: the status, and a draft stamped `intent@v4`.
+11. **admin-10.18**, line 1: "When they open **Capture & Plan**, Then no Analysis request is made for them". Opening the tab never requests an Analysis, so this line cannot fail. The When must attempt a capture, and the Then must name what the eater sees.
+12. **admin-10.64**, line 2: "names the task in the string catalogue's Arabic label and keeps 'AI' terms consistent with the eater app". No Arabic string is given and "consistent" has no reference value, so this story about Arabic contains no Arabic console text.
+13. These lines name no screen or interface:
+    - 10.20, line 3: "When a 13th is added, Then it is refused". Where, and with what message?
+    - 10.21, line 3: where does the reason "Too few Analyses to judge (A13)" show?
+    - 10.22, both lines: "new eaters are added" and "return to it rather than being drawn again". Through which interface?
+    - 10.24, line 2: the v7 and v6 stamps. Read through `GET /v1/analyses/{id}`?
+    - 10.34, line 3: "When shadow or canary metrics are viewed". Which screen?
+14. **admin-10.45**, line 2: "the total is suppressed or rounded too". The rounding rule is not named, so a verifier cannot decide whether a rounded total still lets the hidden figure be derived (A26).
+15. **admin-10.65 contradicts admin-10.33.** 10.33 says "the row reads 'Not sent: no connection. Try again.' with a retry button"; 10.65 says "The kill switch shows 'Will try when online'". The first is a manual retry. The second implies a queued switch that fires later by itself. A verifier cannot know which to observe, and a queued emergency action could fire after the situation has changed.
+16. **admin-10.33**: "each target is at least 44 × 44 pt". The console is a web page, so give the size in CSS px.
+
+**Sourced**
+17. §1.3 and §4 state the persona's routine and place with no source and no `assumption` label:
+    - "Each morning: read the Registry overview, then the Quality and Jobs screens";
+    - "Mostly at a desk, on a desktop browser, in long sessions";
+    - "On call, from a phone (about 390 px), sometimes on a weak home or mobile network, often at night";
+    - the "What they hate" list, which infers admins' feelings from incident reports and guidance (A11–A27) that say nothing about what admins hate.
+
+    Only the Ramadan load is labelled.
+18. **admin-10.20**, line 3: "no more than 12 guard metrics may be configured (A11)". This turns A11's hedge "perhaps no more than a dozen" into a hard limit, and the limit is not in the §3 starting-values table or in §7.
+
+**Vocabulary**
+19. "Paused" names three things:
+    - a canary halted by a regression ("Paused · validation failures 30 % vs 1 %", 10.21; "Canary is paused on a regression", 10.23);
+    - AI turned off (`reason: "paused"`, 10.28; "photo and voice analysis show a paused note", 10.30; "Paused while AI is off", 10.34);
+    - 10.32's "canary v7 at 10 % paused underneath".
+
+    The third leaves 10.32's expected "Canary · 10 %" ambiguous, because a canary paused on a regression should not read as running.
+20. One stage has three names: map §3's "shadow → canary → rollout", and the lens's "Full" ("Promote to full") and "Live" ("Live v7"; "Stage names are 'Draft · Shadow · Canary · Live/Full'"). "Draft" also names an Analysis draft, as the lens's own §6.1 notes. The question is routed to §6, but the acceptance lines already use both names.
+21. Task keys and screen names differ, against map ¶4 ("the screen, the code and the logs use these words"): `intent` / "Text and voice intent", `scale` / "Scale reading", `transcribe` / "Voice transcription", `meal_photo` / "Meal photo". This makes §4's "Names match the screen" untrue.
+22. Words outside map ¶4 are used as fixed copy, and some have more than one name:
+    - "price book" (10.40 title, §1.3), "Prices" (the screen), "meter" and "cost meter";
+    - "model catalogue", "the catalogue" and **Registry › Models**;
+    - "Registry version", "candidate", "guard metric", "staff account" and the console section names.
+
+    §6 conflict 2 routes only the section names and "Registry version".
+
+**Experience**
+23. Several care questions are neither answered nor marked not applicable, although a platform build asks every group:
+    - Group 2: "Would someone who knows none of our internal names understand every label?" The console shows `registry.read` (10.3), "(A13)" (10.21) and "(FR-081)" (10.59) as copy. Also unanswered: "Can people tell at a glance what is tappable".
+    - Group 3: "Does the screen respond at the instant of touch?", "Can the person change their mind in the middle of a motion?" and "Does the first screen appear at once, back where the person left off?"
+    - Group 5: "Do we collect only the data this feature needs?"
+    - Group 6: "At the largest text size, does anything clip or overlap?" This covers browser zoom and text size at 390 px.
+24. §4 says "the admin's quiet window for promotions moves to late morning". No story or requirement carries this; nothing warns about a promotion during the eaters' peak. A29 says nothing about late morning either; its quote is "From 10 p.m. to 2 a.m.".
+25. §4's inclusion requirements have no acceptance line in any story, so no verifier can observe them. These are "the whole promote/rollback/kill-switch flow works by keyboard", the screen-reader label "Meal photo, AI on, toggle" and "4.5:1 contrast in light and dark". Separately, 10.28 makes "Turn off" the sheet's main button, while §4 says "One main action per view, and it is never the destructive one". The lens should state which button is the default on each of the three confirmations.
+
+**Ids**
+26. **admin-10.51** (export retry), **10.52** (deletion deadline, "4 days left (due 2026-10-05)") and **10.54** (retention purge) serve WF-9: export, and "delete account removes private data and media within the policy window". With journey = WF number they are admin-9.x stories, or the lens must say why they sit under WF-10. The lens brief asks for "one journey per workflow the persona touches", and this file has only journey 10.
+
+## Fix round 1 (2026-10-01)
+
+All 26 defects are fixed in the file itself. Story ids were renumbered: journey admin-9 is new and admin-10 runs 10.1–10.71. The file now also follows `way/vocabulary.md` (delta D2):
+
+- the kill switch is On/Off, fails fast with `AI_UNAVAILABLE` and queues nothing;
+- the Registry version states are Proposed → Shadow → Canary → Rollout · Rolled back;
+- the error codes are `FORBIDDEN`, `NOT_FOUND` (never revealing another user's ids), `VALIDATION_ERROR`, `CONSENT_REQUIRED`, `RATE_LIMITED` and `STALE_REVISION`;
+- the sections are Registry, Metrics, Jobs, Roles, Audit trail and Settings (launch gates);
+- the Analysis states are Ready for review and Failed;
+- the Privacy job states are Running, Completed and Failed;
+- the Entry state is Confirmed;
+- the roles are staff accounts, never eater accounts.
+
+1. **10.62 (staff vs eater accounts) dropped as a story.** D2 then settled the rule ("a staff account is never an eater account"). It is now one acceptance line in admin-10.61 traced to D2, and §7 conflict 9 records this.
+2. **Every story now carries a map, brief, blueprint or D2 trace.** The eight research-only stories:
+
+   | old | new | traced to |
+   |---|---|---|
+   | 10.22 | 10.25 | §16.4 |
+   | 10.33 | 10.36 | §16.4 and blueprint §0's ~390 px console proof |
+   | 10.34 | 10.37 | §16.4 and NFR-05 |
+   | 10.49 | 10.54 | FR-080 |
+   | 10.57 | 10.60 | blueprint §0 line 3 and FR-080 |
+   | 10.58 | 10.61 | blueprint §0 line 3, FR-080 and NFR-12 |
+   | 10.61 | 10.64 | FR-081 and map §2 |
+   | 10.65 | merged | its offline line moved into 10.1 (FR-080, §16.4); its kill-switch line merged into 10.36 |
+
+   A script check finds every story's trace line citing a map, brief, blueprint or D2 line.
+3. **New 10.13 and 10.14: the regression set.**
+   - 10.13 counts the six §16.4 kinds and checks NFR-10's minimums of 200 consented target-cuisine cases and 100 bilingual labels. Synthetic cases are not counted toward the minimum. It adds a case using the AT-01 fixture and refuses a case with no expected result.
+   - 10.14 takes consented cases only from eaters who gave the research Consent (FR-076). Raw evidence opens only for a restricted role (§19.2), and withdrawing the Consent removes the case (AT-29).
+4. **10.28 now stamps the full §16.4 set:**
+   - Registry version, model id, prompt version and schema version;
+   - nutrition algorithm version and source versions;
+   - the processing location (§15.3);
+   - and a write missing any stamp is refused.
+5. **New 10.39: roll back a quotas version** (map §3, "config live / rolled back"; map §6).
+6. **New 10.41: an anonymous session reaches its own limit** (FR-001), shown at runtime with `RATE_LIMITED`, including the carry-over on sign-in.
+7. **New 10.12: provider data settings** (§19.1). `store=false` and grounding off are enforced in code and checked by `/s`. The 24-hour cache and the abuse-monitoring exception are recorded with who and when, and a re-check falls due after 90 days.
+8. **New admin-9.3: a retry re-checks the account and the Consent first** (AT-29).
+   - An export for a deleted account → `VALIDATION_ERROR`, and the job stays Failed.
+   - Consent withdrawn → `CONSENT_REQUIRED`, with no provider call.
+   - Kill switch On → `AI_UNAVAILABLE`.
+   - 10.56 points to it.
+9. **New 10.65–10.67 under the Settings launch gates, for NFR-12:**
+   - credential rotation with the value never shown or logged;
+   - the dependency audit and SBOM, with CI failing on a known vulnerability;
+   - a backup restore that replays every Day.
+
+   Owner note: hosted rotation and scheduled backups wait with the dropped operate row. The §9 coverage row now names all seven NFR-12 items.
+10. **10.31 (was 10.28), line 3:** now "returns 200 with an Analysis that is Ready for review, stamped `text@v4`".
+11. **10.21 (was 10.18), line 1:** the eater now *takes a photo*. The app shows the Consent explanation and sends no request. A direct call returns 403 `CONSENT_REQUIRED`, and the Shadow count does not move.
+12. **10.69 (was 10.64):** proposed Arabic strings in a table, used verbatim in the acceptance lines. They are «السجل», «الوجبة», «مفتاح الإيقاف: غير مُفعَّل», «مفتاح الإيقاف: مُفعَّل», «إلغاء» and «فعِّل مفتاح الإيقاف: الوجبة». The vague "consistent with the eater app" claim is gone.
+13. **Every flagged line now names its screen or interface:**
+    - the "13th metric" line is removed (see 18);
+    - the regression reasons show on Registry › Meal, the Audit trail and a banner (10.24);
+    - the Canary share lines are read through `GET /v1/analyses/{id}` (10.25);
+    - the roll-back stamps go through `GET /v1/analyses/{id}` (10.27);
+    - "No traffic while the kill switch is On" shows on the Registry › Meal Canary panel (10.37).
+14. **10.50 names complementary suppression** with a worked fixture: rows of 7, 40, 120 and 300 with a total of 467. Rows 7 and 40 are hidden and the total is shown exact.
+15. **The 10.33/10.65 contradiction is resolved in 10.36.** A switch sent offline shows "Not sent … Try again". It is never queued, and nothing is sent until the admin presses Try again. 10.34 adds that while the kill switch is On, an eater's request fails at once and is never sent later without the eater (D2).
+16. **10.36 sizes are in CSS px:** 44 × 44 CSS px at 390 CSS px.
+17. **§1.3 is split** into "What the sources show going wrong" (sourced) and the routine, place and feelings, each labelled `assumption`. The unsourced "what they hate" claims are removed. §5 labels its place and feeling lines the same way.
+18. **"A dozen" is a soft guideline.** The hard limit is removed from 10.23. The §3 table says "about six; a dozen is A11's soft guideline, not a limit".
+19. **"Paused" no longer names anything.**
+    - The kill-switch states are On and Off (D2).
+    - A failing Canary check rolls the version back automatically (10.24, state Rolled back).
+    - 10.35 now reads "Canary: version 7 · 10 % of eaters" once the kill switch is Off.
+20. **One name for each stage:** Proposed → Shadow → Canary → Rollout · Rolled back (map §3 and D2). "Draft", "Live" and "Full" are gone. The overview reads "Rollout: version 6", and the replaced version is the "previous Rollout version".
+21. **Task keys now equal the screen names:** `meal`/Meal, `label`/Label, `scale`/Scale, `recipe`/Recipe, `text`/Text, `voice`/Voice. They follow the brief's §14 capture modes and `POST /v1/analyses`.
+22. **One name per thing:**
+    - "price book", "Prices" and "meter" all became "prices on Metrics" and "estimated cost";
+    - "model catalogue" became "the models list on Registry";
+    - "candidate" became "proposed version";
+    - "guard metric" became "Canary check";
+    - "console user" became "staff account" (D2);
+    - the sections are D2's.
+
+    The words left over are listed in §7 conflict 1 for a dated delta.
+23. **§5 answers every care question in groups 1–6, numbered as in care.md**, or marks it n/a with a reason: group 1.8 and group 3.5 (no animation), and group 4.9 (no device permissions). The copy rule in §3 removes internal ids (`registry.read`, finding ids, requirement ids) from screen copy, and a script check finds none in quoted copy.
+24. **The unsourced "late morning" promotion window is dropped.** A29 is now used only for the eater's late diary-day boundary (10.44), and the text says that no rollout window is derived from it.
+25. **New 10.71 covers keyboard, screen reader, contrast and zoom**, with runtime lines:
+    - keyboard-only Propose → Canary → Rollout → roll back → kill switch, with Esc cancelling;
+    - VoiceOver announcing "Meal, kill switch Off/On, switch";
+    - axe-core reporting no contrast failure in light and dark at 1280 and 390 CSS px;
+    - 200 % zoom with no clipping.
+
+    Every confirmation now defaults to "Cancel": the kill switch (10.31, 10.32), Move to Canary (10.22), Move to Rollout (10.26), roll back (10.27) and quotas roll back (10.39). The action button is separate and named with its verb.
+26. **WF-9 stories are renumbered as journey admin-9:**
+
+    | old | new |
+    |---|---|
+    | 10.52, deletion deadline | admin-9.1 |
+    | 10.51, export retry | admin-9.2 |
+    | new, AT-29 re-checks | admin-9.3 |
+    | 10.54, retention purge | admin-9.4 |
+
+    The analysis-job retry stays in WF-10 as 10.56, because FR-080 places failed AI jobs in the console's AI governance.
+
+Counts after round 1: 75 stories (admin-9: 4; admin-10: 71) and 197 acceptance lines. Every story has at least one `/r` line.
