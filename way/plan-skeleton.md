@@ -23,11 +23,11 @@ Input for the planner who writes `blueprint.md` §2. Every story id (629: the le
 - S09 Capture and analyse — Analyzer port, FixtureAnalyzer default, Gemini adapter behind the Registry, photo + words, label, scale, voice (server transcription), ≤2 questions, intent, untrusted text, Analysis review, App Check.
 - S10 Registry, quotas, prices, kill switch, metrics — Platform admin console.
 - S11 Templates, copy, Siri, widget — App Intents, interactive widget (JSON command files), copy Meal/Day.
-- S12 Planner — OR-Tools CP-SAT, Meal planner, Meal review, Plan states, expiry (eater-5.44).
+- S12 Planner — OR-Tools CP-SAT, Meal planner, Meal review, Plan states, expiry (eater-5.45).
 - S13 Activity — HealthKit read, manual exercise, dedupe/link, activity modes, credit offer (eater-7.25).
 - S14 Health write — food correlations, rewrite on correction, delete on void.
-- S15 Privacy — Consent screens and withdrawal, Wordings (admin-10.77), export job, delete account job, retention jobs.
-- S16 Grants — support request, eater approves/declines/withdraws, read-only Diary within the Grant, expiry, Grant settings (admin-10.76).
+- S15 Privacy — Consent screens and withdrawal, Wordings (admin-10.73), export job, delete account job, retention jobs.
+- S16 Grants — support request, eater approves/declines/withdraws, read-only Diary within the Grant, expiry, Grant settings (admin-10.72).
 - S17 Support console — look-up, account panel, Jobs tabs, failed Analyses, Sync, Requests received outside the app, escalation.
 - S18 Auditor console — Audit trail Events, Anomalies, Consents, Summary, review notes (auditor-10.42), retention run (auditor-10.43), records of processing, exports.
 - S19 Policy and approver depth — Policy versions (floors, caps, credit, retention), Label submissions, Flags, Cross-checks, USDA release import.
