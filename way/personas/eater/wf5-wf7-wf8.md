@@ -139,7 +139,7 @@ As the Eater, I choose "about 450" or "not above 500", so that the planner aims 
 #### eater-5.6 · Carbohydrate maximum, on macro energy (4/4/9)
 As the Eater, I set a carbohydrate maximum and see what it is a share of, so that "30 %" means the same thing in the plan and in my reports. · Trace: FR-049, FRD §9.1 (4C ≤ r × E_macro), §10.1 (denominator label; same convention in planner and reports)
 - `/r` Given «حد الكربوهيدرات 30 ٪» ("Carbohydrate maximum 30 %") on Meal planner, Then the caption under the field reads «من الطاقة المحسوبة من المغذيات (4/4/9)» ("share of macro-derived energy (4/4/9)").
-- `/m` Given 4 kabsa rice spoons + 2 chicken pieces (P 33.6, C 28.0, F 16.8 g; 397.6 kcal), When checked against 30 %, Then the share is 28.17 % and passes; 5 rice + 2 chicken (440.0 kcal) gives 31.82 % and fails.
+- `/m` Given 4 kabsa rice spoons + 2 chicken pieces (P 33.6, C 28.0, F 16.8 g; 397.6 kcal), When the planner's validator checks them against 30 %, Then the share is 28.17 % and passes; 5 rice + 2 chicken (440.0 kcal) gives 31.82 % and fails.
 - `/r` Given 0 or 130 typed in the field, Then «أدخل رقمًا من 1 إلى 100 ٪» ("Enter 1 to 100 %") appears beside it and no request is sent.
 
 #### eater-5.7 · Protein minimum in grams or as a share
@@ -163,10 +163,10 @@ As the Eater, I mark foods I will eat anyway, so that the plan is built around t
 
 #### eater-5.10 · Preference shares, with the basis always visible
 As the Eater, I say how I would like the meal split and by what (count, mass or calories), so that the plan's split means what I meant. · Trace: FR-050, AT-18
-- `/r` Given Mona enters shares 30 / 20 / 5 / 40 / 5 for foul, cheese, olive, egg and tuna, Then a «الأساس» ("Basis") control shows Count · Mass · Calories with none selected, and "Find counts" stays disabled until she picks one.
+- `/r` Given Mona enters shares 30 / 20 / 5 / 40 / 5 for foul, cheese, olive, egg and tuna on Meal planner, Then a «الأساس» ("Basis") control shows Count · Mass · Calories with none selected, and "Find counts" stays disabled until she picks one.
 - `/r` Given her shares add to 95, Then Meal planner reads «المجموع 95 ٪» ("Shares total 95 %") and offers «اجعلها 100 ٪» ("Scale to 100 %") or editing; nothing changes until she taps one.
 - `/r` Given basis Count, When counts are found, Then the result header reads «النسب حسب العدد» ("Shares by count"), and `POST /v1/meal-plans` echoes `preference.basis: "count"`.
-- `/m` Given basis Mass, When shares are computed, Then each row's mass is the expanded portion, bread included (a foul bite = 28 g).
+- `/m` Given basis Mass, When the planner's share calculation runs, Then each row's mass is the expanded portion, bread included (a foul bite = 28 g).
 
 #### eater-5.11 · Whole counts by default; halves or grams only when I allow them
 As the Eater, I get whole bites and spoons unless I turn on halves or grams, so that the plan is something I can actually eat. · Trace: FR-051; map §1.6 Policy "planner increments" · **Shared: Eater · Nutrition approver** (approver-10.55)
@@ -177,22 +177,22 @@ As the Eater, I get whole bites and spoons unless I turn on halves or grams, so 
 
 #### eater-5.12 · Bread with every dipped bite, counted before any check
 As the Eater, I see each dipped bite's bread in the plan and in its numbers, so that "fits 500" includes the bread I really eat. · Trace: FR-052, FR-018, FR-019, FR-020, AT-04; FRD §2.4 ("bread with every bite"); E5
-- `/r` Given Mona's foul spoon (dipped, 8 g bread rule) and cheese bite (bread inside), When counts are found, Then each foul row reads «فيها 8 غ عيش» ("Includes 8 g bread") and the cheese row reads «العيش جزء من اللقمة» ("Bread is part of the bite"), and 3 foul bites show 138 kcal, not 75.
+- `/r` Given Mona's foul spoon (dipped, 8 g bread rule) and cheese bite (bread inside), When counts are found, Then each foul row on Meal planner reads «فيها 8 غ عيش» ("Includes 8 g bread") and the cheese row reads «العيش جزء من اللقمة» ("Bread is part of the bite"), and 3 foul bites show 138 kcal, not 75.
 - `/m` Given the validator receives a foul count of 3, Then it checks the expanded vector (46.0 kcal, P 2.2, C 6.6, F 1.2 per count), and a cheese bite count adds no second bread (47.4 kcal).
-- `/r` Given a meat bite with the exception "5 g bread" (FR-020), Then its row reads «فيها 5 غ عيش».
+- `/r` Given a meat bite Unit with the exception "5 g bread" among the chips, When counts are found, Then its row on Meal planner reads «فيها 5 غ عيش».
 - `/r` Given no Unit that puts two fillings on one bread bite, When `POST /v1/meal-plans` returns, Then for every dipped filling in `counts[]` the bread count in `components[]` equals the filling count.
 
 #### eater-5.13 · Wrong limits are caught beside the field, in either digit system
 As the Eater, I type limits in Arabic-Indic or Western digits and get told at once what is wrong, so that I never send a plan request that cannot mean anything. · Trace: FR-049, FRD §14.1 (both numeral systems, decimal input), §18.2; E41, EX-23, EX-39
-- `/r` Given Mona types «٥٠٠» in Calorie ceiling, Then it is stored as 500 and shown as «٥٠٠»; typing "500" sends the same request.
-- `/r` Given «٣٠٫٥» in Carbohydrate maximum, Then it is read as 30.5 %.
+- `/r` Given Mona types «٥٠٠» in Calorie ceiling on Meal planner, Then it is stored as 500 and shown as «٥٠٠»; typing "500" sends the same request.
+- `/r` Given «٣٠٫٥» typed in Carbohydrate maximum on Meal planner, Then the request to `POST /v1/meal-plans` carries 0.305.
 - `/r` Given −200 or «ابc» in Calorie ceiling, Then «أدخل رقمًا أكبر من صفر» ("Enter a number above 0") appears beside the field, "Find counts" is disabled and no request is sent.
 - `/r` Given `POST /v1/meal-plans` with `carb_max_share: 1.3`, Then it returns `VALIDATION_ERROR` naming `carb_max_share`, and no Plan is created.
 
 ### C · Read the answer
 
 #### eater-5.14 · A plan in counts I can eat, inside every limit
-As the Eater, I tap "Find counts" and get counts with their numbers and every limit checked, so that I know before I reach for the tray. · Trace: FR-055, FR-053, FRD §9, §9.1, NFR-04; map WF-5 done-when ("cap 500 kcal + carbs ≤30 % → counts satisfying unrounded constraints"); E33, EX-11, EX-15
+As the Eater, I tap "Find counts" and get counts with their numbers and every limit checked, so that I know before I reach for the tray. · Trace: FR-055, FR-053, FRD §9, §9.1, NFR-04; map WF-5 done-when ("cap 500 kcal + carbs ≤30 % → counts satisfying unrounded constraints"); research.md Part 2 §3 (the WF-5 moment, "before reaching for the tray"); E33, EX-11, EX-15
 - `/r` Given Faisal's chips kabsa rice spoon, chicken piece (Available 3), salad spoon and laban cup, Calorie ceiling 500 and Carbohydrate maximum 30 %, When he taps «احسب الكميات» ("Find counts"), Then within 2 s Meal planner shows «مقترحة — ضمن كل حدودك» ("Proposed — fits all your limits"), a row per food used with count, component weights, kcal and P/C/F, the totals, and «احفظ الخطة» ("Save plan") as the main button (a Proposed Plan is Saved before it can be Confirmed).
 - `/r` Given the same request to `POST /v1/meal-plans`, When it returns a Plan in state `proposed` and its counts are recomputed from the Unit vectors, Then E_source ≤ 500 and 4C ≤ 0.30 × E_macro on unrounded values. 4 rice + 2 chicken (397.6 kcal, 28.17 %) is a valid answer; 5 rice + 2 chicken (440.0 kcal, 31.82 %) is never returned.
 - `/r` Given a result, Then the limits list shows each limit with its unrounded value and a word, for example "Calorie ceiling 500 kcal — 397.6 · met" and "Carbohydrate ≤ 30 % — 28.17 % · met" (EX-35: a word, not colour alone).
@@ -200,27 +200,27 @@ As the Eater, I tap "Find counts" and get counts with their numbers and every li
 
 #### eater-5.15 · Every limit is checked on unrounded numbers (AT-20)
 As the Eater, I can trust that a plan marked as fitting really fits, so that a rounded "30.0 %" never hides 30.04 %. · Trace: FR-053, AT-20
-- `/m` Given one sandwich quarter (P 12, C 18.775, F 14.1 g; 250.0 kcal) and Carbohydrate maximum 30.00 %, When validated, Then the share is 75.1 / 250.0 = 30.04 % and the check fails.
+- `/m` Given one sandwich quarter (P 12, C 18.775, F 14.1 g; 250.0 kcal) and Carbohydrate maximum 30.00 %, When the planner's validator runs, Then the share is 75.1 / 250.0 = 30.04 % and the check fails.
 - `/r` Given that food as Must include 1 and Available 1 with Carbohydrate maximum 30 %, When `POST /v1/meal-plans` is called, Then the Plan's `state` is `infeasible` and `blocking[]` holds `carb_max_share` with `value` 0.3004 and `limit` 0.30.
 - `/r` Given the same on Meal planner, Then the result reads "Infeasible — no plan fits these limits" with "Carbohydrate 30.04 % — above your 30 % maximum", never "30.0 %" beside "met".
 
 #### eater-5.16 · An estimate is shown as an estimate, with its Evidence
 As the Eater, I see where each number comes from and a low/high when a food is estimated, so that I never mistake a guess for a measurement. · Trace: FR-055 (estimate/range, evidence quality), FR-029, FR-033, FRD §9.1 (a ceiling is on the estimated value), §20.1; E8, EX-32
 - `/r` Given a result of 4 rice + 2 chicken + 2 salad, Then each row carries its Evidence badge (Recipe-calculated, Measured, Estimated analogue), and the total reads "430 kcal · low 420 – high 446 (estimate, not a statistical interval)".
-- `/m` Given salad low 11.0 and high 24.0 kcal per spoon, When the range is built, Then low = 430.0 − 2 × 5.2 = 419.6 and high = 430.0 + 2 × 7.8 = 445.6, and the Calorie ceiling is checked on 430.0, the estimate (FRD §9.1).
+- `/m` Given salad low 11.0 and high 24.0 kcal per spoon, When the planner builds the range, Then low = 430.0 − 2 × 5.2 = 419.6 and high = 430.0 + 2 × 7.8 = 445.6, and the Calorie ceiling is checked on 430.0, the estimate (FRD §9.1).
 - `/r` Given a result whose rows are only Measured, Label-verified or Recipe-calculated, Then no range is shown.
 - `/r` Given any result in English or Arabic, Then the words "exact" / «بالضبط» do not appear on Meal planner or in the API `explanation`.
 
 #### eater-5.17 · Shares by count and by calories, reported apart (AT-18)
 As the Eater, I see how my split by count turns out in calories, so that "40 % of bites" is never read as "40 % of calories". · Trace: FR-050, AT-18, FRD §10.2 (largest-remainder display)
-- `/r` Given Mona's plan foul 6, cheese 4, olive 1, egg 8, tuna 1 with basis Count, Then two labelled rows show: «حسب العدد ٣٠٫٠ · ٢٠٫٠ · ٥٫٠ · ٤٠٫٠ · ٥٫٠ ٪» and «حسب السعرات ٣٤٫١ · ٢٣٫٤ · ٠٫٧ · ٣٧٫٧ · ٤٫١ ٪», and the total reads «٨١٠ سعرة».
-- `/m` Given Calorie target about 809.7 with tolerance 0, shares by count 30 / 20 / 5 / 40 / 5 and no other limit, When solved, Then the counts are 6 / 4 / 1 / 8 / 1, the only answer with zero deviation.
+- `/r` Given Mona's Proposed plan foul 6, cheese 4, olive 1, egg 8, tuna 1 with basis Count, Then two labelled rows on Meal planner show: «حسب العدد ٣٠٫٠ · ٢٠٫٠ · ٥٫٠ · ٤٠٫٠ · ٥٫٠ ٪» and «حسب السعرات ٣٤٫١ · ٢٣٫٤ · ٠٫٧ · ٣٧٫٧ · ٤٫١ ٪», and the total reads «٨١٠ سعرة».
+- `/m` Given Calorie target about 809.7 with tolerance 0, shares by count 30 / 20 / 5 / 40 / 5 and no other limit, When the planner's solver runs, Then the counts are 6 / 4 / 1 / 8 / 1, the only answer with zero deviation.
 - `/r` Given the same plan from `POST /v1/meal-plans`, Then `preference_report.count_shares` and `preference_report.calorie_shares` are separate arrays, and each displayed row adds to 100.0.
 
 #### eater-5.18 · Nudge a count on the answer and see every limit checked again
 As the Eater, I change a count on the result with a stepper, so that I can try "one more spoon" and see at once whether it still fits. · Trace: FR-053, FR-055, FRD §14 (Meal planner: counts); EX-13, EX-17
 - `/r` Given the kabsa result rice 4 + chicken 2, When Faisal taps + on rice, Then within 300 ms the total reads 440 kcal, the limits list reads "Carbohydrate 31.82 % — above your 30 % maximum", and the header changes to «مقترحة — الكربوهيدرات أعلى من حدك» ("Proposed — carbohydrate above your maximum").
-- `/r` When he taps − on rice, Then the header returns to «مقترحة — ضمن كل حدودك».
+- `/r` When he taps − on rice, Then the Meal planner header returns to «مقترحة — ضمن كل حدودك».
 - `/r` Given he saves the plan with rice 5, When `POST /v1/meal-plans/{id}/validate` (*proposed*) is called with those counts, Then the server returns the same failing check, and the Saved Plan shows "Saved — carbohydrate above your maximum", never "fits all your limits".
 
 #### eater-5.19 · The explanation repeats only verified numbers
@@ -248,12 +248,12 @@ As the Eater, I am told which limit blocks the plan and the smallest change that
 As the Eater, I can trust that my required fries and my bread are always in the numbers, so that no side is "free". · Trace: AT-19, FR-049, FR-052, FR-054
 - `/r` Given Sam's chips grilled chicken bite and hummus bite (each with bread) and fries handful, with Must include fries ≥ 1 and Calorie ceiling 500, When counts are found, Then the result includes fries ≥ 1, every chicken and hummus row reads "Includes 8 g bread", and the total equals the sum of the rows (for example 2 fries + 4 chicken + 1 hummus = 443 kcal).
 - `/r` Given Calorie ceiling 80 instead, Then Meal planner reads "Infeasible — must-include fries (92.5 kcal) are above the 80 kcal ceiling" with the changes "Raise the ceiling to 93 kcal" and "Make fries optional".
-- `/m` Given any candidate solution, When validated, Then it is rejected if a must-include count is below its minimum, if a dipped bite lacks its bread component, or if a row's kcal ≠ count × its Unit vector.
+- `/m` Given any candidate solution, When the planner's validator runs, Then it is rejected if a must-include count is below its minimum, if a dipped bite lacks its bread component, or if a row's kcal ≠ count × its Unit vector.
 
 #### eater-5.23 · Several limits block together: each is named and each change is labelled
 As the Eater, I see every limit that blocks the plan and one labelled change for each, so that I can pick the change that suits me. · Trace: FR-054, FR-049
-- `/r` Given Faisal's Calorie ceiling 500, Protein minimum 60 g, chicken Available 3 and Carbohydrate maximum 30 %, When counts are found, Then «غير ممكنة — لا توجد خطة ضمن هذه الحدود» names three blockers together: protein minimum 60 g, calorie ceiling 500 kcal and chicken available 3.
-- `/r` Given the same, Then three changes are offered, each enough alone: "Lower the protein minimum to 53.6 g", "Raise the ceiling to 584 kcal" and "Allow 4 chicken pieces".
+- `/r` Given Faisal's Calorie ceiling 500, Protein minimum 60 g, chicken Available 3 and Carbohydrate maximum 30 %, When counts are found, Then Meal planner reads «غير ممكنة — لا توجد خطة ضمن هذه الحدود» and names three blockers together: protein minimum 60 g, calorie ceiling 500 kcal and chicken available 3.
+- `/r` Given the same, Then Meal planner offers three changes, each enough alone: "Lower the protein minimum to 53.6 g", "Raise the ceiling to 584 kcal" and "Allow 4 chicken pieces".
 - `/m` Given the fixture, When the planner computes the changes, Then the most protein under the other limits is 53.6 g (3 chicken + 2 salad + 1 laban = 495.4 kcal), the lowest ceiling reaching 60 g with ≤ 3 chicken is 584.0 kcal (3 chicken + 2 laban), and 4 chicken alone give 60 g at 456.0 kcal.
 - `/r` Given `POST /v1/meal-plans`, Then `blocking[]` has three entries and `changes[]` has `new_value` 53.6, 584 and 4.
 
@@ -262,7 +262,7 @@ As the Eater, I am told when the planner ran out of time, so that "no answer yet
 - `/r` Given the planner's time limit is reached after a plan was found, Then Meal planner reads "Proposed — best found in time; all your limits checked", and every limit in the list is verified.
 - `/r` Given the time limit is reached with no plan found, Then no Plan is created, the screen reads "No answer in time — try fewer foods or fewer limits", shows no counts, and never reads "Infeasible".
 - `/r` Given a test configuration that sets the solver time limit to 1 ms (`assumption`: a test-only setting), When `POST /v1/meal-plans` is called with 20 candidates, Then `solution_status` is `unknown` (no Plan) or `feasible` (a Plan in state `proposed`), never `infeasible`.
-- `/r` Given a solve that is still running after 1 s, Then a progress indicator with "Cancel" shows, and Cancel returns to the limits with the list kept.
+- `/r` Given a solve that is still running after 1 s, Then Meal planner shows a progress indicator with "Cancel", and Cancel returns to the limits with the list kept.
 
 ### E · Safety
 
@@ -303,7 +303,7 @@ As the Eater, I tap "Ate as planned" after the meal, so that exactly what I plan
 As the Eater, I can tap twice, lose the network or confirm on another device, so that the meal is still counted once. · Trace: AT-21, FR-043, FR-045, AT-10, AT-31, FRD §8.3, §18 ("A 409 conflict returns the current revision")
 - `/r` Given the confirmation command for the Plan is delivered three times with the same command id, When `GET /v1/reports/day` is called, Then there is one meal of 397.6 kcal and the Day revision moved once.
 - `/r` Given "Ate as planned" is double-tapped on the simulator, Then one meal is logged, and the button is disabled from the first touch.
-- `/r` Given the Plan was Confirmed on the iPhone, When "Ate as planned" is tapped on an iPad that still shows it as Saved (different command id), Then the API returns 409 `STALE_REVISION` with the Plan's current state, and the iPad shows «تم تأكيدها الساعة 22:15 — لم يُضف شيء» ("Already confirmed at 22:15 — nothing added").
+- `/r` Given the Plan was Confirmed on the iPhone, When "Ate as planned" is tapped on the Plan card on Today on an iPad that still shows it as Saved (different command id), Then `POST /v1/consumption` returns 409 `STALE_REVISION` with the Plan's current state, and the iPad shows «تم تأكيدها الساعة 22:15 — لم يُضف شيء» ("Already confirmed at 22:15 — nothing added").
 - `/m` Given a `source_plan_id` already linked to Confirmed Entries, When the ledger receives another consume command with that plan id, Then it rejects it, whatever the command id.
 
 #### eater-5.31 · Change amounts: I log what I actually ate
@@ -317,13 +317,13 @@ As the Eater, I change the counts to what I really ate, so that my Day is true e
 As the Eater, I say I ate two more, so that it changes the counts if I have not confirmed yet, and adds an Entry if I have. · Trace: FRD §2.5 ("becomes a count adjustment or a new consumption event, depending on the referenced meal"), §8.2, FR-039, FR-036; E42, E43, EX-40
 - `/r` Given Mona's Saved Plan with egg bite × 8 and Meal review open, When she says or types «أكلت لقمتين بيض زيادة» ("I ate two extra egg bites"), Then a chip shows the transcript, the egg stepper moves from ٨ to ١٠, and nothing is committed until «احفظ ما أكلت».
 - `/r` Given the Plan is already Confirmed with egg bite × 8, When she says the same on Today, Then a confirmation chip «أضف ٢ لقمة بيض للفطار» ("Add 2 egg bites to breakfast") logs a new Entry of 2 egg bites (76 kcal) in the same meal, and the 8-bite Entry is unchanged.
-- `/r` Given she says «كانت ١٠ مش ٨» ("it was 10, not 8") instead, Then the Correction preview opens (WF-6) with old ٨, new ١٠ and delta +٧٦ — not a new Entry (AT-26).
+- `/r` Given she says «كانت ١٠ مش ٨» ("it was 10, not 8") on Today instead, Then the Correction preview opens (WF-6) with old ٨, new ١٠ and delta +٧٦ — not a new Entry (AT-26).
 
 #### eater-5.33 · A partial meal and its leftovers
 As the Eater, I log the part I ate now and the leftovers when I eat them, so that the meal is complete without being counted twice. · Trace: FRD §14 Meal review states ("partial meal, leftovers"), FR-045, FR-043
 - `/r` Given the Plan Confirmed as Changed with rice 3 of 4, Then the Plan card on Today reads «باقي: ملعقة رز ١» ("Leftovers: 1 rice spoon") with «سجّل الباقي» ("Log leftovers").
 - `/r` When Faisal taps «سجّل الباقي» at 23:40, Then one Entry of kabsa rice spoon × 1 (42 kcal) is logged at 23:40 on the same Day (before the 05:00 boundary), and the card reads «مؤكدة · بتغيير · الباقي مسجّل» ("Confirmed · Changed · leftovers logged").
-- `/r` Given «سجّل الباقي» is tapped twice or its command retried, Then one Entry is logged, and the button is gone afterwards.
+- `/r` Given «سجّل الباقي» is tapped twice on the Plan card or its command retried, Then `GET /v1/reports/day` shows one leftover Entry, and the button is gone from the card.
 
 #### eater-5.34 · Not eaten
 As the Eater, I mark a Plan "Not eaten", so that it is closed and counts nothing. · Trace: FRD §2.5, FR-045; `way/vocabulary.md` (Plan: Not eaten)
@@ -335,7 +335,7 @@ As the Eater, I mark a Plan "Not eaten", so that it is closed and counts nothing
 As the Eater, I confirm last night's Plan the next morning, so that it lands on the Day I ate it. · Trace: FR-047, FRD §8.1, FR-044, FR-040 (eating timestamp); E9, E11, E24; EX-07, EX-20
 - `/r` Given Faisal's Plan Saved on Day 2027-02-10 (Ramadan, boundary 05:00) at 21:30 and not confirmed, When he opens Today on 2027-02-11 at 08:10, Then a card reads «من أمس: خطة الكبسة — محفوظة، لا تُحسب حتى تؤكد» ("From yesterday: kabsa plan — Saved, not counted until you confirm") with the three buttons.
 - `/r` When he taps «أكلت كما في الخطة», Then the Entries land on Day 2027-02-10 with eating time 21:30 (editable before saving), the Day report for 2027-02-10 rises by 398 kcal, and Today (2027-02-11) is unchanged.
-- `/r` Given a suhoor Plan Saved at 03:40 on 2027-02-11 by the clock, When it is confirmed, Then its Entries belong to Day 2027-02-10, the same Day as that evening's iftar.
+- `/r` Given a suhoor Plan Saved at 03:40 on 2027-02-11 by the clock, When it is confirmed on its Plan card, Then its Entries show in the Day report for Day 2027-02-10, the same Day as that evening's iftar.
 
 #### eater-5.36 · Correcting a Confirmed Plan's meal keeps the link
 As the Eater, I correct a count after confirming, so that the meal is fixed without running the Plan again. · Trace: FRD §2.6, FR-041, FR-046; WF-6
@@ -346,12 +346,12 @@ As the Eater, I correct a count after confirming, so that the meal is fixed with
 As the Eater, I confirm a Plan with no signal, so that it is logged now and synced once later. · Trace: FRD §8.3, FR-043, FR-045, NFR-06, AT-31; E38; EX-12, EX-21
 - `/r` Given airplane mode on the simulator, When Faisal taps «أكلت كما في الخطة», Then the two Entries appear marked «قيد المزامنة» ("Pending"), the remaining figure reads 242 with "incl. 398 Pending", and the card reads «مؤكدة · قيد المزامنة» ("Confirmed · Pending").
 - `/r` Given the network returns, Then the command is accepted once, the Entries become Confirmed (the "Pending" mark disappears), and `GET /v1/reports/day` shows one meal of 397.6 kcal.
-- `/r` Given the same Plan was Confirmed on another device while this phone was offline, When the phone reconnects, Then the server returns 409 `STALE_REVISION` with the current state, the phone shows «تم تأكيدها من جهاز آخر — لم يُضف شيء» ("Already confirmed on another device — nothing added"), and its Pending Entries are dropped from the outbox without ever being Confirmed.
+- `/r` Given the same Plan was Confirmed on another device while this phone was offline, When the phone reconnects, Then `POST /v1/consumption` returns 409 `STALE_REVISION` with the current state, Today on the phone shows «تم تأكيدها من جهاز آخر — لم يُضف شيء» ("Already confirmed on another device — nothing added"), and its Pending Entries are dropped from the outbox without ever being Confirmed.
 
 #### eater-5.38 · A Unit changed after I planned
 As the Eater, I recalibrate a Unit between planning and eating, so that confirming still logs exactly the numbers I was shown. · Trace: FR-014, FR-031, FRD §17 MealPlan (`selected_versions`); E15, E21; see §7, item 4
 - `/r` Given a Plan Saved with kabsa rice spoon version 1 (25 g) and Faisal saves version 2 (28 g) before confirming, When the Plan card opens, Then it notes «تغيّرت ملعقة الرز بعد هذه الخطة (25 غ ← 28 غ)» ("Your rice spoon changed after this plan").
-- `/r` When he taps «أكلت كما في الخطة», Then the Entries use version 1's values as shown on the Plan (`unit_version_id` = version 1), and "Change amounts" offers version 2 for new counts.
+- `/r` When he taps «أكلت كما في الخطة» on the Plan card, Then the Entries on Today use version 1's values as shown on the Plan (`POST /v1/consumption` carries `unit_version_id` = version 1), and "Change amounts" offers version 2 for new counts.
 
 ### G · When things fail
 
@@ -372,14 +372,14 @@ As the Eater, I plan from my Units when photo reading is paused or my daily limi
 #### eater-5.41 · The plan in Arabic, right to left, in my digits
 As the Eater who reads Arabic, I read the plan right to left with my chosen digits, so that counts sit next to their food and numbers are never reversed. · Trace: FRD §14.1, map §0 line 5, §1.6 (numerals); E40, E41, EX-39
 - `/r` Given Faisal in Arabic with Western digits, Then the rows on Meal planner read right to left («ملعقة رز كبسة · 4»), macro bars fill from the right, back points right, and 397.6 keeps its digit order.
-- `/r` Given Mona with Arabic-Indic digits, Then counts, totals, steppers and shares use them («٦», «٨١٠ سعرة», «٣٤٫١ ٪»).
-- `/r` Given an English Unit name inside an Arabic row ("cheese bite"), Then the count stays beside its food in both directions (the name is direction-isolated).
+- `/r` Given Mona with Arabic-Indic digits, Then Meal planner shows counts, totals, steppers and shares in them («٦», «٨١٠ سعرة», «٣٤٫١ ٪»).
+- `/r` Given an English Unit name inside an Arabic row on Meal planner ("cheese bite"), Then the count stays beside its food in both directions (the name is direction-isolated).
 
 #### eater-5.42 · One thumb, large text and VoiceOver
 As the Eater at the table, I use the planner with one thumb, at large text sizes, or by VoiceOver, so that it works with bread in my other hand and for every reader. · Trace: FRD §14.2, NFR-08; E34, E35, E36; EX-33, EX-36, EX-37, EX-38
 - `/r` Given the smallest simulator (iPhone 17e), Then each count stepper and "Ate as planned" measure at least 44 × 44 pt and sit in the middle and lower band of the screen, with the tabs at the bottom edge.
 - `/r` Given the largest accessibility text size in Arabic and in English, Then Meal planner and Meal review rows wrap with no clipping or overlap, and the limits list stays readable.
-- `/r` Given VoiceOver, Then a row reads "Kabsa rice spoon, 4, 170 calories, recipe-calculated", reads "5" after +, and "Infeasible" is announced together with its blocking limit.
+- `/r` Given VoiceOver on Meal planner, Then a row reads "Kabsa rice spoon, 4, 170 calories, recipe-calculated", reads "5" after +, and "Infeasible" is announced together with its blocking limit.
 
 #### eater-5.43 · Hide numbers: a plan in counts only
 As the Eater who hides numbers, I get counts and the Plan's state in words, so that I can plan without seeing calories. · Trace: map §1.6 ("hide numbers" view), FRD §11.4, §14.2; R37; EX-43; see §7, item 10
@@ -426,7 +426,7 @@ As the Eater who shared only recent Health history, I see where that history beg
 #### eater-7.4 · Imports run when I open the app, and I can see when they last ran
 As the Eater, I see when Activity last synced, so that I know how fresh the numbers are. · Trace: FR-067 ("Surface data coverage and last sync time"), FRD §12.3 ("Refresh when allowed and at app foreground; display freshness"), P30
 - `/r` Given Sam opens the app at 07:30, When the import finishes, Then Today's Activity row reads "Synced 07:30", and Today never waited for the import before showing.
-- `/r` Given no import has succeeded for 26 hours, Then the row reads "Last synced yesterday 05:12" in quiet text, with no alert.
+- `/r` Given no import has succeeded for 26 hours, Then Today's Activity row reads "Last synced yesterday 05:12" in quiet text, with no alert.
 - `/r` Given an import, When `POST /v1/activity/import` returns, Then the body has `accepted`, `updated`, `duplicate` and `conflict` counts, and `GET /v1/reports/day` returns the same `last_sync_at`.
 - `/s` Given background delivery is enabled for active energy (entitlement on), Then the app registers it at hourly frequency, the most HealthKit allows for that type (P30), and no screen string in the catalogue calls Activity data "live".
 
@@ -456,12 +456,12 @@ As the Eater, I can trust that my workouts and weight stay with Sips & Bytes, so
 As the Eater whose watch and running app both record the walk, I see one walk, so that the same effort is never counted twice. · Trace: AT-22, FR-064, FR-063; map WF-7 done-when ("one workout from Health + a matching manual entry → one contribution") · **Shared: Eater · Support agent** (support-9.19)
 - `/r` Given Faisal's import at 2026-10-01 07:30 Asia/Riyadh holds the Watch walk 07:00–07:45 (210 kcal), the running app's copy 07:01–07:44 (205 kcal) and the Watch walk sent a second time, When the import runs, Then Today shows one walk of 210 kcal, and the import result is accepted 1, duplicate 2, conflict 0.
 - `/r` Given that walk, When the Activity sheet opens, Then it reads «سُجّل أيضًا من: تطبيق الجري · محسوب مرة واحدة» ("Also recorded by: running app · counted once").
-- `/m` Given two records of the same type whose intervals overlap, When deduplicated, Then one record is kept, the device-recorded one first. The overlap threshold and the source order are `assumption` (§8).
+- `/m` Given two records of the same type whose intervals overlap, When the import's dedupe rule runs, Then one record is kept, the device-recorded one first. The overlap threshold and the source order are `assumption` (§8).
 
 #### eater-7.10 · Daily active energy and its workouts are not added together
 As the Eater, I see my day's active energy with the walk inside it, so that the walk is not added on top. · Trace: FR-064 ("Never sum a provider's active-energy daily aggregate and its included workouts"), FR-066
 - `/r` Given Sam's Health active energy for the Day is 520 kcal including the 210 kcal walk, When the Activity sheet opens, Then it reads "Active energy 520 kcal" with the walk listed inside it, and 730 appears nowhere.
-- `/m` Given a Day with a provider aggregate, When Activity is totalled, Then the total is the aggregate, and a workout adds only for time the aggregate does not cover.
+- `/m` Given a Day with a provider aggregate, When the Day projection totals Activity, Then the total is the aggregate, and a workout adds only for time the aggregate does not cover.
 
 #### eater-7.11 · A manual entry that matches an imported workout asks to link (AT-22)
 As the Eater, I am asked whether my typed walk is the one Health already has, so that I never create a second walk by accident. · Trace: FR-065, AT-22
@@ -474,27 +474,27 @@ As the Eater, I am asked whether my typed walk is the one Health already has, so
 #### eater-7.12 · Add an Activity by hand
 As the Eater without a watch, I type my exercise, so that it shows beside my food. · Trace: FR-062 ("offer manual exercise entry and correction"), FR-063 (user override), FRD §8.3
 - `/r` Given Mona has not connected Health, When she adds «مشاية ٣٠ دقيقة · ١٧٥ سعرة نشاط» ("treadmill 30 min, 175 kcal active") at 18:00, Then the Activity appears in Today's timeline at 18:00, and the food total is unchanged.
-- `/r` Given airplane mode, When she adds it, Then it shows «قيد المزامنة» ("Pending") and becomes Confirmed once when the network returns.
+- `/r` Given airplane mode, When she adds it, Then Today shows it marked «قيد المزامنة» ("Pending"), and becomes Confirmed once when the network returns.
 - `/r` Given `POST /v1/activity` is sent three times with the same idempotency key, Then `GET /v1/activity` lists one Activity.
 - `/r` Given −50 kcal sent to `POST /v1/activity`, Then it returns `VALIDATION_ERROR` naming `energy_kcal`.
 
 #### eater-7.13 · Gross energy from a machine is converted before it counts
 As the Eater, I enter the number on the treadmill, so that its resting part is taken out before it can raise my Target. · Trace: FRD §12.2 ("Manual activities reporting gross energy require conversion or confirmation before receiving net-exercise credit"), FR-063 (energy basis)
 - `/r` Given Sam in Activity-adjusted mode with resting estimate 1,779 kcal/day, When he enters "Treadmill · 30 min · 175 kcal · total shown on the machine", Then the sheet reads "Counted as 138 kcal active (175 − 37 resting for 30 min)" with "Confirm", and the credit becomes 69 kcal (50 %).
-- `/m` Given 175 kcal gross over 30 min and 1,779 kcal/day resting, Then active = 175 − 1,779 × 30 / 1,440 = 137.9375.
-- `/r` Given he chooses "Not sure", Then the Activity is saved and shown with "No credit until the energy type is confirmed", and the Target today is unchanged.
+- `/m` Given 175 kcal gross over 30 min and 1,779 kcal/day resting, When the Activity energy conversion runs, Then active = 175 − 1,779 × 30 / 1,440 = 137.9375.
+- `/r` Given he chooses "Not sure", Then the Activity is saved and shown on Today with "No credit until the energy type is confirmed", and the Target today is unchanged.
 
 #### eater-7.14 · Correct or Void an Activity without making a second one
 As the Eater, I fix or remove an Activity, so that it is changed in place and never doubled. · Trace: FR-065 ("Corrections shall not create a second workout"), FR-041, FR-046
-- `/r` Given Mona's treadmill Activity of 30 min, When she edits it to 40 min, Then one Activity shows 40 min, and its history reads «٣٠ ← ٤٠ دقيقة».
+- `/r` Given Mona's treadmill Activity of 30 min, When she edits it to 40 min in the Activity sheet, Then Today shows one Activity of 40 min, and its history reads «٣٠ ← ٤٠ دقيقة».
 - `/r` Given she Voids it, Then it leaves Today with an Undo banner; Undo Restores it.
 - `/r` Given `POST /v1/activity/{id}/void` (*proposed*) is retried, Then the Activity is removed once and `GET /v1/activity` matches Today.
 
 #### eater-7.15 · Wrong Activity input is caught beside the field
 As the Eater, I am told at once when a time or a number cannot be right, so that a slip never becomes data. · Trace: FR-062, FRD §18.2; care.md group 4; EX-23
 - `/r` Given an end before the start, 0 minutes or −50 kcal, Then a message sits beside that field (for example "End is before start") and "Save" is disabled.
-- `/r` Given 1,200 kcal for 20 minutes, Then "That's high for 20 minutes — check the number" offers "Keep" and "Edit", and does not block (the threshold is `assumption`).
-- `/r` Given a start time later than now, Then "This starts in the future" appears beside the time.
+- `/r` Given 1,200 kcal for 20 minutes in the Activity sheet, Then "That's high for 20 minutes — check the number" offers "Keep" and "Edit", and does not block (the threshold is `assumption`).
+- `/r` Given a start time later than now in the Activity sheet, Then "This starts in the future" appears beside the time.
 
 ### E · Activity mode and the food budget
 
@@ -515,14 +515,14 @@ As the Eater, I choose Activity-adjusted and approve its base, credit factor and
 - `/r` Given Sam in Fixed mode with Target 1,870 (all-in: 2,334.8 maintenance including 200 kcal exercise, −20 %), When he opens Settings → Activity → Activity mode and picks "Activity-adjusted", Then a preview shows "Base food Target 1,710 (maintenance without exercise 2,134.8, −20 %)", "Credit 50 % of eligible Activity" and "Cap 300 kcal a day", each editable, with "Approve".
 - `/r` Given he taps "Approve", Then Today reads "Food Target: Activity-adjusted", and the Day report for 2026-09-30 still shows Target 1,870.
 - `/r` Given he taps "Cancel" instead, Then nothing changes and Today reads "Food Target: Fixed".
-- `/s` Given the approval, Then a new Target version stores the mode, base, credit factor, cap and effective date, and no calculation applies the all-in multiplier and Activity credit together (FRD §12.2).
+- `/s` Given the approval, When `GET /v1/targets` (*proposed*) is read, Then a new Target version stores the mode, base, credit factor, cap and effective date, and no calculation applies the all-in multiplier and Activity credit together (FRD §12.2).
 
 #### eater-7.19 · The Activity-adjusted budget, step by step
 As the Eater in Activity-adjusted mode, I see how a workout changes today's Target, so that every added calorie has a visible reason. · Trace: FRD §12.2 (`target_today = base_food_target + approved_activity_credit`; `remaining = target_today − consumed_source_energy`), FR-066, FR-064
 - `/r` Given base 1,710, credit 50 %, cap 300 and 1,200 kcal consumed, When a 400 kcal workout imports, Then Today reads "Target today 1,910 (1,710 + 200 Activity credit)" and remaining 710.
-- `/r` Given an 800 kcal workout instead, Then the credit is 300 with "Cap reached", Target today 2,010 and remaining 810.
-- `/r` Given the 400 kcal workout arrives from two feeds, Then the credit is 200 once.
-- `/r` Given Health has no data for the Day, Then the credit is 0, Target today 1,710, and the row reads "No Activity data — no credit".
+- `/r` Given an 800 kcal workout instead, Then Today shows the credit 300 with "Cap reached", Target today 2,010 and remaining 810.
+- `/r` Given the 400 kcal workout arrives from two feeds, Then Today shows the credit 200 once, and `GET /v1/reports/day` has one credit of 200.
+- `/r` Given Health has no data for the Day, Then Today shows credit 0, Target today 1,710, and the row reads "No Activity data — no credit".
 
 #### eater-7.20 · What each number means
 As the Eater, I can see food, active energy, total expenditure and the net figure side by side, so that I never take "food minus exercise" for my deficit. · Trace: FR-066 ("Explain that net intake is not maintenance or actual deficit"), FRD §11.3
@@ -538,10 +538,10 @@ As the Eater, I can see for each Day where its Activity came from and how fresh 
 ### F · Time
 
 #### eater-7.22 · A late workout lands on the right Day
-As the Eater who walks after taraweeh or late at night, I see the walk on the Day I am living, so that the night is not split in two. · Trace: FRD §8.1 (diary-day boundary; travel must not duplicate or lose), FR-044; E9, E11, E20; EX-20
-- `/r` Given Faisal's Ramadan boundary 05:00, When a walk from 23:30 to 00:10 (clock dates 2027-02-10 to 02-11) imports, Then it lands on Day 2027-02-10 with that Day's iftar and suhoor.
-- `/r` Given a walk from 04:30 to 05:20, which crosses the boundary, Then it belongs to the Day in which it started (`assumption`; §7, item 7).
-- `/r` Given Sam's workout recorded in Europe/London and his phone then set to Asia/Riyadh, When the next import runs, Then the workout keeps its UTC time and zone, and there is no second copy.
+As the Eater whose Activity runs late at night or in a Ramadan night, I see it on the Day I am living, so that the night is not split in two. · Trace: FRD §8.1 (diary-day boundary; travel must not duplicate or lose), FR-044; E9, E11, E20; EX-20
+- `/r` Given Faisal's Ramadan boundary 05:00, When a walk from 23:30 to 00:10 (clock dates 2027-02-10 to 02-11) imports, Then Today for Day 2027-02-10 lists it with that Day's iftar and suhoor.
+- `/r` Given a walk from 04:30 to 05:20, which crosses the boundary, Then Today lists it on the Day in which it started (`assumption`; §7, item 7).
+- `/r` Given Sam's workout recorded in Europe/London and his phone then set to Asia/Riyadh, When the next import runs, Then `GET /v1/activity` returns it with its original UTC time and zone, and Today shows no second copy.
 
 ### G · Inclusion and control
 
@@ -554,7 +554,7 @@ As the Eater, I read Activity in Arabic, by VoiceOver or with numbers hidden, so
 #### eater-7.24 · Turning Health access off later
 As the Eater, I can stop sharing a Health type at any time, so that the app stops importing it and everything else keeps working. · Trace: FR-076 ("Refusal must preserve unaffected functions"), FR-067, P30, R3, R31 (withdrawing as easy as giving); WF-9
 - `/r` Given Sam withdraws the Workouts Consent in Settings → Activity (the Consent becomes Withdrawn), Then workout imports stop at once, the Activity row reads "Workouts not shared", and food logging is unchanged. Whether earlier imported Activity is kept or deleted is open (§7, item 8).
-- `/r` Given he turns access off in the Health app instead, Then the app shows "No new data from Apple Health since 07:30", never "denied" (it cannot tell, P30).
+- `/r` Given he turns access off in the Health app instead, Then Today's Activity row shows "No new data from Apple Health since 07:30", never "denied" (it cannot tell, P30).
 
 ---
 
@@ -579,24 +579,24 @@ As the Eater, I see what the meal added right after I confirm it, so that I know
 #### eater-8.2 · The Day report: Target, consumed, remaining, macros, Evidence and coverage
 As the Eater, I read the whole Day in one place, so that I know where I stand and how sure the numbers are. · Trace: FR-069, FR-070, FRD §13.1, §14 Today; map WF-8 done-when ("target, consumed, remaining, shares summing to 100.0 %, coverage")
 - `/r` Given the Day after 8.1, When the Day report opens from Today's remaining figure, Then it reads "Daily total 1,200 kcal · Target 1,870 · Remaining 670"; Protein 72 g · 288 kcal · 24.0 %; Carbohydrate 138 g · 552 kcal · 46.0 %; Fat 40 g · 360 kcal · 30.0 %; "Carbohydrate: above your 30 % target"; and "Macros known for all 1,200 kcal".
-- `/r` Given the Day includes 2 hummus bites (Estimated analogue, low 45.0 – high 75.0 kcal each), Then each Entry shows its Evidence badge and the total shows "low 1,173 – high 1,233 (estimate)"; a Day with no estimated Entry shows no range.
+- `/r` Given the Day includes 2 hummus bites (Estimated analogue, low 45.0 – high 75.0 kcal each), Then the Day report shows each Entry with its Evidence badge and the total shows "low 1,173 – high 1,233 (estimate)"; a Day with no estimated Entry shows no range.
 - `/r` Given the same Day, When `GET /v1/reports/day` is called, Then it returns the same totals, shares, range, `revision` and target version.
 
 #### eater-8.3 · Shares always add to 100.0 %, on one convention
 As the Eater, I see shares that add up, so that a chart that says 99.9 % never makes me doubt the rest. · Trace: FRD §10.1, §10.2 (largest-remainder display; zero energy → "not applicable"); map WF-8 done-when
-- `/m` Given P 20 g, C 25 g, F 10 g (80 / 100 / 90 kcal), When display shares are computed, Then they are 29.6 / 37.1 / 33.3 % (sum 100.0), while rounding each value alone would give 99.9; stored values stay unrounded.
+- `/m` Given P 20 g, C 25 g, F 10 g (80 / 100 / 90 kcal), When the report projection computes display shares, Then they are 29.6 / 37.1 / 33.3 % (sum 100.0), while rounding each value alone would give 99.9; stored values stay unrounded.
 - `/r` Given a Day with only black coffee and water (0 kcal), When the Day report opens, Then shares read "Not applicable" and no macro chart is drawn.
 - `/r` Given any Day report or meal report on Today, Then the share heading reads "Share of macro-derived energy (4/4/9)".
 
 #### eater-8.4 · When a label's calories differ from 4/4/9 (AT-15)
 As the Eater, I keep the label's calories as the headline and see why the macro shares differ, so that I trust both. · Trace: AT-15, FR-030, FR-069, FRD §10.1, §10.2 (mismatch trigger); E15, E16
 - `/r` Given a Label-verified snack Entry of 300 kcal with P 10, C 30, F 8 g (232 kcal by 4/4/9), When the meal report shows, Then the headline is 300 kcal, the shares read 17.3 / 51.7 / 31.0 % (sum 100.0) under "4/4/9", and a note reads "Label energy 300 kcal; the macros give 232 kcal by 4/4/9. Labels can use other energy factors."
-- `/m` Given 300 vs 232 (68 kcal, 22.7 % of the source energy), Then the gap is material (> 10 % and > 10 kcal) and the note is shown; given 250 vs 232 (18 kcal, 7.2 %), Then no note. Measuring the percentage against the source energy is `assumption`.
+- `/m` Given 300 vs 232 (68 kcal, 22.7 % of the source energy), When the report's mismatch check runs, Then the gap is material (> 10 % and > 10 kcal) and the note is shown; given 250 vs 232 (18 kcal, 7.2 %), Then no note. Measuring the percentage against the source energy is `assumption`.
 - `/r` Given the same Entry, When `GET /v1/reports/day` is called, Then `source_kcal` is 300 and `macro_kcal` is 232; the label value is never changed.
 
 #### eater-8.5 · Unknown macros stay unknown (AT-16)
 As the Eater who logs a calorie-only food, I see that the Day's macros are incomplete, so that no grams are invented. · Trace: AT-16, FR-016, FR-070, FRD §10.2 ("Missing macros: mark unknown; display coverage")
-- `/r` Given Sam's Day of 1,200 kcal with full macros, When he adds "office cake 150 kcal" (User-defined, calorie only), Then the Day reads 1,350 kcal, coverage reads "Macros known for 1,200 of 1,350 kcal", shares are labelled "of the 1,200 kcal with known macros", and the cake row shows no grams.
+- `/r` Given Sam's Day of 1,200 kcal with full macros, When he adds "office cake 150 kcal" (User-defined, calorie only), Then the Day report reads 1,350 kcal, coverage reads "Macros known for 1,200 of 1,350 kcal", shares are labelled "of the 1,200 kcal with known macros", and the cake row shows no grams.
 - `/r` Given the same, When `GET /v1/reports/day` is called, Then `macro_coverage` is `partial` and the cake's P/C/F are null, not 0.
 
 #### eater-8.6 · Over my Target is a number, not a verdict
@@ -626,46 +626,46 @@ As the Eater, I correct yesterday and only yesterday moves, so that today's repo
 As the Eater, I look back over a week, four weeks or dates I pick, so that I see a pattern, not just a Day. · Trace: FR-072, FRD §14 Progress, §18 (`GET /v1/reports/period`); map WF-8
 - `/r` Given Mona opens Progress, Then a control reads «٧ أيام · ٢٨ يومًا · مخصص» ("7 days · 28 days · Custom"), and the view has sections for intake per Day, intake vs Target, macro composition, Activity and Weight.
 - `/r` Given `GET /v1/reports/period?from=2026-09-20&to=2026-09-26`, Then it returns 7 Day rows, each with target version and value, consumed, coverage state, Activity coverage and weights.
-- `/r` Given "7 days" is chosen on 2026-10-01, Then the view covers the 7 Days ending on the selected Day, 2026-09-25 to 2026-10-01 (rolling; §7, item 11).
+- `/r` Given "7 days" is chosen on Progress on 2026-10-01, Then the view covers the 7 Days ending on the selected Day, 2026-09-25 to 2026-10-01 (rolling; §7, item 11).
 
 #### eater-8.11 · Each Day keeps the Target that applied that Day
 As the Eater, I change my Target today and last month still reads as it was, so that the past is never rewritten. · Trace: FR-071, FR-058, FRD §17 GoalPlanVersion ("Past days retain their effective plan") · **Shared: Eater · Nutrition approver** (approver-10.58)
-- `/r` Given Mona's Target was 1,870 until 2026-09-14 and 1,750 from 2026-09-15, When the 28-day view (2026-09-04 – 2026-10-01) opens, Then 09-04 to 09-14 show 1,870 and 09-15 onward show 1,750.
+- `/r` Given Mona's Target was 1,870 until 2026-09-14 and 1,750 from 2026-09-15, When the 28-day view (2026-09-04 – 2026-10-01) opens on Progress, Then 09-04 to 09-14 show 1,870 and 09-15 onward show 1,750.
 - `/r` Given she changes her Target to 1,700 on 2026-10-01, Then only 10-01 shows 1,700, 09-15 to 09-30 still show 1,750, and the API rows match the screen.
 - `/s` Given a Policy version with a higher floor comes In effect after those Days (approver-10.58), When their projections are rebuilt, Then their target values are unchanged.
 
 #### eater-8.12 · Missing Days are unknown, not zero (AT-25)
 As the Eater who forgot two Days, I see them as unlogged, so that a gap is never shown as a low-calorie success. · Trace: FR-073, AT-25; map WF-8 done-when ("a week with 2 missing days shows coverage, not zeros"); E24; EX-27
-- `/r` Given Mona's week 2026-09-20 to 09-26 with «١٬٦٥٠ · ١٬٧٢٠ · — · ١٬٥٨٠ · ١٬٩٠٠ · — · ١٬٦١٠» and Target 1,750, When the 7-day view for that week opens, Then it reads «٥ من ٧ أيام مسجلة» ("5 of 7 Days logged"), the two Days are marked «غير مسجل» ("Unlogged") with a pattern and a word, the average reads «١٬٦٩٢» over logged Days, and intake vs Target reads «−٢٩٠ على ٥ أيام مسجلة», not −3,790.
+- `/r` Given Mona's week 2026-09-20 to 09-26 with «١٬٦٥٠ · ١٬٧٢٠ · — · ١٬٥٨٠ · ١٬٩٠٠ · — · ١٬٦١٠» and Target 1,750, When the 7-day view for that week opens on Progress, Then it reads «٥ من ٧ أيام مسجلة» ("5 of 7 Days logged"), the two Days are marked «غير مسجل» ("Unlogged") with a pattern and a word, the average reads «١٬٦٩٢» over logged Days, and intake vs Target reads «−٢٩٠ على ٥ أيام مسجلة», not −3,790.
 - `/r` Given the same period from `GET /v1/reports/period`, Then `days_logged` is 5, `days_unlogged` is 2, and `consumed_kcal` is null for the two Unlogged Days.
 - `/m` Given the period projection, When averages and variance are computed, Then Unlogged Days are left out of both.
 
 #### eater-8.13 · Complete, Partial, Unlogged — and marking a Day Complete
 As the Eater, I mark a Day complete when I logged everything, so that reports can tell a full Day from a partial one. · Trace: FR-073, FR-060 ("self-marked complete diary days")
 - `/r` Given Mona's Day report for 2026-09-29, When she taps «اليوم كامل» ("Mark Day complete"), Then a «كامل» ("Complete") badge appears with Undo, and the 28-day view shows that Day as Complete.
-- `/r` Given Days with Entries she has not marked Complete, Then they read «جزئي» ("Partial"), and tapping «اليوم كامل» again on a Complete Day returns it to Partial; Days without Entries read «غير مسجل» ("Unlogged").
+- `/r` Given Days with Entries she has not marked Complete, Then Progress shows them as «جزئي» ("Partial"), and tapping «اليوم كامل» again on a Complete Day returns it to Partial; Days without Entries read «غير مسجل» ("Unlogged").
 - `/r` Given `POST /v1/days/2026-09-29/complete` (*proposed*), Then `GET /v1/reports/period` returns `coverage: "complete"` for that Day; undoing returns `partial`.
 
 #### eater-8.14 · Today is provisional
 As the Eater, I see today marked as not finished, so that a half-eaten Day does not pull my week down. · Trace: FR-074 ("Current incomplete days must be labeled provisional")
-- `/r` Given the 7-day view on 2026-10-01 with 900 kcal logged today, Then today's bar reads «مؤقت» ("Provisional") and is left out of the period average and intake vs Target until the Day ends or is marked Complete.
+- `/r` Given the 7-day view on Progress on 2026-10-01 with 900 kcal logged today, Then today's bar reads «مؤقت» ("Provisional") and is left out of the period average and intake vs Target until the Day ends or is marked Complete.
 - `/r` Given `GET /v1/reports/period` including today, Then today's row has `provisional: true`.
 
 #### eater-8.15 · Intake vs Target, never "fat lost"
 As the Eater, I see how my intake compared with my Target, so that I get a fact, not a promise about my body. · Trace: FR-074 ("not an unsupported claim of fat gained/lost"), FR-059, FRD §1.3, §19.3; R6
-- `/r` Given the week in 8.12, Then the summary reads «الأكل مقابل الهدف: −٢٩٠ سعرة على ٥ أيام مسجلة» ("Intake vs Target: −290 kcal over 5 logged Days"), and no kilograms, "fat", "burned" or projected weight appear beside it.
-- `/r` Given any period view, Then the comparison is labelled "vs Target", never "vs plan".
+- `/r` Given the week in 8.12, Then the Progress summary reads «الأكل مقابل الهدف: −٢٩٠ سعرة على ٥ أيام مسجلة» ("Intake vs Target: −290 kcal over 5 logged Days"), and no kilograms, "fat", "burned" or projected weight appear beside it.
+- `/r` Given any period view on Progress, Then the comparison is labelled "vs Target", never "vs plan".
 
 #### eater-8.16 · My week starts where my region's week starts
 As the Eater, I see weeks that start on my region's first day, so that "this week" matches my working week. · Trace: FR-072, FRD §1.3 ("daily/weekly reports"); E14; EX-05; research.md §6, conflict 4
-- `/r` Given Mona's device calendar has Saturday as its first weekday, When the 28-day view opens, Then its week separators fall before Saturdays; given Monday (Sam, United Kingdom), Then before Mondays.
+- `/r` Given Mona's device calendar has Saturday as its first weekday, When the 28-day view opens on Progress, Then its week separators fall before Saturdays; given Monday (Sam, United Kingdom), Then before Mondays.
 - `/r` Given Settings → Units & language → first day of week changed to Sunday, Then the separators move to Sundays, and Day values are unchanged.
 *Note:* the first weekday for Egypt and Saudi Arabia comes from the device calendar; the values per country are `assumption`.
 
 #### eater-8.17 · Wrong custom dates are caught
 As the Eater, I am told at once when my custom dates cannot work, so that I never get an empty or misleading report. · Trace: FR-072, FRD §18.2; care.md group 4; EX-23
 - `/r` Given Progress → Custom with an end before the start, Then "End date is before start date" appears beside the end date and the view does not load.
-- `/r` Given an end after today, Then the picker stops at today; given more than 366 days, Then "Choose up to 366 days" (the limit is `assumption`).
+- `/r` Given Progress → Custom, Then the end-date picker stops at today; given more than 366 days, Then "Choose up to 366 days" (the limit is `assumption`).
 - `/r` Given `GET /v1/reports/period?from=2026-09-26&to=2026-09-20`, Then it returns `VALIDATION_ERROR` naming `to`.
 
 #### eater-8.18 · Iftar and suhoor in one Day's report
@@ -681,14 +681,14 @@ As the Eater, I see my weight observations over the period with where each came 
 
 #### eater-8.20 · Add my weight by hand; an unusual reading is flagged, not deleted
 As the Eater, I type my weight, and a reading that looks wrong is flagged for me to decide, so that one bad reading never bends the trend silently. · Trace: FRD §17 WeightObservation (`outlier_state`), §14 Progress ("outlier weights"), §14.1 (both numeral systems)
-- `/r` Given Mona (no Health connected) types «٦٨٫٤ كجم», When saved, Then it is stored as 68.4 kg and shown as «٦٨٫٤».
-- `/r` Given she types 74.9 kg for 2026-09-20 between 68.6 (09-17) and 68.2 (09-24), Then the point reads «غير معتاد — راجعيه» ("Unusual — check") with «احتفظي به» ("Keep") and «استبعده من الاتجاه» ("Exclude from trend"); it stays in the list either way, and while flagged it is left out of the trend line. The rule for "unusual" is `assumption`.
+- `/r` Given Mona (no Health connected) types «٦٨٫٤ كجم» in Progress → Weight → «أضف الوزن» ("Add weight"), When saved, Then `POST /v1/weights` (*proposed*) stores 68.4 kg and Progress → Weight shows «٦٨٫٤».
+- `/r` Given she types 74.9 kg for 2026-09-20 between 68.6 (09-17) and 68.2 (09-24), Then the point on Progress → Weight reads «غير معتاد — راجعيه» ("Unusual — check") with «احتفظي به» ("Keep") and «استبعده من الاتجاه» ("Exclude from trend"); it stays in the list either way, and while flagged it is left out of the trend line. The rule for "unusual" is `assumption`.
 - `/r` Given 0, a negative value or 500 kg, Then the field shows the fix beside it and nothing is saved; the same value sent to `POST /v1/weights` (*proposed*) returns `VALIDATION_ERROR` naming `kg`.
 
 #### eater-8.21 · A trend statement only with enough evidence (P1)
 As the Eater, I get a trend statement only when there is enough data, so that a few readings never become a claim. · Trace: FR-060 (P1: "proposed minimum 14 days, 10 self-marked complete diary days, and 4 weight observations. Otherwise show 'insufficient evidence'"), FR-059; R42 (the adaptive approach; its refuted detail is not used) · **P1**
 - `/r` Given Mona's 28-day period with 9 Complete Days and 4 weights, When Progress → Weight opens, Then it reads "Insufficient evidence for a trend: 9 of 10 Complete Days needed · 4 of 4 weights · 28 of 14 days", and no trend number is shown.
-- `/r` Given at least 14 days, 10 Complete Days and 4 weights, Then a trend statement appears worded as an estimate with its range (FR-059), never as a promise.
+- `/r` Given at least 14 days, 10 Complete Days and 4 weights, Then Progress → Weight shows a trend statement worded as an estimate with its range (FR-059), never as a promise.
 
 #### eater-8.22 · No weight data, or Health access changed
 As the Eater with no weights yet, or whose Health access changed, I see what is missing and what to do, so that an empty chart never looks like a broken app. · Trace: FRD §14 Progress ("Insufficient data … permission changes"), FR-067; EX-19, EX-27
@@ -708,7 +708,7 @@ As the Eater, I see each Target I approved, when it applied and why, so that I u
 #### eater-8.24 · Export a period report as a file
 As the Eater, I export a period report in a file my coach or spreadsheet can read, so that my data is mine to take. · Trace: FR-075 ("export of entries, portions, recipes, targets, and reports in machine-readable form"), FRD §23.3 ("Export … must never be paywalled"); C53; research.md §6, conflict 8
 - `/r` Given the week 2026-09-20 – 09-26, When Mona taps «صدّري الفترة» ("Export period") → CSV, Then the share sheet offers a CSV with one row per Day: `date` (ISO), `target_version`, `target_kcal`, `consumed_kcal` (empty for Unlogged), `protein_g`, `carbohydrate_g`, `fat_g`, `coverage` (complete, partial or unlogged), `provisional`, `active_energy_kcal` (empty when no data) and `weight_kg`, in Western digits whatever her display setting.
-- `/r` Given JSON is chosen instead, Then the file holds the same values as the CSV.
+- `/r` Given JSON is chosen instead on Progress → "Export period", Then the file holds the same values as the CSV.
 - `/r` Given `GET /v1/reports/period?from=2026-09-20&to=2026-09-26&format=csv` (*proposed* parameter), Then it returns `text/csv` whose rows equal the screen's values.
 - `/r` Given any account on Progress, Then "Export period" shows no upgrade prompt or lock.
 
@@ -730,8 +730,8 @@ As the Eater, I see my last reports with a note when offline, and placeholders w
 
 #### eater-8.28 · Reports in Arabic, right to left, by VoiceOver and at large text
 As the Eater who reads Arabic or uses VoiceOver, I read my reports in my way, so that charts run in my direction and every number is spoken. · Trace: FRD §14.1, §14.2, NFR-08; E40, E41; EX-33, EX-36, EX-39
-- `/r` Given Mona in Arabic, When the 7-day view opens, Then Days run right to left with the earliest on the right, bars and macro shares fill from the right, and digits keep their order («١٬٦٥٠»).
-- `/r` Given VoiceOver in English on the week of 8.12, Then the chart's summary reads "7 days, 5 logged, average 1,692 calories, 2 unlogged", and each Day bar can be read on its own.
+- `/r` Given Mona in Arabic, When the 7-day view opens on Progress, Then Days run right to left with the earliest on the right, bars and macro shares fill from the right, and digits keep their order («١٬٦٥٠»).
+- `/r` Given VoiceOver in English on the week of 8.12, Then the Progress chart's summary reads "7 days, 5 logged, average 1,692 calories, 2 unlogged", and each Day bar can be read on its own.
 - `/r` Given the largest accessibility text size, Then Day report rows wrap with no clipping in English and Arabic.
 
 #### eater-8.29 · Reports with numbers hidden
@@ -834,13 +834,16 @@ Never for the owner. Items 11–13 restate research.md §6 conflicts 4, 7 and 8 
 | FR-052 bread expanded before checking; no packing without approval | 5.12, 5.22 |
 | FR-053 unrounded validation | 5.6, 5.14, 5.15, 5.18 |
 | FR-054 infeasible: blocking constraints and smallest labelled changes | 5.21, 5.22, 5.23, 5.25 |
-| FR-055 counts, weights, estimate/range, macros, target status, Evidence, confirmation control | 5.14, 5.16, 5.17, 5.18, 5.19 |
+| FR-055 counts, weights, estimate/range, macros, target status, Evidence, confirmation control | 5.14, 5.16, 5.17, 5.18, 5.19, 5.20 |
 | FRD §2.4 Journey C (photo, "Plan a meal", chips, unknown foods, limits, substitution) | 5.1, 5.2, 5.3, 5.12, 5.19, 5.21 |
 | FRD §2.5 Journey D (Ate as planned, Change amounts, Not eaten, extra bites, never both) | 5.28–5.34 |
 | FRD §9 / §9.1 (OR-Tools, integer counts, 4C ≤ r × E_macro, about vs not above, solver verifies) | 5.5, 5.6, 5.11, 5.14, 5.16, 5.24 |
 | FRD §14 Meal planner states (feasible, infeasible, uncertain estimate, pending confirmation) | 5.14, 5.21, 5.16, 5.28 |
 | FRD §14 Meal review states (repeated confirmation, partial meal, leftovers, correction) | 5.30, 5.31, 5.33, 5.36 |
 | FRD §19.3 dangerous restriction → safe response | 5.25 |
+| FRD §11.4 tracking-only: no restrictive plans, neutral tracking | 5.27, 8.30 |
+| FRD §14.2 tone (no punitive red, no skipping to repay) | 5.26, 8.6 |
+| FRD §14.1, §14.2, NFR-08 (Arabic RTL and numerals, text size, VoiceOver, targets) | 5.41, 5.42, 7.23, 8.28 |
 | NFR-04 planner ≤ 2 s; timeout status | 5.14, 5.24 |
 | AT-17 | 5.21 (and 5.25 nonempty) |
 | AT-18 | 5.17 |
@@ -884,6 +887,7 @@ Never for the owner. Items 11–13 restate research.md §6 conflicts 4, 7 and 8 
 | row "HealthKit → app → API" (dedupe; activity mode; "no data" never "denied") | 7.2, 7.9–7.11, 7.16–7.19 |
 | row "Ledger → Eater" (target version per Day; 4/4/9 shares; coverage) | 8.1–8.3, 8.11, 8.12 |
 | row 1 consents ("each Health type") | 7.1, 7.24 |
+| row "Eater → AI analyzer" ("Health data never sent") | 7.8 |
 | §1.6 settings: Hide numbers, activity mode, diary-day boundary, numerals | 5.43, 7.23, 8.29; 7.18; 5.35, 7.22, 8.18; 5.13, 5.41, 8.28 |
 
 ### 9.3 The unhappy paths the lens brief names
@@ -900,4 +904,4 @@ Never for the owner. Items 11–13 restate research.md §6 conflicts 4, 7 and 8 
 
 ### 9.4 Counts
 
-WF-5: 43 stories · WF-7: 24 stories · WF-8: 30 stories · **97 stories**. Acceptance-line counts are in the hand-back.
+WF-5: 43 stories, 145 acceptance lines · WF-7: 24 stories, 70 lines · WF-8: 30 stories, 72 lines · **97 stories, 287 acceptance lines** (258 `/r`, 20 `/m`, 9 `/s`).
