@@ -12,3 +12,6 @@ Check, and quote the line for each finding:
 7. Ids follow `<persona>-<journey>.<story>` with journey = WF number.
 
 Append at the foot of the persona file a section `## Lens verdict (date)`: `pass` or `fail`, then the defects numbered, each with the story id or missing step and what is wrong. Fix nothing yourself. Never send the owner's identifiers to any outside service. Return one line: pass/fail and the defect count.
+
+## Addendum (2026-10-01, from way/lessons.md)
+A mismatch with ANOTHER lens's fixtures, event names, task keys or story ids is not a defect of this lens: list it under "Cross-lens (for the model phase join)" in your verdict, uncounted. Judge this lens on its own stories, the map, the FRD and `way/vocabulary.md`.

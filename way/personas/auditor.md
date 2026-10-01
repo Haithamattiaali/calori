@@ -1098,3 +1098,126 @@ Count before the fix: 55 stories and 112 acceptance lines. Count after: 58 stori
 | 22 | "Support" has two names | **Support agent** everywhere: fixtures, screens, refusal text ("Your role: Support agent"), §5, §6 |
 | 23 | names differ from other lenses | adopted D2: Unanswered; `GRANT_NOT_ACTIVE`; `FORBIDDEN`; **Audit trail** (section, views and `audit_trail.*` event names); support-lens ids `grant_31f0`, `acct_9c41e2`, `staff_mona`; and the support lens's request fields (reason code, diary days, areas, duration, case reference). Remaining differences are listed in Conflicts, item 16 (support pre-D2 states and codes, staff id styles, approver review signature, admin "Draft"/"full"). Names not yet in D2 are listed in item 15 |
 | 24 | the separation-of-duties violation cannot be made through the product | `staff_sod_seed` is now "written directly into the role store by the test seed … below the roles API", in the fixture and in 10.26. A second rule, "roles held with no assignment event", catches it. Conflicts, item 17 records it as a detective control behind admin-10.59 |
+
+## Lens verdict — re-verify (2026-10-01)
+
+**fail** — 13 defects: 1 left from round 1, 12 new.
+
+A second independent verifier re-ran `way/personas/_lens-verifier-brief.md` on this file after fix round 1. `way/vocabulary.md` (D2) was binding, and nothing above was changed. The support, admin, approver and eater lenses were read as they stood at about 06:00Z. The admin and approver lenses were being edited by their own fix rounds at the time, so their story ids are cited with their titles.
+
+What passed:
+- **Ids (check 7).** auditor-10.1–10.40 and auditor-9.1–9.18; journey = WF number.
+- **Counts.** §8 is exact: 58 stories (40 + 18) and 118 acceptance lines (/m 9 · /s 14 · /r 95). Every story has a /r line.
+- **Arithmetic.** Every count in 10.2, 10.3, 10.14, 10.25, 10.27, 10.32, 10.34, 10.35, 10.36, 9.1, 9.2, 9.10 and 9.17 was recomputed from the 80-event table, and all match.
+- **Refuted findings.** None is cited as standing (R34, R29's decree type, R18's Cloud Tasks claim, P5, P11's original claim).
+- **Sources.** All 21 links in §1.0 answered HTTP 200 on 2026-10-01, using a generic User-Agent; no owner identifier was sent. The stated dates match the pages: C1 "Last updated 2026-09-30"; C2 and C3 "2026-09-24"; M1 ms.date 2026-06-19; A1 datePublished 2026-03-19; N1 last-modified 2026-05-11, version 5.2.0; U1 "20 August 2025". Quotes added in this round were found in their sources: K1 Art. 31; K2 Arts. 11(1)(c), 26(3) and 32(3)(b); E1 Art. 4(9) and the Arabic of Art. 9(1); E2's decree, Gazette and grace-period lines; N1 AC-2(7). The one exception is item 4.
+- **D2 inside this lens.** Roles, the states of Grant, Policy, Registry, Consent and Privacy job, and every error code are D2's. The old names (Lapsed, Revoked, `GRANT_NOT_APPROVED`, `ROLE_FORBIDDEN`, "Trail", `G-2026-…`, `U-19`) are gone.
+- **Experience (check 6).** §5 still answers device, place, moment, feeling and style, and the six care groups.
+
+### Round-1 defects: fixed or not
+
+23 of the 24 are fixed. #12 is only partly fixed.
+
+| # | status | the line that shows it |
+|---|---|---|
+| 1 | fixed | 10.3: "the timeline shows 8 events in order …"; its /s line: "returns the same 8 events (ids 52, 54, 55, 56, 57, 58, 59, 60) in that order" |
+| 2 | fixed | "The seeded Audit trail — exactly these 80 events. Live actions during a test append from event 81"; 10.1: "Chain intact through event 80"; 10.15: "Intact · events 1–82", then event 83 `audit_trail.verified` |
+| 3 | fixed | 10.32: "13 events (9–16, 26, 27, 37, 39, 44)"; 10.34: "Grants 4 · reads allowed 4 · reads refused 2 · writes refused 1 · age confirmation 1 · Consent events 10 · Privacy jobs 1 · raw-evidence attempts refused 1". Both recomputed and correct |
+| 4 | fixed | fixtures: "**B1**: 25,000 synthetic events, seed 42 … **B2**: 1,200,000 synthetic events"; 10.33: "1,200,000 events · 12 parts of up to 100,000 rows" |
+| 5 | fixed | 10.10: "the request window is 72 h, an `assumption` from support lens A6"; "Read refused at 10:30:00Z by `staff_mona`, GRANT_NOT_ACTIVE, 'state Unanswered'" |
+| 6 | fixed | the fixtures now define every Grant and requester, `rec_fm_eg`, Policy v1 and v2, `grant-req-1`, R-0805, R-gap and fixture X. 9.8 now reads "each staff role … 403 `FORBIDDEN`". Smaller gaps remain (item 3) |
+| 7 | fixed | 10.25: "**Held at** 2026-08-31T12:00:00Z … 'Nobody held a role at this time — the first assignment was 2026-09-01T06:00:00Z (event 1)'" |
+| 8 | fixed | 10.27: "within 1 s at the 95th percentile (a chosen default …)"; 10.35: "within 3 s at the 95th percentile (a chosen default)"; §5 cites both |
+| 9 | fixed | 10.11: "traced to D2 Grant state 'Withdrawn (by the eater)' and C3 'revoked at any time'" |
+| 10 | fixed | 10.18: "v2 reads 'In effect · proposed by staff_yara · approved by staff_dina …'"; Conflicts 16 lists the approver lens's review signature |
+| 11 | fixed | 10.20 rows "v7 Shadow" … "v7 Rolled back, 'v6 live'"; **Live at** 2026-09-24 shows "v7 in Shadow (copies only)" |
+| 12 | **partly** | fixed: 10.13 "Write refused · POST /v1/consumption · grant_31f0 (Active) · FORBIDDEN", 10.11 Withdrawn, 10.12 Ended. Still missing: a read outside the Grant's Days or areas (item 1) |
+| 13 | fixed | 10.23: "«صقعي» · Gulf · → 'Dates, Saqai' · proposed by staff_dina · approved by staff_yara 10:15:00Z" |
+| 14 | fixed in this lens | 9.9: "Age 18+ confirmed · age-1 · onboarding age question · 2026-09-01T18:20:00Z · app 1.0.3". It now clashes with the eater lens (item 11) |
+| 15 | fixed | 9.1 rows "Health: read workouts", "Health: read active energy", "Health: read body mass", "Health: write food" |
+| 16 | fixed | 9.5: "Photos and audio held for analysis deleted: 3 · 07:45:04Z"; "Prepared export files deleted: 1 (job_exp_4402) · 07:45:05Z" |
+| 17 | fixed | 9.14: "Entries, Units (portions), Recipes, Targets, Reports (day and period), Consents" |
+| 18 | fixed | §1.0 lists K1–K4, E1, E2, G1, U1, O1, N1, C1–C3, H1, M1 and A1 with links and the source's own dates; every link resolves |
+| 19 | fixed | §1.1: "r1-refute-b leaves the decree type **doubtful** … It records only the refuter's corrected statement" |
+| 20 | fixed | §1.1 quotes «… ومنع اختراقها، وتوثيق نتائج التقييم», "documenting the results of the evaluation", which matches the dual text. Conflict 3 now rests on K2 Art. 32(3)(b), E1's Arabic and A1 |
+| 21 | fixed | fixtures: "the backup lifecycle is **30 days** (`assumption`)"; retention "runs **hourly** … (a chosen default derived from FR-078 …)" |
+| 22 | fixed | 10.17: "Your role: Support agent."; no bare "Support" role is left |
+| 23 | fixed as listed | none of Lapsed, `GRANT_NOT_APPROVED`, `ROLE_FORBIDDEN`, "Trail" or `G-2026-…` remains. Conflicts 16 now describes differences that no longer exist (item 7) |
+| 24 | fixed | fixtures: "written **directly into the role store by the test seed** on 2026-09-30, below the roles API"; the second rule in 10.26; Conflicts 17. The admin story ids it cites are now stale (item 8) |
+
+### Defects
+
+**Complete**
+
+1. **Journey 10, left from round-1 #12: no story covers a read outside the Grant's Days or areas while the Grant is Active.** The interaction row is "Support → eater diary | read within the Grant".
+   - 10.4 shows "days 2026-09-28 to 2026-09-30" and the areas "Entries and day reports", "My Units". But no line shows a read outside them (for example Day 2026-09-27 under `grant_31f0`) being refused and logged.
+   - 10.14 has no rule "reads allowed outside a Grant's Days or areas".
+   - The support lens does refuse this read: support-10.12 "Out-of-scope reads are refused", "the API returns 403 `FORBIDDEN`".
+
+**Observable**
+
+2. **auditor-10.9 and auditor-9.8 contradict each other.**
+   - 10.9 /s: "every diary, report and media endpoint with each staff role and no Grant … (GRANT_REQUIRED for the Support agent, FORBIDDEN for every other role)".
+   - 9.8 /s: "each staff role … requests a raw photo or audio of any Analysis Then each returns 403 `FORBIDDEN` and writes one `access.refused` event".
+   - A Support agent who asks for a raw photo without a Grant cannot pass both lines: the code and the event action differ.
+3. **Fixture gaps: these lines name values the fixture never gives.**
+   - **9.14** shows "the categories with item counts", "the file size", "the link expiry" and "whether it was downloaded". The fixture gives `job_exp_4402` only its request and completion times. Under support lens A8 (7 days), the link would end on 2026-09-17T12:04Z, three days before 9.5 deletes the file. The fixture must also say whether the file outlives its link.
+   - **9.11** lists "the steps, each with its completion time", but `job_del_2201` has no step times.
+   - **9.2 and 9.17** show each Consent row's method and app version. Events 12–16 carry no method, and no Consent event carries an app version. (9.9's "app 1.0.3" is not in event 9's row.)
+   - **10.20** says "Each row shows … the time and the reason", but event 40 (`registry.version.proposed · meal_photo@v7`) has no reason.
+   - **9.13** looks up "that account's former email", but the fixture gives `acct_d40e17` no email.
+
+**Sourced**
+
+4. **§1.1, row "Capacity (adults)": the E1 quote is not in E1.** The lens quotes "E1 definitions" as "children's data shall be deemed sensitive personal data". The Sharkawy dual text, which is E1's link, reads "in all cases, data relating to children is considered to be sensitive data". The quoted words come from the GitHub mirror that R28 first used (`Kiramido1/Amenly-Product`), and this lens does not cite that mirror.
+5. **Conflicts item 8 credits the map with a line it does not have.** The item says "The map lists records of processing as pre-launch governance work (r1 implications)". Blueprint §1 never mentions records of processing. The list is in the Implications of `r1-rules-trends.md`: "Governance work before launch … Records of processing."
+
+**Vocabulary, and names across lenses (one name per thing)**
+
+6. **Fixtures said to follow other lenses contradict them.** The lens says "Ids follow the support lens where that lens defines the same thing", and that it reuses the approver lens's fixtures "where they overlap". A seeded test cannot satisfy both lenses in these cases, and Conflicts lists none of them:
+   - **`grant_31f0` reads.** Support G1 has "reads at 10:24, 10:25 and 10:27 UTC", and eater-9.25 requires both views to "list the same 3 reads at the same times". Here events 55–57 are at 10:24:00, 10:26:30 and 10:31:00.
+   - **`grant_31f9`.** Support G2 has "for E1 by `staff_mona`: Requested 11:30 UTC, Declined 11:42 UTC". Here events 61–62 are by `staff_omar`, at 12:00 and 12:06.
+   - **`grant_40aa`.** Support E10 has "`acct_f1e0c3` … Requested 2026-09-27 10:05 UTC → Unanswered 2026-09-30 10:05 UTC". Here it belongs to `acct_3f88a1` and was requested on 2026-10-01T10:09Z.
+   - **The reason label.** The support catalogue reads "An Entry is missing or appears twice"; 10.4 reads "An entry is missing or appears twice".
+   - **The licence of the فول مدمس — EG record.** approver-10.31 reads "Own calculation · ingredients CC0 1.0 (USDA FoodData Central — cite)"; 10.22 reads "first-party calculation (approver-built)".
+7. **Audit trail action names clash with the support lens, and Conflicts item 16 is out of date.**
+   - The support lens's events include `grant.active`, `grant.read_denied` and `grant.approve_denied` (support §0.2). This lens has no `grant.active`, uses `grant.read_refused`, and records a staff member's attempt to approve as `access.refused` (10.6).
+   - support-10.15 expects `staff_hana` to see, for `grant_31f0`, "`grant.requested`, `grant.approved`, `grant.active`, three `grant.read` … and `grant.expired`". 10.3 says 8 events and has no `grant.active`.
+   - Conflicts 15 lists this lens's event names but not the clash.
+   - Conflicts 16 says the support lens's states and codes "predate D2", and that the admin lens says "Draft" and "full". Both lenses' fix rounds removed these. support-10.8 now returns "409 `GRANT_NOT_ACTIVE` with state Unanswered", and the admin fix round says '"Draft", "Live" and "Full" are gone'.
+8. **The admin story ids cited here are stale.** The admin lens renumbered its role stories:
+
+   | admin id | story now |
+   |---|---|
+   | admin-10.59 | "The five personas' roles are seeded…" |
+   | admin-10.61 | "Assign or remove a role…" |
+   | admin-10.62 | "Duties that must stay apart are kept apart" (the separation-of-duties save rule) |
+   | admin-10.64 | "Nobody changes their own roles…" (the self-change refusal) |
+
+   This lens still cites "admin-10.59 refuses this combination at save" (fixtures, 10.26, Conflicts 17) and "self-change, admin-10.61" (event 35, 10.26).
+9. **The Registry task has two names.** The fixture says "Registry (task `meal_photo`, names from the admin lens)", and the fix round says "Registry ids follow the admin lens (`meal_photo@v6`, `meal_photo@v7`)". The admin lens calls the task `meal`, its versions `meal@v6` and `meal@v7`, and the schema "schema version 3" (admin-10.1, 10.25). Its own verifier rejected `meal_photo` (admin verdict, item 21). This lens's schema is `analysis.v3`.
+10. **A Platform admin's diary read is FORBIDDEN here and NOT_FOUND in the admin lens.**
+    - Event 77 and 10.9 /s give `FORBIDDEN`.
+    - admin-10.63 is marked "*Shared: Support agent, Auditor*". It says the platform admin's `GET /v1/reports/day?user=eater-synth-060` "returns 404 `NOT_FOUND`".
+    - D2 can be read either way: "FORBIDDEN (role lacks the permission)" and "NOT_FOUND (also for another user's ids — never reveal existence)". Neither lens lists the difference.
+11. **auditor-9.9: here the age gate runs on the server; in the eater lens it never leaves the iPhone.**
+    - 9.9 /s: "When the onboarding call sends age 17 Then it returns 422 `AGE_REQUIREMENT` … one `age.refused` event is written". Its /r line shows "Age gate refusals: 1".
+    - eater-1.2 /s: "zero requests were sent, and the local database holds no age value". Under the eater lens the refusal count could never leave 0.
+    - §6 marks 9.9 as shared with the eater, but Conflicts does not list this clash. The eater lens's C-18 is about whether a self-declared age is enough, not this.
+12. **Consent records are named differently from the eater lens, and Conflicts does not list it.**
+    - **Text version ids.** The eater fixture has "Diary processing `c-diary-1`; Optional research `c-research-1`", and takes `c-ai-4` as the "auditor lens fixture". Here they are `diary-1` and `research-1`.
+    - **Methods.** 9.2 allows only "'onboarding' or 'Settings'". The eater lens records "in-app sheet · Capture" (eater-9.3) and asks for the Health, Microphone and Photos Consents the first time they are needed (eater-1.6), as care group 4 requires.
+    - The eater lens's Health purposes ("Health: write dietary energy", and no "read active energy") also differ from 9.1. The map backs this lens on that point, so it is not counted here.
+
+**Traced**
+
+13. **The renumbering broke references, and the fix note says it could not.** The fix round says "Stories were renumbered; no other file references these ids." The eater lens (`eater/wf1-wf9.md`, `eater/wf2-wf4.md`) cites auditor ids about 30 times, and some now point to other stories:
+    - eater-9.12 cites "auditor-9.13" for the export job. 9.13 is now the deleted account.
+    - eater-9.16 cites "auditor-9.9, auditor-9.10" for deletion. 9.9 is now the age gate.
+    - eater-9.11 cites "auditor-9.14" for retention runs. 9.14 is now the export job.
+    - eater-9.7 cites "auditor-9.8" for consented quality review. 9.8 now refuses every attempt.
+    - eater-9.28 cites "auditor fixture G-2026-0046", which no longer exists.
+
+    §6 also marks only 9.5 and 9.9 as shared with the eater. The eater lens marks 9.1, 9.2, 9.4 and 9.6 as shared with this lens as well.
+
+**Not counted here.** The eater lens still uses names that predate D2: `AGE_GATE_REQUIRED`, `FORBIDDEN_ROLE`, `GRANT_DECLINED`, `GRANT_REVOKED`, `expired_unanswered`. They contradict 10.6, 10.7, 10.10, 10.11 and 9.9. D2 sides with this lens, so they are defects of the eater lens.
