@@ -646,4 +646,4 @@ Proposals for the model phase, to be added to the map's vocabulary or renamed: *
 | WF-9 done-when (export; deletion with a completion record without identifiers) | 9.7, 9.9, 9.11 |
 | WF-10 done-when (request, approval in Settings, read in the box, expiry, trail; decline gives no access) | 10.2, 10.6, 10.7, 10.11, 10.15, 10.17, 10.23 |
 
-**Totals:** 48 stories (journey 9: 25, journey 10: 23); 145 acceptance lines (63 in journey 9, 82 in journey 10), each tagged `/m`, `/s` or `/r`, and every story has at least one `/r` line.
+**Totals:** 48 stories (journey 9: 25, journey 10: 23); 146 acceptance lines (78 in journey 9, 68 in journey 10): 106 `/r`, 34 `/s`, 6 `/m`. Every story has at least one `/r` line.
