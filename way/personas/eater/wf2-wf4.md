@@ -1186,3 +1186,66 @@ What passed:
       - The WF-2 header promises "the review one-handed", but no Unit editor line checks thumb reach.
     - The AT table leaves out AT-15 (cited by 2.35) and AT-10 (cited by 4.21).
 27. **The "hide numbers" view (EX-43) is not honoured on these screens.** The map lists it as a user setting (§1 ¶6, R37). Every line on the Unit editor and Analysis review shows kcal, and no story covers an eater who has the view on. `wf3-wf6.md` covers it for Today.
+
+## Fix round 1 (2026-10-01)
+
+Each defect of the verdict above, fixed at its root. After the fixes, every changed line was re-read against `way/vocabulary.md` (D2) and against the stories it touches in `approver.md`, `admin.md`, `support.md`, `auditor.md`, `eater/wf1-wf9.md` and `eater/wf3-wf6.md`. No outside source was opened and no request was sent anywhere. Totals now: 105 stories (52 + 53) and 366 acceptance lines (298 runtime, 37 system, 31 module). The 4 new stories are 2.52, 4.51, 4.52 and 4.53.
+
+1. **One seed.** The fixtures now begin with "The shared eater seed". Its Unit names and values are those of `wf3-wf6.md` §2.2: cheese bite «قرصة جبنة» is 46 kcal (2.5 / 4.5 / 2.0); bread bite is 20 → 22.5 kcal; cup of laban is 152 kcal; glass of milk tea is 60 kcal; talbina spoon is 20 kcal; Faisal's Sukkari date is 24 kcal; foul spoon is 30 kcal. The kabsa rice spoon, chicken piece and tuna bite (6.8 g tuna + 8 g bread) come from `wf5-wf7-wf8.md`. The component Foods were re-derived so that every part adds up to those values (White cheese 231.5 kcal per 100 g; Bread, baladi 8.75 / 50 / 1.25; Laban drink 60.8 per 100 ml). The lines that changed are 2.18, 2.22, 2.25, 2.26, 2.28, 2.36, 2.38, 2.44, 2.45, 2.50, 2.51, 4.12, 4.21, 4.27, 4.29, 4.39, 4.40, 4.44 and 4.50. Every Given now names an account whose seed holds it. Huda (fresh, no Units), Hala (trial T1 of `wf1-wf9.md`), Nadia and Khalid (fresh accounts) were added for the creation and first-use stories. `wf5-wf7-wf8.md` still gives other values for the same Units; §5 conflict 15 lists each one, so the model phase can make one seed file.
+2. **eater-2.8.** The reference now holds only "Tuna, canned in water, drained". Mona's tuna in oil is her own label record (FR-025's first tier). AT-05 is run on Faisal, who has no tuna record of his own.
+3. **eater-2.15.** AT-07 moved to Mona's yogurt cup, built on Yogurt, plain (per 100 g). "180 g · declared" is therefore a valid Unit (110 kcal) and no longer clashes with 2.14. Laban stays per ml.
+4. **eater-2.22 against eater-2.25.** The dipped-bite rule now marks only egg bite (and meat bite in 2.24). Line 1 of 2.22 also checks that cheese spoon still reads "without bread · 26 kcal", because its bread comes only through its with-bread variant (FR-024).
+5. **eater-2.26.** Line 1 reads Mona's existing glass of milk tea. The rules line calls `GET /v1/rules` with Faisal's token, and its expected values are his two Food rules from the fixtures.
+6. **eater-2.48.** The rejection is now one that can happen: while device A was offline, Mona saved another "honey spoon" on device B, so A's queued Save returns `VALIDATION_ERROR` on `label`.
+7. **eater-4.13.** The reference Food "Kabsa rice" (170 kcal per 100 g) was added. 180–320 g gives 306–544 kcal from that one record. The edited chip gives 212 kcal from Faisal's kabsa rice spoon (42.4 kcal each).
+8. **Seed gaps.**
+   - 2.7 lists exactly Bread, baladi · Bread, shami · Toast, white, and all three are in the seed.
+   - 4.18 uses Molasses, sugarcane, whose protein is not printed.
+   - 4.12 uses glass of milk tea (measured, 60 kcal), not foul spoon.
+   - 2.27's Given now creates the Saved Composite "two eggs breakfast".
+9. **eater-4.16.** Faisal's own cup of laban now wins ("your unit · 152 kcal"). The dialect-only line moved to Khalid (Gulf, no laban Unit).
+10. **eater-4.6.** A withdrawal mid-run now makes the Analysis Failed, a D2 state. The copy says the photo was removed from the server. The /s line checks that the uploaded photo is gone and that nothing more is sent (AT-29).
+11. **Vague lines.**
+    - 4.50: with VoiceOver off, the Undo banner stays 8 s, a fixture value to be re-chosen on the served screen; with VoiceOver on, it stays until the eater acts (eater-3.5).
+    - 4.20: the count stepper's − and + each measure at least 44×44 pt and sit in the middle band.
+12. **eater-2.42 (/s).** The line now retires the EG Alias «لبن» → Milk, whole, and checks that Mona's glass of milk still resolves to version 1. The precedence /r line uses Sam with dialect EG.
+13. **eater-4.30.** The one-tap exception was removed. A sentence with no verb never logs without a tap, even with one-tap logging on (FRD §2.3: "An explicit command").
+14. **eater-2.33.** After "Cook again", **My Units** asks "Use the new batch for talbina spoon from now on?". "Use it" saves talbina spoon version 2. The /s line checks that each spoon version references its own Recipe version (FR-010, FR-014).
+15. **Shared ids.** The traces and the §4 table now cite admin-10.28, 10.29, 10.33, 10.34, 10.40, 10.43, 10.44 and 10.53, and support-4.1, 4.2 and 10.24.
+16. **Disagreements with other lenses.**
+    - 2.35 (/s) now follows approver-10.13: a private Unit raises no flag, and a submitted one does.
+    - 4.17 (/s) now follows approver Conflict 5: a lone eater's text raises no flag.
+    - 4.3 (/s) records the method "in-app sheet · first use".
+    - §5 conflicts 16, 17 and 18 record the open part of each.
+17. **FRD §7.1 and §16.3.**
+    - eater-4.51 reads every §7.1 field, with field-level uncertainty.
+    - eater-4.52 covers file type and size (step 1), a schema failure (retried once with the same command id, then Failed), the resolver's numbers replacing a number from the model (step 5), and numerical plausibility (step 4).
+    - The coverage rows are split by pipeline step.
+18. **FR-025.** eater-2.9 gains an /m line over all five tiers in order, an /r line for Faisal's own record against the reference, and an /r line for recipe-calculated over an analogue (approver-10.39). The coverage row says which line proves which step.
+19. **AT-32.** eater-4.47 gains a line that logs a manual amount during the timeout (Bread, baladi 40 g → 100 kcal, Confirmed).
+20. **Microphone Consent.** eater-4.5 now asks for the Microphone Consent in a sheet before the iOS prompt, and an /s line checks the "Microphone" record. eater-4.4 does the same for the Photos Consent, as eater-1.6 does.
+21. **E39.** §5 conflict 13 now reads "iPhone is about half of mobile use in Saudi Arabia (E39: iOS 51.6 %)".
+22. **Analysis states.**
+    - "Not now" creates no Analysis (4.3).
+    - Cancel makes it Discarded (4.11).
+    - The daily limit and a withdrawal make it Failed (4.48, 4.6). "Try again" creates a new Analysis (admin-10.34).
+    - An upload retry stays Processing with the same command id (4.11).
+    - 4.49 now reads "Pending · tap to analyse".
+    - §5 conflict 10 records the missing "waiting" state.
+23. **"Serving template".** eater-2.27 now uses a Saved Composite. §5 conflict 10 raises the FRD word against Template.
+24. **Field names.** `unit_kind` is the kind of amount and `structure` is simple · composite · recipe (2.4, 2.17, §6). The fixture column reads "amount kind · structure".
+25. **Places without a delta.** "How to read" and §5 conflict 10 list the quick-add control, the capture modes, the count stepper, the correction preview, Source details and Label submission for a dated delta.
+26. **Coverage truth.**
+    - The EX table now has one row for each of EX-33 to EX-39.
+    - 2.50 gained thumb reach, 44 pt, contrast and visible-swipe-button lines.
+    - 4.50 gained 44 pt and a contrast-and-badge-word line.
+    - The AT table gained AT-10 (2.38, 4.21) and AT-15 (2.35).
+27. **Hide numbers.** New stories eater-2.52 (Unit editor, My Units, Source details) and eater-4.53 (Analysis review and its questions). Both use **Settings → Goals → "Hide numbers"**, as eater-3.42 does, and both have an /s line showing the data is unchanged.
+
+**Also aligned while re-reading** (no new contradiction):
+- 4.39 shows Faisal's chips by his Arabic Unit names (eater-3.10).
+- 4.41 uses «بصارة» (no Unit), because «فول» would match two of Mona's Units (eater-3.12).
+- 4.43 uses the Alias "ful".
+- 4.44 follows eater-3.14 for the Text Kill switch.
+- 4.47 follows admin-10.33 for the Meal Kill switch, with the shutter disabled; §5 conflict 19 notes admin-10.34's other reading.
+- 4.25 opens the Start new day confirmation (eater-3.32).
