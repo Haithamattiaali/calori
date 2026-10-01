@@ -209,7 +209,7 @@ Moments that decide their trust. These are inferred from the sources above, `ass
 | Canary duration — the deadline for the minimum sample | 24 hours | A17's bake-in, applied as a deadline only: Move to Rollout is offered as soon as the minimum sample is met and every check passes, with no further wait (10.24, 10.26, 10.71) — `assumption` |
 | Seeded quotas ("Quotas version 1") | image tasks soft 15 / hard 25; Text and Voice soft 60 / hard 100; anonymous sessions hard 3 / 10 | §23.3 |
 | Seeded AI spend cap | alert at $40, cap at $60 per UTC day | A4 |
-| Seeded prices ("Prices version 1") | `gemini-3.8-flash` input $0.75 / output $3.75 per million tokens from 2 Sep 2026, and $1.50 / $7.50 from 1 Jan 2027; `gemini-3.5-flash-lite` priced from its model page when the Text task is seeded | A18; P3 as corrected in r1-refute-b |
+| Seeded price rows (prices panel on **Metrics**) | `gemini-3.8-flash` input $0.75 / output $3.75 per million tokens, effective 2 Sep 2026; `gemini-3.5-flash-lite` input $0.30 / output $2.50 per million tokens, effective at seeding. The 1 Jan 2027 rise is not seeded: an admin adds it (10.45) | A18; agrees with P3 (stands in r1-refute-b) |
 | Evaluation tolerance | proposed version ≥ Rollout version − 2 points per score | — |
 | Small groups | fewer than 11 distinct eaters are hidden | A26 |
 | Retirement warning / block for new Proposed versions | ≤90 days / ≤30 days | — |
@@ -763,7 +763,7 @@ As platform admin, I need a quota to count only fresh AI work, so that eaters ar
 - Given a fresh test database, When the same `POST /v1/analyses` command is delivered three times with one command id (AT-10 pattern), Then:
   - the quota counts one Analysis;
   - the provider mock's request log shows one call, because the repeats replay the stored result. `/r` `/s`
-- Given a fresh test database with the seeded "Prices version 1" (§3) and the mock set to time out once, When one `meal` command runs, its bounded retry succeeds on the second call (each call 1,000 input and 500 output tokens at the 2026 prices), and `GET /v1/admin/metrics/cost?task=meal` is read, Then:
+- Given a fresh test database with the seeded price rows (§3) and the mock set to time out once, When one `meal` command runs, its bounded retry succeeds on the second call (each call 1,000 input and 500 output tokens at the 2026 prices), and `GET /v1/admin/metrics/cost?task=meal` is read, Then:
   - the quota counts one Analysis;
   - the cost view on **Metrics** reads "Provider calls 2 · estimated $0.0053";
   - the API returns `provider_calls: 2` and `estimated_cost: 0.00525`. `/r`
@@ -775,10 +775,8 @@ As platform admin, I reset each eater's quota at their own diary-day boundary, s
 
 #### admin-10.45 · Keep effective-dated prices
 As platform admin, I record provider prices per model with effective dates on the prices panel of **Metrics**, so that each call is priced at the rate of its own day and a known change is ready in advance. §16.5, §23.3 ("Do not embed temporary provider prices in core requirements"); A18.
-- Given the prices panel on **Metrics**, When `admin.a` enters the following for `gemini-3.8-flash`, Then both rows show with their effective dates and the note "output includes thinking tokens":
-  - input $0.75 and output $3.75 per million tokens from 2 Sep 2026;
-  - input $1.50 and output $7.50 from 1 Jan 2027;
-  - the source page. `/r`
+- Given a fresh deployment, When the prices panel on **Metrics** opens, Then it lists the seeded rows of §3 — `gemini-3.8-flash` $0.75 / $3.75 from 2 Sep 2026 and `gemini-3.5-flash-lite` $0.30 / $2.50 — each marked "Seeded", and `GET /v1/admin/prices` returns both. `/r`
+- Given those seeded rows, When `admin.a` adds for `gemini-3.8-flash` input $1.50 and output $7.50 per million tokens from 1 Jan 2027 with the source page, Then the panel shows both `gemini-3.8-flash` rows with their effective dates and the note "output includes thinking tokens". `/r`
 - Given those prices, When an Analysis at 2026-12-31 23:59:59 UTC and one at 2027-01-01 00:00:00 UTC each use 1,000 input and 500 output tokens, Then:
   - their costs are stored unrounded as $0.002625 and $0.00525;
   - **Metrics** shows them as $0.0026 and $0.0053 (four decimals, half up). `/r` `/m`
@@ -969,7 +967,7 @@ As platform admin, I see that the AI provider credential is loaded and when, nev
 - Given `eater-synth-105` posts a synthetic meal photo that the eater then approves, When the structured log record for that request is read, Then it holds:
   - the request id, timing, status, `registry_version` (model version), estimated cost and validation code (§19.2);
   - the same request id on every record for that request, so one Analysis can be followed. `/s`
-- Given `eater-synth-105` has saved weight 82.4 kg and height 178 cm in **Settings** › Goals, posts a synthetic meal photo, and records a synthetic voice note whose transcript reads "three cheese bites and a cup of laban", When all service logs and crash reports from that run are searched for each of: the photo's bytes (raw, base64 and SHA-256), the audio's bytes (raw, base64 and SHA-256), the transcript text, the Unit names in the approved Analysis ("cheese bite", "laban"), the profile values `82.4` and `178`, and the prompt text sent to the mock, Then none is found (§19.2: "not raw meal images, private diaries, audio, or sensitive profile values"). `/s`
+- Given `eater-synth-105` has saved the distinctive synthetic profile values weight 82.37 kg and height 178.6 cm, posts a synthetic meal photo, and records a synthetic voice note whose transcript reads "three cheese bites and a cup of laban", When all service logs and crash reports from that run are searched for each of: the photo's bytes (raw, base64 and SHA-256), the audio's bytes (raw, base64 and SHA-256), the transcript text, the item names that voice Analysis returned (read through `GET /v1/analyses/{id}`), the strings `82.37` and `178.6`, and the prompt text sent to the mock, Then none is found (§19.2: "not raw meal images, private diaries, audio, or sensitive profile values"). `/s`
 
 #### admin-10.66 · Dependency audit and pinned versions are visible
 As platform admin, I see the running build's dependency audit and SBOM, so that I know whether we ship a known-vulnerable package. NFR-12 ("dependency scans"), blueprint §3 D1 (supply chain).
@@ -1132,7 +1130,7 @@ Every question in `care.md` "The questions" is answered below, or marked not app
    - the roles and the first platform admin (10.59);
    - the Rollout versions (10.1);
    - "Quotas version 1" (10.38) and the AI spend cap (10.48);
-   - "Prices version 1" on **Metrics** (10.45), which the spend cap and the cost views need;
+   - the seeded price rows on the prices panel of **Metrics** (§3, 10.45), which the spend cap and the cost views need;
    - the other starting values in §3.
 8. **No typing what the system knows.** Models, prompts and schema versions are chosen from lists. Only reasons and prices are typed.
 9. **Tappable at a glance.** Every control is a bordered button or an underlined link. Table cells that are not controls carry no hover style.
@@ -1169,6 +1167,7 @@ Every question in `care.md` "The questions" is answered below, or marked not app
    | minimum samples | 10.20, 10.23 |
    | Canary checks | 10.23 |
    | Canary duration | 10.24 |
+   | seeded price rows | 10.43, 10.45 |
    | evaluation tolerance | 10.17 |
    | small groups | 10.50 |
    | retirement warning and block | 10.6 |
@@ -1193,13 +1192,13 @@ Every question in `care.md` "The questions" is answered below, or marked not app
 6. **Undo, and showing what it reversed:**
    - roll back (10.27), quotas roll back (10.39) and the kill switch turned Off (10.35) each undo the earlier action;
    - **Audit trail** shows exactly what each undid.
-7. **Warnings only before unexpected, permanent loss.** Nothing in this console deletes permanently; seeded roles cannot be deleted at all (10.59). Confirmations are kept for moving a Registry version between states and for turning AI off, and for nothing else:
+7. **Warnings only before unexpected, permanent loss.** Nothing in this console deletes permanently; seeded roles cannot be deleted at all (10.59). Confirmations are exactly the five named in "The matching style", and nothing else confirms:
    - Move to Canary (10.22) and Move to Rollout (10.26);
    - roll back from any stage, Shadow included (10.27);
    - turning the kill switch On (10.31, 10.32);
    - quotas roll back (10.39).
 
-   Number edits that take effect at once — the Canary share (10.25, 10.30) and saving quotas (10.38) — and turning the kill switch Off (10.35) save without a confirmation, because the same control undoes each in one step and the Audit trail records it.
+   Everything else saves directly, and the Audit trail records it: Move to Shadow (10.18), because a Shadow version's results never reach an eater; the Canary share (10.25, 10.30) and saving quotas (10.38), because the same control undoes each in one step; and turning the kill switch Off (10.35), because it restores service.
 8. **Half-filled forms.** A half-filled Propose form is kept in that browser and offered back as "Restore your unsaved Meal version" (10.8). Nothing reaches the server until the form passes the checks in 10.11.
 9. **Permissions asked at the moment of need:** n/a. The console asks for no device permission. Role refusals explain themselves (10.2, 10.3).
 10. **No network.** The last data is shown with its time and a quiet bar. Changes are disabled, and the kill switch is never queued (10.1, 10.36).
@@ -1780,3 +1779,63 @@ After two fix rounds, 6 defects remained (re-verify 2). Cause in one sentence: e
 4. Care 4.7 states the rule the stories follow: confirm state moves and kill switch On; number edits and kill switch Off save directly.
 5. Canary duration is only the minimum-sample deadline; Move to Rollout is offered once the sample is met and checks pass, so 10.71's one-sitting flow holds.
 6. "Prices version 1" is seeded in §3, listed in care 2.7, and 10.43's fresh database includes it.
+
+## Lens verdict — final (2026-10-01)
+
+**fail**: 4 defects. Of the 6 re-verify-2 defects, 4 are fixed and 2 are only partly fixed (defects 2 and 3 below). The other 2 defects are new, in lines the session wrote. A lens verifier that did not write this file checked only the lines the session changed (commit 4c02c33 → 462ac11): 10.65's log search, §3's roll-back target line and its Canary duration and Seeded prices rows, 10.59, care 4.7 and 2.7, and 10.43. It checked them against the stories they touch (10.18, 10.22, 10.24–10.27, 10.30–10.39, 10.45–10.48, 10.71), `way/vocabulary.md` (D2), `way/blueprint.md` §0–§1, `way/brief/frd-v1.0.md` §19.2 and `way/research/r1-refute-b.md`. Unchanged material was not re-audited. No outside service was contacted.
+
+**What holds.**
+- "previous Rollout version" is gone from the lens's own text. It survives only in the dated "Fix round 1" record.
+- 10.43's arithmetic still holds on the seeded 2026 rows: 2 × (1,000 × $0.75 + 500 × $3.75) ÷ 1,000,000 = $0.00525, shown as $0.0053.
+- The Canary duration row, 10.24, 10.26 and 10.71 now give the 24 hours one meaning.
+- 10.59's restart line now names a screen and an API, and it agrees with 10.2's account that has no role.
+
+### The 6 re-verify-2 defects
+
+| # | status | quoted line |
+|---|---|---|
+| 1 | fixed; the new line brings defect 1 | 10.65: "Given `eater-synth-105` has saved weight 82.4 kg and height 178 cm in **Settings** › Goals, posts a synthetic meal photo, and records a synthetic voice note whose transcript reads "three cheese bites and a cup of laban", When all service logs and crash reports from that run are searched for each of: the photo's bytes (raw, base64 and SHA-256), the audio's bytes (raw, base64 and SHA-256), the transcript text, …". A request now carries the transcript, and audio, base64 and profile values are searched. |
+| 2 | fixed | §3: "When a newer version reaches Rollout, **Registry** shows the one it replaces as "Roll-back target: version n" — a pointer, not a state (10.26)." This matches 10.26, 10.27 and §7 conflicts 1 and 13. |
+| 3 | fixed | 10.59: "Then **Roles › Users** lists `admin.b` with "No role" and `admin.a` as the only Platform admin, and `GET /v1/admin/users/{admin.b}/roles` returns an empty list." Trace: "blueprint §0 line 3, the first-platform-admin setting is deployment configuration read at start-up — `assumption`." Line 6 is no longer misquoted. |
+| 4 | **partly fixed**; see defect 2 | Care 4.7: "Number edits that take effect at once — the Canary share (10.25, 10.30) and saving quotas (10.38) — and turning the kill switch Off (10.35) save without a confirmation" and "roll back from any stage, Shadow included (10.27)". The four stories named last round now agree, but the new rule sentence does not match its own list. |
+| 5 | fixed | §3: "Canary duration — the deadline for the minimum sample \| 24 hours \| A17's bake-in, applied as a deadline only: Move to Rollout is offered as soon as the minimum sample is met and every check passes, with no further wait (10.24, 10.26, 10.71) — `assumption`". It agrees with 10.24 ("by the end of its 24-hour duration") and allows 10.71's flow in one sitting. |
+| 6 | **partly fixed**; see defects 3 and 4 | §3: "Seeded prices ("Prices version 1") \| `gemini-3.8-flash` input $0.75 / output $3.75 per million tokens from 2 Sep 2026, and $1.50 / $7.50 from 1 Jan 2027; …". 10.43: "Given a fresh test database with the seeded "Prices version 1" (§3)". Care 2.7: ""Prices version 1" on **Metrics** (10.45), which the spend cap and the cost views need". `meal` cost is now seeded; the Text model is not. |
+
+### Defects
+
+**Observable and Vocabulary**
+1. **admin-10.65, line 5 (the session's new log search): some search terms can match by chance, and two names have no antecedent.**
+   - The search includes "the profile values `82.4` and `178`". These are bare numbers. The same run's structured logs carry timings, epoch timestamps, counts and hex ids (line 4 of this story requires "timing" in every record). "178" or "82.4" can occur there without any profile value leaking. A correct build can then fail "none is found", and a hit does not prove a leak. Distinctive synthetic values are needed, such as 82.37 kg and 178.6 cm.
+   - "the Unit names in the approved Analysis ("cheese bite", "laban")": this Given approves nothing. The approval is in line 4's separate Given, and that one is for the photo. So "the approved Analysis" has no antecedent.
+   - The map's **Unit** is the eater's own saved item (WF-2; D2 "Unit … Draft → Saved"). This Given saves no Unit "cheese bite" or "laban" for `eater-synth-105`. These are the item names of the voice Analysis, and they may resolve to Foods instead.
+
+**Experience (care answer against its own list and the stories)**
+2. **Care 4.7's new rule still contradicts its own list and one story.** It reads "Confirmations are kept for moving a Registry version between states and for turning AI off, and for nothing else". But:
+   - "quotas roll back (10.39)" is on the list, and 10.39 confirms it ("confirms (focused default "Cancel")"). It is neither of the two kinds. A quotas version is not a Registry version: D2 defines a Registry version as "model id + prompt + schema per task", and §7 conflict 14 says so.
+   - Move to Shadow (10.18) is a Registry version moving between states (Proposed → Shadow), and 10.71 walks it ("move it to Shadow"). Yet 10.18 has no confirmation ("When `admin.a` moves it to Shadow at 5 %, Then … **Registry › Meal** reads …"), and neither the list nor "The matching style" names it.
+
+**Sourced and Complete**
+3. **The Seeded prices row leaves the Text model unpriced, and it misstates the refuter.**
+   - The row reads "`gemini-3.5-flash-lite` priced from its model page when the Text task is seeded". That gives no value, even though A18 opened it ("For `gemini-3.5-flash-lite` it is "$0.30" input and "$2.50" output").
+   - The same cell says the Text task is seeded on that model, and 10.1 has `text` in Rollout on it. A seeded Rollout version never passes 10.46's "No price, no Canary" check.
+   - So on a fresh deployment, Text cost is unpriced. 10.48's cap would leave Text out of its count, and care 2.7's "Nothing needs setting first" still fails for Text cost.
+   - The source cell reads "P3 as corrected in r1-refute-b". `r1-refute-b.md` marks P3 "stands (now opened)", not corrected, and A18 itself says "agrees with P3 as opened in r1-refute-b".
+
+**Vocabulary and Observable**
+4. **"Prices version 1" is a new versioned name. Nothing routes it, no screen shows it, and 10.45 does not use it.**
+   - §7 conflict 1 lists only "prices panel". §7 conflict 14 routes "Quotas version n" to D2, but no conflict routes a prices version.
+   - 10.45 models prices as effective-dated rows ("Add a new effective date instead"), not versions. No line shows "Prices version 1" on **Metrics** or in an API. Compare 10.38, which has "Given a fresh deployment … it reads "Quotas version 1"".
+   - Care 2.7 points to "(10.45)" for the seeded prices, but 10.45 has no seeded line.
+   - Care 3.8 says "Every value in the §3 table is exercised by a story", but its table has no row for seeded prices.
+   - 10.45 line 1's Given ("the prices panel on **Metrics**") does not say whether the seeded rows are there. On a fresh deployment, `admin.a` re-enters the two `gemini-3.8-flash` rows that already exist. The 2 Sep 2026 row is already in effect, and 10.45 line 3 refuses edits to a row in effect.
+
+**Ids**: no defects.
+
+### Cross-lens (for the model phase join; not counted)
+- **Profile values on Settings › Goals.** 10.65 has the eater save weight and height in **Settings** › Goals. The eater lens (WF-1) owns where profile values are saved.
+
+## Second fix by the session (2026-10-01), after the final check
+1. 10.65 searches distinctive values (82.37 kg, 178.6 cm) and the item names the voice Analysis returned (read through the API), not "Unit names in the approved Analysis".
+2. Care 4.7 is an explicit list of the five confirmations, with each direct-save action named and its reason; Move to Shadow (10.18) saves directly because Shadow results never reach an eater.
+3. Seeded price rows include `gemini-3.5-flash-lite` ($0.30 / $2.50, from A18), and the source cell says P3 stands.
+4. No new "Prices version" name: §3, care 2.7, 10.43 and 10.45 speak of the seeded price rows on the prices panel; 10.45 now shows them on a fresh deployment and the admin adds only the 1 Jan 2027 row; care 3.8 lists the row.

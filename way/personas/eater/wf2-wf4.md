@@ -532,13 +532,13 @@ As the Eater, the first time I send a photo, voice or words to the AI without ha
 As the Eater, the Photos Consent and the camera are asked for when I first use them, with one plain reason, and a "no" leaves me other ways in, so that a permission never blocks logging. · FR-076, map §1.3 (separate consents: "photos"), FRD §14 (Capture "permission denied"), FRD §3.2 · EX-26 (as eater-1.6)
 - `/r` Given Nadia has never used the camera, When she first opens **Capture & Plan**, Then a sheet gives one sentence on why the Photos Consent is needed, with "Give consent" and "Not now"; the iOS camera prompt appears only after "Give consent", and never at app launch.
 - `/r` Given the Photos Consent is Given but iOS denies the camera, When **Capture & Plan** opens, Then it reads "Camera is off" with "Open iPhone Settings", and the "Add words" field still works.
-- `/r` Given she tapped "Not now", When she types "3 cheese bites" in "Add words", Then text capture still reaches **Analysis review** (with the AI Consent Given), and no camera session starts.
+- `/r` Given she tapped "Not now" on the Photos Consent and her AI Consent is Given, When she types "3 cheese bites" in "Add words", Then text capture still reaches **Analysis review**, and no camera session starts.
 - `/s` Given "Give consent", When `GET /v1/me/consents` is read, Then one Consent for purpose "Photos" is Given with time and method.
 
 #### eater-4.5 · The Microphone Consent and the microphone, asked when first needed
 As the Eater, the Microphone Consent and the microphone are asked for when I first tap the microphone, and a "no" sends me to typing, so that voice is never the only way. · FR-076, map §1.3 (separate consents: "mic") · EX-26, E43
 - `/r` Given Nadia has never used voice, When she first taps the microphone, Then a sheet gives one sentence on why the Microphone Consent is needed, with "Give consent" and "Not now"; the iOS microphone prompt appears only after "Give consent".
-- `/r` Given she taps "Not now", or iOS denies the microphone, When she taps the microphone again, Then the field reads "Microphone is off — type instead" and the keyboard opens; a typed "3 cheese bites" reaches **Analysis review**.
+- `/r` Given she tapped "Not now", or iOS denies the microphone, and her AI Consent is Given, When she taps the microphone again, Then the field reads "Microphone is off — type instead" and the keyboard opens; a typed "3 cheese bites" reaches **Analysis review**.
 - `/s` Given "Give consent", When `GET /v1/me/consents` is read, Then one Consent for purpose "Microphone" is Given with time and method, apart from the AI Consent.
 
 #### eater-4.6 · Withdraw the AI Consent in one tap
@@ -684,7 +684,7 @@ As the Eater, sending the same photo again warns me instead of logging it twice,
 
 #### eater-4.25 · Eight things I can mean; three touch my diary
 As the Eater, I can say what I want in plain words — estimate, save as a unit, plan, log, correct, remove, report or start a new day — and only logging, correcting and removing change my diary, so that talking to the app is safe. · FR-039
-- `/r` Given the quick-add control on **Today**, When Mona sends a plate photo with «كام سعر في ده؟», «احسب اللقمة دي واحفظها», «خطط لي وجبة ٦٠٠ سعر», «أكلت ٣ قرص جبنة», «١٨ مش ١٥», «شيل كوباية اللبن», «فاضل كام النهارده؟» and «ابدأ يوم جديد» one at a time, Then each opens its own place: an estimate in **Analysis review** · the **Unit editor** · the **Meal planner** · **Analysis review** · the correction preview · the Entry with Void offered · **Today**'s day report · the new-Day question.
+- `/r` Given the quick-add control on **Today**, When Mona sends a plate photo with «كام سعر في ده؟», «احسب اللقمة دي واحفظها», «خطط لي وجبة ٦٠٠ سعر», «أكلت ٣ قرص جبنة», «١٨ مش ١٥», «شيل كوباية اللبن», «فاضل كام النهارده؟» and «ابدأ يوم جديد» one at a time, Then each opens its own place: an estimate in **Analysis review** · the **Unit editor** · the **Meal planner** · **Analysis review** · the correction preview · the Entry with Void offered · **Today**'s day report · the Start new day confirmation (eater-3.32).
 - `/r` Given the estimate, calibrate, plan, report and new-day sentences, When each finishes, Then `GET /v1/reports/day` returns the same revision as before; only the consume, correct and remove paths can change it, and each still needs her tap.
 - `/m` Given the intent test set (English, Egyptian Arabic, Gulf Arabic, mixed), When the intent parser runs, Then each sentence maps to its labelled intent, and the score is reported per intent (NFR-09).
 
@@ -870,3 +870,216 @@ As the Eater who has turned numbers off, I can still capture, review and approve
 - `/r` Given **Settings → Goals → "Hide numbers"** is on for Mona, When **Analysis review** shows her breakfast, Then the chips read "cheese bite × 3 · your unit" and "glass of milk tea × 1 · your unit" with their Evidence badges, and no kcal, range, macro or share appears; Approve works.
 - `/r` Given the same setting and a question about oil, When the question shows, Then it asks about the amount ("How much oil was used?") with choices in spoons or grams, never in kcal.
 - `/s` Given the same Analysis read with "Hide numbers" on and then off, When `GET /v1/analyses/{id}` is called, Then both responses are identical — the view hides, it never changes the Analysis.
+
+---
+
+## 4 · Stories shared with other personas
+
+Ids as they stand in the other lens files on 2026-10-01 after their own fix rounds.
+
+| story | shared with | the other side |
+|---|---|---|
+| eater-2.8 | Nutrition approver | approver-10.12 (substituted preparation, AT-05) |
+| eater-2.19 | Nutrition approver | approver-10.55 (component-sum tolerance) |
+| eater-2.35 | Nutrition approver | approver-10.13 (energy mismatch kept as printed; raised on a Label submission) |
+| eater-2.36 | Nutrition approver | approver-10.28 (new Food version; the eater chooses the scope) |
+| eater-2.41 | Nutrition approver | approver-10.41, approver-10.44 (Aliases; the normaliser) |
+| eater-2.42 | Nutrition approver | approver-10.42, approver-10.46 (لبن by dialect; retiring an Alias) |
+| eater-2.51 | Platform admin | admin-10.29 (a Registry change never rewrites history) |
+| eater-4.3, eater-4.6 | Auditor | auditor-9.1, auditor-9.2 (Consents by purpose; one account's Consent history) |
+| eater-4.12 | Platform admin | admin-10.28 (every Analysis carries its configuration) |
+| eater-4.14 | Nutrition approver | approver-10.55 (clarification limit) |
+| eater-4.16 | Nutrition approver | approver-10.42 (dialect question) |
+| eater-4.17 | Nutrition approver | approver-10.10 (an analogue becomes a Food, under approver Conflict 5) |
+| eater-4.37 | Nutrition approver | approver-10.15, approver-10.16, approver-10.66 (Label submission and its Consent) |
+| eater-4.42 | Platform admin | admin-10.53 (acceptance by language) |
+| eater-4.44 | Platform admin | admin-10.43 (only new AI work counts toward a quota) |
+| eater-4.47 | Platform admin · Support agent | admin-10.33, admin-10.34 · support-4.1, support-10.24 |
+| eater-4.48 | Platform admin · Support agent | admin-10.40, admin-10.44 · support-4.2 |
+| eater-4.49 | Platform admin | admin-10.34 (nothing is sent later without the eater) |
+
+---
+
+## 5 · Conflicts for the model phase
+
+These are tensions for the model phase, never questions for the owner.
+
+1. **Logging a Unit that has not synced yet (eater vs the ledger rule).** At a kitchen counter with no signal the eater saves honey spoon and wants to log it at once (EX-21, eater-2.48). FRD §18.1 says "The server resolves nutrient values from the approved unit snapshot" and the client "cannot submit its own aggregate calories". Vocabulary D2 gives a Unit no Pending state, so a queued Save shows as a Draft. The model must say whether an Entry may reference a queued Unit Save (ordered after it in the outbox, both Pending) or whether the Unit must be Saved first.
+2. **"measured" means two things (eater vs Nutrition approver).** FR-012 has a value basis per amount (this file: measured · declared · estimated; approver Conflict 8: measured · declared · estimate); the map's Evidence badges include "measured" for a Unit's nutrition. A Unit with a declared weight has no badge in the set (eater-2.10, eater-2.15, eater-4.34), and approver Conflict 6 finds no badge for a Tier A row. Name the relation and the one spelling once, in both languages.
+3. **Matching typed Unit names without AI (eater vs Platform admin and the Consent rule).** FRD §2.3 says approved Units need "no additional AI nutrition estimate", AT-32 says manual logging works during an outage, and FR-076 says refusing the AI Consent keeps unaffected functions. Turning a sentence into a command is the AI's task (map §1.2, 3.5 Flash-Lite). This file and eater-3.14 use a path that does not parse sentences: with the Kill switch On for Text, or the AI Consent Withdrawn, the typed words are matched against the eater's own Unit names and Aliases on the server, and the matches are listed with count steppers (eater-4.44). The model must name that path and confirm it sends nothing to Google.
+4. **What "a pass" is (FR-035).** "At most two … questions per pass" leaves a loop possible if every answer starts a new pass. This file caps one Analysis at two questions in total (eater-4.15); eater-3.12 says "two questions in this pass". The approver's limit (approver-10.55) needs the same definition.
+5. **A percentage tolerance against a kitchen scale's step (eater vs Nutrition approver).** FRD fixtures are below 10 g (5.4 g cheese, 1.5 g oil). On a scale with 1 g steps a 2 % tolerance (approver-10.55) fails honest readings. The model must say whether the tolerance is the larger of a percentage and the scale's step, and where the step is stored (eater-2.19).
+6. **A household rule against Unit versions.** FR-014 says editing a Unit makes a new version; the map's User rules are versioned separately with "effective from" (FRD §17 UserRuleVersion). When the bread rule or the bread bite's weight changes (eater-2.22, eater-2.44), the model must say whether every dipped Unit gets a new version, or the rule version is applied when logging and kept in the Entry's snapshot, and how My Units shows it. For a Recipe's new batch this file asks the eater and then versions the spoon (eater-2.33).
+7. **Restaurant values have no badge (eater vs Nutrition approver).** FRD §6.2 makes the serving's meaning required, and Saudi menus carry calories by law (F20), but eaters doubt them (E28). "label-verified" overclaims for a menu. The model must name the badge for a restaurant's declared value (eater-2.37).
+8. **Label submission (eater vs Nutrition approver).** eater-4.37 needs its own review Consent purpose (R22), which the map's consent list does not hold, and keeps the photos past the 30-day raw-scan period while the submission is Proposed or In review. Same as approver Conflict 4.
+9. **Which photos are kept.** FR-078 keeps "raw scans up to 30 days unless saved". A Unit's picture (eater-2.6) is saved by the eater; a scale or label photo behind a measured Unit (eater-4.34) is a raw scan whose number survives deletion (FRD §17 MeasurementEvidence). The model must say which media are "saved" and which expire.
+10. **Words with no name yet (vocabulary D2 says: add by a dated delta first).**
+    - Places and controls from the FRD used here: the **quick-add control** (FRD §2.1), the capture **modes Meal · Unit · Label · Recipe** (FRD §14), the **count stepper** (FRD §14), the **correction preview** (FRD §2.6) and **Source details** (FRD §14, FR-046).
+    - **Label submission** and its states (from the approver lens).
+    - "Serving template" (FR-022: "Use an approved serving template") would collide with **Template** ("a saved meal"). This file uses a Saved Composite instead (eater-2.27); the FRD word needs another name.
+    - No Analysis state covers "captured, waiting for a Consent or for the daily limit". This file creates no Analysis on "Not now" (eater-4.3) and uses Failed for the limit and for a withdrawal mid-run (eater-4.48, eater-4.6). "Try again" makes a new Analysis because Failed is an end state.
+    - D2 shows Discarded (Analysis) and Archived (Unit) as end states. This file therefore offers no undo for a discard (eater-4.22, though EX-24 prefers undo to warnings) and no way back from Archived (eater-2.46; `wf3-wf6.md` proposes "Unarchive").
+    - "Meal" as a group of Entries (research Conflict 2; FR-069 "meal report").
+11. **The Day of a late approval.** An offline photo taken at 13:05 and approved at 18:10 — or days later — lands on the capture time's Day (eater-4.49, FRD §8.1), which FR-047 treats as a late edit to a past Day. The eater may expect "today". Proposal: the capture time's Day, shown and changeable before approval, never moved to today silently.
+12. **Who decides a photo is a shared table.** AT-27 fails silently if the model reads a shared tray as one plate. The model must say whether the eater's choice ("Log what I ate" vs "Plan a meal"), the analyzer's reading of the scene, or both decide; and that a dish seen as shared always starts at "My portion: 0" (eater-4.31).
+13. **Gulf Arabic voice before launch (eater vs Platform admin).** Transcription lists only ar-EG (P15 as narrowed in r1-refute-b), and Gulf speech is harder (E43). iPhone is about half of mobile use in Saudi Arabia (E39: iOS 51.6 % in September 2026). The launch gate for voice by dialect must be set with the AI evaluation set (NFR-10, admin-10.53); typed and tapped logging must never depend on it (map §1.7).
+14. **My own name against the dialect table (eater vs Nutrition approver).** eater-2.42 fixes the order: the eater's own Unit name, then the eater's dialect setting, then the approver's default (research Conflict 3; eater-3.10 says the same). Retiring a reference Alias must never touch an eater's own names (approver-10.46).
+15. **One seed for all eater files.** This file and `wf3-wf6.md` §2.2 share one set of Unit values. `wf5-wf7-wf8.md` §0.2 gives other values for the same Units: cheese bite 47.4 kcal (1.7 / 4.3 / 2.6) against 46 (2.5 / 4.5 / 2.0); bread bite 8 g 21.0 kcal against 20.0 (AT-12 reads 20 → 22.5 here and in `wf3-wf6.md`); cup of laban 121.0 kcal (8 / 11 / 5) against 152 (8 / 12 / 8); the without-bread base "cheese without bread / جبنة من غير عيش" 26.4 kcal against "cheese spoon / معلقة جبنة" 26.0 (FRD §5.2 and §24.1 call it "cheese spoon"); foul spoon 46.0 with bread (25.0 filling) against 30; egg bite 38.2 kcal including a 21.0 kcal bread bite. One seed file, owned by the model phase, must hold one value per Unit, and every eater file must test against it.
+16. **Energy mismatch on a private Unit (eater vs Nutrition approver).** approver-10.13 raises the flag on a Label submission only. A private Unit whose label differs from 4/4/9 (eater-2.35) therefore never reaches review unless the eater submits it (eater-4.37). Decide whether a de-identified flag is raised from private label Units too.
+17. **A lone eater's analogue never reaches review (eater vs Nutrition approver).** approver Conflict 5 shows eater-typed text only when at least 5 distinct eaters used it in 28 days. Faisal's «تمر خلاص» (eater-4.17) stays an analogue for him until then. This file accepts the rule; the threshold is a privacy decision.
+18. **Consent method "at first use" (eater vs Auditor).** eater-4.3, eater-4.4, eater-4.5 (and eater-1.6) record a Consent given in a sheet at first use. auditor-9.2 knows only the methods "onboarding" and "Settings". Add the method, or move every first-use Consent into Settings.
+19. **The Kill switch and the shutter (Platform admin lens, two stories).** admin-10.33 disables the shutter while the Kill switch is On; admin-10.34 lets a photo be taken with the switch On and become Failed. This file follows admin-10.33 for the switch (eater-4.47) and uses Failed only for a timeout.
+
+---
+
+## 6 · Interfaces this file proposes (for the model phase)
+
+FRD §18 endpoints are used as written: `POST /v1/analyses`, `POST /v1/units`, `POST /v1/units/{id}/versions`, `POST /v1/recipes`, `POST /v1/consumption`, `POST /v1/consumption/{id}/corrections`, `GET /v1/reports/day`. Proposed names:
+
+- `GET /v1/units` (`sort=recent`, `include=archived`), `GET /v1/units/{id}` (current version, versions, variants, accompaniment), `GET /v1/units/{id}/picture`, an archive action.
+- Unit fields: `unit_kind` is the kind of amount (bite · spoonful · sip · cup · piece · slice · handful · custom, FR-009); `structure` is simple · composite · recipe. One field per meaning.
+- `GET /v1/analyses/{id}`, `GET /v1/analyses?status=…` (using the Analysis states of vocabulary D2), carrying every FRD §7.1 field.
+- `GET /v1/rules` (User rules: accompaniment, preparation defaults; FRD §17 UserRuleVersion).
+- `source_analysis_id` on `POST /v1/consumption`, like `source_plan_id` in FRD §18.1.
+- Analysis fields beyond FRD §7.1: `transcript`, a recapture reason, an "available" mark per item for a shared table, and `validation_status`.
+- Shared with other lenses: `GET /v1/me/consents` and the Consent purposes `ai_processing`, "Photos", "Microphone" (`wf1-wf9.md`); `POST /v1/label-submissions` (approver lens).
+- Error codes are only those of vocabulary D2: `UNIT_NOT_FOUND`, `UNIT_AMBIGUOUS`, `STALE_REVISION`, `SOURCE_BASIS_UNKNOWN`, `MASS_BALANCE_ERROR`, `AI_UNAVAILABLE`, `RATE_LIMITED`, `VALIDATION_ERROR`, `NOT_FOUND`, `CONSENT_REQUIRED`. A cycle (eater-2.20), a duplicate name (eater-2.2, eater-2.48), a file of the wrong type or size and a Health field (eater-4.52, eater-4.46) use `VALIDATION_ERROR` with the field named.
+
+---
+
+## 7 · Coverage
+
+### FRD lines in this dispatch → stories
+
+| FRD line | stories |
+|---|---|
+| FR-009 kinds, fractions | 2.4 |
+| FR-010 specific food and preparation | 2.7, 2.8, 2.33 |
+| FR-011 mass, volume, components, before/after, average | 2.10, 2.11, 2.12, 2.13, 2.14, 2.17 |
+| FR-012 measured / declared / estimated; scale photo clarity | 2.10, 2.15, 4.33, 4.34 |
+| FR-013 sample count, mean, spread | 2.13 |
+| FR-014 immutable versions | 2.2, 2.33, 2.36, 2.44, 2.45, 2.47, 2.51 |
+| FR-015 Aliases EN/AR, voice | 2.41, 2.42, 2.43 |
+| FR-016 calorie-only override | 2.34 |
+| FR-017 components | 2.17, 2.18 |
+| FR-018 bread per dipped bite | 2.22 |
+| FR-019 no double bread | 2.23 |
+| FR-020 exceptions; the Unit's rule wins | 2.24 |
+| FR-021 preparation defaults as quantities | 2.26 |
+| FR-022 bread not inferred from eggs | 2.27 |
+| FR-023 cycles, negative residual, sum tolerance | 2.12, 2.18, 2.19, 2.20, 2.21, 2.31 |
+| FR-024 with/without bread variant | 2.8, 2.25 |
+| FR-025 resolver order: own record > label/manufacturer > database > recipe > labelled analogue | 2.9 (all five tiers: /m line; own record and recipe-over-analogue: /r lines), 4.17, 4.41 |
+| FR-026 source, basis, date, preparation, evidence; AI ≠ label-verified | 2.9 |
+| FR-027 label fields; missing ≠ zero | 4.18, 4.35, 4.36 |
+| FR-028 recipe from weighed ingredients and cooked yield; additions, discards | 2.29, 2.31, 2.33, 4.38 |
+| FR-029 range when yield or oil is unknown | 2.32 |
+| FR-030 source energy kept apart from 4/4/9 | 2.35, 4.36 |
+| FR-031 scope chosen before recalculating history | 2.36, 2.45, 2.51 |
+| FR-032 editable items, preparation, matched Units, missing quantities | 4.10, 4.12, 4.20 |
+| FR-033 identity vs portion vs source confidence; no exact grams from one image | 4.13, 4.51 |
+| FR-034 guided scale and label capture; uncertain digits, bases, units | 4.34, 4.35 |
+| FR-035 at most two questions; then manual or uncertain estimate; no silent resolution | 2.42, 4.14, 4.15, 4.16, 4.19, 4.30 |
+| FR-036 EN/AR/code-switching voice; transcript; replay; numbers and unit words | 2.5, 4.27, 4.39, 4.40, 4.42, 4.43 |
+| FR-037 shared table = available food | 4.31, 4.32 |
+| FR-038 crop, quality guidance, metadata, no people | 4.7, 4.8, 4.9 |
+| FR-039 eight intents; only consume/correct/remove touch the ledger | 4.2, 4.25, 4.26, 4.27, 4.29, 4.30, 4.45 |
+| FRD §2.2 Journey A (define a Unit) | 2.1, 2.5, 2.6, 2.38, 2.39, 4.33 |
+| FRD §2.3 Journey B (repeat by voice or text) | 4.12, 4.44 |
+| FRD §2.4 Journey C (photograph a shared table) | 4.2, 4.31, 4.32 |
+| FRD §4.1 a spoon is not universal | 2.7, 2.28 |
+| FRD §4.2 edible weight; no ml→g; ml highlighted; wet cereal | 2.11, 2.14, 2.15, 2.21, 4.38 |
+| FRD §4.3 calibration, not consumption | 2.39, 4.26, 4.33 |
+| FRD §5.1 precedence; spoon ≠ bite | 2.28, 2.42 |
+| FRD §5.2 required examples | 2.17, 2.18, 2.22, 2.26, 2.30 |
+| FRD §6.1 formulas; no second yield factor; water | 2.10, 2.30, 2.31 |
+| FRD §6.2 restaurant serving meaning | 2.37 |
+| FRD §7.1 AI contract fields; ownership and validity checks; the resolver's numbers | 4.12, 4.23, 4.51, 4.52 |
+| FRD §7.2 recapture; outage; offline photo | 4.8, 4.47, 4.49 |
+| FRD §14 My Units states (new, archived, duplicate, recalibration) | 2.1, 2.46, 2.2, 2.44 |
+| FRD §14 Unit editor states (component-sum error, ml/g ambiguity, missing final yield) | 2.19, 2.14, 2.32 |
+| FRD §14 Capture states (bad lighting, unreadable digits, upload progress, permission denied, retry) | 4.8, 4.34, 4.11, 4.4, 4.5 |
+| FRD §14 Analysis review states (exact match, estimated analogue, missing macro data, conflict) | 4.12, 4.17, 4.18, 4.19 |
+| FRD §16.3 step 1 (ownership, consent, file type, size) | 4.3, 4.23, 4.52 |
+| FRD §16.3 step 2 (only relevant units, rules, sources) | 4.46 |
+| FRD §16.3 step 3–4 (schema-constrained extraction; fields, bases, mass balance, plausibility, source ids) | 4.23, 4.51, 4.52 |
+| FRD §16.3 step 5 (numbers from approved records and recipes) | 4.12, 4.52 |
+| FRD §16.3 step 6–7 (review draft; commit through the manual-logging service); untrusted text | 4.21, 4.38, 4.45 |
+| FRD §16.4 Analysis stamped with versions | 4.12 |
+| FRD §16.5 no inference for a confirmed Unit; daily quota | 4.12, 4.44, 4.48 |
+| FR-001 trial without duplicate Units | 2.49 |
+| FR-076 separate consents; refusal keeps other functions; withdrawal | 4.3, 4.4, 4.5, 4.6, 4.37 |
+| FR-077 / FR-078 crop, metadata, media retention | 2.5, 2.6, 4.6, 4.7, 4.22, 4.39 |
+| NFR-03 AI progress and recovery | 4.11 |
+| NFR-05 / NFR-06 AI failure and offline | 2.48, 4.47, 4.49 |
+| NFR-07 per-user isolation | 2.6, 4.7, 4.23 |
+| NFR-08 accessibility | 2.50, 4.50 |
+| NFR-09 / NFR-10 separate AI scores; bilingual evaluation | 4.25, 4.35, 4.42 |
+
+### Acceptance tests → stories
+
+| AT | stories |
+|---|---|
+| AT-01 average of 7 pieces | 2.13 |
+| AT-02 cheese with oil inside | 2.18 |
+| AT-03 mixed spoon 38.1 g | 2.17 |
+| AT-04 dipped egg bites; bread already inside | 2.22, 2.23 |
+| AT-05 tuna in oil not replaced | 2.8 |
+| AT-06 recipe 480 kcal, yield 384 g | 2.29, 2.30 |
+| AT-07 scale in ml | 2.15 |
+| AT-08 label piece 10 g = 50 kcal | 4.36 |
+| AT-10 one command delivered more than once → one Entry (pattern) | 2.38, 4.21 |
+| AT-12 8 g → 9 g, history kept, selected correction only after approval | 2.44, 2.45 |
+| AT-13 "calculate and save my bite" | 2.39, 4.26 |
+| AT-15 source energy kept as the headline (the part this dispatch touches) | 2.35 |
+| AT-16 calorie-only, coverage incomplete | 2.34 |
+| AT-26 «١٨ مش ١٥» and mixed names → correction | 4.27 |
+| AT-27 table photo = available food | 4.31, 4.32 |
+| AT-28 serving energy vs per-100 g macros | 4.36 |
+| AT-30 text in an image is untrusted | 4.45 |
+| AT-32 AI times out: recent Unit logs, a manual amount logs, the Analysis is not consumed | 4.47 |
+
+### Done-when and map lines → stories
+
+| line | stories |
+|---|---|
+| WF-2 done-when: cheese bite 5.4 + 1.5 + 8 g | 2.18, 2.25, 2.38 |
+| WF-2 done-when: Recipe with weighed yield gives AT-06's numbers | 2.29 |
+| WF-2 done-when: My Units lists them; Today unchanged | 2.39, 2.40 |
+| WF-4 done-when: plate photo + "fried in ghee" → editable chips, badges, range; nothing consumed | 4.10, 4.13 |
+| WF-4 done-when: «١٨ مش ١٥» → correction | 4.27 |
+| map §1.3 Eater → app: separate consents (sending to Google's AI; mic; photos), one-tap withdrawal | 4.3, 4.4, 4.5, 4.6 |
+| map §1.3 Eater → app: create or recalibrate a Unit; weigh the cooked pot | 2.29, 2.44 |
+| map §1.3 Eater → AI analyzer: schema-constrained output, server validation, ≤2 questions, text in images untrusted, Health data never sent | 4.14, 4.45, 4.46, 4.51, 4.52 |
+| map §1.3 Analyzer → resolver: resolver order; AI cannot verify; Alias by dialect | 2.9, 4.16 |
+| map §1.6 User settings and rules (dialect, one-tap logging, hide numbers, accompaniment, preparation defaults, precedence) | 2.22, 2.26, 2.28, 2.42, 2.52, 4.44, 4.53 |
+
+### Experience requirements honoured → stories
+
+| EX | stories |
+|---|---|
+| EX-02, EX-13, EX-16 (fast repeat, answer at once, no wait) | 4.20, 4.21, 4.44, 4.47 |
+| EX-03, EX-19 (no setup; empty states with the next step) | 2.1, 2.49 |
+| EX-04 (choose log or plan on the photo) | 4.2 |
+| EX-05 (dialect defaults) | 4.16 |
+| EX-09, EX-15 (verbs; one main action) | 2.38, 4.21 |
+| EX-10 (never ask what is known: last pot, photo time) | 2.29, 4.7 |
+| EX-14 (no number changes without a visible cause) | 2.36, 2.44, 2.51 |
+| EX-17, EX-25 (change of mind; half-built work kept) | 2.3, 4.22 |
+| EX-18 (resume where I left off) | 4.1 |
+| EX-21, EX-22 (offline and AI down are quiet) | 2.48, 4.47, 4.48, 4.49 |
+| EX-23 (errors beside the problem) | 2.15, 2.16 |
+| EX-26 (permissions and Consents at the moment of use) | 2.5, 4.3, 4.4, 4.5 |
+| EX-27 (unknown, never zero) | 2.34, 4.18 |
+| EX-29, EX-31 (no diary in logs; collect only what is needed) | 4.7, 4.9, 4.24, 4.46 |
+| EX-32 (claim only what is true) | 2.32, 4.13 |
+| EX-33 (largest text) | 2.50, 4.50 |
+| EX-34 (contrast in sun and at night) | 2.50, 4.50 |
+| EX-35 (meaning not by colour alone) | 4.17, 4.50 |
+| EX-36 (screen reader) | 2.50, 4.50 |
+| EX-37 (44 pt targets; a visible button for every swipe) | 2.4, 2.50, 4.20, 4.50 |
+| EX-38 (reduced motion; no timer that beats a slow reader) | 4.50 |
+| EX-39 (Arabic done right) | 2.50, 4.50 |
+| EX-40 (mixed input in one line) | 4.39, 4.43 |
+| EX-43 ("hide numbers" view) | 2.52, 4.53 |
+| One-thumb review in the Unit editor (journey intro; E34, E35) | 2.50 |
