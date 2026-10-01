@@ -81,3 +81,6 @@ Checked 2026-10-01 04:11Z against commit `b183a45` ("way: tailor — governor ga
 - This re-audit section is not committed.
 
 **Re-audit verdict: 1 gap still open. Gap 3, part 2: §0 line 6 cites "the /way skill's `floor.md`", which is not in `way/` or git, and the line is not labelled "recommended default".**
+
+## Closing note by the session, 2026-10-01
+The one gap the re-audit left open (gap 3, part 2) and its note were fixed in commit e834f12: the adapter rule is labelled a recommended default, the auditor persona is sourced to the first map's hidden-persona hunt, and line 2 counts 5 personas. The governor's rule is one re-audit per phase; Tailor is closed on this fix.
