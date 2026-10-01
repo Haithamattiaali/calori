@@ -371,7 +371,7 @@ cheese bite «قرصة جبنة» v1 (46.0; as Mona's) · tea with milk «شاي
 | story | inputs | result |
 |---|---|---|
 | eater-5.12 | 3 foul bites, each with its bread | 150 kcal (90 for the filling alone); expanded vector per count 50.0 kcal, P 2.7, C 8.0, F 0.8; a cheese bite adds no second bread (46.0) |
-| eater-5.17 (basis Count) | foul bite 6 · cheese bite 4 · olive 1 · egg bite 8 · tuna bite 1 | kcal 300 + 184 + 5.3 + 308.8 + 33.6 = **831.7** (shown 832); calorie shares 36.0707 · 22.1234 · 0.6372 · 37.1288 · 4.0399 % → largest remainder to one decimal **36.1 · 22.1 · 0.6 · 37.1 · 4.1** (sum 100.0); count shares 30.0 · 20.0 · 5.0 · 40.0 · 5.0; the `/m` line reads "Calorie aim about **831.7** with tolerance 0" → 6 / 4 / 1 / 8 / 1, the only zero-deviation answer (with aim 809.7, 53 other count sets would reach it exactly and 6/4/1/8/1 would miss by 22 kcal) |
+| eater-5.17 (basis Count) | foul bite 6 · cheese bite 4 · olive 1 · egg bite 8 · tuna bite 1 | kcal 300 + 184 + 5.3 + 308.8 + 33.6 = **831.7** (shown 832); calorie shares 36.0707 · 22.1234 · 0.6372 · 37.1288 · 4.0399 % → largest remainder to one decimal **36.1 · 22.1 · 0.6 · 37.1 · 4.1** (sum 100.0); count shares 30.0 · 20.0 · 5.0 · 40.0 · 5.0; the `/m` line reads "Calorie aim about **831.7** with tolerance 0" → 6 / 4 / 1 / 8 / 1, the only zero-deviation answer (with aim 809.7, 170 other count sets would reach it exactly and 6/4/1/8/1 would miss by 22 kcal) |
 | eater-5.21 (AT-17) | foul bite, cheese bite, egg bite, each with bread; Carbohydrate maximum 30 %; Calorie aim about 300 (±10 %) | shares on macro energy: foul bite 32 ÷ 50 = **64.00 %**, cheese bite 18 ÷ 46 = 9/23 = **39.13 %**, egg bite 16.48 ÷ 38.3 = **43.03 %** → Infeasible; changes "Raise the maximum to 39.2 %" and "Use your cheese spoon" (2.0 ÷ 26.3 = **7.60 %**); after raising to 39.2 %, only cheese bites fit: 6 = 276 kcal (24 from 300), **7 = 322 kcal** (22 from 300) → 7 cheese bites, carbohydrate 39.13 %; the egg bite reads "43.0 % — above the maximum" |
 | eater-5.22 (AT-19) | must-include fries ≥ 1; ceiling 500 | example row set 2 fries + 4 grilled chicken bites + 1 hummus bite = 186 + 195.2 + 54.35 = **435.55** kcal (shown 436); with ceiling 80: "must-include fries (93 kcal) are above the 80 kcal ceiling", change "Raise the ceiling to 93 kcal" |
 | eater-5.23 | Faisal: kabsa rice spoon, chicken piece (Available 3), salad spoon, cup of laban; ceiling 500; Protein minimum 60 g; Carbohydrate maximum 30 % | most protein under the other limits **53 g** = 3 chicken + 1 laban (494 kcal; carbohydrate 48 ÷ 494 = 9.72 %); lowest ceiling reaching 60 g with ≤ 3 chicken **646 kcal** = 3 chicken + 2 laban (61 g); 4 chicken alone = 60 g at 456 kcal → changes "Lower the protein minimum to 53 g", "Raise the ceiling to 646 kcal", "Allow 4 chicken pieces"; `changes[]` 53, 646, 4 |
@@ -974,7 +974,7 @@ An independent recount (`way/research/seed-check.md`, 884 values with `fractions
 
 | # | defect | change |
 |---|---|---|
-| D1 | AT-22: the 07:30 Riyadh import held a walk that ended at 07:45 | §10.4: the Watch walk runs **06:00–06:45** Riyadh (03:00–03:45Z) and the running app's copy 06:01–06:44. The import stays at 04:30Z, after the walk and before Faisal's 07:30 Breakfast. `join.md` J54 supersedes e578 eater-7.9 and 7.11 (manual walk from 06:00; «هل هو نفس المشي 6:00–6:45 من Apple Health؟») |
+| D1 | AT-22: the 07:30 Riyadh import held a walk that ended at 07:45 | §10.4: the Watch walk runs **06:00–06:45** Riyadh (03:00–03:45Z) and the running app's copy 06:01–06:44. The import stays at 04:30Z (07:30 Riyadh), 45 min after the walk ends and at the same minute as Faisal's 07:30 Breakfast, which no longer falls inside the walk. `join.md` J54 supersedes e578 eater-7.9 and 7.11 (manual walk from 06:00; «هل هو نفس المشي 6:00–6:45 من Apple Health؟») |
 | D2 | E1's Conflict `cmd_7a1e` (2026-09-30T19:15Z) came from a device whose last sync was 2026-09-29T20:40Z | §6.1: the app 1.0.2 iPhone's last sync is **2026-09-30T19:15Z**, the sync that carried `cmd_7a1e`. `join.md` J57 supersedes support §0.3 E1 and support-9.4 (now "20:15 your time (19:15 UTC) · 22:15 eater's time") |
 | D3 | the export count ignored 15 Sep's Entries | §10.1 `job_exp_4402`: **Entries 216**. §12.3 shows the sum 2 + 42 × 5 + 4: 12:00Z is 15:00 Riyadh, so the 07:00 and 13:00 Entries are already in. `join.md` J139 supersedes auditor-9.14's 212 |
 | D4 | Sam's 2026-10-01 Health weight vs §10.5's "no new body mass after 24 Sept" | §10.5: the 2026-10-01 sample is written at 2026-10-01T06:00:00Z. §2 adds the start clock 2026-09-30T12:00:00Z for e578 eater-8.22 (Sam's line), when no sample after 24 Sept is loaded |
@@ -996,3 +996,9 @@ The verifier's script re-ran on the fixed file: 883 values checked. Its 12 remai
 - the §9 Grants;
 - the Unit and planner arithmetic;
 - the AT-01, AT-03 and AT-09 coverage.
+
+## Fixes after the re-check (2026-10-01, by the session)
+- R1: the D1 fix-log sentence now says the 04:30Z import is at the same minute as Faisal's 07:30 Breakfast (07:30 Riyadh), 45 min after the walk ends.
+- R2: J54 also supersedes e578 eater-7.6's 81.3 kg / 179.2 lb (read 83.5 kg / 184.1 lb).
+- R3: J55 also supersedes e578 eater-5.44's "12 count sets" (read "3 count sets … (4 + 2, 1 + 3, 2 + 3)").
+- R4: with aim 809.7, 170 other count sets reach it exactly (by enumeration and a coin-change count), not 53.
