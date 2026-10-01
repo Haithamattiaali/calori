@@ -454,7 +454,7 @@ As the Eater, I see when Activity last synced, so that I know how fresh the numb
 - `/r` Given Sam opens the app at 07:30, When the import finishes, Then Today's Activity row reads "Synced 07:30", and Today never waited for the import before showing.
 - `/r` Given no import has succeeded for 26 hours, Then Today's Activity row reads "Last synced yesterday 05:12" in quiet text, with no alert.
 - `/r` Given an import, When `POST /v1/activity/import` returns, Then the body has `accepted`, `updated`, `duplicate` and `conflict` counts, and `GET /v1/reports/day` returns the same `last_sync_at`.
-- `/r` Given a new active-energy sample is added to Health on the simulator, When the verifier brings the app to the foreground at a time T it notes (FRD §12.3 "Refresh … at app foreground"), Then the import runs, Today's Activity row shows the sample's active energy in its total (e.g. "+120 kcal active" for a 120 kcal sample) and `GET /v1/activity?day=` lists it once, Today's Activity row reads "Synced" followed by T's hour and minute, and no catalogue string calls Activity data "live". Whether HealthKit delivers it earlier in the background is HealthKit's choice (P30: some types at most hourly), so no line expects a delivery time.
+- `/r` Given Sam's Day has no Activity yet and a 120 kcal active-energy sample is added to Health on the simulator, When the verifier brings the app to the foreground at a time T it notes (FRD §12.3 "Refresh … at app foreground"), Then the import runs, Today's Activity row reads "120 kcal active" and "Synced" followed by T's hour and minute, `GET /v1/activity?diary_day_id=…` (*proposed*) returns exactly one record whose `provider_record_id` is the sample's, and `GET /v1/reports/day` returns `active_energy_kcal: 120`; no catalogue string calls Activity data "live". Whether HealthKit delivers it earlier in the background is HealthKit's choice (P30: some types at most hourly), so no line expects a delivery time.
 
 #### eater-7.5 · Each imported Activity keeps where it came from
 As the Eater, I can see where each Activity came from, so that I can trust or question it. · Trace: FR-063
@@ -791,7 +791,7 @@ As the Eater, I see carbohydrate as each source states it, fiber beside it, and 
 - `/r` Given Sam logs a Label-verified cereal bar whose label gives 190 kcal, protein 4 g, total carbohydrate 30 g (of which fiber 6 g and sugars 12 g) and fat 6 g, When the meal report shows on Today, Then it reads "Carbohydrate 30 g (as the source states it: includes fiber) · of which fiber 6 g · sugars 12 g", and the Day report's carbohydrate rises by 30 g, not 42.
 - `/m` Given carbohydrate 30 g and sugars 12 g, When the nutrition core totals the Day, Then carbohydrate adds 30 g, and sugars are reported apart and never added to it.
 - `/r` Given Settings → Units & language → "Show net carbohydrate" off (the default), Then no net figure appears on Today, the Day report or Progress; turned on, Then the meal report adds "Net carbohydrate (total carbohydrate − fiber) 24 g", always under that name, and the 4/4/9 share still uses the 30 g.
-- `/r` Given Sam also logs one flatbread whose Food record states carbohydrate excluding fiber (169 kcal; P 6, C 34, F 1 g; fiber 3 g), When its detail opens from the Day report, Then it reads "Carbohydrate 34 g (as the source states it: excludes fiber) · fiber 3 g", the cereal bar's detail reads "Carbohydrate 30 g (as the source states it: includes fiber)", nothing is converted, and the Day report shows "Carbohydrate is counted as each source states it" under the carbohydrate row.
+- `/r` Given Sam also logs one flatbread whose Food record states carbohydrate excluding fiber (169 kcal; P 6, C 34, F 1 g; fiber 3 g), When its detail opens from the Day report, Then it reads "Carbohydrate 34 g (as the source states it: excludes fiber) · fiber 3 g", the cereal bar's detail reads "Carbohydrate 30 g (as the source states it: includes fiber) · of which fiber 6 g", nothing is converted, and the Day report shows "Carbohydrate is counted as each source states it" under the carbohydrate row.
 - `/r` Given `GET /v1/reports/day` for that Day, Then it returns `carbohydrate_g`, `fiber_g` and `sugars_g` separately, each Entry's `carbohydrate_basis`, and `net_carbohydrate_g` only while the setting is on.
 
 #### eater-8.33 · The same share gets the same words in every report
@@ -1429,3 +1429,56 @@ The re-verify's list stands as written, and fix round 2 changed nothing in it. T
 1. 5.40 line 4: the "Photo ready for review" note opens Meal planner with that photo's dishes, as every other plan photo does (5.1, 5.39).
 2. 7.4 line 4: the counted sample is observed as its active energy in Today's Activity total and once in `GET /v1/activity?day=`.
 3. 8.32: one wording for the carbohydrate convention on both lines — "(as the source states it: includes fiber)".
+
+
+## Lens verdict — closing 2 (2026-10-01)
+
+**fail**: 3 defects. The 5.40 fix holds. The 7.4 fix adds a second name for an API call, and the line still has no fixed figure. The 8.32 fix gives each carbohydrate convention one name, but the second half of closing defect 3 is still open.
+
+An agent that did not write this file checked it, as a scoped check under `way/personas/_lens-verifier-brief.md` and its addendum, with `way/vocabulary.md` binding. The scope was the three lines changed in "Fix by the session, after the closing check" (commit 8c07ebf): 5.40 line 4, 7.4 line 4 and 8.32's carbohydrate wording across its lines. Nothing else was re-audited. "Line n" means a story's nth acceptance line.
+
+### The 3 closing defects
+
+| # | status | the line now |
+|---|---|---|
+| 1 | **fixed** | 5.40 line 4: "… which opens Meal planner with that photo's dishes as available foods when tapped (as 5.1 and 5.39)". This matches 5.1 line 2 ("When the Analysis reaches Ready for review, Then Meal planner opens with the chips … marked as available foods") and 5.39 line 2 ("it moves to Processing and then to planning"). It also matches 5.3 line 1, which asks a plan Analysis's questions on Meal planner. 5.40 line 4 takes the Ready for review branch, so 5.3's Needs answers branch does not arise. No story now sends a plan photo to Analysis review. |
+| 2 | **partly fixed** | 7.4 line 4: "Today's Activity row shows the sample's active energy in its total (e.g. "+120 kcal active" for a 120 kcal sample) and `GET /v1/activity?day=` lists it once". It now names a screen and an endpoint, but brings defect 1 and leaves defect 2. |
+| 3 | **half fixed** | Line 1 and line 4 both read "Carbohydrate 30 g (as the source states it: includes fiber)", and the flatbread reads "(as the source states it: excludes fiber)". So each `carbohydrate_basis` value (§6) has one on-screen name. The fiber half of closing defect 3 is still open (defect 3). |
+
+### Defects
+
+1. **eater-7.4 line 4: `GET /v1/activity?day=` is a second name for a call that §6 already names.**
+   - The line: "`GET /v1/activity?day=` lists it once".
+   - §6 proposes the call as "`GET /v1/activity?diary_day_id=`" (used in 7.5, 7.11–7.14). 7.5 line 2 calls it "`GET /v1/activity?diary_day_id=…` (*proposed*)".
+   - `?day=` is not in FRD §18 or §6, and it is not marked *proposed*. §6's row does not list 7.4.
+   - So one call has two query names. Brief check 5 and blueprint §1 ¶4 require "one name per thing".
+2. **eater-7.4 line 4: the screen figure is only an example, and the API check names no field.**
+   - The Given still gives the sample no amount ("a new active-energy sample"). 120 kcal appears only after "e.g.".
+   - The Given sets no earlier active energy for the Day, so "in its total" has no expected value.
+   - "+120 kcal active" is a form Today's Activity row takes nowhere else. Elsewhere the row reads a total, e.g. 7.16 line 1: "the Activity row reads "200 kcal active · not added to your food Target (Fixed)"".
+   - A verifier cannot tell whether to expect "+120 kcal active" or a total 120 higher than before.
+   - "lists it once" names no field showing that the record is this sample, such as `provider_record_id` (7.5 line 2), or giving its amount, such as `energy_kcal` (7.12).
+3. **eater-8.32 line 4: the cereal bar's detail shows no fiber, but the same Entry's meal report and the flatbread's detail do.**
+   - Line 1, the meal report: "Carbohydrate 30 g (as the source states it: includes fiber) · of which fiber 6 g · sugars 12 g".
+   - Line 4, the flatbread's detail: "Carbohydrate 34 g (as the source states it: excludes fiber) · fiber 3 g".
+   - Line 4, the cereal bar's detail: "Carbohydrate 30 g (as the source states it: includes fiber)", with nothing after it.
+   - The story promises "fiber beside it". The closing verdict raised this in defect 3 ("Also, only the flatbread's detail shows fiber beside it"), and the session fix did not change it.
+   - So the detail screen has two shapes of carbohydrate line, and a builder cannot tell which is right.
+
+### Checked, not counted
+
+- **8.32 line 3** keeps "Net carbohydrate (total carbohydrate − fiber) 24 g". "Total carbohydrate" is FRD §10.2's own term. Here it defines the net figure; it is not a label for a `carbohydrate_basis` value.
+- **8.32's two fiber wordings**: "of which fiber" (includes fiber) and "fiber" (excludes fiber) both fit their convention. The fiber is part of the 30 g but not part of the 34 g.
+
+### Counts
+
+A recount gives 103 stories and 328 lines (292 `/r`, 28 `/m`, 8 `/s`), the same as §9.4. The fix rewrote three lines and added none.
+
+### Cross-lens (for the model phase join; not counted)
+
+Nothing new. The earlier lists stand.
+
+
+## Second fix by the session (2026-10-01), after closing check 2
+1–2. eater-7.4 line 4: a Day with no Activity, a stated 120 kcal sample; the Activity row reads "120 kcal active" (the row's own total form, as 7.16); `GET /v1/activity?diary_day_id=…` (the file's one name for the call, §6) returns exactly one record with the sample's `provider_record_id`; `GET /v1/reports/day` returns `active_energy_kcal: 120`.
+3. eater-8.32 line 4: the cereal bar's detail shows its fiber ("· of which fiber 6 g"), as the story promises.
