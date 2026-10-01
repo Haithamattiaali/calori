@@ -1541,3 +1541,49 @@ What passes in the changed lines:
 
 ## Fourth fix by the session (2026-10-01), after the closing check
 9.8 /s bullet 2 now records `access.refused` like every other media refusal, so one cause has one code (`FORBIDDEN`) and one event (`access.refused`), and 9.8 /r's filter and 10.14's "other refusals" count it.
+
+
+## Lens verdict — closing 2 (2026-10-01)
+
+**pass**: 0 defects. The closing verdict's defect 1 is fixed.
+
+An agent that did not write this file checked it, as a scoped check under `way/personas/_lens-verifier-brief.md` and its addendum. `way/vocabulary.md` was binding: "`FORBIDDEN` (role lacks the permission)". Delta D3 touches none of the lines checked.
+
+**Scope.** The diff e6fbda8..7c3bb82 changes one body line, 9.8 /s bullet 2. It also appends the closing verdict and the fourth fix note. That one line was read against:
+- 9.8 /r;
+- 10.9 /s;
+- 10.14;
+- §3's derived counts, on which 10.14's information line rests.
+
+Nothing else was re-audited. No acceptance line was added or removed. A recount gives 59 stories and 121 lines, as §8 states.
+
+### Closing defect 1: fixed
+
+The changed line: "a Support agent with an Active Grant gets 403 `FORBIDDEN`, because no role holds the raw-evidence permission (D2: the role lacks the permission), and one `access.refused` event is written (the media rule of 10.9);"
+
+- **Against 9.8 /r.**
+  - The filter "`access.refused` and object "Analysis photo"" now catches this case, as it catches event 78 ("access.refused · GET Analysis an_7781 photo"). Every refused raw-evidence attempt shows under that one filter.
+  - 9.8 /r runs on the seeded Audit trail, where event 78 is the only media attempt, so its expected row is unchanged.
+- **Against 10.9 /s.** That line reads: "on media endpoints every role, the Support agent included, gets 403 `FORBIDDEN`, recorded as `access.refused`, because no role holds the raw-evidence permission (§7 A11)". The bullet gives the same code, event and reason.
+  - 10.9 /s calls with no Grant. But its reason is a missing role permission, which a Grant does not change. §7 A11 agrees: "D2 has no role with that permission, so 9.8 treats every attempt as refused". So "(the media rule of 10.9)" applies with an Active Grant too.
+- **Against 10.14.**
+  - The information line "Refused reads 5 · refused writes 1 · other refusals 3" counts the seeded trail. §3 gives "Other refusals: 3 (events 35, 77, 78)", all `access.refused`, and "Refused reads: 5 (events 60, 63, 68, 76, 80)", all `grant.read_refused`. The bullet's event therefore falls under "other refusals" with event 78, as the fix note says.
+  - The bullet runs on a fresh emulator, so 10.14's seeded numbers do not move.
+  - "raw evidence opened by staff 0" is unaffected, because a refused request opens nothing.
+
+**Every media line now gives `FORBIDDEN` with `access.refused`:**
+- 9.8 /r;
+- 9.8 /s bullets 1–3;
+- the media endpoints of 10.9 /s.
+
+`grant.read_refused` stays only on diary and report reads that a Grant could cover, as §7 A16 says: the Support agent in 10.9 /s, 10.41 /s, and events 60, 63, 68, 76 and 80.
+
+### Cross-lens (for the model phase join; uncounted)
+
+- **A direct media read.** The support lens still gives no code or event for one. This lens has now settled it as `FORBIDDEN` with `access.refused`, and the shared event catalogue should fix that.
+- **Carried from earlier verdicts:**
+  - `grant.read_refused` here, `grant.read_denied` in the support lens (§7 B M6);
+  - the fixtures `grant_7a02` and `grant_7d01`, which have no §7 B row;
+  - `CASE-1201`;
+  - the eater-accounts row for `acct_9c41e2`;
+  - cancelling a Requested Grant (support K10).

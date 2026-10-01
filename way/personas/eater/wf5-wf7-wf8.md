@@ -381,7 +381,7 @@ As the Eater, I plan from my Units when photo reading is unavailable, slow or my
 - `/r` Given the Kill switch for meal photos is On, When Faisal takes a table photo and taps «تخطيط وجبة», Then `POST /v1/analyses` returns `AI_UNAVAILABLE` and one line says «قراءة الصور غير متاحة الآن. يمكن التخطيط من الوحدات المحفوظة.» ("Photo reading is unavailable right now. You can still plan from your Units.") with "Choose foods", and from that list "Find counts" works.
 - `/r` Given his daily AI quota is used, When `POST /v1/analyses` is called, Then it returns 429 `RATE_LIMITED` with `resets_at`, Meal planner shows that reset time in his local time, and `POST /v1/meal-plans` with Units is accepted.
 - `/r` Given the plan photo's Analysis is still Processing after 12 s (NFR-03's p95 bound; the analyzer adapter mock does not answer), Then Capture & Plan shows the progress indicator with «ما زالت قراءة الصورة جارية. يمكن التخطيط من الوحدات المحفوظة الآن.» ("Still reading the photo. You can plan from your Units now.") and "Choose foods", from which "Find counts" works, and Today's totals are unchanged (AT-32).
-- `/r` Given that Analysis later answers (asynchronous recovery, NFR-03), Then it moves to Ready for review and Capture & Plan shows the quiet note «الصورة جاهزة للمراجعة» ("Photo ready for review"), which opens Analysis review when tapped; given it fails instead, Then its state is Failed with "Try again"; either way `GET /v1/reports/day` shows no Entry from it (AT-32: "pending analysis is not reported as consumed").
+- `/r` Given that Analysis later answers (asynchronous recovery, NFR-03), Then it moves to Ready for review and Capture & Plan shows the quiet note «الصورة جاهزة للمراجعة» ("Photo ready for review"), which opens Meal planner with that photo's dishes as available foods when tapped (as 5.1 and 5.39); given it fails instead, Then its state is Failed with "Try again"; either way `GET /v1/reports/day` shows no Entry from it (AT-32: "pending analysis is not reported as consumed").
 - `/r` Given the Kill switch is On, When counts are found from Units, Then the Plan is Proposed with the full limits list and no generated explanation (5.19).
 
 ### H · Inclusion
@@ -454,7 +454,7 @@ As the Eater, I see when Activity last synced, so that I know how fresh the numb
 - `/r` Given Sam opens the app at 07:30, When the import finishes, Then Today's Activity row reads "Synced 07:30", and Today never waited for the import before showing.
 - `/r` Given no import has succeeded for 26 hours, Then Today's Activity row reads "Last synced yesterday 05:12" in quiet text, with no alert.
 - `/r` Given an import, When `POST /v1/activity/import` returns, Then the body has `accepted`, `updated`, `duplicate` and `conflict` counts, and `GET /v1/reports/day` returns the same `last_sync_at`.
-- `/r` Given a new active-energy sample is added to Health on the simulator, When the verifier brings the app to the foreground at a time T it notes (FRD §12.3 "Refresh … at app foreground"), Then the import runs, the sample is counted, Today's Activity row reads "Synced" followed by T's hour and minute, and no catalogue string calls Activity data "live". Whether HealthKit delivers it earlier in the background is HealthKit's choice (P30: some types at most hourly), so no line expects a delivery time.
+- `/r` Given a new active-energy sample is added to Health on the simulator, When the verifier brings the app to the foreground at a time T it notes (FRD §12.3 "Refresh … at app foreground"), Then the import runs, Today's Activity row shows the sample's active energy in its total (e.g. "+120 kcal active" for a 120 kcal sample) and `GET /v1/activity?day=` lists it once, Today's Activity row reads "Synced" followed by T's hour and minute, and no catalogue string calls Activity data "live". Whether HealthKit delivers it earlier in the background is HealthKit's choice (P30: some types at most hourly), so no line expects a delivery time.
 
 #### eater-7.5 · Each imported Activity keeps where it came from
 As the Eater, I can see where each Activity came from, so that I can trust or question it. · Trace: FR-063
@@ -788,7 +788,7 @@ As the Eater with enough evidence, I may get one small suggested change to my Ta
 
 #### eater-8.32 · Fiber and net carbohydrate keep the source's convention
 As the Eater, I see carbohydrate as each source states it, fiber beside it, and a net figure only if I ask for one by name, so that sugar or fiber is never counted twice. · Trace: FRD §10.2 ("Fiber and net carbohydrate: Preserve source total carbohydrate and fiber conventions. Never add sugar to total carbohydrate again. Net carbohydrate is optional and explicitly named."), FR-026, FR-027 (fiber, sugars)
-- `/r` Given Sam logs a Label-verified cereal bar whose label gives 190 kcal, protein 4 g, total carbohydrate 30 g (of which fiber 6 g and sugars 12 g) and fat 6 g, When the meal report shows on Today, Then it reads "Carbohydrate 30 g (total, as on the label) · of which fiber 6 g · sugars 12 g", and the Day report's carbohydrate rises by 30 g, not 42.
+- `/r` Given Sam logs a Label-verified cereal bar whose label gives 190 kcal, protein 4 g, total carbohydrate 30 g (of which fiber 6 g and sugars 12 g) and fat 6 g, When the meal report shows on Today, Then it reads "Carbohydrate 30 g (as the source states it: includes fiber) · of which fiber 6 g · sugars 12 g", and the Day report's carbohydrate rises by 30 g, not 42.
 - `/m` Given carbohydrate 30 g and sugars 12 g, When the nutrition core totals the Day, Then carbohydrate adds 30 g, and sugars are reported apart and never added to it.
 - `/r` Given Settings → Units & language → "Show net carbohydrate" off (the default), Then no net figure appears on Today, the Day report or Progress; turned on, Then the meal report adds "Net carbohydrate (total carbohydrate − fiber) 24 g", always under that name, and the 4/4/9 share still uses the 30 g.
 - `/r` Given Sam also logs one flatbread whose Food record states carbohydrate excluding fiber (169 kcal; P 6, C 34, F 1 g; fiber 3 g), When its detail opens from the Day report, Then it reads "Carbohydrate 34 g (as the source states it: excludes fiber) · fiber 3 g", the cereal bar's detail reads "Carbohydrate 30 g (as the source states it: includes fiber)", nothing is converted, and the Day report shows "Carbohydrate is counted as each source states it" under the carbohydrate row.
@@ -1317,3 +1317,115 @@ Each re-verify defect is fixed at its root with the smallest change; both verdic
 Also aligned with delta D3, which the re-verify read: 5.19 line 3 and 7.1 line 3 now say a Consent "is Not given".
 
 Counts after this round: **103 stories** (WF-5 44, WF-7 24, WF-8 35) and **328 acceptance lines** (292 `/r`, 28 `/m`, 8 `/s`).
+
+
+## Lens verdict — closing (2026-10-01)
+
+**fail**: 3 defects. All 6 re-verify defects are fixed, and 5.14 now yields 4 rice + 2 chicken. But three lines changed in fix round 2 each bring a new problem.
+
+An agent that did not write this file checked it, as a scoped closing check under `way/personas/_lens-verifier-brief.md` and its addendum. `way/vocabulary.md` was binding (D2, D3). The scope was:
+- the diff 4627423..30bd235 (fix round 2);
+- the 6 re-verify defects;
+- the 5.14 arithmetic, and the stories that build on that plan.
+
+Nothing else was re-audited. "Line n" means a story's nth acceptance line.
+
+### The 6 re-verify defects
+
+| # | status | the changed line |
+|---|---|---|
+| 1 | **fixed** | Row B of the WF-5 step table: "Calorie aim or Calorie ceiling". 5.26 line 1: "no negative aim appears". §7 item 10: "a hidden Calorie aim". §8: "The Calorie aim tolerance default (±10 % in 5.5)". "Calorie target" now appears only inside FRD quotes (5.44's trace, §7 item 6, 8.34). |
+| 2 | **fixed** | 5.14 line 1: "Faisal's chips kabsa rice spoon and chicken piece (Available 3), with salad and laban under Exclude for this meal (5.8), a typed Calorie aim about 400 (±10 %)". Line 2: "the counts are 4 rice + 2 chicken (397.6 kcal, 28.17 %)". Line 3 (`/m`): "it minimizes the distance from the Calorie aim (FRD §9.1), then the number of distinct foods (5.44)". Line 4: "Calorie aim about 400 (360–440) — 397.6 · met". The recomputation is below. |
+| 3 | **fixed as stated** | 7.4 line 4: "When the verifier brings the app to the foreground at a time T it notes (FRD §12.3 "Refresh … at app foreground"), Then … "Synced" followed by T's hour and minute … so no line expects a delivery time." This matches FRD §12.3 ("Refresh when allowed and at app foreground") and P30 as r1-refute-b quotes it ("Some sample types have a maximum frequency of [hourly]"). The rewritten line has a new problem (defect 2). |
+| 4 | **fixed** | 7.18 line 2: "Targets the app estimates keep a deficit no larger than the smaller of 15 % and 500 kcal." This is the rule of the Policy fixture ("deficit cap the smaller of 15 % and 500 kcal"). |
+| 5 | **fixed**, with new problems in two of its three lines | 5.5 line 2: "gets the error in this story's fourth line". Line 4 is the «الحد الأعلى أقل من القيمة المقصودة …» error. 5.40 line 4 now names the note «الصورة جاهزة للمراجعة», and the screen it opens brings defect 1. 8.32 line 4 now has a fixture, a flatbread with 4·6 + 4·34 + 9·1 = 169 kcal, and gives exact wording; that wording brings defect 3. |
+| 6 | **fixed** | §6 lists the `mark` body "(`complete` · `partial`) and `expected_revision`", "(fields `change_kcal`, `reason`, `review_period`)" and "`carbohydrate_basis` (`includes_fiber` · `excludes_fiber`)". It also lists "Accept / قبول" (and says that "Keep 1,750" is the Keep label), the two messages, and Arabic for all five settings labels. §7 item 23 names every one: "the labels and messages, the settings labels with their Arabic, the API calls and the `mark` body …". |
+
+### 5.14 recomputed with exact fractions
+
+**The request.**
+- Kabsa rice spoon: P 9/10, C 7, F 6/5 g; 212/5 kcal. No Available limit.
+- Chicken piece: P 15, C 0, F 6 g; 114 kcal; Available 3.
+- Salad and laban: excluded.
+- Whole counts (the default, 5.11), and the sum of counts ≥ 1 (5.25 `/m`).
+- E_source ≤ 500 and 4C ≤ 3/10 × E_macro. For both Units, E_source = E_macro (4/4/9).
+
+**The carbohydrate limit.** 28r ≤ 3/10 × (212/5 r + 114c), which gives r ≤ 855/382 × c (about 2.238c).
+
+**Every feasible count set: 12.**
+- chicken 1: rice 0–2;
+- chicken 2: rice 0–4;
+- chicken 3: rice 0–3 (with 4 rice, 342 + 4 × 42.4 = 511.6 is above the 500 ceiling).
+
+The same 12 sets appear in 5.14 `/m` and 5.44 `/m`.
+
+**Distance from the aim of 400.**
+- 4 + 2: 397.6 kcal, 12/5 = 2.4 away;
+- 1 + 3: 384.4 kcal, 15.6 away;
+- 2 + 3: 426.8 kcal, 26.8 away;
+- 3 + 2: 355.2 kcal, 44.8 away;
+- every other set is 58 or more away.
+
+**The result.** The best set is unique, so the distinct-foods tie-break is never needed. The solver's answer under the stated objective is **4 rice + 2 chicken: 397.6 kcal, carbohydrate 112/397.6 = 28.17 %**. Treating the ±10 % band (360–440) as a hard limit as well would leave only 4 + 2, 1 + 3 and 2 + 3, and 4 + 2 would still be nearest. 5 + 2 is 440.0 kcal at 140/440 = 31.82 %, which breaks the carbohydrate maximum and is never returned.
+
+### Stories built on that plan: all still hold
+
+- **5.18 line 1** (rice 4 → 5): "440 kcal" and "Carbohydrate 31.82 % — above your 30 % maximum". 440.0 is inside the new aim band (≤ 440), so nothing else in the list changes.
+- **5.28:** 397.6, with "remaining … 640" (1,900 − 1,260, from 5.5 line 1).
+- **5.29:** 640 − 397.6 = 242.4, shown as 242; the meal report shows 398.
+- **5.30:** one meal of 397.6.
+- **5.31:**
+  - 3 + 2 = 355.2, shown as 355;
+  - remaining 284.8, shown as 285;
+  - 5 + 2 is 440.0 kcal at 31.82 %;
+  - the photo of line 2 is 5.1's photo, whose salad and laban chips 5.14 now excludes. This is consistent.
+- **5.33:** 1 rice spoon = 42.4, shown as 42.
+- **5.34:** has no figures.
+- **5.35:** +398.
+- **5.36:** −42.
+- **5.37:** 242 "incl. 398 Pending", and one meal of 397.6.
+
+### Consent wording (D3): passes
+
+- 5.19 line 3: "Given Faisal's Consent for sending photos, voice and text to Google's AI is Not given (D3; map §3 row 1, FR-076)".
+- 7.1 line 3: "Given the Workouts Consent is Not given (D3), When `POST /v1/activity/import` is sent with a workout, Then it returns `CONSENT_REQUIRED` and nothing is stored."
+
+Both use the D3 state word.
+
+### Counts
+
+A recount gives 103 stories and 328 lines (292 `/r`, 28 `/m`, 8 `/s`). By journey: WF-5 has 44 stories and 163 lines, WF-7 24 and 71, WF-8 35 and 94. The ids are in sequence, and every story has a `/r` line. This matches §9.4 and the fix note.
+
+### Defects
+
+1. **eater-5.40 line 4: the new note opens a screen that this file never uses for a plan photo.**
+   - The line: "Capture & Plan shows the quiet note «الصورة جاهزة للمراجعة» ("Photo ready for review"), which opens Analysis review when tapped".
+   - The Analysis is "the plan photo's Analysis" (line 3), so its intent is `plan`.
+   - Everywhere else, a plan Analysis that reaches Ready for review goes to Meal planner:
+     - 5.1 line 2: "When the Analysis reaches Ready for review, Then Meal planner opens with the chips …";
+     - 5.39 line 2: "it moves to Processing and then to planning";
+     - 5.3 line 1 asks the Analysis's questions on Meal planner.
+   - "Analysis review" appears in no other story. A verifier who taps the note cannot tell which screen to expect: Analysis review, or Meal planner with the photo's chips.
+2. **eater-7.4 line 4: "the sample is counted" gives no value and no place.**
+   - The line: "Given a new active-energy sample is added to Health on the simulator, When the verifier brings the app to the foreground at a time T it notes …, Then the import runs, the sample is counted, Today's Activity row reads "Synced" followed by T's hour and minute".
+   - The sample has no amount.
+   - The line names no figure or field where the count shows, such as:
+     - the active energy on Today's Activity row;
+     - `active_energy_kcal` in `GET /v1/reports/day`;
+     - `accepted` in the import response.
+   - So "counted" cannot be observed.
+3. **eater-8.32: the cereal bar's carbohydrate convention gets two wordings.**
+   - Line 1, the meal report: "Carbohydrate 30 g (total, as on the label) · of which fiber 6 g · sugars 12 g".
+   - Line 4, new, the same Entry's detail: "Carbohydrate 30 g (as the source states it: includes fiber)".
+   - So one basis value (`includes_fiber`, §6) has two on-screen strings. Also, only the flatbread's detail shows fiber beside it ("· fiber 3 g").
+   - Brief check 5 and blueprint §1.4 ask for "one name per thing; the screen, the code and the logs use these words".
+
+### Cross-lens (for the model phase join; not counted)
+
+The re-verify's list stands as written, and fix round 2 changed nothing in it. The two Units that 5.14 now uses, the kabsa rice spoon (42.4) and the chicken piece (114.0), are the two whose values match the other eater files.
+
+
+## Fix by the session (2026-10-01), after the closing check
+1. 5.40 line 4: the "Photo ready for review" note opens Meal planner with that photo's dishes, as every other plan photo does (5.1, 5.39).
+2. 7.4 line 4: the counted sample is observed as its active energy in Today's Activity total and once in `GET /v1/activity?day=`.
+3. 8.32: one wording for the carbohydrate convention on both lines — "(as the source states it: includes fiber)".
