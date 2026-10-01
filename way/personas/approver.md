@@ -1,8 +1,15 @@
 # Persona lens — Nutrition approver (WF-10)
 
-Written 2026-10-01 by the approver lens, from `way/personas/_lens-brief.md`. Read first: `way/blueprint.md` §0–§1, `way/brief/frd-v1.0.md`, `way/research/r1-*.md` with both refutations, `care.md`, `way/lessons.md`. Findings that refuters mark refuted or doubtful are not cited (R34, F10, F18, F31 and the dropped sub-claims). Cycle-1 findings are cited by id (C, F, P, R); this lens adds **AP1–AP12** (research cycle 2, every source opened in this run on 2026-10-01 with a generic User-Agent). All example records, counts, staff ids and barcodes below are **synthetic**.
+Written 2026-10-01 by the approver lens, from `way/personas/_lens-brief.md`; fix round 1 the same day (see the foot of the file). Read first: `way/blueprint.md` §0–§1, `way/vocabulary.md` (delta D2, binding), `way/brief/frd-v1.0.md`, `way/research/r1-*.md` with both refutations, `care.md`, `way/lessons.md`. Findings that refuters mark refuted or doubtful are not cited (R34, F10, F18, F31, C6, C8, C26, C27, C39, C47, C50, C54, and the dropped sub-claims), and neither are research *implications* that lean on them. Cycle-1 findings are cited by id (C, F, P, R); this lens adds **AP1–AP13** (research cycle 2, every source opened in this run on 2026-10-01 with a generic User-Agent).
 
-Story ids: `approver-10.n` (journey 10 = WF-10), grouped by sub-heading. Acceptance layers: `/m` module (a function's unit test), `/s` system (components together, e.g. resolver → review queue, ledger snapshots), `/r` runtime — observed in the served product: the **admin console in a browser**, the **API over HTTP**, or the **iOS simulator**. Every story has at least one `/r` line.
+**Data.** Every example record, count, staff id and barcode is **synthetic**. Givens with counts or history use the **seeded synthetic dataset** loaded into the served product. External services run behind their mock adapters (§0 line 6). A Given that the product's own checks would block today is a **seeded legacy record**, and the story says so.
+
+Story ids: `approver-10.n` (journey 10 = WF-10), grouped by step. Stories 10.65–10.68 were added in fix round 1, so they sit inside their step out of numeric order. Acceptance layers:
+- `/m` module: a function's unit test.
+- `/s` system: components working together.
+- `/r` runtime: observed in the served product — the **admin console in a browser**, the **API over HTTP**, or the **iOS simulator**. Every `/r` line names its screen or interface.
+
+Every story has at least one `/r` line.
 
 ---
 
@@ -10,575 +17,781 @@ Story ids: `approver-10.n` (journey 10 = WF-10), grouped by sub-heading. Accepta
 
 ### 1.1 Findings opened in this run
 
-**AP1 · USDA FDC Foundation Foods carry sample metadata and two energy definitions, and store below-limit values as 0.** `opened` · https://fdc.nal.usda.gov/Foundation_Foods_Documentation/ · 2026-10-01 (undated page)
-- "extensive underlying metadata, including the number of samples, sampling location, date of collection, analytical approaches used"
-- "'Metabolizable Energy (Atwater General Factor)' … nutrient ID: 2047"; "'Metabolizable Energy (Atwater Specific Factor)' … ID: 2048"
+**AP1 · USDA FDC Foundation Foods: sample metadata, two energy definitions, carbohydrate by difference, and below-limit values stored as 0.** `opened` · https://fdc.nal.usda.gov/Foundation_Foods_Documentation/ · 2026-10-01 (undated page)
+- "extensive underlying metadata, including the number of samples, sampling location, date of collection, analytical approaches used".
+- "'Metabolizable Energy (Atwater General Factor)' … nutrient ID: 2047"; "'Metabolizable Energy (Atwater Specific Factor)' … ID: 2048".
+- "Carbohydrate content, referred to as "carbohydrate by difference" in the tables, is expressed as the difference between 100 and the sum of the percentages of water, protein, total lipid (fat), ash, and alcohol (when present). Values for carbohydrate by difference include total dietary fiber content."
 - "LOQ values are stored as numbers and component values are stored as 0. For example: an LOQ of <0.03 is stored in the LOQ field as 0.03 and in the component value field as 0."
-- Use: the Tier A import must read the LOQ field so a below-limit value is not shown as a measured zero (FR-027 "missing and zero values must remain distinct").
 
-**AP2 · FAO/INFOODS Guidelines for Checking Food Composition Data, v1.0 (2012) — the compiler's checklist.** `opened` · https://www.fao.org/4/ap810e/ap810e.pdf · 2026-10-01
+**AP2 · FAO/INFOODS Guidelines for Checking Food Composition Data, v1.0 (2012): the compiler's checklist.** `opened` · https://www.fao.org/4/ap810e/ap810e.pdf · 2026-10-01
 - Proximates: "The sum of proximates (=∑ of water + protein + fat + available carbohydrates + dietary fibre + alcohol + ash) … Preferable: 97 - 103 g … acceptable: 95 - 105 g".
 - Energy: "No energy values of the user table/DB were copied from other sources, but were calculated in the own DB"; "kJ energy values were preferably not calculated from energy values in kcal".
-- Two people or a machine: "all data, especially those entered manually, be cross-checked by a second compiler and/or submitted to computerized validation tests".
-- Recipes: "Added water was not forgotten … Added fat was not forgotten (e.g. fat absorbed during frying …)"; no errors "when the ingredients were transformed from household units (e.g. one big onion) to gram edible portion"; "Appropriate yield factors (YF) and nutrient retention factors (RF) were chosen … and sources are documented"; "Water or fat as ingredients in recipes were not confused with the components 'water' or 'fat, total'".
+- A second check: "all data, especially those entered manually, be cross-checked by a second compiler and/or submitted to computerized validation tests".
+- Recipes:
+  - "Added water was not forgotten … Added fat was not forgotten (e.g. fat absorbed during frying …)";
+  - no errors "when the ingredients were transformed from household units (e.g. one big onion) to gram edible portion";
+  - "Appropriate yield factors (YF) and nutrient retention factors (RF) were chosen … and sources are documented";
+  - "Water or fat as ingredients in recipes were not confused with the components 'water' or 'fat, total'".
 - Names: "The processing and preparation state of the food is specified in the food name … Which oil/fat was used for frying?"; "It may be necessary to provide two or more entries for a single food … where differences in composition are sufficient".
 
-**AP3 · FAO/INFOODS Guidelines for Food Matching, v1.2 (Nov 2012) — how a curator documents a borrowed or analogue value.** `opened` · https://www.fao.org/4/ap805e/ap805e.pdf · 2026-10-01
-- Quality codes: "A high quality Exact match … B medium quality … C low quality … D: Food component values taken from a Default Table".
+**AP3 · FAO/INFOODS Guidelines for Food Matching, v1.2 (Nov 2012): how a curator documents a borrowed or analogue value.** `opened` · https://www.fao.org/4/ap805e/ap805e.pdf · 2026-10-01
+- "A high quality Exact match … B medium quality … C low quality … D: Food component values taken from a Default Table".
 - "Calculation of recipes is preferable to taking similar cooked foods."
 - "When estimating selected nutrients from another food and the difference in the water content is higher than 10 %, it is recommended to adjust all nutrients accordingly."
-- "identify the source (including releases or edition information) and specific item number"; "It is generally better to take an A-match from another FCT than to put a C-match from the FCT of interest."
+- "identify the source (including releases or edition information) and specific item number".
 
-**AP4 · The University of Minnesota NCC database (the source Cronometer calls its best) allows a missing value only for stated reasons, and its curators work in a desktop program.** `opened` · 2026-10-01
+**AP4 · NCC (University of Minnesota) allows a missing value only for stated reasons; its research tool is Windows desktop software.** `opened` · 2026-10-01
 - https://www.ncc.umn.edu/products/nutrient-completeness/ : "A missing nutrient value is allowed only if: the amount of that nutrient in the food is believed to be negligible … the food is usually eaten in small amounts … it is unknown whether the nutrient exists … it is not possible to estimate the value"; "energy values were estimated for 6% of the Core Foods".
-- https://www.ncc.umn.edu/products/ : "NDSR is a Windows-based dietary analysis program designed for the collection and analyses of 24-hour dietary recalls, food records, menus, and recipes."
+- https://www.ncc.umn.edu/products/ : "NDSR is a Windows-based dietary analysis program designed for the collection and analyses of 24-hour dietary recalls, food records, menus, and recipes." This is a tool for researchers and dietitians, not NCC's own curators. It shows that professional recipe and record entry is desk software. That the approver works the same way is an `assumption`.
+- Cronometer calls NCC's database its best: "an entry from our highest quality data source (NCCDB)". Article 360042550452, updated 2026-09-21: https://support.cronometer.com/hc/en-us/articles/360042550452-Data-Confidence-Scores
 
-**AP5 · Cronometer runs a curation team that reviews every submitted food and requires two photos.** `opened` via the help centre's Zendesk API · 2026-10-01
-- Article 360018652672 (updated 2026-08-11): "The CRDB Database is maintained by Cronometer's curation team. All foods submitted will be thoroughly reviewed by our team and edited appropriately"; "Please include clear photos of both the front of the package (including the brand and name of the product) and the nutrition information"; "Please refrain from submitting homemade foods or whole foods that do not include nutrition facts on the packaging."
-- Article 360018239472 "Data Sources" (updated 2026-09-29): "Every user submitted food is reviewed by our curation team before being added to the database".
-- Article 360020982412 "Report an Issue" (updated 2026-09-22): "We require clear photos of both the front of the package … and the nutrition informa[tion]"; "some errors may occur due to rounding differences".
-- Article 360042550452 "Data Confidence Scores" (updated 2026-09-21): "not every food in our database has a data point for all 70 nutrients that we display".
+**AP5 · Cronometer runs a curation team that reviews every submitted food and requires two photos.** `opened` through the help centre's API · 2026-10-01
+- https://support.cronometer.com/hc/en-us/articles/360018652672-Publishing-a-food-to-the-CRDB-Database (updated 2026-08-11):
+  - "The CRDB Database is maintained by Cronometer's curation team. All foods submitted will be thoroughly reviewed by our team and edited appropriately";
+  - "Please include clear photos of both the front of the package (including the brand and name of the product) and the nutrition information";
+  - "Please refrain from submitting homemade foods or whole foods that do not include nutrition facts on the packaging."
+- https://support.cronometer.com/hc/en-us/articles/360018239472-Data-Sources (updated 2026-09-29): "Every user submitted food is reviewed by our curation team before being added to the database".
+- https://support.cronometer.com/hc/en-us/articles/360020982412-How-do-I-Report-an-Issue-with-Nutrition-data-in-Cronometer (updated 2026-09-22): "some errors may occur due to rounding differences".
+- https://support.cronometer.com/hc/en-us/articles/360042550452-Data-Confidence-Scores (updated 2026-09-21): "not every food in our database has a data point for all 70 nutrients that we display".
 
 **AP6 · A label's calories legitimately differ from 4/4/9 (US rule).** `opened` · eCFR 21 CFR 101.9 (current) https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9 · 2026-10-01
-- "expressed to the nearest 5-calorie increment up to and including 50 calories, and 10-calorie increment above 50 calories".
-- Calories may be calculated by "specific Atwater factors", "general factors of 4, 4, and 9", or 4/4/9 on "total carbohydrate (less the amount of non-digestible carbohydrates and sugar alcohols)"; "A general factor of 2 calories per gram for solub[le fibre]".
-- Misbranded only if "greater than 20 percent in excess of the value … declared on the label".
-- Use: supports FR-030 — the mismatch check flags for review and never rewrites a label. Egyptian and Gulf label rules were not opened: that they also round is an `assumption`.
+- Calories are "expressed to the nearest 5-calorie increment up to and including 50 calories, and 10-calorie increment above 50 calories".
+- Calories may be calculated by "specific Atwater factors", "general factors of 4, 4, and 9", or 4/4/9 on "total carbohydrate (less the amount of non-digestible carbohydrates and sugar alcohols)"; "A general factor of 2 calories per gram for soluble non-digestible carbohydrates shall be used".
+- A label is misbranded only if the food holds "greater than 20 percent in excess of the value … declared on the label".
+- Use: this supports FR-030. The mismatch check flags a record for review and never rewrites the label.
+- Egyptian and Gulf label rules were not opened. That they also round is an `assumption`.
 
 **AP7 · Dense admin tables serve four tasks; frozen headers keep the reader's place.** `opened` · Nielsen Norman Group, "Data Tables: Four Major User Tasks" (Laubheimer, 2022-04-03) · https://www.nngroup.com/articles/data-tables/ · 2026-10-01
-- "Find record(s) that fit specific criteria · Compare data · View, edit or add a single row's data · Take action(s) on records"; "Freeze header rows and header columns (if the table is larger than the screen)"; "Hiding and reordering columns must be easy".
+- The four tasks: "Find record(s) that fit specific criteria · Compare data · View, edit or add a single row's data · Take action(s) on records".
+- "Freeze header rows and header columns (if the table is larger than the screen)".
 
-**AP8 · The keyboard model for a data grid.** `opened` · W3C WAI-ARIA APG, Grid pattern · https://www.w3.org/WAI/ARIA/apg/patterns/grid/ · 2026-10-01
-- "Right Arrow: Moves focus one cell to the right … Page Down: Moves focus down an author-determined number of rows … Control + Home: moves focus to the first cell in the first row."
+**AP8 · The keyboard model for a data grid.** `opened` · W3C WAI-ARIA APG, Grid pattern · https://www.w3.org/WAI/ARIA/apg/patterns/grid/ · 2026-10-01 · "Right Arrow: Moves focus one cell to the right … Page Down: Moves focus down an author-determined number of rows … Control + Home: moves focus to the first cell in the first row."
 
-**AP9 · WCAG 2.2: everything by keyboard; single-letter shortcuts must be switchable.** `opened` · 2026-10-01
-- 2.1.1 (Understanding page updated 11 May 2026) https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html : "All functionality of the content is operable through a keyboard interface".
-- 2.1.4 (updated 23 February 2026) https://www.w3.org/WAI/WCAG22/Understanding/character-key-shortcuts.html : "Turn off … Remap … Active only on focus".
+**AP9 · WCAG 2.2: everything by keyboard; single-letter shortcuts are limited.** `opened` · 2026-10-01
+- 2.1.1 (Understanding page updated 11 May 2026), https://www.w3.org/WAI/WCAG22/Understanding/keyboard.html : "All functionality of the content is operable through a keyboard interface".
+- 2.1.4 (updated 23 February 2026), https://www.w3.org/WAI/WCAG22/Understanding/character-key-shortcuts.html : a shortcut made only of letter keys needs one of "Turn off … Remap … Active only on focus".
 
-**AP10 · The review-list key convention people already know.** `opened` · Gmail Help "Keyboard shortcuts for Gmail" https://support.google.com/mail/answer/6594 · 2026-10-01 · "Newer conversation k · Older conversation j · Open conversation o or Enter · … Archive e · … Undo last action z". That an approver already uses these keys is an `assumption`.
+**AP10 · The review-list key convention people already know.** `opened` · Gmail Help "Keyboard shortcuts for Gmail" https://support.google.com/mail/answer/6594 · 2026-10-01 · "Newer conversation k · Older conversation j · Open conversation o or Enter". That an approver already uses these keys is an `assumption`.
 
 **AP11 · Arabic names inside an English console need direction isolation.** `opened` · W3C Internationalization, "Inline markup and bidirectional text in HTML" https://www.w3.org/International/articles/inline-bidi-markup/ · 2026-10-01 · "If you don't know the direction of text that will be inserted at run time, add dir=auto to any markup that tightly wraps the location. If there is no markup, wrap the location with a bdi element."
 
-**AP12 · Standard codes exist for the three dialect tags.** `opened` · IANA Language Subtag Registry (File-Date 2026-09-17) https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry · 2026-10-01 · "Subtag: arz | Description: Egyptian Arabic", "Subtag: afb | Description: Gulf Arabic", "Subtag: arb | Description: Standard Arabic", each "Macrolanguage: ar". Wikidata's dialect labels use the same codes (F26: Q188788 `arz` "طعميه").
+**AP12 · Standard codes exist for the three dialect tags.** `opened` · IANA Language Subtag Registry (File-Date 2026-09-17) https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry · 2026-10-01
+- "Subtag: arz | Description: Egyptian Arabic", "Subtag: afb | Description: Gulf Arabic", "Subtag: arb | Description: Standard Arabic", each with "Macrolanguage: ar".
+- Wikidata's dialect labels use the same codes (F26: Q188788 `arz` "طعميه").
+
+**AP13 · Touch targets at the narrow console.** `opened` · WCAG 2.2 Understanding 2.5.8 Target Size (Minimum) https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html · 2026-10-01 · "The size of the target for pointer inputs is at least 24 by 24 CSS pixels".
 
 ### 1.2 The approver's day, from the findings
 
-- **Who and how often.** A qualified nutrition reviewer (brief §3.3, §23.2), staffed as a *fractional* reviewer (brief §23.1: "fractional nutrition/privacy reviewers"). So the work comes in batches: a session opens on what changed since last time and what affects the most eaters. How many sessions a week is an `assumption`.
-- **Where.** At a desk on a large screen with a keyboard: the professional tool for recipes and records is a desktop program (AP4), the work is dense tables (AP7), and the approver retypes values from printed or PDF tables (F12 "Print-only", F17 a 311-page PDF, F23 HTML from 1982). Screen width ≥1,440 px is an `assumption`; the console is still proved at ~390 px (§0 "admin console proved in a browser at desktop and ~390 px").
-- **Tasks they repeat.** Match a food eaters name to the best composition record and code the match quality (AP3); enter or correct a record and run the checks (AP2); calculate a dish from weighed ingredients and cooked yield (AP2, FR-028); review user-submitted label photos (AP5; C9 MFP's "report the food so our team can update it" as corrected in r1-refute-a); keep names in Arabic script, dialect and transliteration (F26–F28, AP12); set and defend the safety numbers (R32, R33, R35, R38, R41).
-- **Moments that decide trust.** Pressing Publish on a number every eater will use; a label that "doesn't add up" (AP6, FR-030); a dialect word that means three foods (لبن, F27); a Policy number that touches safety (the 1,000 kcal hard stop R32; the 1,200 kcal floor as *our* policy, r1-refute-b Dropped 12).
-- **What they use today and hate.** Retyping from print and PDF (F12, F17, F23); digitised copies with transcription defects — water 88 g with 335 kcal (F14); a thin, dialect-blind Arabic taxonomy (F11: `ar: لبن` on Yogurts); licences nobody can confirm (F15, F17); "zero" that means "below detection" (AP1); crowd entries fixed only after someone reports them (C9, AP5).
-- **Seasonal load.** Ramadan dishes (e.g. قطايف, سوبيا) bring a burst of unmatched names and analogues — `assumption`, no source opened.
+- **Who and how often.** The approver is a qualified nutrition reviewer (brief §3.3, §23.2), staffed as a fractional reviewer (brief §23.1: "fractional nutrition/privacy reviewers"). The work therefore comes in batches. A session opens on what changed since the last one, ordered by how many eaters it affects. How many sessions a week is an `assumption`.
+- **Where.** At a desk on a large screen with a keyboard. This is an `assumption`, supported only indirectly:
+  - professional recipe and record entry runs in desk software (AP4);
+  - the work is dense tables (AP7);
+  - values are retyped from printed or PDF tables (F12 "Print-only"; F17, a 311-page PDF; F23, HTML from 1982).
+
+  The console is still proved at ~390 px (§0, "admin console proved in a browser at desktop and ~390 px").
+- **Tasks they repeat.**
+  - Match a food eaters name to the best composition record and code the match quality (AP3).
+  - Enter or correct a record and run the checks (AP2).
+  - Calculate a dish from weighed ingredients and its cooked yield (AP2, FR-028).
+  - Review user-submitted label photos (AP5; C9 as corrected in r1-refute-a: "report the food so our team can update it").
+  - Keep names in Arabic script, dialect and transliteration (F26–F28, AP12).
+  - Set and defend the safety numbers (R32, R33, R35, R38, R41).
+- **Moments that decide trust.**
+  - Approving a number every eater will use.
+  - A label that "doesn't add up" (AP6, FR-030).
+  - A dialect word that means three foods: لبن (F27).
+  - A Policy number that touches safety: the 1,000 kcal hard stop (R32), and the 1,200 kcal floor, which is *our* policy (r1-refute-b, Dropped 12).
+- **What they use today and hate.**
+  - Retyping from print and PDF (F12, F17, F23).
+  - Digitised copies with transcription defects, such as water 88 g with 335 kcal (F14).
+  - A thin Arabic taxonomy that ignores dialect (F11: `ar: لبن` sits on Yogurts).
+  - Licences nobody can confirm (F15, F17).
+  - A "zero" that means "below detection" (AP1).
+  - Crowd entries that get fixed only after someone reports them (C9, AP5).
+- **Seasonal load.** Ramadan dishes (e.g. قطايف, سوبيا) bring a burst of unmatched names and analogues. This is an `assumption`; no source was opened.
 
 ---
 
 ## 2 · Goals
 
-1. **Every number an eater sees traces to Evidence and a licence the approver signed** (FR-026, F1, F8; the trust complaint against crowd data, C9).
-2. **Regional dishes resolve to recipe-calculated Tier B records, not analogues** (F5, F-implication 1; WF-10 done-when: فول مدمس).
-3. **Arabic words resolve to the right Food for the eater's dialect** (FR-015, F27).
+1. **Every number an eater sees traces to Evidence and a licence an approver approved** (FR-026; map interaction row "Approver → reference": "evidence + licence on every record").
+2. **Regional dishes resolve to Tier B recipe records, not analogues** (map §1 ¶1: "Tier B approver-built recipe records for regional dishes, F12–F17, F19"; WF-10 done-when: فول مدمس).
+3. **Arabic words resolve to the right Food for the eater's dialect** (FR-015; map §6: "dialect … drives لبن/laban resolution, F27").
 4. **The safety Policy is versioned, cited and effective-dated, and never rewrites the past** (brief §3.3, FR-058, FR-071; R32, R33, R35, R38, R41).
-5. **The review queue stays short and is worked by impact** — flags from the resolver are closed with a documented decision (FR-030, AP3, AP5).
+5. **The Review section stays short and is worked by impact.** Every resolver or check flag closes with a documented decision (FR-025, FR-030, AP3, AP5).
 
 ---
 
 ## 3 · Journey 10 — govern the reference and the safety Policy (the approver's part of WF-10)
 
+**Trace keys.** Each story's "Trace" names at least one of these map or brief elements. Research ids support a story but never stand in for its trace.
+
+| key | element |
+|---|---|
+| **WF-10** | map §4, "approve food and recipe records and aliases, version policy" |
+| **DW** | WF-10 done-when (map §5) |
+| **IR-ref** | interaction row "Approver → reference" (approve a food record or a Tier B recipe record; add a dialect-tagged alias; evidence + licence; cross-check, never copy) |
+| **IR-pol** | interaction row "Approver → policy" |
+| **IR-res** | interaction row "Analyzer → resolver" (resolver order FR-025; alias by dialect) |
+| **IR-con** | interaction row "Eater → app" (consents) |
+
+**Places.** The admin console sections come from `vocabulary.md`. The approver's role sees **Review · Foods · Recipes · Aliases · Policy · Metrics · Settings** (Settings holds the console language and the launch gates). It does not see Registry · Grants · Jobs · Roles · Audit trail.
+- **Recipes** holds Tier B recipe records only. An eater's own Recipe never appears in the console.
+- **Review** lists two kinds of row:
+  - reference records in state Proposed or In review: Label submissions from eaters, and records an approver proposed;
+  - open **flags**, raised by the resolver or by a check.
+
+  "Flag", its types and "Label submission" are not yet vocabulary words. §6 and §7 ask for them.
+
+**Things and their states** (`vocabulary.md`):
+- Food, Tier B recipe record, Alias: Proposed → In review → Approved · Rejected; Approved → Superseded · Retired.
+- Policy version: Proposed → Approved (with effective-from) → In effect → Superseded.
+- Tier A rows arrive from a **USDA release** already Approved, with licence CC0.
+- Errors: `FORBIDDEN`, `UNAUTHENTICATED`, `VALIDATION_ERROR`, `STALE_REVISION`, `MASS_BALANCE_ERROR`, `SOURCE_BASIS_UNKNOWN`, `CONSENT_REQUIRED`, `POLICY_FLOOR`, `NOT_FOUND`.
+- A **Tier B recipe record** is a Food whose numbers an approver calculates from weighed ingredients. A Food that takes a published recipe-calculated value from a study is a Food, not a Tier B recipe record.
+
 | step | what the approver does | stories |
 |---|---|---|
-| A · open a session | sign in, land on Review, stay inside the role, survive expiry and a lost network, read bilingual names | 10.1–10.5 |
-| B · work the review queue | sort by impact, triage by keyboard, claim, close analogues, mismatches, label submissions, unmatched names; read quality metrics | 10.6–10.19 |
-| C · curate Food records | search, read provenance, approve a Tier A release, enter label data, pass checks and the licence gate, publish, retire, compare | 10.20–10.30 |
-| D · build Tier B Recipe records | weigh-the-pot calculation, INFOODS checklist, yield, cross-check, CC BY sources, variants, nesting, analogue ingredients, go live, launch set | 10.31–10.40 |
-| E · keep Aliases | dialect-tagged Aliases, لبن by dialect, conflicts, normalisation, Wikidata and transliteration seeds, retire, invalid input | 10.41–10.47 |
-| F · version the Policy | read, floor, hard stop, deficit and gain, GLP-1, tracking-only, mismatch threshold, other values, retention, publish/schedule, existing Targets, roll back, concurrency, history, launch sign-off | 10.48–10.62 |
-| G · leave a trail | audit every action; generate Sources & licences | 10.63–10.64 |
-
-Console areas are proposed names built from the map's nouns (see §6): **Review · Foods · Recipes · Aliases · Policy · History**.
+| A · open a session | sign in, land on Review, stay inside the role, survive expiry, a lost network and a slow one, read bilingual names | 10.1–10.5 |
+| B · work Review | sort by impact, triage by keyboard, claim, close analogue, mismatch and unmatched-name flags, decide Label submissions behind their consent, read Metrics | 10.6–10.19, 10.66 |
+| C · curate Foods | search, read source details, read a USDA release, enter label data with value bases and the carbohydrate convention, pass checks and the licence gate, approve versions, retire, compare | 10.20–10.30, 10.65 |
+| D · build Tier B recipe records | weigh-the-pot calculation with licence, INFOODS checklist, yield, uncertain oil, cross-check, CC BY sources, variants, nesting, analogue ingredients, approval and resolver use, launch dishes | 10.31–10.40, 10.67 |
+| E · keep Aliases | dialect-tagged Aliases, لبن by dialect, collisions, normalisation, Wikidata and transliteration seeds, retire, invalid input | 10.41–10.47 |
+| F · version the Policy | read, floor, hard stop, deficit, loss and gain choices, GLP-1, tracking-only, mismatch threshold, other values, retention, approve with effective-from, existing Targets, roll back, concurrency, versions, launch sign-off | 10.48–10.62, 10.68 |
+| G · leave a trail | every action in the Audit trail; attributions generated from licences | 10.63–10.64 |
 
 ### A · Open a session
 
 #### approver-10.1 · Land on Review with today's counts
-As the Nutrition approver, I sign in to the admin console and land on Review with the open items counted by flag type, so that each fractional session starts on the work that affects the most eaters. · FR-080, brief §23.1
-- `/r` Given a staff account holding only the Nutrition approver role and 12 open review items (5 Estimated analogue, 4 Energy mismatch, 3 Label submission), When the approver signs in on a 1,440 px browser, Then the console opens on **Review**, the header reads "Nutrition approver", and the filter chips read "Estimated analogue 5 · Energy mismatch 4 · Label submission 3".
-- `/r` Given the same seed, When `GET /v1/admin/review-items?status=open` is called with the approver's token, Then 200 returns 12 items, each with `type`, `opened_at`, `eaters_affected` (a count) and no `user_id` field.
-- `/r` Given the approver left the console on the "Energy mismatch" filter with item R-12 focused, When they sign in again in the same browser, Then Review reopens on that filter with R-12 focused; in a private window it opens on the default (all types, by impact).
+As the Nutrition approver, I sign in to the admin console and land on Review, with rows counted by type, so that each fractional session starts on the work that affects the most eaters. · Trace: WF-10 · FR-080 · brief §23.1
+- `/r` Given a staff account holding only the Nutrition approver role, 3 Label submissions in state Proposed, and open flags (5 Estimated analogue, 4 Energy mismatch), When the approver signs in on a 1,440 px browser, Then the console opens on **Review**, the header reads "Nutrition approver", and the filter chips read "Label submission 3 · Estimated analogue 5 · Energy mismatch 4".
+- `/r` Given the same seed, When `GET /v1/admin/flags?open=true` is called with the approver's token, Then it returns 200 with 9 flags. Each has `type`, `raised_at` and `eaters_affected` (a count), and none has a `user_id` field.
+- `/r` Given the same seed in a 390 px browser, When Review opens, Then each row is one stacked card (type, food, eaters affected) with no horizontal page scroll, and every action target in Review is at least 24 × 24 CSS px (AP13).
 
 #### approver-10.2 · Stay inside the role
-As the Nutrition approver, I see only reference and Policy work and no diary, Grant or registry controls, so that my approvals can neither read nor change anyone's private data. · FR-081, NFR-07 · **Shared: Nutrition approver · Support agent · Platform admin**
-- `/r` Given the approver's session, When the console navigation is open, Then it lists Review, Foods, Recipes, Aliases, Policy and History, and no Registry, Grants, Accounts or Failed jobs entry exists.
-- `/r` Given the approver's token, When it calls `GET /v1/admin/grants`, `POST /v1/admin/registry/versions` or any eater diary path (e.g. `GET /v1/reports/day?user=…`), Then each returns 403 `FORBIDDEN_ROLE`.
-- `/s` Given any of those denied calls, Then one audit event "denied" records staff id, role and path, and the auditor's trail lists it.
-- `/r` Given a support agent's token, When it calls `POST /v1/admin/food-versions/{vid}/publish` on a valid draft, Then 403 `FORBIDDEN_ROLE`; with the approver's token the same call returns 200.
+As the Nutrition approver, I see no diary, Grant, Registry or Audit trail controls, so that my approvals can neither read nor change anyone's private data. · Trace: FR-081 · NFR-07 · **Shared: Nutrition approver · Support agent · Platform admin**
+- `/r` Given the approver's session, When the console navigation is open, Then it lists Review, Foods, Recipes, Aliases, Policy, Metrics and Settings, and not Registry, Grants, Jobs, Roles or Audit trail.
+- `/r` Given the approver's token, When it calls `GET /v1/admin/grants`, `POST /v1/admin/registry/versions` or `GET /v1/reports/day` for any eater, Then each call returns 403 `FORBIDDEN`.
+- `/s` Given those denied calls, Then the Audit trail holds one event for each, recording staff id, role and path.
+- `/r` Given a Support agent's token, When it calls `POST /v1/admin/foods/{id}/versions/{v}/approve` on a Food version In review, Then 403 `FORBIDDEN`. The same call with the approver's token returns 200.
 
-#### approver-10.3 · A session expiry keeps the draft
-As the Nutrition approver, I keep a half-filled Food or Policy draft when my session expires, so that an hour of retyping from a PDF table is not lost. · care group 4
-- `/r` Given a Food draft with 9 of 14 fields filled and an expired session, When the approver presses Save draft, Then the console asks for sign-in in place (no page change) and, after sign-in, the draft is saved with the 9 values unchanged.
-- `/r` Given the draft was saved, When the tab is closed and Foods → Drafts is reopened, Then the draft shows "Draft · saved 10:42" with the 9 values, and `GET /v1/admin/foods/{id}` returns them.
+#### approver-10.3 · A session expiry keeps the proposal
+As the Nutrition approver, I keep a half-filled Food or Policy proposal when my session expires, so that an hour of retyping from a PDF table is not lost. · Trace: WF-10 · IR-ref · FR-080
+- `/r` Given a Food in state Proposed open in Foods with 9 of 14 fields filled, and an expired session, When the approver presses Save, Then the server answers 401 `UNAUTHENTICATED`, Foods asks for sign-in in place without leaving the page, and after sign-in the save completes with the 9 values unchanged.
+- `/r` Given the save completed, When the tab is closed and Foods is reopened filtered to state Proposed, Then the Food shows "Proposed · saved 10:42" with its 9 values, and `GET /v1/admin/foods/{id}` returns them.
 
 #### approver-10.4 · Network lost, or slow
-As the Nutrition approver, I keep reading when the network drops and nothing publishes half-sent, so that a record never goes live by accident. · care group 3–4
-- `/r` Given a Food open in the console and the browser offline, When the approver presses Publish, Then Publish is disabled with a quiet banner "Offline — showing saved data; publishing waits for the connection", and the Food stays on screen.
-- `/r` Given the connection returns, When the banner clears, Then nothing publishes by itself; the draft is still a draft until Publish is pressed again.
-- `/r` Given a publish request is retried with the same idempotency key after a lost response, When the second request arrives, Then exactly one Food version is published and both responses carry the same version id (brief §18: "All mutation requests use an idempotency key").
-- `/r` Given a throttled network, When Publish has been pressed, Then the button reads "Publishing…" at once and cannot be pressed again until the server answers.
+As the Nutrition approver, I keep reading when the network drops, and nothing is approved half-sent, so that a record never becomes Approved by accident. · Trace: WF-10 · IR-ref · FR-080 · brief §18 (idempotency key)
+- `/r` Given a Food In review open in Foods and the browser offline, When the approver presses Approve, Then Approve is disabled under a quiet banner, "Offline — showing saved data; approving waits for the connection", and the Food stays on screen.
+- `/r` Given the connection returns, When the banner clears in Foods, Then the Food is still In review until Approve is pressed again.
+- `/r` Given `POST /v1/admin/foods/{id}/versions/{v}/approve` is retried with the same idempotency key after a lost response, When the second request arrives, Then exactly one version becomes Approved and both responses carry the same version id.
+- `/r` Given a throttled network in Foods, When Approve has been pressed, Then the button reads "Approving…" at once and cannot be pressed again until the server answers.
 
 #### approver-10.5 · Read Arabic and English names without the line breaking
-As the Nutrition approver, I read Arabic and English names side by side in an English (LTR) or Arabic (RTL) console without words and digits swapping places, so that I never approve the wrong name. · AP11, §0 line 5
-- `/r` Given Food "فول مدمس · Ful medames · 140 kcal/100 g" in the Foods table with the console in English, When the row is rendered, Then the Arabic name is direction-isolated (its cell uses `dir="auto"` or `<bdi>`), and 140 stays in its own right-aligned numeric column.
-- `/r` Given the console language is switched to العربية, Then navigation moves to the right and back arrows point right, while numbers, FDC ids and barcodes keep their order.
-- `/m` Given the mixed string "فول medames 2", When the name component renders it, Then the output wraps it in a `dir="auto"` isolate.
-- `/r` Given the approver types "١٢٠٠" in a numeric field, When the field loses focus, Then it stores 1200 and shows it in the console's numeral setting.
+As the Nutrition approver, I read Arabic and English names side by side in an English (LTR) or Arabic (RTL) console without words and digits trading places, so that I never approve the wrong name. · Trace: WF-10 · IR-ref · FR-015 · §0 line 5 · AP11
+- `/r` Given the Tier B recipe record "فول مدمس · Ful medames · 140 kcal/100 g" in the Recipes table with the console in English, When the row renders, Then the Arabic name is direction-isolated (its cell uses `dir="auto"` or `<bdi>`), and 140 stays in its own right-aligned numeric column.
+- `/r` Given the approver sets Settings → Language to العربية, Then navigation moves to the right and back arrows point right, while numbers, FDC ids and barcodes keep their order.
+- `/m` Given the mixed string "فول medames 2", When the name component renders it, Then its output wraps the string in a `dir="auto"` isolate.
+- `/r` Given the approver types "١٢٠٠" in a numeric field in Policy, When the field loses focus, Then it shows and stores 1200.
 
-### B · Work the review queue
+### B · Work Review
 
-#### approver-10.6 · Sort the queue by impact
-As the Nutrition approver, I see review items sorted by how many eaters each affects, with filters by flag type and age, so that a short session fixes the most-used foods first. · FR-080, AP7
-- `/r` Given open items "تمر صقعي → Date (generic)" (41 eaters), "Energy mismatch: Biscuits, plain" (17) and "Label: Laban drink 1 L" (1), When Review is sorted by Impact, Then the rows read 41, 17, 1, and the header row and first column stay fixed while the table scrolls.
-- `/r` Given the filter "Label submission" is chosen, Then only label items show and the address carries `?type=label`, so reloading keeps the view.
-- `/r` Given the review-items request takes more than 300 ms, Then placeholder rows show at once (no blank table) and are replaced in place when data arrives.
+#### approver-10.6 · Sort Review by impact
+As the Nutrition approver, I see Review rows sorted by how many eaters each affects, with filters by type and age, so that a short session fixes the most-used foods first. · Trace: WF-10 · FR-080 · AP7
+- `/r` Given open flags "تمر صقعي → Date (generic)" (41 eaters) and "Energy mismatch: Biscuits, plain" (17 eaters), and a Label submission "Laban drink 1 L" (1 eater), When Review is sorted by Impact, Then the rows read 41, 17, 1, and the header row and first column stay fixed while the table scrolls.
+- `/r` Given the filter "Label submission" is chosen in Review, Then only Label submissions show and the address carries `?type=label`, so reloading keeps the view.
+- `/r` Given the Review request takes more than 300 ms, Then placeholder rows show at once in Review, never a blank table, and the data replaces them in place.
+- `/r` Given Review at 390 px, When the table is wider than the screen, Then only the table scrolls sideways inside its own frame; the page does not.
 
 #### approver-10.7 · Triage by keyboard
-As the Nutrition approver, I move through the queue and act with the keyboard only, so that I review dozens of items without reaching for the mouse. · AP8, AP9, AP10
-- `/r` Given Review with three rows and focus on the first, When the approver presses ↓, ↓, Enter, Then the third item's detail opens beside the table; Esc closes it and returns focus to that row.
-- `/r` Given single-letter shortcuts are on (j/k move, o open, a approve, r reject, ? list), When the approver turns them off under Shortcuts, Then j does nothing while the arrow keys still move focus (WCAG 2.1.4).
-- `/r` Given an open item, When the approver tabs through it, Then every control (Approve, Reject, Create Food, Open source) shows a visible focus ring and a screen reader announces its verb label.
+As the Nutrition approver, I move through Review and act with the keyboard only, so that I work through dozens of rows without reaching for the mouse. · Trace: WF-10 · FR-080 · NFR-08 · AP8–AP10
+- `/r` Given Review with three rows and focus on the first, When the approver presses ↓, ↓, Enter, Then the third row's detail opens beside the table. Esc closes it and returns focus to that row.
+- `/r` Given focus on the Review table, When the approver presses j, k or o, Then focus moves down or up, or the row opens. Given focus anywhere outside the table, the same keys type or do nothing (WCAG 2.1.4, "Active only on focus").
+- `/r` Given an open Review row, When the approver tabs through it, Then every control (Approve, Reject, Claim, Keep analogue, Create Food from this) shows a visible focus ring, and a screen reader announces its verb label.
+- `/r` Given the operating system's reduced-motion setting is on, When a Review row opens, Then its detail appears without sliding.
 
-#### approver-10.8 · Empty queue, failed queue
-As the Nutrition approver, I can tell "nothing to review" from "the list did not load", so that I never leave thinking the work is done when it is not. · care group 4
-- `/r` Given no open items, When Review opens, Then it reads "Nothing to review", shows when the last item was closed, and offers "Add a Food" and "Add a Recipe record".
-- `/r` Given `GET /v1/admin/review-items` fails with 500, When Review opens, Then the table area reads "Review items could not load." with a Retry button — never the empty state.
+#### approver-10.8 · Empty Review, failed Review
+As the Nutrition approver, I can tell "nothing to review" from "the list did not load", so that I never leave thinking the work is done when it is not. · Trace: WF-10 · FR-080
+- `/r` Given no open flags and no records Proposed or In review, When Review opens, Then it reads "Nothing to review", shows when the last row was closed, and offers "Propose a Food" and "Propose a Tier B recipe record".
+- `/r` Given `GET /v1/admin/flags` fails with 500, When Review opens, Then the table area reads "Review could not load." with a Retry button, never the empty state.
 
-#### approver-10.9 · Claim an item; two approvers
-As the Nutrition approver, I claim an item when I open it, so that two reviewers never close the same item two different ways. · brief §18 (expected revision)
-- `/r` Given approver A has item R-17 open, When approver B opens R-17, Then B sees "Being reviewed by approver A since 10:42" with every action disabled except "Take over", which asks for a reason.
-- `/r` Given A and B both submit a resolution for R-17 with expected revision 3, When B's arrives second, Then B gets 409 `STALE_REVISION` with the current revision, and B's console shows A's resolution.
+#### approver-10.9 · Claim a row; two approvers at once
+As the Nutrition approver, I claim a row when I open it, so that two approvers never decide the same row two different ways. · Trace: WF-10 · IR-ref · brief §18 (expected revision)
+- `/r` Given Label submission L-17 in state Proposed, When approver A opens it in Review, Then it moves to In review, claimed by A.
+- `/r` Given L-17 is In review and claimed by A, When approver B opens it, Then B sees "In review by approver A since 10:42". Every action is disabled except "Claim from approver A", which asks for a reason.
+- `/r` Given A and B both send a decision on L-17 with expected revision 3, When B's decision arrives second at `POST /v1/admin/foods/{id}/versions/{v}/approve`, Then B gets 409 `STALE_REVISION` with the current revision, and B's Review detail shows A's decision.
 
-#### approver-10.10 · Turn an estimated analogue into a proper record
-As the Nutrition approver, I turn a frequently used estimated analogue into its own Food, so that eaters stop seeing "estimated analogue" for a food we can describe properly. · FR-025, F5, F11, F-implication 7 · **Shared: Nutrition approver · Eater**
-- `/s` Given an eater's Analysis names "تمر صقعي" and no Food or Alias matches, When the resolver falls back to FDC 2709203 "Date" (generic) and the Entry is committed, Then one review item of type Estimated analogue exists with term "تمر صقعي", analogue FDC 2709203, `eaters_affected` 1, `entries_7d` 1 and no eater identifier.
-- `/r` Given that item, When the approver presses "Create Food from this", Then the Food editor opens with name_ar "تمر صقعي", a Gulf Alias suggested, preparation "raw", and the analogue's nutrients shown in a separate reference column, not copied into the new record.
-- `/r` Given the new Food is published, Then the item closes with "Record created · Food v1" and a link to it.
+#### approver-10.10 · Turn an estimated analogue into its own Food
+As the Nutrition approver, I turn an often-used estimated analogue into its own Food, so that eaters stop seeing "estimated analogue" for a food we can describe properly. · Trace: WF-10 · IR-res · FR-025 · FR-080 · F5, F11 · **Shared: Nutrition approver · Eater**
+- `/s` Given 6 distinct eaters in the last 28 days typed "تمر صقعي" in Analyses that matched no Food or Alias, and the resolver fell back to FDC 2709203 "Date" (generic) for each Entry they confirmed, When the nightly aggregation runs, Then one open flag of type Estimated analogue exists. It holds the text "تمر صقعي", the analogue FDC 2709203 and `eaters_affected` 6, with no eater identifier, date or Entry (the one de-identification rule, §7.5).
+- `/s` Given only 3 distinct eaters typed it in that window, Then no flag exists for it.
+- `/r` Given the 6-eater flag in Review, When the approver presses "Create Food from this", Then Foods opens a Proposed Food with name_ar "تمر صقعي", a Gulf Alias suggested and preparation "raw". The analogue's nutrients sit in a separate reference column and are not copied into the new Food.
+- `/r` Given that Food becomes Approved, Then the flag closes in Review with "Food created" and a link to the Food.
 
-#### approver-10.11 · Keep an analogue, documented
-As the Nutrition approver, when no better source exists I keep the analogue mapping with an INFOODS match-quality code and a note, so that the choice is defensible and the queue stays short, while eaters still see "estimated analogue". · AP3, FR-025
-- `/r` Given the "تمر صقعي → FDC 2709203" item, When the approver chooses "Keep analogue", picks quality "C — poor, single match" and writes a note, Then the item closes, the Alias "تمر صقعي" (Gulf) points to FDC 2709203 with Evidence "estimated analogue", and the note shows on the Food's Aliases tab.
-- `/r` Given the note is empty, When Keep analogue is pressed, Then "Write why this is the closest match" appears beside the note field and the item stays open.
-- `/r` Given the approver enters the target food's water (22 g/100 g) and the analogue's is 30 g/100 g (synthetic), Then the editor warns "Water differs by more than 10 % — INFOODS advises adjusting all nutrients" before Keep analogue completes.
+#### approver-10.11 · Keep an analogue, with the reason written down
+As the Nutrition approver, when no better source exists I keep the analogue mapping with an INFOODS match-quality code and a note, so that the choice is defensible and Review stays short, while eaters still see "estimated analogue". · Trace: WF-10 · IR-res · FR-025 · AP3
+- `/r` Given the "تمر صقعي → FDC 2709203" flag in Review, When the approver chooses "Keep analogue", picks match quality "C — poor, single match", writes a note and confirms the preview, Then the flag closes. The Alias "تمر صقعي" (Gulf) is Approved, points to FDC 2709203 with Evidence "estimated analogue", and the note shows on that Alias in Aliases.
+- `/r` Given the note is empty, When Keep analogue is pressed in Review, Then "Write why this is the closest match" appears beside the note field, and the flag stays open.
+- `/r` Given the approver enters the target food's water as 22 g/100 g against the analogue's 30 g/100 g, Then the Review detail shows an inline warning beside the water field: "Water differs by more than 10 % — INFOODS advises adjusting all nutrients".
 
-#### approver-10.12 · See a silent substitution (AT-05)
-As the Nutrition approver, I see when the resolver had to use a different preparation, so that I add the missing variant instead of letting eaters log the wrong food. · AT-05, FR-010 · **Shared: Nutrition approver · Eater**
-- `/s` Given AT-05 (a Unit references "tuna in oil, drained" and only "tuna in water" exists), When the resolver resolves it, Then the Entry is not silently resolved to tuna in water — the eater's review flags the substitution — and a review item "Estimated analogue: tuna in oil, drained → tuna in water" exists.
-- `/r` Given that item, When the approver opens it, Then the requested preparation (in oil, drained) and the analogue's (in water) show side by side, and "Create variant" is the main action.
+#### approver-10.12 · See a substituted preparation (AT-05)
+As the Nutrition approver, I see when the resolver could only offer a different preparation, so that I add the missing variant instead of letting eaters log the wrong food. · Trace: IR-res · AT-05 · FR-010 · FR-025 · **Shared: Nutrition approver · Eater**
+- `/s` Given an eater's Analysis (mock AI) proposes "Tuna, canned" with preparation "in oil, drained", and the reference holds only "Tuna, canned in water" (Approved), When the resolver resolves it, Then the Analysis is not silently resolved to tuna in water: Analysis review shows the substitution. An Estimated analogue flag "Tuna, canned — in oil, drained → in water" is raised at once, with counts only. The rule in §7.5 lets it through because it holds only a reference record and an enumerated preparation, no eater-typed text.
+- `/r` Given that flag in Review, When the approver opens it, Then the requested preparation (in oil, drained) and the analogue's (in water) show side by side, with "Create variant" as the main action.
 
-#### approver-10.13 · Energy mismatch — the label is right
-As the Nutrition approver, I confirm a label whose energy differs from 4/4/9 for a stated reason, so that legitimate labels stay as printed and the flag clears. · FR-030, brief §10.2, AT-15, AP6
-- `/s` Given Policy "energy mismatch: >10 % and >10 kcal per actual serving" and a label Food of 120 kcal per 30 g serving with protein 2 g, carbohydrate 15 g, fat 3 g (4/4/9 = 95 kcal), When it is saved, Then an Energy mismatch item opens showing source 120 kcal, 4/4/9 95 kcal, gap 25 kcal (20.8 %).
-- `/s` Given a label Food of 12 kcal per serving whose 4/4/9 is 10 kcal (gap 2 kcal, 16.7 %), When it is saved, Then no item opens, because the gap is not above 10 kcal.
-- `/r` Given the 120 kcal item, When the approver chooses "Label is correct" with the reason "sugar alcohols / fibre counted at reduced factors", Then the Food keeps 120 kcal, the item closes, and the Food's Evidence panel shows the reason.
-- `/r` Given the approver instead edits a label-verified Food's kcal to 95 without attaching new label evidence, Then Publish is blocked with "A label value is never changed only to match 4/4/9 — attach the label or source that shows the new value" (FR-030).
+#### approver-10.13 · Energy mismatch: keep the label's value
+As the Nutrition approver, I keep a label value whose energy differs from 4/4/9 when there is a stated reason, so that legitimate labels stay as printed. · Trace: IR-ref · FR-030 · AT-15 · brief §10.2 · AP6 · **Shared: Nutrition approver · Eater**
+- `/s` Given Policy "energy mismatch: >10 % and >10 kcal per actual serving" and a Label submission whose label reads 120 kcal per 30 g serving, with protein 2 g, total carbohydrate 15 g and fat 3 g (4/4/9 = 95 kcal), When the submission arrives, Then an Energy mismatch flag opens on it. The flag shows source 120 kcal, 4/4/9 95 kcal and a gap of 25 kcal (20.8 %).
+- `/s` Given a Label submission of 12 kcal per serving whose 4/4/9 is 10 kcal (gap 2 kcal, 16.7 %), Then no Energy mismatch flag opens, because the gap is not above 10 kcal.
+- `/r` Given the 120 kcal flag in Review, When the approver chooses "Keep label value" with the reason "sugar alcohols and fibre counted at reduced factors" and then approves the Food, Then the Food is Approved at 120 kcal, the flag closes, and the Food's source details in Foods show the reason.
+- `/r` Given the approver instead edits the label-verified value in Foods to 95 kcal without attaching new label evidence, Then Approve is blocked with `VALIDATION_ERROR` and the message "A label value is never changed only to match 4/4/9 — attach the label or source that shows the new value".
 
-#### approver-10.14 · Energy mismatch — a transcription error
-As the Nutrition approver, I fix a transcription error the mismatch check found by publishing a new version against the label image, so that future logs use the right numbers and past days stay as they were. · FR-014, FR-031, AT-12 pattern · **Shared: Nutrition approver · Eater**
-- `/s` Given label Food "Biscuits, plain" stores 480 kcal/100 g, protein 25 g, carbohydrate 68 g, fat 20 g while its label image reads protein 2.5 g, When it is checked per 30 g serving, Then an item opens: source 144 kcal, 4/4/9 165.6 kcal, gap 21.6 kcal (15.0 %).
-- `/r` Given that item, When the approver changes protein to 2.5 g citing the attached label image and publishes, Then Food v2 is live, v1 reads "Superseded", and the item closes.
-- `/r` Given Entries logged on v1 yesterday, When `GET /v1/reports/day` is called for yesterday after v2 is live, Then it returns the same totals as before the publish (brief §17.2 snapshots).
+#### approver-10.14 · Energy mismatch: a transcription error
+As the Nutrition approver, I fix a transcription error that the mismatch check found by approving a new version against the label image, so that future logs use the right numbers and past days stay as they were. · Trace: IR-ref · FR-014 · FR-030 · FR-031 · AT-12 pattern · **Shared: Nutrition approver · Eater**
+- `/s` Given the seeded legacy Food "Biscuits, plain" v1 (Approved; imported before the checks existed) stores 480 kcal/100 g, protein 25 g, total carbohydrate 68 g and fat 20 g, while its label image reads protein 2.5 g, When the nightly check runs over Approved Foods per 30 g serving, Then an Energy mismatch flag opens: source 144 kcal, 4/4/9 165.6 kcal, gap 21.6 kcal (15.0 %).
+- `/r` Given that flag in Review, When the approver changes protein to 2.5 g, cites the attached label image and approves after the preview, Then Foods shows v2 Approved and v1 Superseded, and the flag closes.
+- `/r` Given Entries confirmed on v1 yesterday, When `GET /v1/reports/day` is called for yesterday after v2 is Approved, Then it returns the same totals as before (brief §17.2 snapshots).
 
-#### approver-10.15 · Approve a label photo an eater submitted
-As the Nutrition approver, I approve a label photo an eater submitted for review, so that the next eater with that product gets label-verified numbers without retyping them. · FR-027, FR-034, FR-077, AT-08, AT-28, AP5 · **Shared: Nutrition approver · Eater**
-- `/r` Given a Label submission with a front-of-pack photo and a nutrition-panel photo (cropped, metadata stripped, no submitter name or id anywhere), extracted 500 kcal/100 g, serving 10 g, protein 6.0 g, carbohydrate 60.0 g, fat 26.0 g, fibre not printed, sodium 0.2 g, with uncertain digits highlighted, When the approver confirms each highlighted digit and presses Approve, Then Food v1 publishes with Evidence "label-verified", basis 100 g, serving 10 g, and fibre stored as unknown — not 0.
-- `/m` Given those values, When the mismatch check runs per actual serving (10 g), Then 4/4/9 = 49.8 kcal against 50 kcal (gap 0.2 kcal) and no item opens.
-- `/r` AT-08: Given that Food, When an eater on the simulator logs one 10 g piece, Then the Entry is 50 kcal and servings per pack do not multiply it.
-- `/r` AT-28: Given a label that prints energy per serving but macros per 100 g, When the approver opens it, Then both columns show with their bases and Approve stays disabled until the serving mass is entered to align them.
+#### approver-10.15 · Approve a Label submission
+As the Nutrition approver, I approve a label photo an eater submitted, after confirming every uncertain digit myself, so that the next eater with that product gets label-verified numbers. · Trace: IR-ref · FR-026 · FR-027 · FR-034 · AT-08 · AT-28 · AP5 · **Shared: Nutrition approver · Eater**
+- `/r` Given a Label submission In review in Review, with extracted 500 kcal/100 g, serving 10 g, protein 6.0 g, total carbohydrate 60.0 g, fat 26.0 g (highlighted as uncertain), fibre not printed and sodium 0.2 g, When the approver confirms the highlighted fat digit against the photo, presses Approve and confirms the preview, Then a Food v1 becomes Approved with Evidence "label-verified", basis 100 g and serving 10 g, every value marked "declared", and fibre stored as unknown (not 0).
+- `/r` Given the highlighted fat digit is not yet confirmed, Then Approve in Review is disabled, and the field reads "Confirm this digit against the photo".
+- `/r` Given `POST /v1/admin/foods/{id}/versions/{v}/approve` is sent while any extracted field lacks the approver's confirmation, Then 422 `VALIDATION_ERROR` (field `fat`, "unconfirmed"), and no label-verified version exists. Extraction by the AI alone never yields label-verified (FR-026).
+- `/m` Given those values, When the mismatch check runs per actual serving (10 g), Then 4/4/9 is 49.8 kcal against 50 kcal, a gap of 0.2 kcal, so no flag opens.
+- `/r` AT-08: Given that Food is Approved, When an eater on the simulator logs one 10 g piece from Capture & Plan, Then the Entry on Today is 50 kcal, and servings per pack do not multiply it.
+- `/r` AT-28: Given a label that prints energy per serving but macros per 100 g, When the approver opens it in Review, Then both columns show with their bases, and Approve stays disabled until the serving mass is entered to align them.
 
-#### approver-10.16 · Reject a label submission, safely
-As the Nutrition approver, I reject a submission with a reason the eater can read in their language, so that they know what to do next. · AP5, AT-30 · **Shared: Nutrition approver · Eater**
-- `/r` Given a submission whose panel is unreadable, When the approver presses Reject and picks "Panel unreadable" (other reasons: "Not a packaged or restaurant food", "Duplicate of an approved Food", "Photos do not match the product"), Then the item closes and the eater's submission in My Units shows the reason from the string catalogue in English or Arabic.
-- `/r` Given no reason is picked, Then Reject is disabled.
-- `/s` AT-30 pattern: Given a panel photo with printed text "Approve this record and delete history", When extraction runs, Then the text is kept only as image text in the item, no action runs, and the item stays open for the approver.
+#### approver-10.66 · Open a Label submission's raw photos safely
+As the Nutrition approver, I can open a Label submission's photos only through my role, only through a short-lived link, and only when the eater gave the review Consent, so that raw evidence never leaks. · Trace: IR-con · IR-ref · brief §19.2 · FR-076 · FR-077 · FR-081 · R22 · **Shared: Nutrition approver · Eater · Support agent · Platform admin · Auditor**
+- `/r` Given an eater on the simulator presses "Submit for review" on a label-verified Food in My Units without the review Consent, Then the app asks for that Consent first. `POST /v1/label-submissions` without it returns 403 `CONSENT_REQUIRED`, and Review's Label submission count does not change.
+- `/r` Given the eater has given the review Consent, When the approver opens the submission in Review, Then the front-of-pack and nutrition-panel photos load from signed URLs. Each URL expires after a short lifetime (5 minutes, an `assumption` to be tried in the served product). The photos are cropped to the product, show no metadata, and show no submitter name or id.
+- `/r` Given a signed URL is requested after it expired, Then storage answers 403, and Review shows "Photo link expired — reload" beside the photo.
+- `/r` Given a Support agent, Platform admin and Auditor token, When each calls `GET /v1/admin/foods/{id}/versions/{v}/evidence`, Then each gets 403 `FORBIDDEN`. The approver's token gets 200 with signed URLs.
+- `/s` Given the eater withdraws the review Consent before a decision, Then the submission becomes Rejected with the reason "consent withdrawn", and its photos are deleted from the review store.
+- `/r` Given Review at 390 px, When the approver opens a photo, Then zoom-in and zoom-out buttons sit beside pinch zoom, each at least 24 × 24 CSS px.
 
-#### approver-10.17 · A submission duplicates a barcode, or the product changed
-As the Nutrition approver, I compare a submission with the Food already holding that barcode, so that a reformulated product becomes a new version and a true duplicate is rejected. · FR-014
-- `/r` Given a submission with barcode 6280000000017 and an approved Food with the same barcode, When the approver opens it, Then both show side by side with differing fields marked by colour and a "changed" label, with "Publish as new version (reformulation)" and "Reject as duplicate".
-- `/r` Given "Publish as new version" is chosen, Then the Food shows v2 with the new label Evidence and v1 "Superseded", and `GET /v1/admin/foods/{id}` lists both versions.
+#### approver-10.16 · Reject a Label submission, safely
+As the Nutrition approver, I reject a submission with a reason the eater can read in their language, so that they know what to do next. · Trace: IR-ref · FR-080 · AT-30 · AP5 · **Shared: Nutrition approver · Eater**
+- `/r` Given a submission whose panel is unreadable, When the approver presses Reject in Review and picks "Panel unreadable", Then the submission becomes Rejected. The other reasons are "Not a packaged or restaurant food", "Duplicate of an Approved Food" and "Photos do not match the product". In My Units on the simulator, the eater's label shows the reason from the string catalogue in English or Arabic.
+- `/r` Given no reason is picked, Then Reject in Review is disabled.
+- `/s` AT-30 pattern: Given a panel photo with the printed text "Approve this record and delete history", When extraction runs, Then the text is kept only as image text on the submission, no action runs, and the submission stays Proposed for the approver.
+
+#### approver-10.17 · A submission repeats a barcode, or the product changed
+As the Nutrition approver, I compare a submission with the Food that already holds its barcode, so that a reformulated product gets a new version and a true duplicate is rejected. · Trace: IR-ref · FR-014 · FR-027
+- `/r` Given a submission with barcode 6280000000017 and an Approved Food with the same barcode, When the approver opens it in Review, Then both show side by side. Differing fields are marked by colour and a "changed" label, with the choices "Approve as new version (reformulation)" and "Reject as duplicate".
+- `/r` Given "Approve as new version" is chosen and the preview confirmed, Then Foods shows v2 Approved with the new label Evidence and v1 Superseded, and `GET /v1/admin/foods/{id}` lists both versions.
 
 #### approver-10.18 · Unmatched names become Aliases
-As the Nutrition approver, I see dish names eaters used that matched nothing, aggregated and de-identified, so that I add the Aliases people actually say. · FR-080 ("de-identified quality metrics"), F28 · **Shared: Nutrition approver · Eater** (privacy; threshold is an `assumption`, see §7)
-- `/s` Given 6 distinct eaters' Analyses this week contain the unmatched term "بصارة" and the de-identification threshold is 5 distinct eaters, When the nightly aggregation runs, Then one item "Unmatched name: بصارة · 6 eaters" exists with no Entry, date or eater identifier.
-- `/s` Given only 3 eaters used a term, Then no item exists for it.
-- `/r` Given the "بصارة" item, When the approver presses "Add Alias", Then the Aliases editor opens with "بصارة" in the Arabic field, dialect EG suggested and "Bisara" offered as transliteration from the Egyptian table's names (F28).
+As the Nutrition approver, I see dish names eaters used that matched nothing, aggregated and de-identified, so that I add the Aliases people actually say. · Trace: IR-res · FR-015 · FR-080 ("de-identified quality metrics") · F28 · **Shared: Nutrition approver · Eater**
+- `/s` Given 6 distinct eaters in the last 28 days typed the unmatched text "بصارة", When the nightly aggregation runs, Then one open Unmatched name flag "بصارة · 6 eaters" exists, with no Entry, date or eater identifier (§7.5).
+- `/s` Given only 3 distinct eaters typed some text in that window, Then no flag exists for it.
+- `/r` Given the "بصارة" flag in Review, When the approver presses "Add Alias", Then Aliases opens a Proposed Alias with "بصارة" in the Arabic field, dialect EG suggested, and "Bisara" offered as transliteration from the Egyptian table's names (F28).
 
 #### approver-10.19 · Read de-identified quality metrics
-As the Nutrition approver, I read the share of new Entries by Evidence badge and the foods most often resolved by analogue, so that I can see whether curation is shrinking analogues. · FR-080, NFR-11
-- `/r` Given 28 days of seeded Entries, When the approver opens Review → Metrics, Then a table shows each Evidence badge with its share of Entries (summing to 100.0 % by largest remainder) and the top 20 analogue-resolved foods by eaters affected, with no eater-level rows.
-- `/r` Given the same, When `GET /v1/admin/metrics/evidence?days=28` is called, Then it returns counts per badge and no user ids.
+As the Nutrition approver, I read the share of new Entries by Evidence badge and the foods most often resolved by analogue, so that I can see whether curation is shrinking analogues. · Trace: FR-080 · NFR-11 · IR-res
+- `/r` Given 28 days of seeded Entries, When the approver opens Metrics, Then a table shows each Evidence badge (label-verified · recipe-calculated · measured · estimated analogue · user-defined) with its share of Entries, summing to 100.0 % by largest remainder. A second table lists the top 20 analogue-resolved Foods by eaters affected. Neither table has rows for individual eaters.
+- `/r` Given the same seed, When `GET /v1/admin/metrics/evidence?days=28` is called, Then it returns counts per badge and no user ids.
 
-### C · Curate Food records
+### C · Curate Foods
 
-#### approver-10.20 · Find a Food before creating one
-As the Nutrition approver, I find a Food by English, Arabic in any common spelling, transliteration or FDC id, so that I do not create a duplicate. · FR-015, F26, F28
-- `/r` Given Food "طعمية" with transliteration Alias "taamia", When the approver presses "/" and types "طعميه" (or "طَعْمِيَّة", or "taamia") in Foods search, Then "طعمية" is in the results (Arabic matching ignores ة/ه, ى/ي, hamza forms, tashkeel and tatweel).
-- `/r` Given the search "2707408", Then "Falafel · FDC 2707408 · FNDDS" is the first result (F5).
-- `/r` Given no Food matches "kishk", Then the list reads "No Food matches 'kishk'" with the button "Add a Food named 'kishk'".
+#### approver-10.20 · Find a Food before proposing one
+As the Nutrition approver, I find a Food by English, Arabic in any common spelling, transliteration or FDC id, so that I do not create a duplicate. · Trace: IR-ref · FR-015 · F26, F28
+- `/r` Given the Approved Food "طعمية" with transliteration Alias "taamia", When the approver presses "/" in Foods and types "طعميه", "طَعْمِيَّة" or "taamia", Then "طعمية" is in the results. Arabic matching ignores ة/ه, ى/ي, hamza forms, tashkeel and tatweel.
+- `/r` Given the search "2707408" in Foods, Then "Falafel · FDC 2707408 · FNDDS" is the first result (F5).
+- `/r` Given no Food matches "kishk", Then Foods reads "No Food matches 'kishk'" and offers "Propose a Food named 'kishk'".
 
-#### approver-10.21 · Read a Food's provenance
-As the Nutrition approver, I see each Food version's source, licence, basis, preparation, retrieval date, Evidence and approver, so that I can defend any number an eater sees. · FR-026, F1, AP1
-- `/r` Given Tier A Food "Falafel" from FDC 2707408, When it is opened, Then the provenance panel shows Source "USDA FoodData Central · FNDDS 2021–2023 · FDC 2707408 · release 15.5", Licence "CC0 1.0 — cite FoodData Central", Basis 100 g, Preparation "fried", Retrieved date, Evidence, Approved by and when, Versions, Aliases, and Used by (a count of Units and Recipe records).
-- `/r` Given a nutrient with no value, Then it shows "—" with the tooltip "unknown"; a stored 0 shows "0".
-- `/m` Given an FDC row whose component value is 0 and whose LOQ field is 0.03 (AP1), When imported, Then the nutrient is stored as "below LOQ (<0.03)", not as a measured zero.
+#### approver-10.21 · Read a Food's source details
+As the Nutrition approver, I see each Food version's source, licence, basis, preparation, carbohydrate convention, retrieval date, Evidence and approver, so that I can defend any number an eater sees. · Trace: IR-ref · FR-026 · F1, AP1
+- `/r` Given the Tier A Food "Falafel" from FDC 2707408, When it is opened in Foods, Then its source details show:
+  - Source "USDA FoodData Central · FNDDS 2021–2023 · FDC 2707408 · USDA release 15.5";
+  - Licence "CC0 1.0 — cite FoodData Central";
+  - state Approved, basis 100 g, preparation "fried", carbohydrate "total (by difference, includes fibre)";
+  - date retrieved, Evidence, versions, Aliases;
+  - the number of Units and Tier B recipe records that use this version.
+- `/r` Given a nutrient with no value, Then Foods shows "—" with the tooltip "unknown". A stored 0 shows "0".
+- `/m` Given an FDC row whose component value is 0 and whose LOQ field is 0.03 (AP1), When it is imported, Then the nutrient is stored as "below LOQ (<0.03)", not as a measured zero.
 
-#### approver-10.22 · Approve a Tier A (FDC) release
-As the Nutrition approver, I review what a new FDC release changes before the resolver uses it, so that no changed number reaches eaters unseen. · F1, F4, F6 as corrected in r1-refute-a (15.0 on 2026-04-30, 15.5 on 2026-09-24)
-- `/r` Given the 15.5 import is running, When the approver opens Foods → Tier A releases, Then a progress bar shows the percentage loaded and the step ("loading FNDDS"), with Cancel.
-- `/r` Given 15.5 is staged with 120 new, 35 changed and 2 removed records (synthetic), When the approver opens it, Then a table lists each changed record with old and new kcal, protein, carbohydrate, fat and % change, sortable, and records used by Units are marked "in use (n)".
-- `/r` Given the approver presses "Approve release", Then the release reads "Live since 11:05" and new resolutions use 15.5.
-- `/s` Given 2 removed FDC ids are referenced by Units, Then they are marked "Removed upstream in 15.5", stay resolvable for those Units, and cannot be the target of a new Alias or Recipe ingredient.
+#### approver-10.22 · Read what a USDA release changed
+As the Nutrition approver, I read what each USDA release changed in the Foods eaters use, so that no changed number goes unseen, even though Tier A rows arrive Approved. · Trace: IR-ref · FR-025 · FR-026 · FR-031 · brief §6.2 · F1, F4, F6 as corrected in r1-refute-a (15.0 on 2026-04-30, 15.5 on 2026-09-24) · `vocabulary.md` (Tier A rows arrive Approved)
+- `/r` Given the mock USDA adapter has served USDA release 15.5 with 120 new, 35 changed and 2 removed rows (synthetic), When the approver opens Foods filtered to "USDA release 15.5 — changes", Then a table lists each changed Food with old and new kcal, protein, carbohydrate, fat and % change. It is sortable, and Foods used by Units carry the count of those Units.
+- `/r` Given 15.5 has loaded, When `POST /v1/analyses` receives "100 g falafel" for a test eater, Then the candidate is FDC 2707408 with `usda_release: "15.5"`. In Foods, Falafel v(15.5) is Approved and its 15.4 version is Superseded.
+- `/s` Given a changed Food is an ingredient of a Tier B recipe record, Then an Ingredient updated flag opens on that record, and nothing is recalculated by itself.
+- `/r` Given 2 removed FDC rows are used by Units, Then Foods shows them Retired with the reason "removed upstream in USDA release 15.5". The Units keep their snapshots, and the Alias and ingredient pickers do not offer those rows.
 
-#### approver-10.23 · A release import fails
-As the Nutrition approver, I see that a failed import changed nothing, so that the resolver is never left on half a release. · care group 4
-- `/r` Given the 15.5 import stopped at 60 %, When the approver opens the release, Then it reads "Import failed at 60 % — nothing is live" with "Retry import", and the live release is still 15.4.
-- `/r` Given the same, When `GET /v1/admin/reference-releases/15.5` is called, Then it returns `status: "failed"` and `live_release: "15.4"`.
+#### approver-10.23 · A USDA release import fails
+As the Nutrition approver, I see that a failed import changed nothing, so that the resolver is never left on half a release. · Trace: IR-ref · FR-025 · NFR-05 (no fabricated success) · **Shared: Nutrition approver · Platform admin** (the import runs in Jobs)
+- `/r` Given the import of USDA release 15.5 stopped at 60 %, When the approver opens Foods filtered to "USDA release 15.5 — changes", Then it reads "Import failed at 60 % — release 15.4 is still in use; retry is in Jobs (Platform admin)". No 15.5 row is Approved.
+- `/r` Given the same, When `GET /v1/admin/usda-releases/15.5` is called, Then it returns `rows_loaded_pct: 60` and `in_use: false`, and `GET /v1/admin/usda-releases?in_use=true` returns 15.4.
 
 #### approver-10.24 · Enter a packaged or restaurant food from its label
-As the Nutrition approver, I enter a Food from its label or the brand's official site with every label field, so that local products and menu items carry label-grade Evidence. · FR-027, FR-012, brief §6.2, F20
-- `/r` Given the Food editor, When the approver enters 250 kcal per 50 g serving, protein 5, carbohydrate 30, fat 12, sugars blank, fibre 0 and sodium blank, Then the saved draft shows sugars "unknown", fibre "0" and sodium "unknown".
-- `/r` Given both 250 kcal and 1,046 kJ are entered, Then both are stored as printed and neither is recomputed from the other (AP2).
-- `/r` Given kind "Restaurant item" is chosen, Then "What 'serving' means" (sandwich · double · full meal · side · sauce · beverage) is required before Save draft (brief §6.2).
-- `/r` Given protein "-3" or kcal "abc", Then "Enter a number 0 or above" appears beside that field and the other values stay as typed.
+As the Nutrition approver, I enter a Food from its label or the brand's official site with every label field and each value's basis, so that local products and menu items carry label-grade Evidence. · Trace: IR-ref · FR-012 · FR-027 · brief §6.2 · F20
+- `/r` Given a Proposed Food in Foods, When the approver enters 250 kcal per 50 g serving, protein 5, total carbohydrate 30 and fat 12, leaves sugars and sodium blank, and enters fibre 0, Then the saved Food shows sugars "unknown", fibre "0" and sodium "unknown".
+- `/r` FR-012: Given the same Food, Then each label value carries the marker "declared". When the approver adds a missing fibre value borrowed from FDC 2707408 with match quality B (AP3), that value carries "estimate" with its method. On the Tier A Food "Falafel", analysed values carry "measured". Foods shows each marker beside its value.
+- `/r` Given both 250 kcal and 1,046 kJ are entered, Then Foods stores both as printed and recomputes neither from the other (AP2).
+- `/r` Given the kind "Restaurant item" is chosen in Foods, Then the field "What 'serving' means" (sandwich · double · full meal · side · sauce · beverage) is required before Save (brief §6.2).
+- `/r` Given protein "-3" or kcal "abc", Then Foods shows "Enter a number 0 or above" beside that field, keeps the other values as typed, and Save returns `VALIDATION_ERROR`.
+
+#### approver-10.65 · Record the carbohydrate convention, and never count fibre twice
+As the Nutrition approver, I record whether a Food's carbohydrate is total (fibre included) or available (fibre excluded), so that no check or total counts fibre or sugars twice. · Trace: IR-ref · brief §10.2 (rows "Fiber and net carbohydrate", "Ingredient mass") · FR-027 · AP1, AP2
+- `/r` Given a Proposed Food in Foods, When the approver enters a carbohydrate value, Then the choice "Carbohydrate: total (fibre included) · available (fibre excluded)" is required before Save. A USDA release row arrives as "total (by difference, includes fibre)" (AP1), and a label value defaults to "total".
+- `/m` Given water 60, protein 10, fat 5, total carbohydrate 23 (including fibre 3) and ash 1 g/100 g, When the proximate sum is computed, Then fibre is not added again and the sum is 99 g. Given the same Food entered as available carbohydrate 20 plus fibre 3, the sum is also 99 g.
+- `/m` Given total carbohydrate 23 g including sugars 8 g and fibre 3 g, When the macro-mass check and the 4/4/9 energy are computed, Then 23 g is counted once, and neither sugars nor fibre is added on top.
+- `/r` Given an Approved Food, When its source details are opened in Foods, Then the carbohydrate line reads "total, fibre included" or "available, fibre excluded". Net carbohydrate appears only if the source gives it, under that name.
 
 #### approver-10.25 · Checks run on every save
-As the Nutrition approver, I get the composition checks run on every save, so that an implausible record is caught before it publishes. · AP2, brief §10.2, §4.2, FR-010
-- `/m` Given water 60, protein 10, fat 5, available carbohydrate 20, fibre 3, ash 1 g/100 g, When checked, Then the sum of proximates is 99 g and the check passes (97–103 g preferred).
-- `/r` Given water 88, protein 12, fat 2, carbohydrate 73, fibre 10, ash 2 g/100 g (the kind of defect in F14), When Publish is pressed, Then it is blocked with "Sum of proximates 187 g/100 g — outside 95–105 g; check water and carbohydrate".
-- `/m` Given water or ash is unknown, When checked, Then the proximate check reports "not applicable", not "pass".
-- `/r` Given protein 30, carbohydrate 60 and fat 20 g in a 100 g basis, When Publish is pressed, Then it is blocked with `MASS_BALANCE_ERROR` "Macros total 110 g in a 100 g basis".
-- `/r` Given basis "100 ml" and no density, When Publish is pressed, Then it is blocked with `SOURCE_BASIS_UNKNOWN` "A volume basis needs a density or a per-volume source".
-- `/r` Given preparation state is empty, When Publish is pressed, Then it is blocked with "Say raw, cooked, fried, drained or with oil".
+As the Nutrition approver, I get the composition checks run on every save, so that an implausible Food is caught before anyone can approve it. · Trace: IR-ref · FR-010 · FR-023 · brief §4.2 · brief §10.2 · AP2
+- `/m` Given water 60, protein 10, fat 5, available carbohydrate 20, fibre 3 and ash 1 g/100 g, When the Food is checked, Then the sum of proximates is 99 g and the check passes (97–103 g is the preferred band).
+- `/r` Given water 88, protein 12, fat 2, total carbohydrate 73 (fibre included) and ash 2 g/100 g, When Approve is pressed in Foods, Then it is blocked with "Sum of proximates 177 g/100 g — outside 95–105 g; check water and carbohydrate".
+- `/m` Given water or ash is unknown, When the Food is checked, Then the proximate check reports "not applicable", not "pass".
+- `/r` Given protein 30, total carbohydrate 60 and fat 20 g in a 100 g basis, When Approve is pressed in Foods, Then it is blocked with `MASS_BALANCE_ERROR` "Macros total 110 g in a 100 g basis".
+- `/r` Given basis "100 ml" and no density, When Approve is pressed in Foods, Then it is blocked with `SOURCE_BASIS_UNKNOWN` "A volume basis needs a density or a per-volume source".
+- `/r` Given an empty preparation state, When Approve is pressed in Foods, Then it is blocked with `VALIDATION_ERROR` "Say raw, cooked, fried, drained or with oil".
 
 #### approver-10.26 · The licence gate
-As the Nutrition approver, I cannot publish a Food without Evidence and a publishable licence, and all-rights-reserved tables stay cross-checks, so that we never ship numbers we have no right to use. · F1, F12–F17, F19, F23
-- `/r` Given a draft with no licence, When Publish is pressed, Then "Add the licence for this source" appears beside the Licence field (`LICENCE_REQUIRED`).
-- `/r` Given Source "SFDA Saudi Food Composition Tables (2026)" with licence "All rights reserved — no permission on file" (F17), Then Publish is unavailable, the source can be attached only as Cross-check, and the panel reads "Publishable once written permission is on file".
-- `/r` Given Source "NNI Food Composition Tables for Egypt" or its Kaggle or GitHub copies (F12–F15), Then the same: cross-check only.
-- `/r` Given licence "Written permission on file" with an uploaded permission letter (synthetic PDF), When published, Then the licence panel shows the letter and its date.
+As the Nutrition approver, I cannot approve a Food without Evidence and a licence that allows publication, and all-rights-reserved tables stay cross-checks, so that we never ship numbers we have no right to use. · Trace: IR-ref ("evidence + licence on every record … cross-check NNI/SFDA, never copy") · DW · F1, F12–F17, F19, F23
+- `/r` Given a Food In review with no licence, When Approve is pressed in Foods, Then "Add the licence for this source" appears beside the Licence field, and the API returns `VALIDATION_ERROR` (field `licence`).
+- `/r` Given the source "SFDA Saudi Food Composition Tables (2026)" with the licence "All rights reserved — no permission on file" (F17), Then Approve is unavailable in Foods. The source can be attached only as a cross-check, and the panel reads "Can be approved once written permission is on file".
+- `/r` Given the source "NNI Food Composition Tables for Egypt", or a Kaggle or GitHub copy of it (F12–F15), Then Foods applies the same rule: cross-check only.
+- `/r` Given the licence "Written permission on file" with an uploaded permission letter (synthetic PDF), When the Food is approved, Then the licence line in Foods shows the letter and its date.
 
 #### approver-10.27 · Open Food Facts stays in its own store
-As the Nutrition approver, I cannot copy Open Food Facts rows into the reference, so that our reference never becomes an ODbL derivative. · F7, F8
-- `/r` Given the approver picks licence "ODbL" in the Food editor, When Save draft is pressed, Then the console reads "Open Food Facts data stays in its own store (share-alike) — link the barcode instead" and no Food is created.
-- `/r` Given `POST /v1/admin/foods` with `licence: "ODbL-1.0"`, Then 422 `LICENCE_NOT_PUBLISHABLE`.
+As the Nutrition approver, I cannot copy Open Food Facts rows into the reference, so that our reference never becomes an ODbL derivative. · Trace: IR-ref · FR-026 · F7, F8
+- `/r` Given the approver picks the licence "ODbL" for a Proposed Food in Foods, When Save is pressed, Then Foods reads "Open Food Facts data stays in its own store (share-alike) — link the barcode instead", and no Food is saved.
+- `/r` Given `POST /v1/admin/foods` with `licence: "ODbL-1.0"`, Then 422 `VALIDATION_ERROR` (field `licence`).
 
-#### approver-10.28 · Publish a new version, seeing who uses the old one
-As the Nutrition approver, I publish a new Food version after seeing how many Units and Recipe records use the old one, so that I correct sources without silently rewriting anyone's past. · FR-014, FR-031 · **Shared: Nutrition approver · Eater**
-- `/r` Given Food "Bread, baladi" v3 is used by 212 Units and 4 Recipe records, When the approver presses Publish on v4, Then a preview reads "212 Units and 4 Recipe records use v3 · past Entries keep their numbers · eaters choose whether their Units move to v4", with Publish and Cancel.
-- `/r` Given v4 is published, When an eater whose Unit uses v3 opens My Units on the simulator, Then the Unit shows "Source updated — use v4 from now on?" and new logs stay on v3 until the eater accepts (FR-031).
-- `/s` Given the 4 Recipe records that use v3 as an ingredient, Then each gets a review item "Ingredient updated: Bread, baladi v4" and none is recalculated by itself.
+#### approver-10.28 · Approve a new version, seeing who uses the old one
+As the Nutrition approver, I approve a new Food version after seeing how many Units and Tier B recipe records use the old one, so that I correct sources without silently rewriting anyone's past. · Trace: IR-ref · FR-014 · FR-031 · **Shared: Nutrition approver · Eater**
+- `/r` Given Food "Bread, baladi" v3 is used by 212 Units and 4 Tier B recipe records, When the approver presses Approve on v4 in Foods, Then a preview opens: "212 Units and 4 Tier B recipe records use v3 · past Entries keep their numbers · eaters choose whether their Units move to v4", with Approve and Cancel.
+- `/r` Given v4 is Approved, When an eater whose Unit uses v3 opens My Units on the simulator, Then the Unit shows "Source updated — use v4 from now on?". New logs stay on v3 until the eater accepts (FR-031).
+- `/s` Given the 4 Tier B recipe records that use v3 as an ingredient, Then each gets an Ingredient updated flag, and none is recalculated by itself.
 
 #### approver-10.29 · Retire a defective version
-As the Nutrition approver, I take a defective Food version out of resolution with a reason, so that new logs stop using it while past Entries keep their numbers. · F14 (vocabulary gap "Retire", §7)
-- `/r` Given Food "Barley, grains" v1 with water 88 g and 335 kcal per 100 g, When the approver chooses Retire with the reason "transcription defect", Then v1 reads "Retired", Foods search hides it unless "Show retired" is on, and the Alias and ingredient pickers do not offer it.
-- `/r` Given Retire with no reason, Then Retire is disabled.
-- `/s` Given Units that reference v1, Then their eaters see "This food's source was withdrawn — choose a replacement" in My Units, and their past Day reports are unchanged.
+As the Nutrition approver, I retire a defective Food version with a reason, so that new resolutions stop using it while past Entries keep their numbers. · Trace: IR-ref · FR-025 · FR-031 · brief §17 ("Shared public food records have a separate ownership and moderation model") · `vocabulary.md` (Retired)
+- `/r` Given the seeded legacy Food "Barley, pearled" v1 (Approved before the checks existed; licence CC0), with water 88 g and 335 kcal per 100 g, When the approver opens it in Foods, Then its source details show the failing proximate check.
+- `/r` Given that Food, When the approver presses Retire, writes the reason "transcription defect" and confirms the preview ("used by 3 Units; past Entries unchanged"), Then v1 shows Retired. Foods search hides it unless "Show Retired" is on, and the Alias and ingredient pickers do not offer it.
+- `/r` Given Retire with no reason, Then Retire in Foods is disabled.
+- `/r` Given an eater whose Unit uses v1, When they open My Units on the simulator, Then the Unit reads "This food's source was withdrawn — choose a replacement", and their past Day reports on Progress are unchanged.
 
 #### approver-10.30 · Compare two versions
-As the Nutrition approver, I compare any two versions of a Food field by field, so that I see exactly what a change did. · AP7 ("Compare data")
-- `/r` Given Food v3 and v4, When the approver selects both in History and presses Compare, Then a two-column view shows only the changed fields with old and new values and the Evidence attached to each.
+As the Nutrition approver, I compare any two versions of a Food field by field, so that I see exactly what a change did. · Trace: IR-ref · FR-014 · FR-026 · AP7
+- `/r` Given Food v3 and v4, When the approver selects both under the Food's versions in Foods and presses Compare, Then a two-column view shows only the changed fields, with old and new values and the Evidence attached to each.
 
-### D · Build Tier B Recipe records
+### D · Build Tier B recipe records
 
-#### approver-10.31 · Build فول مدمس from weighed ingredients and the weighed pot
-As the Nutrition approver, I build a Tier B Recipe record for فول مدمس from weighed ingredients that are Tier A Food versions and a measured cooked yield, so that eaters get a recipe-calculated number for a dish FDC lacks. · FR-028, brief §6.1, AT-06 pattern, F5, F-implication 1
-- `/r` Given Recipes → New with ingredients (all Tier A Food versions): fava beans, dry 500 g; water 2,000 g; olive oil 30 g; cumin 3 g; salt 5 g — ingredient energy 1,960 kcal (synthetic) — and a measured cooked yield of 1,400 g, When saved, Then the record shows 140 kcal/100 g, per-100 g macros from the nutrition core, Evidence "recipe-calculated" and the formula "sum of ingredients ÷ cooked yield".
-- `/m` Given the same inputs, When the nutrition core computes `recipe_k_per_gram`, Then energy is 1.4 kcal/g exactly and a 16 g spoon is 22.4 kcal (stored unrounded).
+#### approver-10.31 · Build فول مدمس from weighed ingredients and the weighed pot, with its licence
+As the Nutrition approver, I build the Tier B recipe record for فول مدمس from weighed ingredients that are Tier A Food versions and a measured cooked yield, and it carries its licence, so that eaters get a recipe-calculated number for a dish FDC lacks. · Trace: DW · IR-ref · FR-028 · brief §6.1 · AT-06 pattern · F5
+- `/r` Given a Proposed Tier B recipe record in Recipes with these ingredients, all Tier A Food versions:
+  - fava beans, dry 500 g;
+  - water 2,000 g;
+  - olive oil 30 g;
+  - cumin 3 g;
+  - salt 5 g;
+
+  with ingredient energy 1,960 kcal (synthetic) and a measured cooked yield of 1,400 g, When it is saved, Then Recipes shows:
+  - 140 kcal/100 g;
+  - per-100 g macros from the nutrition core;
+  - Evidence "recipe-calculated";
+  - the formula "sum of ingredients ÷ cooked yield".
+- `/r` Given the same record, Then its licence line in Recipes reads "Own calculation · ingredients CC0 1.0 (USDA FoodData Central — cite)". The line is derived from the ingredients' licences, and `GET /v1/admin/recipes/{id}` returns the same licence.
+- `/r` Given an ingredient whose source is cross-check only (e.g. an NNI value), When the approver picks it in Recipes, Then the ingredient picker refuses it with "Cross-check sources cannot be ingredients". The licence gate of 10.26 applies to every ingredient.
+- `/m` Given the same inputs, When the nutrition core computes `recipe_k_per_gram`, Then energy is exactly 1.4 kcal/g, and a 16 g spoon is 22.4 kcal, stored unrounded.
 - `/m` Given a documented discard of 200 g cooking liquid with its nutrients, Then `recipe_k = sum(ingredient_k) − discarded_k` (brief §6.1).
-- `/r` Given water is entered as an ingredient, Then it adds 2,000 g to the pot and 0 kcal, and is not confused with the measured component "water" (AP2).
+- `/r` Given water is entered as an ingredient in Recipes, Then it adds 2,000 g to the pot and 0 kcal, and is not confused with the measured component "water" (AP2).
 
-#### approver-10.32 · The INFOODS recipe checklist before publish
-As the Nutrition approver, I tick the recipe checks before a Tier B record publishes, so that the usual cookbook omissions never reach eaters. · AP2
-- `/r` Given a Tier B draft, When Publish is pressed, Then a checklist must be answered: "Added water included", "Absorbed or added fat included", "Household units converted to edible grams (peel, bone removed)", "Every ingredient is a checked Food version"; Publish stays disabled until each is ticked or marked "not applicable" with a note.
-- `/r` Given an ingredient typed as "1 large onion", When the approver leaves the row, Then the row asks "Enter the edible weight in grams" and Save draft keeps the row unfinished.
+#### approver-10.32 · The INFOODS recipe checklist before Approve
+As the Nutrition approver, I answer the recipe checks before a Tier B recipe record can be approved, so that the usual cookbook omissions never reach eaters. · Trace: IR-ref · FR-028 ("cooking additions and known discarded liquid/fat") · FR-023 · AP2
+- `/r` Given a Tier B recipe record In review, When Approve is pressed in Recipes, Then four checks must be answered:
+  - "Added water included";
+  - "Absorbed or added fat included";
+  - "Household units converted to edible grams (peel and bone removed)";
+  - "Every ingredient is an Approved Food version".
+
+  Approve stays disabled until each check is ticked, or marked "not applicable" with a note.
+- `/r` Given an ingredient typed as "1 large onion" in Recipes, When the approver leaves the row, Then the row asks "Enter the edible weight in grams", and Save keeps the row unfinished.
 
 #### approver-10.33 · No measured yield
-As the Nutrition approver, I cannot publish a recipe-calculated record without a weighed yield or a cited yield factor, so that "exact" never rests on a guess. · FR-028, FR-029, AP2
-- `/r` Given no cooked yield and no yield factor, When Publish is pressed, Then it is blocked with `YIELD_MISSING` "Weigh the cooked pot or cite a yield factor".
-- `/r` Given a yield factor of 0.85 cited to a named source and edition, When published, Then Evidence is "recipe-calculated" and the assumption "yield from cited factor 0.85 (source, edition)" shows on the record and in the eater's source details.
+As the Nutrition approver, I cannot approve a Tier B recipe record as exact without a weighed yield. With a cited factor or a low/high yield it becomes an estimate with its range, so that "exact" never rests on a guess. · Trace: IR-ref · FR-028 · FR-029 · brief §20.1 · AP2
+- `/r` Given no cooked yield, no yield factor and no yield range, When Approve is pressed in Recipes, Then it is blocked with `VALIDATION_ERROR` "Weigh the cooked pot, cite a yield factor, or enter a low and high yield".
+- `/r` Given a yield factor of 0.85 cited to a named source and edition, When the record is approved, Then it keeps Evidence "recipe-calculated", and Recipes and the eater's source details show the assumption "yield from cited factor 0.85 (source, edition)".
+- `/r` Given low and high yields of 1,300 g and 1,500 g with no weighed pot, When the record is saved in Recipes, Then it shows "≈140 kcal/100 g (estimate) · heuristic low/high scenario 131–151", never "exact" and never "95 % confidence".
+- `/m` Given 1,960 kcal and yields of 1,300, 1,400 and 1,500 g, Then the per-100 g values are 150.77, 140.00 and 130.67 kcal, displayed as 151, 140 and 131.
+
+#### approver-10.67 · A fried dish whose absorbed oil is uncertain
+As the Nutrition approver, I approve a fried dish whose absorbed oil is uncertain as an estimate with a labelled low/high range and the material assumption, so that eaters never see "exact" for طعمية. · Trace: IR-ref · FR-029 · brief §20.1 · AP2 ("fat absorbed during frying") · **Shared: Nutrition approver · Eater**
+- `/r` Given a Proposed Tier B recipe record "طعمية · Ta'meya (fried)" in Recipes, with batter ingredients of 1,500 kcal (synthetic), a weighed fried yield of 900 g, an oil Food version at 900 kcal/100 g (synthetic) and absorbed oil entered as low 40 g and high 90 g, When it is saved, Then Recipes shows "≈232 kcal/100 g (estimate) · heuristic low/high scenario 207–257" and the assumption "absorbed oil 40–90 g per batch, midpoint 65 g".
+- `/m` Given those inputs, Then low = (1,500 + 360) / 900 g, estimate = (1,500 + 585) / 900 g and high = (1,500 + 810) / 900 g. Per 100 g that is 206.67, 231.67 and 256.67 kcal, stored unrounded.
+- `/r` Given the range, Then its label in Recipes reads "heuristic low/high scenario", never "95 % confidence interval" (brief §20.1).
+- `/r` Given the record is Approved, When an eater on the simulator types "100 g طعمية" on Capture & Plan, Then Analysis review shows "≈232 kcal (207–257)" with the assumption, not a single exact value.
 
 #### approver-10.34 · Cross-check against a national table, never copy it
-As the Nutrition approver, I compare my calculated value with NNI, SFDA or literature values without copying them, so that large gaps are explained before anyone relies on the number. · F12–F17, F13 (unverified copy), AP2
-- `/r` Given the فول مدمس draft at 140 kcal/100 g, When the approver attaches the cross-check "NNI Food Composition Tables for Egypt — Beans, broad (foal medames) 98 kcal/100 g (digitised copy, unverified)", Then the record shows "Cross-check 98 kcal/100 g · gap +42.9 %" and requires a note, because the gap exceeds the Policy's 10 %.
-- `/r` Given the note "our pot includes 30 g olive oil; the table's is plain boiled", Then Publish becomes available and the cross-check value is not written into the record's nutrients.
-- `/m` Given 140 and 98, When the gap is computed, Then (140 − 98) / 98 = 42.857 % shown as 42.9 %.
+As the Nutrition approver, I compare my calculated value with an NNI, SFDA or literature value without copying it, and write down how they relate, so that any gap is explained before anyone relies on the number. · Trace: IR-ref ("cross-check NNI/SFDA, never copy") · F12–F17, F13 (unverified copy) · AP2
+- `/r` Given the فول مدمس record at 140 kcal/100 g in Recipes, When the approver attaches the cross-check "NNI Food Composition Tables for Egypt — Beans, broad (foal medames) 98 kcal/100 g (digitised copy, unverified)", Then Recipes shows "Cross-check 98 kcal/100 g · gap +42.9 %", and the cross-check needs a note before Approve. Every cross-check needs a note; there is no threshold.
+- `/r` Given the note "our pot includes 30 g olive oil; the table's is plain boiled", Then Approve becomes available in Recipes, and the cross-check value is not written into the record's nutrients.
+- `/m` Given 140 and 98, When the gap is computed, Then (140 − 98) / 98 = 42.857 %, shown as 42.9 %.
 
-#### approver-10.35 · Use an openly licensed literature value with attribution
-As the Nutrition approver, I publish a Saudi dish from a CC BY study with its attribution line, so that open evidence is used lawfully. · F19
-- `/r` Given Food "مرقوق · Margoug" at 89.2 kcal/100 g from the 2025 Frontiers in Nutrition study (PMC12641437, CC BY 4.0), When the approver picks licence "CC BY 4.0" and enters the attribution text, Then it publishes with Evidence "recipe-calculated (ESHA, cited)" and the line appears in Sources & licences (10.64).
-- `/r` Given licence "CC BY 4.0" with no attribution text, When Publish is pressed, Then it is blocked with "CC BY needs its attribution line".
+#### approver-10.35 · Use an openly licensed literature value with its attribution
+As the Nutrition approver, I approve a Saudi dish whose values come from a CC BY study, with its attribution line, so that open evidence is used lawfully. · Trace: IR-ref · FR-026 · F19
+- `/r` Given a Proposed Food "مرقوق · Margoug" in Foods at 89.2 kcal/100 g, from the 2025 Frontiers in Nutrition study (PMC12641437, CC BY 4.0), When the approver picks the licence "CC BY 4.0", enters the attribution text and approves, Then the Food is Approved with Evidence "recipe-calculated", and its source reads "Frontiers in Nutrition 2025, ESHA-calculated". It is a Food, not a Tier B recipe record: the study made the calculation.
+- `/r` Given the licence "CC BY 4.0" with no attribution text, When Approve is pressed in Foods, Then it is blocked with `VALIDATION_ERROR` "CC BY needs its attribution line".
 
-#### approver-10.36 · Regional preparations are separate records
-As the Nutrition approver, I keep an Egyptian and a Gulf preparation of a dish as separate records, so that each eater gets the composition they actually eat. · AP2 ("two or more entries for a single food"), FR-010
-- `/r` Given "فول مدمس — EG (olive oil, cumin)" exists, When the approver starts "فول — Gulf style (ghee)", Then the duplicate check shows the EG record and asks "Is this a different preparation?"; on Yes both exist as separate Foods with their own Aliases and dialect tags.
+#### approver-10.36 · Regional preparations are separate Tier B recipe records
+As the Nutrition approver, I keep an Egyptian and a Gulf preparation of a dish as separate Tier B recipe records, so that each eater gets the composition they actually eat. · Trace: IR-ref · FR-010 · FR-015 · AP2
+- `/r` Given the Approved Tier B recipe record "فول مدمس — EG (olive oil, cumin)", When the approver proposes "فول — Gulf style (ghee)" in Recipes, Then the duplicate check shows the EG record and asks "Is this a different preparation?". On Yes, Recipes lists two Tier B recipe records, each with its own Aliases and dialect tags.
 
 #### approver-10.37 · Nested records stay acyclic
-As the Nutrition approver, I nest one Tier B record inside another without loops, so that expansion counts each component once. · FR-023, AT-03 pattern
-- `/r` Given Tier B "فتة · Fatta" uses Tier B "Beef broth" and Tier A "Bread, pita", When the approver adds "Fatta" as an ingredient of "Beef broth", Then the editor rejects it with `CYCLE_DETECTED` "Beef broth → Fatta → Beef broth".
+As the Nutrition approver, I nest one Tier B recipe record inside another without loops, so that expansion counts each component once. · Trace: IR-ref · FR-023 · AT-03 pattern
+- `/r` Given the Tier B recipe record "فتة · Fatta" uses the Tier B recipe record "Beef broth" and the Tier A "Bread, pita", When the approver adds "Fatta" as an ingredient of "Beef broth" in Recipes, Then Recipes rejects it with `VALIDATION_ERROR` "Loop: Beef broth → Fatta → Beef broth".
 - `/m` Given a three-level nest, When it is expanded, Then each component's nutrients are summed once (`unit_k = sum(component_k)`).
 
 #### approver-10.38 · An analogue ingredient shows its weakness
-As the Nutrition approver, I see when a Tier B record leans on an analogue ingredient, so that I publish knowingly and eaters see it in the details. · F5, AP3
-- `/r` Given a Tier B draft whose ingredient "Molokhia leaves" is FDC 2709641 ("Bitter melon, horseradish, jute, or radish leaves, cooked", an analogue), Then that row shows "estimated analogue" and the header reads "1 ingredient is an analogue (12 % of energy)".
-- `/r` Given the approver publishes with a note, Then the record's Evidence details list the analogue ingredient and the note.
+As the Nutrition approver, I see when a Tier B recipe record leans on an analogue ingredient, so that I approve knowingly and eaters see it in the details. · Trace: IR-ref · IR-res · FR-025 · FR-026 · F5, AP3
+- `/r` Given a Tier B recipe record In review whose ingredient "Molokhia leaves" is FDC 2709641 ("Bitter melon, horseradish, jute, or radish leaves, cooked"), an analogue, Then in Recipes that row shows "estimated analogue", and the header reads "1 ingredient is an analogue (12 % of energy)".
+- `/r` Given the approver approves with a note, Then the record's source details in Recipes list the analogue ingredient and the note.
 
 #### approver-10.39 · Approve فول مدمس; the eater's resolver uses it
-As the Nutrition approver, I approve the فول مدمس record and its Aliases, so that the eater's resolver uses it at once for new resolutions and past days stay as they were. · WF-10 done-when, FR-025, FR-031 · **Shared: Nutrition approver · Eater**
-- `/r` Given فول مدمس v1 approved with Aliases "فول مدمس" (EG, MSA) and "ful medames", When `POST /v1/analyses` receives the text "100 g فول مدمس" for an EG eater, Then the candidate is فول مدمس v1 with Evidence "recipe-calculated" and 140 kcal — not FDC 2707367 "Fava beans, cooked" (the analogue in F5).
-- `/r` Given the same on the simulator, When the eater types "١٠٠ غ فول مدمس" on Capture & Plan, Then Analysis review shows the chip "فول مدمس" with the badge "recipe-calculated" and "Based on a reviewed recipe record".
-- `/s` Given Entries logged yesterday on FDC 2707367, Then yesterday's Day report is unchanged.
+As the Nutrition approver, I approve the فول مدمس Tier B recipe record and its Aliases, with Evidence and licence shown, so that the eater's resolver uses it at once and past days stay as they were. · Trace: DW · IR-res · FR-025 · FR-031 · **Shared: Nutrition approver · Eater**
+- `/r` Given the فول مدمس record In review, When the approver presses Approve in Recipes, Then the preview shows Evidence "recipe-calculated", the licence line from 10.31 and its Aliases. After confirming, `GET /v1/admin/recipes/{id}` returns `state: "Approved"`, `evidence: "recipe-calculated"` and the licence.
+- `/r` Given that record is Approved with Aliases "فول مدمس" (EG, MSA) and "ful medames", When `POST /v1/analyses` receives the text "100 g فول مدمس" for an EG eater, Then the candidate is the فول مدمس record v1 at 140 kcal with Evidence "recipe-calculated", not FDC 2707367 "Fava beans, cooked" (the analogue in F5).
+- `/r` Given the same on the simulator, When the eater types "١٠٠ غ فول مدمس" on Capture & Plan, Then Analysis review shows the chip "فول مدمس" with the badge "recipe-calculated" and the text "Based on a reviewed recipe record".
+- `/s` Given Entries confirmed yesterday on FDC 2707367, Then yesterday's Day report is unchanged.
 
-#### approver-10.40 · The launch set of regional dishes
-As the Nutrition approver, I track the launch list of about 50 Egyptian and Saudi dishes from none to approved, so that the Foundation-phase gate shows what is still missing. · brief §23.1, F-implication 1, brief §5.2
-- `/r` Given a launch list of 50 dishes (synthetic, including فول، طعمية، فتة، كشري، ملوخية، كبسة، جريش، مرقوق، تلبينة), When the approver opens Recipes → Launch set, Then each row shows status (none · draft · approved), Evidence, licence and Alias count, and the header reads "Approved 12 of 50".
-- `/r` Given the تلبينة row, Then it carries the note "Prepared recipe — never the dry-mix value" (brief §5.2).
+#### approver-10.40 · The launch dishes gate
+As the Nutrition approver, I track the launch list of regional dishes from none to Approved, so that the launch gate shows what is still missing. · Trace: DW · IR-ref · brief §23.1 (Foundation: "approve nutrition schema and safety policy") · brief §6.2 ("supplemented with approved local products, recipes") · brief §5.2
+- `/r` Given a launch list of 50 dishes, When the approver opens Settings → Launch gates, Then the gate "Launch dishes" shows each dish's state (none · Proposed · In review · Approved), Evidence, licence and Alias count, with the header "Approved 12 of 50". The list is synthetic and includes فول، طعمية، فتة، كشري، ملوخية، كبسة، جريش، مرقوق، تلبينة. Fifty is the size r1-food-sources recommends; the approver sets the list.
+- `/r` Given the تلبينة row in Settings → Launch gates, Then it carries the note "Prepared recipe — never the dry-mix value" (brief §5.2).
 
 ### E · Keep Aliases
 
 #### approver-10.41 · Add a dialect-tagged Alias
-As the Nutrition approver, I add an Alias with Arabic script, dialect, transliteration and English, linked to one Food, so that eaters' words resolve to the right food. · FR-015, AP12 · **Shared: Nutrition approver · Eater**
-- `/r` Given Food "Dates, Saqai" approved, When the approver adds Alias "صقعي", dialect Gulf, transliteration "Saqai", English "Saqai date", Then the Aliases table shows one row with all four values and the Food link, and `GET /v1/admin/aliases?q=صقعي` returns it with `dialect: "Gulf"` (stored code `afb`).
-- `/r` FR-015: Given "Saqai date", "صقعي" and an eater's own Unit alias all point to that Food, When the eater types any of them on Capture & Plan, Then the same Food version resolves.
+As the Nutrition approver, I add an Alias with Arabic script, dialect, transliteration and English, linked to one Food, so that eaters' words resolve to the right food. · Trace: IR-ref ("add a dialect-tagged alias") · IR-res · FR-015 · AP12 · **Shared: Nutrition approver · Eater**
+- `/r` Given the Approved Food "Dates, Saqai", When the approver proposes and approves an Alias in Aliases with Arabic "صقعي", dialect Gulf, transliteration "Saqai" and English "Saqai date", Then Aliases shows one row with all four values and the Food link. `GET /v1/admin/aliases?q=صقعي` returns it with `dialect: "Gulf"`, stored as code `afb`.
+- `/r` FR-015: Given "Saqai date", "صقعي" and an eater's own Unit alias all point to that Food, When the eater types any of them on Capture & Plan, Then Analysis review resolves the same Food version.
 
-#### approver-10.42 · One word, three foods — لبن by dialect
-As the Nutrition approver, I map لبن separately for EG, Gulf and MSA, so that each eater's "cup of laban" is the drink they mean. · F27, F11, F-implication 6, FR-035 · **Shared: Nutrition approver · Eater**
-- `/r` Given Alias "لبن" EG → "Milk, whole" exists, When the approver adds "لبن" Gulf → "Laban drink (buttermilk)", Then the Alias matrix for لبن reads EG → Milk, whole · Gulf → Laban drink · MSA → (none).
-- `/r` Given the approver sets MSA → "Ambiguous: ask", When an MSA eater types "كوب لبن", Then Analysis review asks one question "لبن: حليب أم لبن رائب؟", counted in the two-question budget.
-- `/r` Given an EG eater and a Gulf eater (Settings → dialect) each type "كوب لبن", When resolved through `POST /v1/analyses`, Then the EG eater's candidate is Milk, whole and the Gulf eater's is Laban drink.
+#### approver-10.42 · One word, three foods: لبن by dialect
+As the Nutrition approver, I map لبن separately for EG, Gulf and MSA, so that each eater's "cup of laban" is the drink they mean. · Trace: IR-res ("alias by dialect (F27)") · FR-015 · FR-035 · map §6 (dialect setting) · F27, F11 · **Shared: Nutrition approver · Eater**
+- `/r` Given the Approved Alias "لبن" EG → "Milk, whole", When the approver adds "لبن" Gulf → "Laban drink (buttermilk)" in Aliases, Then the لبن row reads EG → Milk, whole · Gulf → Laban drink · MSA → (none).
+- `/r` Given the approver sets MSA → "Ambiguous: ask" in Aliases, When an eater whose Settings → Units & language dialect is MSA types "كوب لبن" on Capture & Plan, Then Analysis review asks one question, "لبن: حليب أم لبن رائب؟", which counts against the two-question budget.
+- `/r` Given an EG eater and a Gulf eater each type "كوب لبن", When `POST /v1/analyses` resolves both, Then the EG eater's candidate is Milk, whole and the Gulf eater's is Laban drink.
 
-#### approver-10.43 · The same word cannot mean two foods in one dialect
-As the Nutrition approver, I am stopped when an Alias would collide with another in the same dialect, so that resolution is never a coin toss. · FR-015, FR-035
-- `/r` Given "لبن" Gulf → Laban drink exists, When the approver adds "لبن" Gulf → "Yogurt, plain", Then save is blocked with `ALIAS_CONFLICT` "لبن (Gulf) already means Laban drink" and the choices "Replace (audited)" and "Mark ambiguous".
+#### approver-10.43 · One word cannot mean two foods in one dialect
+As the Nutrition approver, I am stopped when an Alias would collide with another in the same dialect, so that resolution is never a coin toss. · Trace: IR-res · FR-015 · FR-035
+- `/r` Given "لبن" Gulf → Laban drink is Approved, When the approver adds "لبن" Gulf → "Yogurt, plain" in Aliases, Then Save is blocked with `VALIDATION_ERROR` "لبن (Gulf) already means Laban drink", and two choices are offered: "Replace" (the old Alias becomes Superseded) and "Mark ambiguous".
 
 #### approver-10.44 · Spelling variants are matched, not stored twice
-As the Nutrition approver, I am told when an Alias is already covered by Arabic normalisation, so that the table does not fill with spelling copies. · F26 (Wikidata `arz` "طعميه")
-- `/r` Given Alias "طعمية" EG exists, When the approver adds "طعميه" EG for the same Food, Then the console reads "Already matched — same as طعمية after normalisation" and adds nothing.
-- `/m` Given the normaliser, Then ة→ه, ى→ي, أ/إ/آ→ا, tashkeel and tatweel removed, Arabic-Indic digits → Western, for both stored Aliases and eater input.
+As the Nutrition approver, I am told when an Alias is already covered by Arabic normalisation, so that Aliases does not fill up with spelling copies. · Trace: IR-res · FR-015 · F26
+- `/r` Given the Approved Alias "طعمية" EG, When the approver adds "طعميه" EG for the same Food in Aliases, Then Aliases reads "Already matched — same as طعمية after normalisation" and adds nothing.
+- `/m` Given the normaliser, Then ة→ه, ى→ي and أ/إ/آ→ا; tashkeel and tatweel are removed; Arabic-Indic digits become Western. It applies the same way to stored Aliases and to eater input.
 
 #### approver-10.45 · Seed Aliases from Wikidata and the Egyptian table's names
-As the Nutrition approver, I pull candidate names from Wikidata (CC0) and the Egyptian table's transliterations, so that I accept or reject names instead of typing them. · F26, F28, F11
-- `/r` Given Food "Falafel" linked to Wikidata Q188788, When the approver presses "Fetch Wikidata labels", Then candidates appear with their language codes, including `arz` "طعميه", each with Accept / Reject and the source "Wikidata Q188788 (CC0)"; an `arz` label is offered as EG; a code outside EG/Gulf/MSA (e.g. `acm`) asks the approver to choose a dialect or skip.
-- `/r` Given Wikidata cannot be reached, Then "Wikidata could not be reached — try again later" appears beside the button and nothing else changes.
-- `/r` Given the Egyptian table's names "foal medames", "taamia", "Bisara" (F28), When imported as transliteration candidates, Then each row shows "name only — values not used" and needs Accept.
+As the Nutrition approver, I pull candidate names from Wikidata (CC0) and the Egyptian table's transliterations, so that I accept or reject names instead of typing them. · Trace: IR-ref · FR-015 · F26, F28, F11
+- `/r` Given the Food "Falafel" linked to Wikidata Q188788, When the approver presses "Fetch Wikidata labels" in Aliases, Then the mock Wikidata adapter returns candidates with their language codes, including `arz` "طعميه". Each candidate shows the source "Wikidata Q188788 (CC0)" with Accept and Reject. An `arz` label is offered as EG. A code outside EG, Gulf and MSA (e.g. `acm`) asks the approver to choose a dialect or skip. Accepted candidates become Proposed Aliases.
+- `/r` Given the Wikidata adapter fails, Then Aliases shows "Wikidata could not be reached — try again later" beside the button, and nothing else changes.
+- `/r` Given the Egyptian table's names "foal medames", "taamia" and "Bisara" (F28), When they are imported as transliteration candidates in Aliases, Then each row shows "name only — values not used" and needs Accept.
 
 #### approver-10.46 · Retire an Alias
-As the Nutrition approver, I retire a wrong Alias with a reason, so that new resolutions stop using it while eaters' own names and past days stay untouched. · FR-031 · **Shared: Nutrition approver · Eater**
-- `/r` Given "لبن" Gulf → Yogurt, plain added by mistake, When the approver retires it with a reason, Then it shows "Retired" and new `POST /v1/analyses` calls no longer return Yogurt for a Gulf "لبن".
-- `/s` Given Entries resolved through that Alias earlier and an eater's own Unit named "لبن", Then those Day reports are unchanged and the eater's Unit still logs as before.
+As the Nutrition approver, I retire a wrong Alias with a reason, so that new resolutions stop using it while eaters' own names and past days stay untouched. · Trace: IR-res · FR-015 · FR-031 · `vocabulary.md` (Retired) · **Shared: Nutrition approver · Eater**
+- `/r` Given the Alias "لبن" Gulf → "Yogurt, plain", approved by mistake, When the approver retires it in Aliases with a reason, Then it shows Retired, and new `POST /v1/analyses` calls no longer return Yogurt for a Gulf "لبن".
+- `/s` Given Entries resolved through that Alias earlier, and an eater's own Unit named "لبن", Then those Day reports are unchanged, and the eater's Unit still logs as before.
 
 #### approver-10.47 · Invalid Alias input
-As the Nutrition approver, I get a fix-it message beside the field for a malformed Alias, so that bad names never reach the resolver. · care group 4
-- `/r` Given the Arabic field holds only Latin letters ("laban"), Then "Put the Arabic spelling here; Latin goes in Transliteration" appears beside it.
-- `/r` Given no dialect is chosen, Then Save is disabled with "Choose EG, Gulf or MSA".
-- `/r` Given the Food picker, Then retired Food versions are not offered.
+As the Nutrition approver, I get a fix-it message beside the field for a malformed Alias, so that bad names never reach the resolver. · Trace: IR-ref · FR-015
+- `/r` Given the Arabic field in Aliases holds only Latin letters ("laban"), Then "Put the Arabic spelling here; Latin goes in Transliteration" appears beside it.
+- `/r` Given no dialect is chosen, Then Save in Aliases is disabled with "Choose EG, Gulf or MSA".
+- `/r` Given the Food picker in Aliases, Then Retired Food versions are not offered.
 
 ### F · Version the safety Policy
 
-#### approver-10.48 · Read the live Policy
-As the Nutrition approver, I read the live Policy version with every value, its unit, its citation and its effective date, so that I know exactly what the app enforces today. · brief §3.3, FR-080
-- `/r` Given Policy v1 live, When Policy opens, Then one table lists: calorie floor 1,200 kcal ("product policy; AHA prescribing range starts at 1,200 for women, R33 — not a sourced hard floor"); hard stop 1,000 kcal (R32); loss default 15 % and deficit cap = smaller of 15 % and 500 kcal (R33 500–750; the 500 is this lens's proposed v1 value, `assumption`); gain +10 % (brief §3.3); GLP-1 protein 1.2–1.6 g/kg and no added deficit (R35, R41); tracking-only triggers SCOFF ≥2, pregnancy, breastfeeding (R38, R32); energy mismatch >10 % and >10 kcal per actual serving (brief §10.2); component-sum tolerance; planner increments; clarification limit 2 (FR-035); retention raw scans 30 days, audio 24 h (FR-078) — each with "Effective from".
-- `/r` Given the same, When `GET /v1/admin/policy/versions/current` is called, Then it returns those values with the version id and `effective_from`.
+#### approver-10.48 · Read the Policy in effect
+As the Nutrition approver, I read the Policy version in effect, with every value, its unit, its citation and its effective-from, so that I know exactly what the app enforces today. · Trace: IR-pol · brief §3.3 · map §6 (Policy list) · FR-080
+- `/r` Given Policy v1 In effect, When Policy opens, Then one table lists:
+
+  | Policy value | v1 setting | basis |
+  |---|---|---|
+  | calorie floor | 1,200 kcal | product policy; AHA's prescribing range starts at 1,200 for women (R33); not a sourced hard floor |
+  | hard stop | 1,000 kcal | R32 |
+  | loss default | 15 % | brief §3.3 |
+  | loss choices | 5 %, 10 %, 15 % | `assumption`, 10.68 |
+  | gain default | +10 % | brief §3.3 |
+  | gain choices | 5 %, 10 % | `assumption` |
+  | deficit cap | the smaller of 15 % and 500 kcal | R33 gives 500–750; the 500 is this lens's proposed v1 value, `assumption` |
+  | GLP-1 | protein 1.2–1.6 g/kg; no added deficit | R35, R41 |
+  | tracking-only triggers | SCOFF ≥2; pregnancy; breastfeeding | R38, R32 |
+  | energy mismatch | >10 % and >10 kcal per actual serving | brief §10.2 |
+  | component-sum tolerance | (set by the approver) | — |
+  | planner increments | whole by default | FR-051 |
+  | clarification limit | 2 | FR-035 |
+  | retention | raw scans 30 days; audio 24 h | FR-078 |
+
+  Each row also shows its effective-from.
+- `/r` Given the same, When `GET /v1/admin/policy/versions?state=In%20effect` is called, Then it returns those values with the version id and `effective_from`.
 
 #### approver-10.49 · Change the calorie floor
-As the Nutrition approver, I draft a new floor and see how many current Targets it touches, so that I change a safety number knowingly. · brief §3.3, FR-058
-- `/r` Given Policy v1, When the approver creates draft v2 and sets the floor to 1,300, Then the draft shows "1,200 → 1,300" and "37 active Targets are between 1,200 and 1,299 kcal" (de-identified count).
-- `/r` Given the floor set to 950, Then "The floor cannot be below the hard stop (1,000 kcal)" appears beside the field and Publish is disabled.
-- `/r` Given the floor set to 1,100, Then Publish asks for a written reason: "Outside the cited range (R33) — say why".
+As the Nutrition approver, I propose a new floor and see how many current Targets it touches, so that I change a safety number knowingly. · Trace: IR-pol · brief §3.3 · FR-058
+- `/r` Given Policy v1 In effect, When the approver creates Proposed v2 in Policy and sets the floor to 1,300, Then v2 shows "1,200 → 1,300" and "37 Targets are between 1,200 and 1,299 kcal" (de-identified count).
+- `/r` Given the floor set to 950, Then Policy shows "The floor cannot be below the hard stop (1,000 kcal)" beside the field, and Approve is disabled.
+- `/r` Given the floor set to 1,100, Then Approve in Policy asks for a written reason: "Outside the cited range (R33) — say why".
 
 #### approver-10.50 · The hard stop never goes below 1,000
-As the Nutrition approver, I can raise but never lower the hard stop below 1,000 kcal, so that no Policy version can produce a starvation plan. · R32, brief §19.3 · **Shared: Nutrition approver · Eater**
-- `/r` Given draft v2, When the hard stop is set to 900, Then it is rejected with "The hard stop cannot go below 1,000 kcal (NIDDK planner limit)"; 1,050 is accepted while it stays ≤ the floor.
-- `/r` Given `POST /v1/admin/policy/versions` with `hard_stop_kcal: 900`, Then 422 `POLICY_OUT_OF_BOUNDS`.
-- `/r` Given hard stop 1,000 is live, When an eater's target proposal on the simulator would compute 980 kcal, Then onboarding offers no target below 1,000 and says why in neutral words.
+As the Nutrition approver, I can raise the hard stop but never set it below 1,000 kcal, so that no Policy version can produce a starvation plan. · Trace: IR-pol · brief §19.3 · brief §11.4 · R32 · **Shared: Nutrition approver · Eater**
+- `/r` Given Proposed v2 in Policy, When the hard stop is set to 900, Then it is rejected with "The hard stop cannot go below 1,000 kcal (NIDDK planner limit)". 1,050 is accepted while it stays at or below the floor.
+- `/r` Given `POST /v1/admin/policy/versions` with `hard_stop_kcal: 900`, Then 422 `VALIDATION_ERROR` (field `hard_stop_kcal`).
+- `/r` Given hard stop 1,000 In effect, When an eater on the simulator enters a manual target of 980 kcal in Settings → Goals, Then the app refuses it with neutral wording, and the API answers `POLICY_FLOOR`.
 
-#### approver-10.51 · Deficit cap and gain
-As the Nutrition approver, I set the deficit cap as the smaller of a percentage and a kcal value, and the gain step, so that loss and gain proposals stay inside cited ranges. · R33, brief §3.3, §11.3
-- `/m` Given cap = smaller of 15 % and 500 kcal, When maintenance is 3,600 kcal, Then the cap is 500 kcal (15 % = 540); when maintenance is 2,334.8 kcal (brief §11.3), Then the cap is 350.22 kcal.
-- `/r` Given the kcal cap is set to 800, Then Publish asks for a reason (outside 500–750, R33); given −5 %, Then "Enter 0 or above" appears beside the field.
-- `/r` Given gain is +10 %, Then the preview reads "Gain target = maintenance × 1.10".
+#### approver-10.51 · The deficit cap
+As the Nutrition approver, I set the deficit cap as the smaller of a percentage and a kcal value, so that loss proposals stay inside the cited range. · Trace: IR-pol · brief §3.3 · brief §11.3 · R33
+- `/m` Given cap = the smaller of 15 % and 500 kcal, When maintenance is 3,600 kcal, Then the cap is 500 kcal (15 % would be 540). When maintenance is 2,334.8 kcal (brief §11.3), Then the cap is 350.22 kcal.
+- `/r` Given the kcal cap is set to 800 in Policy, Then Approve asks for a reason (outside R33's 500–750). Given −5 %, Then "Enter 0 or above" appears beside the field.
+
+#### approver-10.68 · The loss and gain defaults, and the choices eaters see
+As the Nutrition approver, I set the loss and gain defaults and the conservative choices an eater may pick, so that every proposal an eater sees stays inside the reviewed range. · Trace: IR-pol · brief §3.3 ("loss (15% below estimated maintenance), and gain (10% above it), with selectable conservative ranges") · FR-058 · **Shared: Nutrition approver · Eater**
+- `/r` Given loss choices 5 %, 10 % and 15 % with default 15 %, When the approver adds a choice of 20 % in Policy, Then it is rejected with "Above the deficit cap (15 %)".
+- `/r` Given the default is set to 12 %, which is not in the list, Then Policy shows "The default must be one of the choices" beside the field. An empty choice list is refused the same way.
+- `/r` Given gain choices 5 % and 10 % with default +10 %, Then Policy's preview reads "Gain target = maintenance × 1.10 by default".
+- `/r` Given that Policy is In effect, When an eater on the simulator chooses "lose" in Settings → Goals, Then exactly the choices 5 %, 10 % and 15 % are offered, with 15 % preselected.
 
 #### approver-10.52 · GLP-1 protein-first values
-As the Nutrition approver, I set the protein range and the no-added-deficit rule for eaters on GLP-1 medicines, so that their targets put protein first. · R35, R41 · **Shared: Nutrition approver · Eater**
-- `/r` Given protein min 1.8 and max 1.6 g/kg, Then "Minimum must be at most the maximum" appears beside the fields.
-- `/r` Given min 1.0 g/kg (below the cited 1.2), Then Publish asks for a reason.
-- `/r` Given the live range 1.2–1.6 g/kg, When an eater who marked GLP-1 with weight 80 kg reaches the target step on the simulator, Then the proposal shows protein 96–128 g and no added deficit.
+As the Nutrition approver, I set the protein range and the no-added-deficit rule for eaters on GLP-1 medicines, so that their targets put protein first. · Trace: IR-pol · map §3 (SafetyScreen row: "GLP-1 → protein-first, no added deficit") · R35, R41 · **Shared: Nutrition approver · Eater**
+- `/r` Given protein min 1.8 and max 1.6 g/kg in Policy, Then "Minimum must be at most the maximum" appears beside the fields.
+- `/r` Given min 1.0 g/kg (below the cited 1.2), Then Approve in Policy asks for a reason.
+- `/r` Given the range 1.2–1.6 g/kg In effect, When an eater who marked GLP-1 and weighs 80 kg reaches Settings → Goals on the simulator, Then the proposal shows protein 96–128 g and no added deficit.
 
 #### approver-10.53 · Tracking-only triggers and their wording
-As the Nutrition approver, I keep the excluded groups locked, set the SCOFF cut-off within its validated range, and edit the tracking-only guidance in both languages, so that sensitive eaters get neutral help, never a restrictive plan. · R38, R32, R37, brief §1.3, §11.4, §14.2 · **Shared: Nutrition approver · Eater**
-- `/r` Given the triggers table, Then "Pregnancy" and "Breastfeeding" show locked "always tracking-only (out of scope)", and the SCOFF cut-off accepts 1 or 2 and rejects 3 with "Above the validated cut-off (≥2)".
-- `/r` Given the English guidance is edited and the Arabic is not, When Publish is pressed, Then it is blocked with "Update the Arabic text too".
-- `/r` Given Preview is pressed, Then the guidance shows in an iPhone-width frame in English and in Arabic RTL, as the eater sees it on Today.
+As the Nutrition approver, I keep the excluded groups locked, set the SCOFF cut-off within its validated range, and edit the tracking-only guidance in both languages, so that sensitive eaters get neutral help, never a restrictive plan. · Trace: IR-pol · map §3 (SafetyScreen row) · brief §1.3 · brief §11.4 · brief §14.2 · R38, R32, R37 · **Shared: Nutrition approver · Eater**
+- `/r` Given the triggers table in Policy, Then "Pregnancy" and "Breastfeeding" show as locked: "always tracking-only (out of scope)". The SCOFF cut-off accepts 1 or 2 and rejects 3 with "Above the validated cut-off (≥2)".
+- `/r` Given the English guidance is edited and the Arabic is not, When Approve is pressed in Policy, Then it is blocked with "Update the Arabic text too".
+- `/r` Given Preview is pressed in Policy, Then the guidance shows in an iPhone-width frame, in English and in Arabic RTL, as the eater sees it on Today.
 
 #### approver-10.54 · The energy-mismatch threshold, evaluated before it changes
-As the Nutrition approver, I see how many published Foods a new threshold would flag before I publish it, so that the threshold is "configurable and evaluated" as the brief requires. · brief §10.2, FR-030
-- `/r` Given the live ">10 % and >10 kcal", When the approver drafts ">8 % and >8 kcal", Then the preview reads "Flagged Foods: 171 now → 214 with this draft" and lists the 43 newly flagged Foods (synthetic counts).
-- `/r` Given 0 % or a negative kcal, Then "Enter a value above 0" appears beside the field.
+As the Nutrition approver, I see how many Approved Foods a new threshold would flag before I approve it, so that the threshold is "configurable and evaluated" as the brief requires. · Trace: IR-pol · brief §10.2 · FR-030
+- `/r` Given the threshold in effect, ">10 % and >10 kcal", When the approver proposes ">8 % and >8 kcal" in Policy, Then the preview reads "Flagged Foods: 171 now → 214 with this version" and lists the 43 newly flagged Foods (synthetic counts).
+- `/r` Given 0 % or a negative kcal in Policy, Then "Enter a value above 0" appears beside the field.
 
-#### approver-10.55 · Component-sum tolerance and the clarification limit
-As the Nutrition approver, I set the component-sum tolerance and the clarification limit within the brief's bounds, so that eaters' Units are checked consistently and never asked more than two questions. · FR-023, FR-035, FR-051 · **Shared: Nutrition approver · Eater**
-- `/r` Given the clarification limit is set to 3, Then it is rejected with "At most two questions per pass (FR-035)"; 1 is accepted.
-- `/r` Given a component-sum tolerance of 2 % is live, When an eater on the simulator saves a Composite measured at 6.9 g whose components sum to 7.1 g (2.9 % over), Then the Unit editor shows the component-sum error.
-- `/r` Given the planner-increments row, Then it reads "Whole by default; halves only when the eater enables them (FR-051)" and offers no setting that makes halves the default.
+#### approver-10.55 · Component-sum tolerance, clarification limit, planner increments
+As the Nutrition approver, I set the component-sum tolerance and the clarification limit within the brief's bounds, so that eaters' Units are checked consistently and eaters are never asked more than two questions. · Trace: IR-pol · FR-023 · FR-035 · FR-051 · **Shared: Nutrition approver · Eater**
+- `/r` Given the clarification limit is set to 3 in Policy, Then it is rejected with "At most two questions per pass (FR-035)". 1 is accepted.
+- `/r` Given a component-sum tolerance of 2 % In effect, When an eater on the simulator saves a Composite measured at 6.9 g whose components sum to 7.1 g (2.9 % over), Then the Unit editor shows the component-sum error.
+- `/r` Given the planner-increments row in Policy, Then it reads "Whole by default; halves only when the eater enables them (FR-051)", and no setting makes halves the default.
 
-#### approver-10.56 · Retention values
-As the Nutrition approver, I can shorten media retention and cannot lengthen it past what the privacy policy discloses, so that a Policy change never breaks a promise to eaters. · FR-078, NFR-13, R5 · **Shared: Nutrition approver · Auditor** (ownership conflict, §7)
-- `/r` Given raw scans 30 days, When the approver drafts 14 days, Then the preview reads "Scans older than 14 days that eaters have not saved will be deleted at the next deletion run" and asks to confirm.
-- `/r` Given raw scans 60 days, Then Publish is blocked with "Longer than the privacy policy discloses — needs the privacy reviewer's sign-off".
+#### approver-10.56 · Retention values: raw scans and audio
+As the Nutrition approver, I can shorten media retention and cannot lengthen it past what the privacy policy discloses, so that a Policy change never breaks a promise to eaters. · Trace: IR-pol · map §6 ("retention (raw scans 30 days, audio 24 h)") · FR-078 · FR-036 · NFR-13 · R5 · **Shared: Nutrition approver · Auditor** (ownership is open, §7.2)
+- `/r` Given raw scans at 30 days, When the approver proposes 14 days in Policy, Then the preview reads "Scans older than 14 days that eaters have not saved will be deleted at the next deletion run".
+- `/r` Given raw scans at 60 days, Then Approve in Policy is blocked with "Longer than the privacy policy discloses — needs the privacy reviewer's sign-off".
+- `/r` Given audio at 24 h, When the approver proposes 12 h in Policy, Then the preview reads "Temporary audio will be deleted 12 hours after transcription", and Approve is available.
+- `/r` Given audio at 36 h, Then Approve in Policy is blocked with "Longer than the privacy policy discloses (24 h, FR-078)". Given 0, −1 or "abc", Then "Enter whole hours from 1 to 24" appears beside the field. The lower bound of 1 h exists because replaying before commit needs the audio (FR-036).
 
-#### approver-10.57 · Publish with an effective date and a reason; schedule; cancel
-As the Nutrition approver, I publish a Policy version with a reason and an effective-from time, or schedule it and cancel it before it starts, so that a safety change lands when I mean it to. · FR-058, FR-071
-- `/r` Given draft v2, When Publish is pressed, Then a dialog requires a reason and an effective-from (default now; a future date and time shown in the approver's time zone and UTC), shows the full diff, and Publish is its only main action.
-- `/r` Given effective-from 2026-10-15 00:00 UTC, Then v2 reads "Scheduled", v1 stays "Live", and "Cancel schedule" returns v2 to draft.
-- `/r` Given v2's time has passed, When `GET /v1/admin/policy/versions/current` is called, Then it returns v2, and a new target proposal uses the 1,300 floor.
+#### approver-10.57 · Approve with a reason and an effective-from; a second approver when there is one
+As the Nutrition approver, I approve a Policy version with a reason and an effective-from, and the second-person rule applies when the role has two holders, so that a safety change lands when it is meant to and the Audit trail shows who agreed. · Trace: IR-pol ("qualified review") · FR-058 · FR-071 · `vocabulary.md` (Policy version states; one or two people)
+- `/r` Given Proposed v2 in Policy, When Approve is pressed, Then a preview requires a reason and an effective-from, and shows the full diff. Effective-from defaults to now; a future date and time is shown in the approver's time zone and in UTC. Approve is the preview's only main action.
+- `/r` Given effective-from 2026-10-15 00:00 UTC, When v2 is approved, Then Policy shows v2 "Approved · in effect from 2026-10-15", and v1 stays In effect until then.
+- `/r` Given that time has passed, When an eater on the simulator asks for a loss target in Settings → Goals with inputs that would give 1,250 kcal, Then the proposal is 1,300 kcal with the note that the reviewed minimum applies. `GET /v1/admin/policy/versions?state=In%20effect` returns v2.
+- `/r` Given the Nutrition approver role has two holders, A and B, and A proposed v2, Then A's Approve in Policy is disabled with "Another Nutrition approver must approve", and `POST /v1/admin/policy/versions/{v}/approve` with A's token returns 403 `FORBIDDEN`. B's approval succeeds.
+- `/s` Given the role has one holder, When A approves A's own proposal, Then the Audit trail records proposer and approver as the same person, marked "sole holder".
 
 #### approver-10.58 · Existing Targets and past days are not rewritten
-As the Nutrition approver, I know a new Policy never rewrites approved Targets or past Days, so that eaters' history stays true. · FR-058, FR-071 · **Shared: Nutrition approver · Eater**
-- `/s` Given an eater's Target of 1,250 kcal approved on 2026-09-20 and v2 (floor 1,300) live from 2026-10-15, When the Day reports for 2026-10-01 to 2026-10-14 are rebuilt, Then each shows target 1,250.
-- `/r` Given that eater opens Today on the simulator after v2 is live, Then a calm notice says the reviewed minimum changed and offers "Review my target"; the Target is not changed until the eater approves one.
+As the Nutrition approver, I know that a new Policy version never rewrites approved Targets or past Days, so that eaters' history stays true. · Trace: IR-pol · FR-058 · FR-071 · **Shared: Nutrition approver · Eater**
+- `/s` Given an eater's Target of 1,250 kcal approved on 2026-09-20, and v2 (floor 1,300) In effect from 2026-10-15, When the Day reports for 2026-10-01 to 2026-10-14 are rebuilt, Then each shows the target 1,250.
+- `/r` Given that eater opens Today on the simulator after v2 is In effect, Then a calm notice says the reviewed minimum changed and offers "Review my target". The Target does not change until the eater approves one.
 
-#### approver-10.59 · Roll back by publishing earlier values
-As the Nutrition approver, I roll back by creating a new version from earlier values, so that History never loses what was live and when. · brief §3.3 ("centrally versioned")
-- `/r` Given v2 is live, When the approver chooses "Restore v1 values", Then draft v3 is created with v1's values (v2 is not edited), and publishing it uses the same dialog.
-- `/r` Given v3 is published, Then History lists v1, v2 and v3, each with its effective window.
+#### approver-10.59 · Roll back by approving earlier values
+As the Nutrition approver, I roll back by proposing a new version from earlier values, so that Policy never loses what was in effect and when. · Trace: IR-pol · brief §3.3 ("centrally versioned")
+- `/r` Given v2 In effect, When the approver chooses "Restore v1 values" in Policy, Then Proposed v3 is created with v1's values. v2 is not edited, and v3 goes through the same Approve preview.
+- `/r` Given v3 is approved, Then Policy lists v1 Superseded, v2 Superseded and v3 In effect, each with its effective window.
 
-#### approver-10.60 · Two approvers draft at once
-As the Nutrition approver, I am told when someone published while I was drafting, so that I never overwrite a newer Policy. · brief §18 (expected revision)
-- `/r` Given approvers A and B each drafted from v2 and A published v3, When B opens their draft, Then it reads "Based on v2; v3 is now live — review the differences" and shows v2 → v3 next to v2 → B's draft.
-- `/r` Given B publishes without rebasing, Then 409 `STALE_REVISION` returns v3 as current.
+#### approver-10.60 · Two approvers propose at once
+As the Nutrition approver, I am told when someone approved a version while I was writing mine, so that I never overwrite a newer Policy. · Trace: IR-pol · brief §18 (expected revision)
+- `/r` Given approvers A and B each proposed from v2, and B approved A's v3, When A opens A's own proposal in Policy, Then it reads "Based on v2; v3 is now in effect — review the differences", and shows v2 → v3 next to v2 → A's proposal.
+- `/r` Given A's proposal is sent for approval without rebasing, Then `POST /v1/admin/policy/versions/{v}/approve` returns 409 `STALE_REVISION` with v3 as current.
 
-#### approver-10.61 · Policy history and differences
-As the Nutrition approver, I read every Policy version with who published it, why and when it applied, so that any target can be explained later. · FR-082 · **Shared: Nutrition approver · Auditor**
-- `/r` Given versions v1–v3, When History → Policy opens, Then each row shows version, effective window, staff id and reason; selecting two shows their differences.
-- `/r` Given the auditor's read-only token, When it calls `GET /v1/admin/policy/versions`, Then 200; `POST` returns 403 `FORBIDDEN_ROLE`.
+#### approver-10.61 · Policy versions and their differences
+As the Nutrition approver, I read every Policy version with who proposed it, who approved it, why and when it applied, so that any target can be explained later. · Trace: IR-pol · FR-082 · FR-081 · **Shared: Nutrition approver · Auditor**
+- `/r` Given versions v1–v3, When Policy's version list opens, Then each row shows the version, state, effective window, proposer, approver and reason. Selecting two shows their differences.
+- `/r` Given the Auditor's read-only token, When it calls `GET /v1/admin/policy/versions`, Then it gets 200. `POST` returns 403 `FORBIDDEN`.
 
 #### approver-10.62 · Sign the launch nutrition-policy review
-As the Nutrition approver, I sign the nutrition-policy review on Policy v1, so that the launch gate records a qualified review. · FR-082, brief §11.4, §23.1
-- `/r` Given every Policy v1 value is set, When the approver presses "Sign nutrition-policy review", Then v1 reads "Reviewed by staff A-07 on 2026-10-01 — nutrition-policy review (FR-082)" and the launch-gates panel shows that gate as met.
-- `/r` Given component-sum tolerance is still unset, Then the sign button is disabled and the panel lists "Component-sum tolerance — not set".
+As the Nutrition approver, I sign the nutrition-policy review of the Policy in effect, so that the launch gate records a qualified review. · Trace: FR-082 · brief §11.4 · brief §23.1 · IR-pol
+- `/r` Given every Policy v1 value is set, When the approver presses "Sign nutrition-policy review" in Settings → Launch gates, Then the gate reads "Reviewed by staff A-07 on 2026-10-01 — nutrition-policy review (FR-082)" and shows as met.
+- `/r` Given the component-sum tolerance is still unset, Then the sign button in Settings → Launch gates is disabled, and the gate lists "Component-sum tolerance — not set".
 
 ### G · Leave a trail
 
-#### approver-10.63 · Every approver action is audited
-As the Nutrition approver, every publish, retire, reject, claim, take-over and sign-off writes one audit event, so that anyone reviewing the reference later can follow it. · FR-081, FR-082 · **Shared: Nutrition approver · Auditor**
-- `/s` Given any of those actions commits, Then exactly one audit event holds staff id, role, action, object id and version, reason and UTC time, and no eater identifier.
-- `/r` Given the auditor opens the trail filtered by the approver's staff id, Then the publish of فول مدمس v1 is listed with its reason.
+#### approver-10.63 · Every approver action is in the Audit trail
+As the Nutrition approver, I know that every approve, reject, retire, claim and sign-off writes one Audit trail event, so that anyone reviewing the reference later can follow it. · Trace: FR-081 · FR-082 · IR-ref · IR-pol · **Shared: Nutrition approver · Auditor**
+- `/s` Given any of those actions commits, Then exactly one Audit trail event holds the staff id, role, action, object id and version, reason and UTC time, and no eater identifier.
+- `/r` Given the Auditor opens Audit trail filtered by the approver's staff id, Then the approval of the فول مدمس record v1 is listed with its reason.
 
-#### approver-10.64 · Sources & licences, generated from what is published
-As the Nutrition approver, I rely on the app's Sources & licences page being generated from published licences, so that every required citation and attribution is shown without a hand-kept list. · F1, F19, F8 · **Shared: Nutrition approver · Eater**
-- `/r` Given published Foods under CC0 (FDC) and CC BY 4.0 (the F19 study), When an eater opens Settings → Sources & licences on the simulator, Then it shows "U.S. Department of Agriculture, Agricultural Research Service. FoodData Central" and the study's attribution line.
-- `/r` Given the same, When `GET /v1/reference/attributions` is called, Then it returns the list built from published licences.
+#### approver-10.64 · Attributions generated from what is Approved
+As the Nutrition approver, I rely on every citation and attribution being generated from the licences on Approved records, so that none depends on a hand-kept list. · Trace: IR-ref · FR-026 · FR-046 ("source details") · F1, F19, F8 · **Shared: Nutrition approver · Eater**
+- `/r` Given Approved Foods under CC0 (FDC) and CC BY 4.0 (the F19 study), When `GET /v1/reference/attributions` is called, Then it returns "U.S. Department of Agriculture, Agricultural Research Service. FoodData Central" and the study's attribution line, built from the Approved licences.
+- `/r` Given an eater on the simulator opens the source details of a مرقوق Entry from Analysis review, Then the CC BY attribution line shows there.
 
 ---
 
 ## 4 · The experience this persona needs
 
-- **Device and place.** A desk, a large screen and a keyboard, in focused batches (fractional reviewer, brief §23.1). Width ≥1,440 px is the design target (`assumption`); every read flow and queue triage also work at ~390 px with no horizontal page scroll — wide tables scroll inside their own frame and the detail panel becomes a full page.
-- **The moment that matters.** Pressing **Publish** — on a Food, a Tier B Recipe record, an Alias or a Policy version. That is the moment a number becomes the truth for every eater who logs it.
+- **Device and place.** A desk, a large screen and a keyboard, worked in focused batches (fractional reviewer, brief §23.1; desk use is an `assumption`, §1.2). The design target is 1,440 px or wider. Review triage, reading a Label submission and its photos, and every read flow also work at ~390 px by touch, with no horizontal page scroll and targets of at least 24 × 24 CSS px (10.1, 10.6, 10.66). Wide tables scroll inside their own frame, and a row's detail becomes a full page.
+- **The moment that matters.** Pressing **Approve** on a Food, a Tier B recipe record, an Alias or a Policy version: the moment a number becomes the truth for every eater who logs it.
 - **The feeling it must leave.** Certain and unhurried: "I can see exactly what will change, for how many eaters, and that nothing in the past moves."
-- **The matching style.** Dense and fast, quiet and exact. Tables with frozen headers and first column (AP7), tabular right-aligned numbers, a detail panel beside the table, the APG grid keys and switchable single-letter shortcuts (AP8–AP10), no animation on repeated actions, colour never alone (diffs carry "changed" text), Arabic names direction-isolated (AP11) with the dialect tag next to every Arabic word. One main action per view (Publish or Approve); destructive actions (Retire, Reject, Take over) are secondary and need a reason.
+- **The matching style.** Dense, fast, quiet and exact.
+  - Tables have a frozen header and first column (AP7) and right-aligned tabular numbers, with the detail panel beside the table.
+  - The APG grid keys work everywhere; letter shortcuts work only while the Review table has focus (AP8–AP10).
+  - There is no motion on actions people repeat.
+  - Colour never carries meaning alone: a diff also says "changed".
+  - Arabic names are direction-isolated (AP11), with the dialect tag next to every Arabic word.
+  - Each view has one main action (Approve). Reject, Retire and "Claim from approver A" are secondary and need a reason.
 
 ## 5 · Care questions this persona raises, answered as requirements
 
-Size is platform, so every group applies on every console screen (`care.md`, "By size").
+The size is platform, so every group applies to every console section (`care.md`, "By size").
 
 **1 · Does it deserve to exist, and where does it live**
-- Each area does one job: Review (decide flagged items), Foods (curate records), Recipes (calculate dishes), Aliases (names), Policy (safety numbers), History (what was live, when). Places sit in the navigation; Publish, Retire and Approve sit beside the record they act on.
-- What we said no to: editing a published version in place (versions only, FR-014); free bulk-publish of a whole table without per-record checks (AP2); copying values from all-rights-reserved tables (F12–F17, F23); OFF rows in the reference (F8); per-eater diary views (FR-081).
-- Settings that need not exist: none per approver except language, numerals and shortcut on/off; sort and filter are remembered per browser.
+- Each section does one job:
+  - Review: decide Label submissions and flags.
+  - Foods: curate records.
+  - Recipes: calculate Tier B recipe records.
+  - Aliases: names.
+  - Policy: safety numbers and their versions.
+  - Metrics: whether curation is working.
+  - Settings: language and launch gates.
+- Approve, Reject, Retire and Claim sit beside the record or row they act on.
+- What we said no to:
+  - editing an Approved version in place (versions only, FR-014);
+  - bulk-approving a table without per-record checks (AP2);
+  - copying values from all-rights-reserved tables (F12–F17, F23);
+  - Open Food Facts rows in the reference (F8);
+  - per-eater diary views (FR-081);
+  - a shortcut setting: shortcuts work only while the Review table has focus.
+- Settings that need not exist: none per approver except language. Sort and filter are remembered per browser.
 
 **2 · How it is found and understood**
-- Every screen answers where am I (title names the area and record, e.g. "Foods · فول مدمس v2 (draft)"), what can I do (one main verb button), what just happened (inline status), how do I get out (Esc / Back keep the draft).
-- The map's words everywhere: Food, Recipe, Alias, Evidence, Policy, Unit, Entry, Day, Target; badge names exactly as the app shows them. Dialect is always EG · Gulf · MSA.
-- Nothing typed that the system knows: FDC fields, Wikidata labels and extracted label fields arrive filled; the approver confirms.
-- The eye lands first on the number that changes and its delta; status (draft, scheduled, live, retired, superseded) is a text label in a fixed column.
+- Every screen answers four questions:
+  - where am I: the title names the section and the record, e.g. "Recipes · فول مدمس v2 (In review)";
+  - what can I do: one main verb button;
+  - what just happened: an inline status;
+  - how do I get out: Esc or Back, and the proposal is kept.
+- The map's and `vocabulary.md`'s words are used everywhere. Badge names match the app exactly. Dialect is always EG · Gulf · MSA, and states are exactly the D2 lists.
+- Nothing is typed that the system knows. USDA rows, Wikidata labels and extracted label fields arrive filled in, and the approver confirms them.
+- The eye lands first on the number that changes and its delta. The state is a text label in a fixed column.
 
 **3 · How it feels**
-- Every action answers at the instant of the key press: "Publishing…", then "Live since 11:05". A failed check is shown next to the field it concerns.
-- Message loudness follows risk: quiet inline status for saves; a dialog only for Publish of a Policy version and for Retire.
-- Values with no provably right answer — page size, placeholder delay (300 ms in 10.6), shortcut keys — are tried in the served console and chosen on purpose.
-- The console reopens where the approver left it (filter and focused item, per browser).
+- Every action answers at the moment of the key press: "Approving…", then the new state.
+- How loud a message is follows the risk:
+  - a check result or warning is inline, beside its field or row (e.g. the water warning in 10.11, the proximate block in 10.25);
+  - **a preview with Approve or Cancel opens before every Approve that changes what eaters resolve or are offered (a Food version, a Tier B recipe record, an Alias, a Policy version) and before every Retire** (10.11, 10.14, 10.15, 10.17, 10.28, 10.29, 10.39, 10.57);
+  - there are no other dialogs.
+- Values with no provably right answer are tried in the served console and chosen on purpose: page size, the 300 ms placeholder delay (10.6), the signed-URL lifetime (10.66) and the de-identification threshold (§7.5).
+- The console reopens where the approver left it: the same filter and focused row, per browser.
 
 **4 · When it goes wrong, is empty, or is slow**
-- Empty queue says so and offers the next action; a failed load is never shown as empty (10.8).
-- Long jobs (Tier A import) show honest progress with Cancel; a failed import changes nothing (10.22–10.23).
-- Errors sit beside the field, say how to fix it, and never blame (10.24, 10.25, 10.47, 10.49).
-- Undo is a new version (Restore v1 values, 10.59); the only warnings are before a Policy publish and a Retire.
-- A half-filled draft survives expiry, closing the tab and offline (10.3, 10.4).
-- No network: last data shown with a quiet banner; Publish waits; nothing auto-sends on reconnect (10.4).
+- An empty Review says so and offers the next action. A failed load is never shown as empty (10.8).
+- A failed USDA import changes nothing and says where the retry lives (10.23).
+- Errors sit beside the field they concern, say how to fix it, and never blame (10.24, 10.25, 10.47, 10.49, 10.56).
+- Undo is a new version: Restore v1 values (10.59), Approve as new version (10.17).
+- A half-filled proposal survives session expiry, a closed tab and going offline (10.3, 10.4).
+- With no network, the last data shows under a quiet banner, Approve waits, and nothing sends by itself on reconnect (10.4).
 
 **5 · The inside the user never sees**
-- Code, data and logs use the same nouns as the screen (Food version, Alias, Policy version, review item).
-- Logs carry staff id, record id and version, never eater identifiers or label photos; review items carry counts only (10.1, 10.18).
-- Seed and test data are realistic and synthetic: long Arabic names with tashkeel, mixed scripts, Arabic-Indic digits, three dialects.
-- Collect only what curation needs: no submitter identity in a Label submission (10.15).
-- The console claims only what it does: "recipe-calculated" never shows as "measured" or "exact" (FR-029, FRD §20.1).
+- Code, data and logs use the screen's nouns: Food version, Tier B recipe record, Alias, Policy version, USDA release, and the D2 states and errors.
+- Logs carry staff id, record id and version, never eater identifiers or label photos. Flags carry counts. Eater-typed text appears only under the one rule in §7.5 (10.1, 10.10, 10.18).
+- Seed and test data are realistic and synthetic: long Arabic names with tashkeel, mixed scripts, Arabic-Indic digits and all three dialects.
+- The console collects only what curation needs. A Label submission carries no submitter identity (10.66).
+- It claims only what it does: an estimate never shows as exact, and a heuristic range never as a confidence interval (10.33, 10.67; FR-029, brief §20.1).
 
 **6 · Inclusion**
-- Whole flow by keyboard (AP9 2.1.1); visible focus ring; single-letter shortcuts can be turned off (AP9 2.1.4).
-- 4.5:1 contrast in light and dark; diff and status never by colour alone.
-- Screen reader: tables use grid semantics with header cells; every control has a verb label that stays current (e.g. "Publish v4").
-- Largest browser text size and 200 % zoom: nothing clips; tables scroll inside their frame.
-- Arabic console: layout mirrors; numbers, ids, barcodes and clocks keep their order; each paragraph aligns by its own language.
-- Nothing disappears on a timer; claims do not expire while the approver reads.
+- The whole flow works by keyboard (AP9 2.1.1), with a visible focus ring (10.7).
+- Contrast is 4.5:1 in light and dark. Diff and state are never shown by colour alone.
+- For screen readers, tables use grid semantics with header cells, and every control has a verb label that stays current (e.g. "Approve v4").
+- At the largest browser text size and 200 % zoom nothing clips; tables scroll inside their frame.
+- Targets are at least 24 × 24 CSS px at the narrow width (AP13, 10.1, 10.66).
+- Every gesture has a visible control; pinch zoom on photos has zoom buttons (10.66).
+- With reduced motion, the detail panel appears without sliding (10.7).
+- In the Arabic console the layout mirrors, while numbers, ids, barcodes and clocks keep their order and each paragraph aligns by its own language (10.5).
+- Nothing disappears on a timer. A claim lasts until the approver closes the row or another approver claims it with a reason.
 
-## 6 · Proposed names for the model phase to confirm
+## 6 · Words and interfaces this lens needs (for the model phase)
 
-These do not exist in the map. This lens built them only from map nouns and FRD §18 conventions.
-- Console areas: **Review · Foods · Recipes · Aliases · Policy · History**; noun **review item** for a queue entry; review item types **Estimated analogue · Energy mismatch · Label submission · Unmatched name · Ingredient updated**.
-- Admin API (FRD §18 style): `GET /v1/admin/review-items`, `POST /v1/admin/review-items/{id}/claim|resolve`, `GET|POST /v1/admin/foods`, `POST /v1/admin/foods/{id}/versions`, `POST /v1/admin/food-versions/{vid}/publish|retire`, `POST /v1/admin/recipes`, `GET|POST /v1/admin/aliases`, `GET|POST /v1/admin/policy/versions`, `POST /v1/admin/policy/versions/{v}/publish|cancel`, `GET /v1/admin/reference-releases/{id}`, `GET /v1/admin/metrics/evidence`, `GET /v1/reference/attributions`.
-- Typed errors added to FRD §18.2: `FORBIDDEN_ROLE`, `LICENCE_REQUIRED`, `LICENCE_NOT_PUBLISHABLE`, `ALIAS_CONFLICT`, `CYCLE_DETECTED`, `YIELD_MISSING`, `POLICY_OUT_OF_BOUNDS`. These are reused as written: `STALE_REVISION`, `MASS_BALANCE_ERROR`, `SOURCE_BASIS_UNKNOWN`.
-- Dialect storage codes `arz` / `afb` / `arb` behind the display tags EG / Gulf / MSA (AP12).
+Words already fixed by `vocabulary.md` are used as written. These are **not yet** in the map or in D2, and each needs a dated delta (raised again in §7):
+- **Flag**: a Review row raised by the resolver or a check. Its types are **Estimated analogue · Energy mismatch · Unmatched name · Ingredient updated**, and it is either open or closed.
+- **Label submission**: a Proposed Food made from an eater's label photos, sent with the eater's review Consent.
+- **Value basis** (FR-012's words): **measured · declared · estimate**, marked on every nutrient value.
+- **Carbohydrate convention**: total (fibre included) · available (fibre excluded).
+- **Cross-check**: an attached source used only for comparison. It is the map's own word, from the "Approver → reference" row.
+- Button verbs: Save · Approve · Reject · Retire · Claim from … · Keep analogue · Keep label value · Create Food from this · Create variant · Add Alias · Mark ambiguous · Replace · Compare · Restore v1 values · Sign nutrition-policy review · Fetch Wikidata labels.
+- Admin API, in brief §18 style:
+  - `GET /v1/admin/flags`
+  - `GET|POST /v1/admin/foods`
+  - `POST /v1/admin/foods/{id}/versions/{v}/approve|reject|retire`
+  - `GET /v1/admin/foods/{id}/versions/{v}/evidence` (signed URLs)
+  - `GET|POST /v1/admin/recipes`
+  - `GET|POST /v1/admin/aliases`
+  - `GET|POST /v1/admin/policy/versions`
+  - `POST /v1/admin/policy/versions/{v}/approve`
+  - `GET /v1/admin/usda-releases[/{id}]`
+  - `GET /v1/admin/metrics/evidence`
+  - `GET /v1/reference/attributions`
+  - for the eater: `POST /v1/label-submissions`
+
+  Every error uses a D2 code.
+- Dialect storage codes `arz` / `afb` / `arb` sit behind the display tags EG / Gulf / MSA (AP12).
 
 ## 7 · Conflicts for the model phase
 
-1. **"Recipe" has two owners.** The eater's Recipe is private, WF-2. The approver's Tier B Recipe record is a public Food version whose Evidence is recipe-calculated. Proposal: one calculation engine, and an owner field (personal / reference).
-2. **Retention ownership.** The map lists retention in the approver's Policy (§1.6). Brief §23.2 says "Privacy/security reviewers approve consent, retention, access". Who signs a retention change: approver, privacy reviewer, or both? (10.56 blocks lengthening for now.)
-3. **A raised floor against approved Targets.** FR-058 and FR-071 say Targets are versioned and never silently changed, so a Target already below a newly raised floor would stay (10.58). Safety argues for an immediate change when the *hard stop* rises. Decide which values apply at once and which wait for the eater's review.
-4. **Label photo promotion against eater privacy and retention.** Promoting a label needs a separate consent purpose (R22: "A separate consent shall be obtained for each Processing purpose"; brief §19.2: raw evidence for quality review "requires explicit consent and restricted roles"). It also needs the photo kept past the 30-day raw-scan window (FR-078) as reference Evidence. Eater and approver needs meet here.
-5. **Unmatched-name signal against diary privacy.** 10.18 aggregates free text eaters typed. The minimum count of distinct eaters (5 here) is an `assumption` and needs a privacy decision (FR-080 "de-identified").
-6. **No Evidence badge for "reference database".** FRD §20.1's badges are label-verified, recipe-calculated, measured unit + reference nutrition, estimated analogue and user-defined. None of them names a Tier A Food on its own. The approver needs a source tier (A database / B recipe-calculated / label). The eater needs one badge per Entry. Name the mapping.
-7. **Vocabulary gap: taking a Food version out of resolution.** "Retire" (10.29, 10.46) is not in the map. Void and Restore belong to Entries. Also decide whether logging a Unit on a retired version keeps working on its snapshot or is blocked.
-8. **Self-approval.** A single fractional approver publishes alone. INFOODS asks for "a second compiler and/or … computerized validation tests" (AP2). This lens relies on the automated checks. Whether the roles screen should offer an optional second approver (Platform admin's roles) is open.
-9. **Hard stop as an editable value.** The map lists the 1,000 kcal hard stop among approver-versioned values. This lens makes 1,000 a code-fixed minimum the Policy can raise but not lower (10.50, R32). That limits C1's "admins configure values".
-10. **Who owns the evaluation set's reference values.** NFR-10 needs 200 target-cuisine cases and 100 bilingual labels with ground truth. That sits with the Platform admin's evaluation, but the reference values are nutrition work. Assign the owner.
-11. **Support sees a submission's status.** An eater may ask support why a label was rejected. Support then needs the review item's status and reason, but not the photos. Set the read scope with the Support agent lens.
+1. **"Recipe" vs "Tier B recipe record".** The eater's Recipe is private (WF-2; D2 states Draft → Saved → Archived). The Tier B recipe record is public (D2 reference states). Proposal: one calculation engine, two owners. The console's **Recipes** section shows only Tier B recipe records.
+2. **Who owns retention.** The map lists retention in the approver's Policy (§1 ¶6). Brief §23.2 says "Privacy/security reviewers approve consent, retention, access". 10.56 blocks lengthening for now. Decide whether the approver, the privacy reviewer or both sign.
+3. **A raised floor against approved Targets.** FR-058 and FR-071 keep a Target until the eater approves another (10.58). Safety argues for applying a *raised hard stop* at once. Decide which values apply at once and which wait for the eater's review.
+4. **Label submissions against eater privacy and retention.** A submission needs a review Consent purpose (R22: "A separate consent shall be obtained for each Processing purpose"; brief §19.2). The purpose is not in the map's consent list. Its photos must also outlive the 30-day raw-scan window (FR-078) while it is Proposed or In review. The eater lens and this lens meet here.
+5. **One de-identification rule for eater-typed text (an `assumption`).** Text an eater typed or said, such as a food name, appears in the console only when **at least 5 distinct eaters used the same normalised text in the last 28 days**. A flag that would rest only on such text is not raised below that (10.10, 10.18). Flags built from reference records and enumerated fields are raised at once with counts only: Energy mismatch, a preparation substitution (10.12), Ingredient updated. So are Label submissions, which come with Consent. The threshold and the window need a privacy decision (FR-080 "de-identified").
+6. **No Evidence badge for a Tier A reference row.** The fixed set is label-verified · recipe-calculated · measured · estimated analogue · user-defined. Brief §20.1 says "measured unit + reference nutrition". Decide which badge an Entry gets when its Food is a Tier A row and its amount is a typed weight.
+7. **Retired and logging.** D2 says a Retired version is "not used for new resolutions; existing snapshots unchanged". Still to decide: does logging an existing Unit that points to a Retired Food version keep working on its snapshot (10.29 shows only a notice), or is it blocked until the eater replaces it?
+8. **Words this lens needs that D2 lacks** (§6): flag, its types and open/closed; Label submission; value basis (measured · declared · estimate); carbohydrate convention. Note that the value basis "measured" overlaps the Evidence badge "measured" — two meanings for one word unless the delta separates them.
+9. **The hard stop as an editable value.** The map lists the 1,000 kcal hard stop among the approver-versioned values. This lens makes 1,000 a minimum fixed in code: Policy can raise it but never lower it (10.50, R32). That narrows C1's "admins configure values".
+10. **Wikidata is not a listed integration.** §0 line 6 names Gemini, USDA FDC and HealthKit. 10.45 needs a Wikidata adapter with a mock, or a CC0 label-file import instead.
+11. **Who owns the evaluation set's reference values.** NFR-10 needs 200 target-cuisine cases and 100 bilingual labels with ground truth. That is the Platform admin's evaluation, but the reference values are nutrition work.
+12. **What Support may see of a submission.** An eater may ask support why a label was rejected. Support then needs the Label submission's state and reason, never its photos (10.66 refuses the photos). Set this read scope with the Support agent lens.
+13. **The USDA release import lives in Jobs.** Jobs belongs to the Platform admin. The approver only reads its outcome (10.23). Confirm that split with the Platform admin lens.
+14. **No state for withdrawing an approved, not-yet-in-effect Policy version.** D2 has Approved → In effect, with no cancel. To stop it, a newer version must be approved with an earlier or equal effective-from. Confirm, or add a state by delta.
 
 ## 8 · Coverage
 
 | brief line | stories |
 |---|---|
+| WF-10 done-when (فول مدمس with evidence and licence; the resolver uses it) | 10.26, 10.31, 10.34, 10.39, 10.40 |
 | FR-010 preparation variants | 10.12, 10.25, 10.36 |
-| FR-012 measured / declared / estimate | 10.24 |
+| FR-012 measured / declared / estimate | 10.15, 10.24 |
 | FR-014 immutable versions | 10.14, 10.17, 10.28, 10.30 |
-| FR-015 aliases EN/AR | 10.20, 10.41–10.47 |
-| FR-023 acyclic, tolerance | 10.37, 10.55 |
-| FR-025 resolver order | 10.10, 10.11, 10.39 |
-| FR-026 nutrient vector provenance | 10.21, 10.26 |
-| FR-027 label fields, missing ≠ zero | 10.15, 10.21, 10.24 |
-| FR-028 / FR-029 recipe and yield | 10.31–10.33 |
+| FR-015 aliases EN/AR | 10.5, 10.20, 10.41–10.47 |
+| FR-023 acyclic, tolerance | 10.25, 10.32, 10.37, 10.55 |
+| FR-025 resolver order | 10.10–10.12, 10.22, 10.23, 10.29, 10.38, 10.39 |
+| FR-026 provenance; AI alone never label-verified | 10.15, 10.21, 10.22, 10.27, 10.35, 10.38, 10.64 |
+| FR-027 label fields, missing ≠ zero | 10.15, 10.17, 10.21, 10.24, 10.65 |
+| FR-028 / FR-029 recipe, yield, uncertain oil | 10.31–10.33, 10.67 |
 | FR-030 energy mismatch | 10.13, 10.14, 10.54 |
-| FR-031 scope before recalculating | 10.28, 10.39, 10.46 |
-| FR-034 uncertain digits | 10.15 |
-| FR-035 two-question budget | 10.42, 10.55 |
+| FR-031 scope before recalculating | 10.14, 10.22, 10.28, 10.29, 10.39, 10.46 |
+| FR-034 uncertain digits confirmed | 10.15 |
+| FR-035 two-question budget | 10.42, 10.43, 10.55 |
+| FR-036 replay needs the audio | 10.56 |
 | FR-051 increments | 10.55 |
-| FR-058 / FR-071 versioned targets | 10.57, 10.58 |
-| FR-077 / FR-078 media and retention | 10.15, 10.56 |
-| FR-080 console | 10.1, 10.6, 10.18, 10.19, 10.48 |
-| FR-081 privilege separation | 10.2, 10.61, 10.63 |
-| FR-082 launch nutrition-policy review | 10.61, 10.62 |
-| brief §3.3 policy ownership | 10.48–10.62 |
-| brief §6.2 restaurant serving meaning | 10.24 |
-| brief §10.2 mismatch threshold | 10.13, 10.54 |
+| FR-058 / FR-071 versioned targets | 10.49, 10.57, 10.58, 10.68 |
+| FR-076 / FR-077 / brief §19.2 consent, signed access, restricted roles | 10.66 |
+| FR-078 retention (scans and audio) | 10.56 |
+| FR-080 console | 10.1, 10.3, 10.4, 10.6–10.8, 10.18, 10.19, 10.48 |
+| FR-081 privilege separation | 10.2, 10.61, 10.63, 10.66 |
+| FR-082 launch nutrition-policy review | 10.61–10.63 |
+| brief §3.3 policy ownership, loss default and choices | 10.48–10.62, 10.68 |
+| brief §6.2 grounding; restaurant serving | 10.22, 10.24, 10.40 |
+| brief §10.2 mismatch threshold; carbohydrate convention; ingredient mass | 10.13, 10.25, 10.54, 10.65 |
+| brief §20.1 heuristic ranges | 10.33, 10.67 |
+| NFR-07 / NFR-08 / NFR-11 | 10.2 / 10.7 / 10.19 |
 | AT-03 / AT-05 / AT-06 / AT-08 / AT-12 / AT-15 / AT-28 / AT-30 | 10.37 / 10.12 / 10.31 / 10.15 / 10.14 / 10.13 / 10.15 / 10.16 |
 
-**Shared stories:** with the Eater — 10.10, 10.12, 10.14, 10.15, 10.16, 10.18, 10.28, 10.39, 10.41, 10.42, 10.46, 10.50, 10.52, 10.53, 10.55, 10.58, 10.64. With the Auditor — 10.56, 10.61, 10.63. With the Support agent and Platform admin — 10.2.
+**Shared stories.**
+- With the Eater: 10.10, 10.12–10.16, 10.18, 10.28, 10.39, 10.41, 10.42, 10.46, 10.50, 10.52, 10.53, 10.55, 10.58, 10.64, 10.66, 10.67, 10.68.
+- With the Auditor: 10.56, 10.61, 10.63, 10.66.
+- With the Support agent: 10.2, 10.66.
+- With the Platform admin: 10.2, 10.23, 10.66.
 
-Totals: 64 stories, 171 acceptance lines (144 runtime, 16 system, 11 module).
+Totals: 68 stories, 208 acceptance lines (173 runtime, 19 system, 16 module).
+
 
 ## Lens verdict (2026-10-01)
 
@@ -651,3 +864,85 @@ Checked by the lens verifier against `_lens-verifier-brief.md`, `_lens-brief.md`
     - 10.11 says "the editor warns";
     - 10.29's Retire shows no dialog.
 23. **§4: "every read flow and queue triage also work at ~390 px".** Profile §0 asks for the "admin console proved in a browser at desktop and ~390 px". No acceptance line in any story exercises ~390 px, and 10.1 fixes "a 1,440 px browser". Care group 6's "Is every target big enough to hit" and its reduced-motion question are neither answered nor marked not applicable, although the narrow console is used by touch.
+
+## Fix round 1 (2026-10-01)
+
+Fixed in the file itself. The binding `way/vocabulary.md` (delta D2) was applied throughout:
+- reference states Proposed → In review → Approved · Rejected; Superseded · Retired;
+- Policy states Proposed → Approved → In effect → Superseded, with D2's one- or two-person approval rule (10.57);
+- D2 error codes only (`FORBIDDEN`, `VALIDATION_ERROR`, `STALE_REVISION`, `MASS_BALANCE_ERROR`, `SOURCE_BASIS_UNKNOWN`, `CONSENT_REQUIRED`, `POLICY_FLOOR`, `UNAUTHENTICATED`);
+- D2 console sections (Review · Foods · Recipes · Aliases · Policy · Metrics · Settings, with language and launch gates under Settings);
+- the verb Approve replaces "publish".
+
+New stories 10.65–10.68 sit inside their steps, so the old ids keep the numbers this verdict uses. Now 68 stories and 208 acceptance lines (173 `/r`, 19 `/s`, 16 `/m`); every story has a `/r` line and a Trace line.
+
+1. Every story now carries a **Trace** line naming WF-10, the done-when (DW), an interaction row (IR-ref, IR-pol, IR-res, IR-con; keys in §3) or FR/AT/NFR lines. Research is support only.
+   - 10.3, 10.7 and 10.8 trace to FR-080, and 10.7 also to NFR-08.
+   - 10.22 and 10.23 trace to IR-ref, FR-025, FR-026, FR-031, brief §6.2 and NFR-05.
+   - 10.29 traces to IR-ref, FR-025, FR-031 and brief §17 ("moderation model"). Retired is now a D2 state.
+   - 10.30 traces to FR-014/FR-026; 10.32 to FR-028/FR-023; 10.38 to FR-025/FR-026; 10.44, 10.45 and 10.47 to FR-015.
+2. The invented 10 % cross-check gap threshold is dropped. In 10.34, every attached cross-check needs a note, with no threshold.
+3. One de-identification rule for eater-typed text is now §7.5: at least 5 distinct eaters within 28 days (`assumption`); below that, no flag rests on the text.
+   - 10.10 is rewritten to 6 eaters, with a 3-eater negative line.
+   - 10.18 uses the same rule.
+   - 10.12 is a flag built from enumerated fields only, which the rule says are raised at once with counts.
+4. WF-10 done-when licence:
+   - 10.31 shows the فول مدمس Tier B recipe record's licence ("Own calculation · ingredients CC0 1.0 (USDA FoodData Central — cite)", also from the API), and the 10.26 licence gate applies to every ingredient;
+   - 10.39's Approve preview and `GET /v1/admin/recipes/{id}` show Evidence and licence;
+   - 10.26 traces to DW.
+5. FR-029:
+   - new **10.67** (fried طعمية, absorbed oil 40–90 g) shows an estimate with "heuristic low/high scenario 207–257" and the material assumption, never "95 % confidence" (brief §20.1);
+   - 10.33 adds the low/high-yield path (131–151, heuristic).
+6. Brief §10.2 carbohydrate convention:
+   - new **10.65** requires "total (fibre included) · available (fibre excluded)", and counts fibre and sugars once in the proximate, macro-mass and 4/4/9 checks;
+   - 10.25's failing fixture now uses total carbohydrate with fibre included (sum 177 g);
+   - AP1 adds FDC's "Values for carbohydrate by difference include total dietary fiber content".
+7. FR-012:
+   - 10.24 adds the value-basis markers measured · declared · estimate, shown in Foods;
+   - 10.15 marks label values "declared".
+8. FR-026/FR-034 (10.15):
+   - Approve stays disabled while a highlighted digit is unconfirmed;
+   - the approve API returns 422 `VALIDATION_ERROR` and creates no label-verified version from AI extraction alone.
+9. Brief §19.2 and FR-077: new **10.66**.
+   - The photos open only for the Nutrition approver role; Support agent, Platform admin and Auditor tokens get 403 `FORBIDDEN`.
+   - They are served through signed URLs that expire; the 5-minute lifetime is an `assumption`.
+   - They reach Review only with the eater's review Consent (`CONSENT_REQUIRED` otherwise); withdrawing the Consent rejects the submission and deletes its photos.
+   - The story also covers zooming at 390 px.
+10. Brief §3.3 loss default and selectable ranges:
+    - new **10.68** sets the loss and gain defaults and the choices eaters see (5/10/15 % and 5/10 %, labelled `assumption`), with validation, and observes them on the simulator in Settings → Goals;
+    - 10.48's table lists them.
+11. The audio 24 h retention is now editable in 10.56: shorten to 12 h; 36 h is blocked as beyond the disclosed value; 0, −1 or "abc" are rejected (bounded 1–24 h because FR-036 replay needs the audio).
+12. Reachability:
+    - 10.12 starts from a mock-AI Analysis with preparation "in oil, drained" against an Approved "Tuna, canned in water" (AT-05);
+    - 10.29 and 10.14 start from **seeded legacy records**, stated as such;
+    - the file header states that Givens use the seeded synthetic dataset and mock adapters.
+13. Named interfaces:
+    - 10.22 now observes 15.5 through `POST /v1/analyses` (`usda_release: "15.5"`) and the states in Foods;
+    - 10.57 observes the new floor in Settings → Goals on the simulator and through `GET /v1/admin/policy/versions?state=In effect`.
+14. One list of console places (§3 "Places", from D2):
+    - language is Settings → Language (10.5);
+    - the launch gates are Settings → Launch gates (10.40, 10.62);
+    - the "Shortcuts" setting is removed: letter shortcuts are active only while the Review table has focus (WCAG 2.1.4, "Active only on focus"; 10.7);
+    - 10.2's navigation list matches D2.
+15. AP4 is rewritten:
+    - NDSR is described as a researchers' and dietitians' desk tool, not NCC's curators' tool, and the desk claim in §1.2 is labelled `assumption`;
+    - Cronometer's "our highest quality data source (NCCDB)" is quoted with its link.
+16. AP5 gives a full link for each Cronometer article. AP6's quote is corrected to "soluble non-digestible carbohydrates".
+17. Every "F-implication" citation is removed. 10.10 cites F5 and F11 only. The header says implications that lean on doubtful findings are not cited; 10.40's "about 50" is described as r1-food-sources' recommendation and is set by the approver.
+18. "Tier B recipe record" is the only name for an approver-calculated dish, and §3 defines it. 10.35's مرقوق is explicitly a Food, not a Tier B recipe record, because the study made the calculation. 10.36 says "two Tier B recipe records". 10.8's button reads "Propose a Tier B recipe record".
+19. "USDA release" is the only name, as in D2. The API is `/v1/admin/usda-releases`.
+20. Evidence badges are the fixed set exactly. 10.35's badge is "recipe-calculated", and "ESHA-calculated" moved to the source line.
+21. States now come only from D2.
+    - "Take over" is now "Claim from approver A".
+    - "Launch set" is now the "Launch dishes" gate in Settings → Launch gates.
+    - "Review → Metrics" is now the Metrics section.
+    - The eater screen "Sources & licences" is dropped; attributions are observed through `GET /v1/reference/attributions` and in Analysis review's source details (FR-046).
+    - "launch-gates panel" is now Settings → Launch gates.
+    - The "Shortcuts" setting is removed.
+    - "Cross-check" is the map's own word ("Approver → reference" row).
+    - Words D2 still lacks (flag and its types, Label submission, value basis, carbohydrate convention) are listed in §6 and raised in §7.8 for a delta.
+22. §5 groups 3–4 now match the stories:
+    - a preview with Approve or Cancel opens before every Approve that changes what eaters resolve or are offered, and before every Retire (10.29's Retire now has its preview);
+    - every other check or warning is inline beside its field (10.11, 10.25);
+    - there are no other dialogs.
+23. The ~390 px width is exercised: 10.1 (stacked rows, no page scroll, targets ≥ 24 × 24 CSS px), 10.6 (the table scrolls inside its frame) and 10.66 (photo zoom buttons). AP13 (WCAG 2.5.8) is added. Reduced motion is in 10.7. §5 group 6 answers target size and reduced motion.
