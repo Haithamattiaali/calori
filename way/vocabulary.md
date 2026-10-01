@@ -38,3 +38,9 @@ Extends `blueprint.md` §1 ¶4. Every lens, contract, screen, log line and test 
 - **Audit outcomes:** Allowed · Refused · Done · Failed · Not found.
 - **Places (app):** Onboarding · Age, · Under 18, · Consents, · Account, · Profile, · Safety screen, · Energy, · Target, · Macros, · Activity mode, · Review · the account line · Settings → Privacy → Grants · Support code · Delete account · Day picker · timeline · Entry details · Day report · Activity sheet · quick-add · count stepper · correction preview · Source details · My Units → Templates · Progress → Weight · Target history.
 - **Places (console):** Registry › <task> (models list, prompt editor, regression set, quotas panel) · Metrics › cost view · prices panel · Jobs › Look up an account · account panel · Privacy help · Privacy jobs · Failed Analyses · Sync · Activity · Requests received outside the app · Escalated · Retention · Grants › Grant form · Grant panel · Grant bar · Diary (read-only) · Grants list · Review › flags · Label submissions · Audit trail › Events · Anomalies · Consents · Summary · Records of processing · Exports (action: Find account) · Settings › launch gates · Grant settings.
+
+## Delta D6 (2026-10-01) — from `join.md` §22
+- **Wording** (a versioned consent or request text): Proposed → Published · Superseded; flag `asks_again`. Console place: **Settings › Wordings**.
+- **Grant settings version**: In use → Replaced · Rolled back.
+- **Plan**: a Saved Plan whose Day has ended stays **Saved** with `expired_at`; copy "not logged"; its card lives on **Today**.
+- Field names: `credit_factor` (decimal fraction), `credit_cap_kcal`.

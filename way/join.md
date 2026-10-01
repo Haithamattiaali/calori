@@ -1026,3 +1026,25 @@ The lenses were judged on their own stories; every mismatch between them was rou
 - **Audit outcomes:** Allowed · Refused · Done · Failed · Not found.
 - **Places (app):** Onboarding · Age, · Under 18, · Consents, · Account, · Profile, · Safety screen, · Energy, · Target, · Macros, · Activity mode, · Review · the account line · Settings → Privacy → Grants · Support code · Delete account · Day picker · timeline · Entry details · Day report · Activity sheet · quick-add · count stepper · correction preview · Source details · My Units → Templates · Progress → Weight · Target history.
 - **Places (console):** Registry › <task> (models list, prompt editor, regression set, quotas panel) · Metrics › cost view · prices panel · Jobs › Look up an account · account panel · Privacy help · Privacy jobs · Failed Analyses · Sync · Activity · Requests received outside the app · Escalated · Retention · Grants › Grant form · Grant panel · Grant bar · Diary (read-only) · Grants list · Review › flags · Label submissions · Audit trail › Events · Anomalies · Consents · Summary · Records of processing · Exports (action: Find account) · Settings › launch gates · Grant settings.
+
+## 22 · Delta D6 — decisions on the model phase's last open points (2026-10-01, by the session)
+
+Source: `way/personas/added-stories.md` ("Proposed for D6", "Conflicts for the model phase"). The nine defaults D6-A1…A9 are adopted as written, except where J151 below widens D6-A7.
+
+**J149 · Adopt D6-A1…A9.** Grant settings bounds (1–24 h, one default), review-note fields and finding values, the no-eater-identifier check, the hourly Audit trail retention run with `removed_through_seq` and `anchor_hash`, the expired Plan's card on Today with "Plan again" only, "Plan again" refilling Meal planner without solving, a 409 `VALIDATION_ERROR` `reason: plan_expired` for a confirmation made after expiry, `credit_factor` as a decimal fraction, and a 409 `VALIDATION_ERROR` `reason: privacy_review_not_signed` — each is the decision. Reason: each default follows a decided pattern (J35's conflict form, J143's retention runs, support SR4) and serves its persona.
+
+**J150 · An expired Plan stays Saved, with `expired_at`.** No new Plan state; copy says "not logged". `GET /v1/meal-plans?state=saved` lists unexpired Plans; `&include_expired=true` lists all. Reason: J130 already decides "no state change"; one fewer state.
+
+**J151 · A confirmation made before expiry is accepted when it arrives later.** A consume command carries the device's `made_at`; when `made_at` is before the Plan's `expired_at`, the server accepts it once onto the Plan's Day (FRD §8.3: the server accepts an unprocessed command once; FR-047: a late edit updates the historical Day). A command made after expiry is refused (J149). With a 00:00 or 03:00 boundary, a next-morning eater logs last night's meal from the Day picker; eater-5.35 holds because its Ramadan Day runs to 12:00 (J116).
+
+**J152 · The Saved Plan card lives on Today** (eater-5.20, 5.28, 5.30, 5.35, 5.45). Capture & Plan shows no Plan card.
+
+**J153 · Wording states and place.** A Wording version is Proposed → Published · Superseded (a newer version of the same key is Published). Console place: **Settings › Wordings**. Reason: one vocabulary for every versioned text (J26).
+
+**J154 · A new consent Wording asks again only when marked.** Each Wording version carries `asks_again` (set by the publisher, recorded in the Audit trail). When true, the next use of that purpose shows the Consent sheet and the purpose stays blocked (`CONSENT_REQUIRED`) until the eater gives or declines it; when false, Consents given under earlier versions stay valid under their own version. The seed's `c-ai-5` has `asks_again: false`, so Faisal stays under `c-ai-3`. Reason: R22/R31 (consent per purpose, documented) without re-asking for wording-only edits.
+
+**J155 · A replaced Grant settings version is "Replaced"** (as a Registry version, D4). States: In use → Replaced · Rolled back.
+
+**J156 · The activity credit offer has its own route.** `GET /v1/targets/activity-credit-offer` returns the newer Policy's credit when it differs from the eater's Target version, and `POST /v1/targets/activity-credit-offer/approve` creates the new Target version (`target.version.approved`). Field names: `credit_factor` (fraction) and `credit_cap_kcal` everywhere — `events.md` is aligned.
+
+**J157 · Retention keeps role history provable.** The `audit_trail.retention_run` summary event carries `roles_held_at_anchor` (each user's roles at the anchor). The Anomalies rule "roles held with no assignment event" treats a role listed there as assigned.
