@@ -428,7 +428,7 @@ As the Auditor, I see that a Support agent could not change a diary even while t
 As the Auditor, I see that while a Grant was Active, a read of a Day or an area it did not cover was refused and logged, so that "within the Grant" means its Days and areas, not only its time box.
 - /r Given separate fixture Y (`grant_7a02` Active, day 2026-10-04 only, area "Entries and day reports") When `staff_mona` requests Day 2026-10-03 and then My Units under `grant_7a02` Then:
   - both API calls return 403 `GRANT_REQUIRED` with no diary data;
-  - on **Grants → grant_7a02**, `staff_hana` sees two rows, "Read refused · outside the Grant · Day 2026-10-03 not in Days (2026-10-04) · FORBIDDEN" and "Read refused · outside the Grant · area My Units not in Entries and day reports · FORBIDDEN";
+  - on **Grants → grant_7a02**, `staff_hana` sees two rows, "Read refused · outside the Grant · Day 2026-10-03 not in Days (2026-10-04) · GRANT_REQUIRED" and "Read refused · outside the Grant · area My Units not in Entries and day reports · GRANT_REQUIRED";
   - reads allowed for `grant_7a02` stay 0.
 - /s Given fixture Y When the emulator test reads Day 2026-10-04 (inside) and Day 2026-10-03 (outside) under `grant_7a02` Then the first returns 200 and writes one `grant.read` (Allowed), and the second returns 403 `GRANT_REQUIRED` and writes one `grant.read_refused` with detail "outside Days".
 - /m Given the rule "diary reads allowed outside a Grant's Days or areas" and a synthetic Audit trail with one Allowed `grant.read` of Day 2026-10-03 under a Grant whose Days are 2026-10-04 When evaluated Then it returns that event id. On the seeded Audit trail the rule shows 0 in Anomalies (10.14).
@@ -743,7 +743,7 @@ As the Auditor, I see that no staff member opened an eater's meal photo or audio
 - /r Given event 78 When `staff_hana` filters Events by `access.refused` and object "Analysis photo" Then one row reads "staff_ali · Analysis an_7781 photo · acct_9c41e2 · FORBIDDEN · 2026-10-03T15:05:00Z". No image appears in the console, and Anomalies "raw evidence opened by staff" is 0.
 - /s Given a fresh emulator When a raw photo or audio of any Analysis is requested Then:
   - a Support agent with no Grant gets 403 `GRANT_REQUIRED`, and one `grant.read_refused` event is written (the same outcome as 10.9);
-  - a Support agent with an Active Grant gets 403 `GRANT_REQUIRED`, because media is in no Grant area, and one `grant.read_refused` event is written (as in 10.41);
+  - a Support agent with an Active Grant gets 403 `FORBIDDEN`, because no role holds the raw-evidence permission (D2: the role lacks the permission), and one `grant.read_refused` event is written (as in 10.41);
   - the Nutrition approver, Platform admin and Auditor each get 403 `FORBIDDEN`, and one `access.refused` event is written.
 
 **auditor-9.9 · The 18+ confirmation and the age gate** *(map interaction row 1; WF-1 done-when "Under 18: no account"; R16, R22)*
@@ -1418,3 +1418,7 @@ What else passed in the changed lines:
   - `CASE-1201` is fixture Y's case here and support-9.11's deletion escalation there;
   - the eater-accounts row still reads "`acct_9c41e2` (E1 in the support lens; …)", although the two lenses' Consents differ;
   - cancelling a Requested Grant (support K10).
+
+## Second fix by the session (2026-10-01), after the final check
+1. auditor-10.41's /r console lines now read `GRANT_REQUIRED` too (2 more places; the first fix missed un-backticked codes), so the console and the API agree.
+2. The journey-9 media line is restored to `FORBIDDEN` with its reason: no role holds the raw-evidence permission (9.8's header, §7 A11), which is D2's meaning of `FORBIDDEN`. `GRANT_REQUIRED` stays for reads the Support agent role may make but no Active Grant covers (§7 A16).
