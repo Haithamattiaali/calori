@@ -579,3 +579,75 @@ These do not exist in the map. This lens built them only from map nouns and FRD 
 **Shared stories:** with the Eater — 10.10, 10.12, 10.14, 10.15, 10.16, 10.18, 10.28, 10.39, 10.41, 10.42, 10.46, 10.50, 10.52, 10.53, 10.55, 10.58, 10.64. With the Auditor — 10.56, 10.61, 10.63. With the Support agent and Platform admin — 10.2.
 
 Totals: 64 stories, 171 acceptance lines (144 runtime, 16 system, 11 module).
+
+## Lens verdict (2026-10-01)
+
+**fail** — 23 defects.
+
+Checked by the lens verifier against `_lens-verifier-brief.md`, `_lens-brief.md`, `way/blueprint.md` §0–§1, `way/brief/frd-v1.0.md`, `way/research/r1-*.md` with both refutations, and `care.md`. Counts confirmed: 64 stories, 171 acceptance lines (144 `/r`, 16 `/s`, 11 `/m`), and every story has at least one `/r` line. The AP1–AP12 quotes were re-opened on 2026-10-01 with a generic User-Agent, and all are on the cited pages except where defects 15–16 say otherwise. No refuted or doubtful finding (R34, F10, F18, F31, C6, C8, C26, C27, C39, C47, C50, C54) is cited directly. **Ids pass:** `approver-10.1` to `approver-10.64` run without gaps, and journey 10 = WF-10.
+
+### Traced
+
+1. **10.3, 10.7, 10.8, 10.22, 10.23, 10.29, 10.30, 10.32, 10.38, 10.44, 10.45, 10.47.** The trace line names no map element and no FR, AT or NFR line. It cites only care.md or research: 10.7 "· AP8, AP9, AP10"; 10.32 "· AP2"; 10.30 "· AP7 ("Compare data")"; 10.29 "· F14 (vocabulary gap "Retire", §7)". These stories sit inside WF-10 steps, so in substance they are not drift, but each one needs its WF-10 step, interaction row or FR line. 10.29's Retire is an operation that neither the map nor the FRD has.
+2. **10.34.** It says the record "requires a note, because the gap exceeds the Policy's 10 %". No cross-check gap threshold appears in map §6's Policy list or in 10.48's Policy table. This Policy value is invented and has no source or `assumption` label.
+3. **10.10 `/s` and 10.12 `/s` against 10.18 (FR-080 "de-identified").** 10.10 opens an item that carries one eater's typed term: "term "تمر صقعي" … `eaters_affected` 1, `entries_7d` 1". 10.18 holds back the same kind of diary text below 5 distinct eaters: "Given only 3 eaters used a term, Then no item exists for it". That gives two de-identification rules for eater-typed food names. §7.5 sets the threshold for unmatched names only.
+
+### Complete
+
+4. **WF-10 done-when: "an approver approves a Tier B recipe record (e.g. فول مدمس) with its evidence and licence".** 10.31 and 10.39 never set or show the فول مدمس record's licence. 10.31 only says "Then the record shows 140 kcal/100 g, per-100 g macros …, Evidence "recipe-calculated" and the formula". No line says which licence a Tier B record carries, or that 10.26's licence gate applies to Recipe records. 10.40 only shows a licence column in the Launch set.
+5. **FR-029: "With missing cooked yield or uncertain absorbed oil, show an estimate/range and the material assumption".** No story covers a fried dish whose absorbed oil is uncertain. 10.32 only ticks "Absorbed or added fat included". 10.33's cited-yield path shows the assumption but no range, and no line labels a range as heuristic (FRD §20.1).
+6. **FRD §10.2, rows "Fiber and net carbohydrate — Preserve source total carbohydrate and fiber conventions" and "Ingredient mass — … must not double-count subcomponents".** No story records whether a Food's carbohydrate is total or available. 10.25 mixes the two conventions: its `/m` line uses "available carbohydrate 20, fibre 3", and its `/r` line uses "carbohydrate 73, fibre 10 … Sum of proximates 187 g". If 73 is total carbohydrate, fibre is counted twice.
+7. **FR-012: "Distinguish measured values, declared values, and estimates".** §8 claims "FR-012 measured / declared / estimate | 10.24", but no 10.24 line shows a measured, declared or estimate marker.
+8. **FR-026: "AI reasoning alone cannot be marked label-verified" (with FR-034's confirmation).** 10.15 covers only the happy path: "When the approver confirms each highlighted digit and presses Approve". No line shows Approve disabled while a highlighted digit is unconfirmed, or the API refusing label-verified without the approver's confirmation.
+9. **FRD §19.2: "Access to raw evidence for quality review requires explicit consent and restricted roles"; FR-077: "Use short-lived signed access".** No line proves any of these for Label submission photos:
+   - they open only for the approver role (a support, admin or auditor token gets 403);
+   - they are served through a short-lived signed URL;
+   - they reach the queue only with the eater's review consent.
+
+   10.15 cites FR-077 but checks only "cropped, metadata stripped". §7.4 raises the consent question, but the approver-side gate has no acceptance line.
+10. **FRD §3.3: "loss (15% below estimated maintenance) … with selectable conservative ranges".** No story edits the loss default or sets the ranges an eater may choose from. 10.48 only reads "loss default 15 %", and 10.51 sets only the cap and the gain.
+11. **Map §6 Policy "retention (raw scans 30 days, audio 24 h)" / FR-078.** 10.56 covers raw scans only. The audio 24 h value has no line for editing it, for its bound, or for invalid input.
+
+### Observable
+
+12. **10.12 `/s` and 10.29 `/r`.** Their Givens cannot arise in the served product:
+    - 10.12 has "a Unit references "tuna in oil, drained" and only "tuna in water" exists". Under FR-010, a Unit must reference a Food version that exists.
+    - 10.29 starts from "Food "Barley, grains" v1 with water 88 g and 335 kcal per 100 g" as published. 10.25's checks and 10.26's NNI cross-check-only gate would block that record.
+
+    Either state these as seeded legacy records or choose fixtures the product can reach.
+13. **10.22 `/r` (3rd) "new resolutions use 15.5" and 10.57 `/r` (3rd) "a new target proposal uses the 1,300 floor".** Neither line names the screen or interface where a verifier would observe the result.
+14. **10.5 `/r` (2nd) "the console language is switched to العربية", 10.7 `/r` (2nd) "under Shortcuts", 10.62 `/r` (1st) "the launch-gates panel shows that gate as met".** None of these screens has a place in the console. 10.2 lists only "Review, Foods, Recipes, Aliases, Policy and History", and §6 names no settings or launch-gates area.
+
+### Sourced
+
+15. **§1.1 AP4.** The heading says "its curators work in a desktop program", but the quote is about NDSR, "a Windows-based dietary analysis program designed for the collection and analyses of 24-hour dietary recalls, food records, menus, and recipes". That is a tool for researchers, not for NCC's curators, and §1.2 "Where" leans on it. The parenthetical "(the source Cronometer calls its best)" has no quote or link. Cronometer article 360042550452 does say "our highest quality data source (NCCDB)", but the lens does not quote it.
+16. **§1.1 AP5 and AP6.** AP5 gives Zendesk article ids and dates but no links. AP6 quotes "A general factor of 2 calories per gram for solub[le fibre]". eCFR 101.9 reads "soluble non-digestible carbohydrates", so the bracket changes the term.
+17. **10.10.** It cites "F-implication 7". That implication's route to a صقعي record ("until an approved SFDA or literature record exists (F5, F11, F31)") rests on F31, which r1-refute-a marks doubtful. The lens header says F31 is not cited.
+
+### Vocabulary
+
+18. **One thing has five names.** The map's term is "Tier B recipe record". The lens uses:
+    - "Tier B Recipe record" (10.31);
+    - "Recipe record" (10.8 "Add a Recipe record", 10.28);
+    - "Tier B record" (10.32, 10.37, 10.38);
+    - "recipe record" (10.39);
+    - "Food" for the same kind of dish (10.35 "Food "مرقوق · Margoug""; 10.36 "both exist as separate Foods").
+19. **One thing has three names:** "Tier A releases" (10.22 area), "FDC release" (10.22 story), and `reference-releases` (10.23 API, §6).
+20. **10.35.** "Evidence "recipe-calculated (ESHA, cited)"" extends the fixed badge set (map §6: "Fixed vocabulary: the evidence badge set"). The calculation method belongs in the source, not in the badge.
+21. **Names used in stories that are neither map words nor in §6's proposed list:**
+    - the statuses "Superseded" (10.14, 10.17), "Scheduled" and "Live" (10.57), and "Retired" (10.29, 10.46); only Retire is raised, in §7.7;
+    - "Take over" (10.9);
+    - "Launch set" (10.40);
+    - "Review → Metrics" (10.19);
+    - "Sources & licences" (10.64), a new Settings screen for the eater;
+    - "launch-gates panel" (10.62);
+    - "Shortcuts" (10.7);
+    - "Cross-check" as an attachment kind (10.26, 10.34).
+
+### Experience
+
+22. **§5 groups 3–4 disagree with the stories.** §5.3 says "a dialog only for Publish of a Policy version and for Retire", and §5.4 says "the only warnings are before a Policy publish and a Retire". The stories do otherwise:
+    - 10.28 puts a Publish/Cancel preview before every Food version publish;
+    - 10.11 says "the editor warns";
+    - 10.29's Retire shows no dialog.
+23. **§4: "every read flow and queue triage also work at ~390 px".** Profile §0 asks for the "admin console proved in a browser at desktop and ~390 px". No acceptance line in any story exercises ~390 px, and 10.1 fixes "a 1,440 px browser". Care group 6's "Is every target big enough to hit" and its reduced-motion question are neither answered nor marked not applicable, although the narrow console is used by touch.
