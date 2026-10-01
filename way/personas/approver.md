@@ -1355,3 +1355,50 @@ Not counted (`way/lessons.md`, 2026-10-01).
 1. 10.69: the approved credit factor and cap are stored on the eater's Target version; a later credit Policy leaves an approved eater's credit unchanged until they approve the new one (new line).
 2. 10.69: target history is on **Progress** (WF-8), not a new Settings place.
 3–5. 10.24: the Foundation Foods line names FDC 321358 "Hummus, commercial" and uses only FR-012's markers, following the release's own derivation per nutrient (Analytical → measured; Calculated → estimate with its method), opened at fdc.nal.usda.gov on 2026-10-01 — no unsourced nutrient list and no fourth marker.
+
+## Lens verdict — final 2 (2026-10-01)
+
+**fail** — 1 defect. All 5 defects of the final verdict are fixed. The fixed 10.24 line brings 1 new fault.
+
+Checked by a fifth lens verifier against `_lens-verifier-brief.md` with its addendum, `way/vocabulary.md` (D2, binding), map §1 ¶4 and WF-8 (`way/blueprint.md`), FRD §12.2, FR-012, FR-026, FR-027, FR-058 and FR-071. The scope is the final verdict's 5 defects and the lines the session changed (`git diff 2a0d2b3 2ff7b4c -- way/personas/approver.md`): 10.24 line 3, and 10.69 lines 3 and 6 plus the new line 7. Each changed line was checked against 10.21, 10.24, 10.58 and 10.69. Unchanged material was not audited again. Eater stories were read only where a changed line meets them: eater-7.18 and eater-8.23.
+- **The source was opened.** https://fdc.nal.usda.gov/portal-data/external/321358 was fetched once with a generic User-Agent and no identifiers, on 2026-10-01 (HTTP 200, JSON). It returned `"description": "Hummus, commercial"`, `"foodType": "Foundation"` and `"currentFood": true`. Each nutrient's `foodNutrientDerivation` is as the line says:
+  - "Total lipid (fat)" 17.1 g, "Fiber, total dietary" 5.4 g and "Iron, Fe" 2.41 mg: `"code": "A", "description": "Analytical"`.
+  - "Protein" 7.35 g, "Carbohydrate, by difference" 14.9 g, "Energy (Atwater General Factors)" 243 kcal and "Energy (Atwater Specific Factors)" 229 kcal: `"code": "NC", "description": "Calculated"`. Protein's source reads "Calculated or imputed". The record's conversion factors are "Protein From Nitrogen" 6.25 and "Calories From Proximates" 3.47 / 8.37 / 4.07.
+  - Recomputed: carbohydrate 100 − (58.7 + 7.35 + 17.1 + 1.97) = 14.88, shown as 14.9; specific energy 7.35 × 3.47 + 17.1 × 8.37 + 14.9 × 4.07 = 229.3, shown as 229; general energy 7.35 × 4 + 17.1 × 9 + 14.9 × 4 = 242.9, shown as 243. These are calculated values, as the line says.
+- No owner identifier was sent anywhere.
+
+### The 5 final-verdict defects
+
+| # | status | the line that shows it |
+|---|---|---|
+| 1 | fixed | 10.69 "The approved credit factor and cap are stored on the eater's Target version."; new line "Given an eater who approved credit 50 % up to 300 kcal, When a Policy version with credit 40 % up to 250 kcal comes In effect, Then that eater's Today still credits 50 % up to 300 kcal (their Target version is unchanged, as 10.58 protects approved Targets), and Settings → Activity offers "New activity credit available: 40 % up to 250 kcal — Review", which changes nothing until the eater approves it". This agrees with 10.58 ("a new Policy version never rewrites approved Targets"; "The Target does not change until the eater approves one"), with FR-058 and FR-071, and with FRD §12.2 ("a visible user-approved credit factor and cap"). It names the simulator, Today and Settings → Activity, and the screen string holds no FR, AP or EA id. |
+| 2 | fixed | 10.69 "after the eater approves the Target, the target history on **Progress** (WF-8) shows that Target with "Activity × 1.2 · Policy v1"". This is the map's place: WF-8 holds "target history", and Progress is a vocabulary tab. No "Settings → Goals → Target history" is left in the story section. |
+| 3 | fixed | 10.24 ""Analytical" → "measured" (total fat, total dietary fibre, iron), "Calculated" → "estimate" with the method shown". Only FR-012's words are used ("measured values, declared values, and estimates"; §6 "measured · declared · estimate"). "calculated from measured values" is gone from the story section. |
+| 4 | fixed | 10.24 "Given the Tier A row FDC 321358 "Hummus, commercial" from USDA Foundation Foods, When its values are opened in Foods". The row exists as named (above). Both energy values on that row are "Calculated", so a verifier can check the "estimate" marker whichever energy Foods shows. |
+| 5 | fixed | 10.24 "(fdc.nal.usda.gov food 321358, derivation per nutrient, opened 2026-10-01)". Every nutrient the line names carries the derivation it claims (above), so the unsourced list is gone. Below-LOQ values: the line no longer marks a whole class ("minerals") "measured". It marks by derivation, and 10.21 stores a below-LOQ component as "below LOQ (<0.03)", not as 0, so an analysed below-LOQ value shows as "<0.03 · measured", not as a measured zero. The two lines agree. |
+
+### Defects
+
+**Observable**
+
+1. **10.24, third line: the rule covers "each value", but maps only two of the three derivations on the row it names.**
+   - The line: "each value carries the marker that follows the release's own derivation for that nutrient: "Analytical" → "measured" …, "Calculated" → "estimate" …".
+   - FDC 321358 also carries a third derivation, `"code": "AS", "description": "Summed"`, whose source is "Analytical or derived from analytical". It applies to "Sugars, Total" 0.34 g, "Total fat (NLEA)" 16.1 g, "Carbohydrate, by summation" 13.9 g and the fatty-acid totals (saturated 2.22 g, monounsaturated 6.37 g, polyunsaturated 7.48 g, trans 0.018 g).
+   - So a verifier who opens the row in Foods cannot tell which marker sugars should carry, though sugars is an FR-027 label field and was on the earlier list. The same gap affects the row's second fat value and second carbohydrate value. "total fat" in the line matches "Total lipid (fat)" (Analytical), not "Total fat (NLEA)" (Summed).
+   - To fix it, do either of these:
+     - add "Summed" → one of FR-012's three markers, with the reason;
+     - limit the claim to the nutrients the line names and say what the other values show.
+
+### Not counted
+
+- **The totals line is still wrong.** It reads "226 acceptance lines (191 runtime, 19 system, 19 module)". The story section now holds **228 (192 `/r`, 18 `/s`, 18 `/m`)**, because this fix added one `/r` line to 10.69. None of the seven checks covers this.
+- **The new source sits outside §1.1.** 10.24 cites "fdc.nal.usda.gov food 321358 … opened 2026-10-01" inline, with no full URL and no AP id, while §1.1 says the lens's own findings are AP1–AP13. The claim is right and was re-opened here. Register it in §1.1 (for example as AP14) with https://fdc.nal.usda.gov/portal-data/external/321358 and the derivation quotes above.
+
+### Cross-lens (for the model phase join)
+
+Not counted (`way/lessons.md`, 2026-10-01).
+- **Where the approved credit lives: now joined.** 10.69 "stored on the eater's Target version" matches eater-7.18's "a new Target version stores the mode, base, credit factor, cap and effective date".
+- **The Target history place: now joined.** 10.69 "the target history on **Progress**" matches eater-8.23's "Progress → Target history".
+- **The new credit offer has no eater story.** 10.69's "New activity credit available: 40 % up to 250 kcal — Review" in Settings → Activity has no counterpart in eater-7.18 (Settings → Activity → Activity mode), which also still makes the credit and cap "each editable". Decide the screen string, and whether a Policy value is a default or a bound.
+- **Target history strings.** 10.69 shows "Activity × 1.2 · Policy v1". eater-8.23 rows show a source such as "Estimated by the app: maintenance 2,200, −15 %". Choose one row format.
+- **The Targets API.** This is still open: 10.69 uses `GET /v1/targets/current`, and eater-7.18 and eater-1.42 use `GET /v1/targets` *(proposed)*.

@@ -12,6 +12,8 @@ Read first: `way/blueprint.md` §0–§1, `way/vocabulary.md` (delta D2 — bind
 
 **Words.** Roles, states, errors and places are the ones in `way/vocabulary.md`. Words the lens needs that are not there yet are listed in §13 as proposals for a dated delta. The Support agent's console screens live in the **Jobs** and **Grants** sections (vocabulary "Places"); the eater's screens live in **Settings → Privacy** and **Settings → Export**.
 
+**Eater-app language (one rule).** Copy quoted for an eater's app is the English string-catalogue text. On an eater whose app is in Arabic (E1 and every fixture marked Arabic in §0.3) the same catalogue key shows its Arabic text with Arabic-Indic digits; a verifier observes such a line by its catalogue key in that language. Where a story also gives the Arabic text, the Arabic text is the one on screen.
+
 **Copy rules.** Eater-facing copy never shows internal ids or error codes. The support code and the deletion reference are shown because they are designed for the eater to read out. The case reference is shown because the eater already has it from the helpdesk's emails (A22). Console copy leads with plain words, and the typed code or id follows in a secondary monospaced column.
 
 **Times (one rule).** Every console time reads "HH:MM your time (HH:MM UTC)". A time the agent may repeat to the eater (Grant end, request closing, export window, quota reset, event times the eater will ask about) adds "· HH:MM eater's time". Deadlines are the eater's calendar date. The app shows the eater's local time only. Offsets on the fixture dates come from the IANA time zone database (SR17): Asia/Riyadh UTC+3; Africa/Cairo UTC+3 until 2026-10-29 and UTC+2 after; Europe/Dublin UTC+1 until 2026-10-25.
@@ -35,6 +37,8 @@ Read first: `way/blueprint.md` §0–§1, `way/vocabulary.md` (delta D2 — bind
 ### 0.2 · Audit trail events this lens writes (proposal)
 
 `staff.sign_in_failed` · `staff.sign_in_locked` · `staff.session_ended` · `support.lookup` (method `support_code` · `email` · `deletion_reference` · `grant`) · `support.lookup_rate_limited` · `support.account_viewed` · `support.jobs_viewed` · `support.job_retried` · `support.escalated` · `support.request_logged` · `grant.requested` · `grant.approved` · `grant.active` · `grant.declined` · `grant.unanswered` · `grant.expired` · `grant.ended` · `grant.withdrawn` · `grant.read` · `grant.read_denied` · `grant.approve_denied`.
+
+How events map to requests: one `/v1/support/*` request writes exactly one event. Opening an account panel is one request (`GET /v1/support/accounts/{id}`) that returns the panel together with its first tab and writes one `support.account_viewed`; opening any other tab (Sync, Analyses, Privacy jobs, Activity) is one request that writes one `support.jobs_viewed`.
 
 Each event holds what, when (UTC), where (console route and API path), source (staff or account id and role), outcome (`allowed`, `found`, `not_found`, `failed`, `denied` or `error`) and the ids involved (SR8 AU-3). The eater's Grant history lists only `grant.read` events with outcome `allowed`.
 
@@ -760,7 +764,7 @@ Covers: WF-10 ("roll models and config"); blueprint §6 (Registry: "kill switch"
 - `/s` **Given** a support token, **When** it calls any Registry write endpoint, **Then** 403 `FORBIDDEN`.
 
 #### support-10.25 · Grant actions and the Diary (read-only) when slow, failing or offline
-Shared: Support agent + eater (Settings → Privacy → Grants history) + auditor (Audit trail).
+Shared: Support agent + eater (Settings → Privacy → Grant history) + auditor (Audit trail).
 As the Support agent, I am told plainly when Send request, a read or End access fails or the network drops, and the diary never stays on screen without the server, so that a failure never leaves a request half-sent or a diary half-open.
 Covers: WF-10, FR-081, NFR-05 · care group 4 · A15, A21
 - `/r` **Given** the Grants API returns 503 (fault injection), **When** the agent presses Send request on a filled form, **Then** the form keeps every field and reads "Couldn't send the request. Nothing was sent to the eater. Try again.", and no new row appears in Grants.
@@ -890,7 +894,6 @@ Size is platform, so every question is asked on every screen this persona uses: 
 | support-9.2 | eater | reads the support code in Settings → Privacy → Support code (eater-9.29) |
 | support-9.3 | auditor | sees `support.lookup` and `support.lookup_rate_limited` |
 | support-9.9 | eater, auditor, platform admin | the eater sees "Running" in Settings → Export (eater-9.14); the auditor sees `support.job_retried`; the platform admin receives the escalation after a second failure |
-| support-10.25 | eater, auditor | the eater's Grant history does not list a read that ended in an error; the auditor sees that attempt as `grant.read` with outcome `error` |
 | support-9.11 | platform admin, auditor | the platform admin sees the escalation in Jobs → "Escalated" and resolves it; the auditor sees `support.escalated` |
 | support-9.14 | platform admin | receives the "cannot sign in" escalation |
 | support-9.15 | auditor | sees `support.request_logged` |
@@ -914,6 +917,7 @@ Size is platform, so every question is asked on every screen this persona uses: 
 | support-10.24 | platform admin | the kill switch the platform admin turns On and Off |
 
 ---
+| support-10.25 | eater, auditor | the eater's Grant history does not list a read that ended in an error; the auditor sees that attempt as `grant.read` with outcome `error` |
 
 ## 12 · Conflicts for the model phase
 
@@ -1508,3 +1512,9 @@ These parts hold:
 
   This lens's 9.2 and 10.6 now expect the Arabic catalogue text with Arabic-Indic digits. At the join, both lenses should use one convention: the Arabic shown, with the English catalogue key given for reference.
 - The earlier cross-lens items of re-verify 2 (eater wording and Grant fixtures, auditor event names, and the ownership questions K3, K4, K5, K7 and K9) were not re-checked and still stand as listed.
+
+
+## Second fix by the session (2026-10-01), after the final check
+1. One rule in §0 for an eater's app language: quoted eater copy is the English catalogue text; on an Arabic app (E1) the same key shows Arabic text with Arabic-Indic digits, observed by catalogue key — this covers 9.2 "Copy", 10.6's badge, 10.10 and 10.17 and every other E1 line at once.
+2. §0.2 states how events map to requests: opening an account panel is one request (panel + first tab) writing one `support.account_viewed`; opening another tab writes one `support.jobs_viewed`. So 9.18's 09:00 look-up (+ panel) and 09:02 Sync tab give exactly three events.
+Also: "Grant history" in 10.25's Shared line; the §11 row for 10.25 moved to story order.
