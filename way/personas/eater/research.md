@@ -99,7 +99,7 @@ Written 2026-10-01. Workflows the eater touches: WF-1…WF-9, plus the eater's s
 - https://itunes.apple.com/eg/rss/customerreviews/page=1/id=341232718/sortby=mostrecent/json · 2022-04-08, 2★ · "When I add any food to my meals, the calories add up. However, I don't see the food logged to my meal."
 - For the eater: every number on Today must be the sum of Entries the eater can see (FR-042, NFR-01). A pending Entry is shown as Pending, never hidden.
 
-**E20 · Midnight rules and frozen time zones: MFP rolls the day at midnight in the time zone first set, and does not follow travel.** `opened`
+**E20 · Midnight rules and frozen time zones: MFP counts a streak day by midnight in the time zone first set, and that zone does not follow travel.** `opened`
 - MFP help "How to fix an incorrect streak", updated 2026-08-30, read via https://support.myfitnesspal.com/api/v2/help_center/en-us/articles/360032624931.json · "Log at least one entry that syncs before midnight in your time zone." · "MyFitnessPal keeps the time zone you originally set. It doesn't update automatically when you travel."
 - For the eater: with late dinners (E9, E10) and Ramadan nights (E11), a fixed midnight cut and a fixed zone produce "wrong day" entries and broken streaks. The FRD's custom boundary and stored capture zone (FRD §8.1, FR-044) are the fix; streaks that punish a missed midnight are not.
 
@@ -126,7 +126,7 @@ Written 2026-10-01. Workflows the eater touches: WF-1…WF-9, plus the eater's s
 **E26 · In Saudi Arabia, 30% of a 1,074-person sample used a weight app and 18% had stopped; 9.2% of those who stopped named the language barrier; MFP was by far the most named app.** `opened`
 - https://pmc.ncbi.nlm.nih.gov/articles/PMC7652688/ · JMIR mHealth uHealth, 2020-10-26 · "The most reported reasons for discontinuing use were (1) loss of interest (64/195, 32.8%), (2) hidden costs (53/195, 27.2%), (3) monitoring by a specialist was not offered (27/195, 13.8%), (4) difficulty using the app (21/195, 10.8%), and (5) language barrier (18/195, 9.2%)." · "the MyFitnessPal app was the most cited by the participants. This app was mentioned more than 140 times".
 
-**E27 · Saudi MFP reviews ask for Arabic again and again, and complain about paywalled barcode and missing local food; one could not choose Saudi Arabia as a country.** Of the latest 100 Saudi-store MFP reviews (2022-10 to 2024-11), more than 40 ask for Arabic. `opened (review)`
+**E27 · Saudi MFP reviews ask for Arabic again and again, and complain about paywalled barcode and missing local food; one could not choose Saudi Arabia as a country.** Of the latest 100 Saudi-store MFP reviews in the feed (2022-10-18 to 2024-11-08), 40 ask for Arabic or for more languages. `opened (review)`
 - https://itunes.apple.com/sa/rss/customerreviews/page=1/id=341232718/sortby=mostrecent/json (pages 1–2) · 2024-10-05 · «حاطين ١٩ لغة فرحت قلت اكيد العربي بينهم بالنهايه لا» — "They list 19 languages; I was glad, sure Arabic was among them — in the end, no." · 2024-08-07 · "I will drop the evaluation due to the absence of the state of the Kingdom of Saudi Arabia. If I put this country, the site will be rejected." · 2024-07-28 · «اتمنى اضافة شركات للتغذية من السعودية» — "I hope you add food companies from Saudi Arabia." The MFP store listing shows no Arabic (C16 as corrected).
 - For the eater: Arabic UI, Saudi and Egyptian region choices and local foods are not polish; their absence is the most common Saudi complaint about the market leader.
 
@@ -139,7 +139,7 @@ Written 2026-10-01. Workflows the eater touches: WF-1…WF-9, plus the eater's s
 - For the eater: Sips & Bytes must match the ease. Its difference is that a correction is a visible Correction with old, new and delta (FRD §2.6), not an AI re-think of the number.
 
 **E30 · Kam Calorie (Egyptian developer) speaks the eater's quantities: "half a chicken, two loaves, two spoons of honey"; pieces, spoons, cups, loaves, no grams; one-tap re-log.** Free plan: 10 AI logs a month. `opened` **(vendor)**
-- https://apps.apple.com/sa/app/kam-calorie/id6748948785 · v1.1.5, about 2026-09-29 · "Pieces, spoons, cups, loaves, plates — no grams required" · "Understands dialect quantities: نص فرخة، رغيفين، معلقتين عسل" · "Log again: re-log a recent meal with one tap" · "Your food diary is stored on your device" · "recordings may be kept to improve Arabic food recognition" · v1.1.5 notes: "Fixed an issue that stopped meal logging (voice, photo and text) from working". The store lists English only (F32 as corrected).
+- https://apps.apple.com/sa/app/kam-calorie/id6748948785 · v1.1.5, about 2026-09-29 · "Pieces, spoons, cups, loaves, plates — no grams required" · "Understands dialect quantities: نص فرخة، رغيفين، معلقتين عسل" · "Log again: re-log a recent meal with one tap" · "Your food diary is stored on your device" · "recordings may be kept to improve Arabic food recognition" · v1.1.4 notes (about 2026-09-25): "Fixed an issue that stopped meal logging (voice, photo and text) from working". The store lists English only (F32 as corrected).
 - For the eater: dialect counts and duals («رغيفين» "two loaves», «معلقتين» "two spoons") must parse in typed and spoken Arabic. When AI logging is down, logging must still work (FRD §7.2, AT-32).
 
 **E31 · A decade-long review of calorie-counting apps: picking food from images beats text; copy-paste logging is valued; missing local and home-cooked food lowers acceptability.** `opened`
@@ -152,7 +152,7 @@ Written 2026-10-01. Workflows the eater touches: WF-1…WF-9, plus the eater's s
 
 **E33 · The phone is already at the table in about one meal in three.** Experience sampling of 1,780 meals (Singapore): 85.3% used a phone during at least one meal; phones were used at 27.1% of meals. `opened`
 - https://pmc.ncbi.nlm.nih.gov/articles/PMC8138713/ · JMIR mHealth uHealth, 2021-05-06 · "most participants (110/129, 85.3%) recorded at least one instance of mealtime smartphone use, with an average frequency of 1 in 3 meals where phones were used (27.1%…)".
-- For the eater: logging at the table is a real moment, not a design fiction; for the other two meals in three, logging happens afterwards from memory (E24).
+- For the eater: logging at the table is a real moment, not a design fiction. At the other meals the phone is away, so logging likely happens afterwards from memory (`assumption`, consistent with E24).
 
 ## C · Where, how and on what device
 
@@ -207,7 +207,7 @@ Written 2026-10-01. Workflows the eater touches: WF-1…WF-9, plus the eater's s
 | Chat assistant (ChatGPT and similar) | a photo or a sentence becomes a table; no database search | different answers on different days; no ledger; forgets or resets (owner's own workflow, brief §1.1) | E22, E23 |
 | MyFitnessPal | huge database, copy yesterday, saved meals | no Arabic; Saudi Arabia missing as a country; barcode paywalled; more taps after redesign; copy only from yesterday; edits do not reach Recents; midnight and frozen zone | E19, E20, E21, E26, E27, E32; C4, C5, C7, C16 |
 | Lose It! / Cronometer | recipes, copy previous day, Health sync | onboarding questions; convoluted recipe flow on a small phone; no Arabic | E17; C19, C22, C23, C29 |
-| Cal AI and other photo-first apps | fastest capture | hard paywall; workout calories added on rest days; hidden-oil undercount | E18; C38, C40 |
+| Cal AI and other photo-first apps | fastest capture | hard paywall and billing complaints; workout calories added on rest days; absurd totals from text descriptions | E18; C38, C40 (its undercount figure is unverified and not used) |
 | Arabic-first apps (Loqma, Kam Calorie, Kilo, Mezan) | Arabic, local dishes and restaurants, dialect quantities | same meal different number on different days; numbers jump after an update; restaurant numbers not believable; long onboarding; forced subscription | E15–E17, E28–E30; F32, F33, F34, F35 |
 | Delivery-app menu calories | free, at the moment of ordering | "both … wrong and unreliable" (Kilo review, E28); serving meaning unclear | E10, E28; F20 |
 | Paper or memory | private, no friction | forgetting; incomplete days; abandonment after gaps | E24 (general journalers); paper use specific to this market is `assumption` |
@@ -221,7 +221,7 @@ Written 2026-10-01. Workflows the eater touches: WF-1…WF-9, plus the eater's s
 - **Device.** The eater's own iPhone on iOS 26+ (blueprint §0), from the smallest current model (iPhone 16e/17e) to the largest Pro Max (P34). Proved on both. Siri, a Home Screen widget and the Lock Screen are part of the surface (P22–P24); widget buttons need the phone unlocked (P24).
 - **Places, in order of how often they matter.**
   1. **The table or the floor cloth (sofra), at home, with family.** Breakfast plates of foul, eggs, cheese and bread bites; a shared lunch tray (Egypt, E1) or kabsa tray (E6); iftar and suhoor in Ramadan (E11, E12). Phone in the left hand or on the table; the right hand eats or holds bread (E5, E6, E34). People around (E24).
-  2. **Later, from memory** — on the sofa or in bed at night, often after midnight (E9), or the next morning: two meals in three are not logged at the table (E33, E24).
+  2. **Later, from memory** — on the sofa or in bed at night, often after midnight (E9), or the next morning: at most meals the phone is not in use (E33), and forgetting is the main cause of gaps (E24).
   3. **The kitchen counter**, once per habitual food: weighing a bite, a spoon or the cooked pot (WF-2). Two hands and a scale are more likely here (`assumption`).
   4. **A restaurant or a delivery order at night** (E10).
   5. **Outdoors in strong sun** — balcony, car, café terrace (E37; places `assumption`).
