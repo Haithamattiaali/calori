@@ -905,3 +905,97 @@ Never for the owner. Items 11–13 restate research.md §6 conflicts 4, 7 and 8 
 ### 9.4 Counts
 
 WF-5: 43 stories, 145 acceptance lines · WF-7: 24 stories, 70 lines · WF-8: 30 stories, 72 lines · **97 stories, 287 acceptance lines** (258 `/r`, 20 `/m`, 9 `/s`).
+
+---
+
+## Lens verdict (2026-10-01)
+
+**fail** — 22 defects.
+
+Verified by an agent that did not write this file, against blueprint §0–§1, `way/vocabulary.md` (D2), `way/brief/frd-v1.0.md`, `way/personas/_lens-brief.md`, `research.md` (context only), `way/research/r1-*.md` and both refuters. Scope: map §3–§5 for WF-5, WF-7, WF-8; FR-045, FR-048…FR-055, FR-060…FR-075; FRD §9, §10, §12, §13; AT-15, AT-17…AT-25 and the ATs the file claims.
+
+**What holds (no defect).** Every story traces to an FR/AT/§ line or a map line. Ids are `eater-5|7|8.n` in sequence. Every story has a `/r` line. The §9.4 counts are exact: 97 stories and 287 lines (258 `/r`, 20 `/m`, 9 `/s`). Every C/F/P/R id cited still stands after the refuters: R42 is used only for its standing part, and R34 is not cited. The fixture arithmetic was recomputed with exact fractions and every figure checks:
+- all 15 Unit vectors (4/4/9 equals source kcal; carbohydrate shares);
+- 5.6: 397.6 kcal at 28.17 %; 440.0 kcal at 31.82 %;
+- 5.15: 30.04 %;
+- 5.16: 430.0 kcal, low 419.6, high 445.6;
+- 5.17: 809.7 kcal; shares 34.1 / 23.4 / 0.7 / 37.7 / 4.1 by largest remainder; 6/4/1/8/1 is the only zero-deviation answer;
+- 5.21: 6 cheese bites, 284.4 kcal, 36.29 %;
+- 5.22: 442.7 kcal;
+- 5.23, by brute force: most protein 53.6 g at 495.4 kcal; lowest ceiling 584.0 kcal; 4 chicken give 60 g at 456.0 kcal;
+- 5.28–5.37: 640 → 242; 355.2; 42.4; 76.4;
+- 7.6: 179.2 lb;
+- 7.13: 137.9375;
+- 7.16–7.20: 1,707.84 shown as 1,710; 1,910 and 710; 2,010 and 810; 2,299; 680;
+- 8.1–8.7: the shares; 1,173–1,233; 29.6 / 37.1 / 33.3; 17.3 / 51.7 / 31.0; 22.7 % against 7.2 %; 1,247.4 and 623;
+- 8.12: 8,460 kcal over 5 Days, mean 1,692, −290 (not −3,790);
+- the 28-Day and 7-Day date spans.
+
+### Defects
+
+1. **Missing step: FR-061 (P1).** It is in this dispatch (FR-060…FR-075) but has no story: "Propose bounded target adjustments (initial product limit: 100 kcal/day per 14-day review), explain the reason, and require acceptance. Never retroactively alter historical targets or force compensation for one high-intake day." FR-060 got 8.21, but FR-061 is also missing from §9.1, which is titled "FRD lines in this dispatch → stories".
+2. **Missing step: FRD §10.2 "Fiber and net carbohydrate".** The rule reads: "Preserve source total carbohydrate and fiber conventions. Never add sugar to total carbohydrate again. Net carbohydrate is optional and explicitly named." No meal or Day report line shows fiber, total against net carbohydrate, or that sugar is not added twice. §9.1 has no §10 row at all.
+3. **Missing step: FRD §10.3 in the reports.** The rule reads: "The default assessment is below, within, or above the selected carbohydrate target. Optional Low/Medium/High labels must disclose the configured thresholds; the app shall not describe the same 45% share differently in adjacent reports." 8.1 and 8.2 show "within" and "above" once each. No line checks that the meal report, the Day report and Progress word the same share the same way, or that a Low/Medium/High label shows its thresholds. The Day report also never shows macro grams against the §10.3 gram targets (FRD §14 Today: "three macro progress indicators").
+4. **Missing step: the FRD §9.1 objective order.** The FRD says: "Minimize deviation from the requested calorie target and preference shares, then preparation complexity. Nutrition constraints outrank preferences." The only objective line is the 5.17 `/m` line, and it runs "with … no other limit". No line sets preference shares that conflict with a limit and shows the limit winning. Preparation complexity as the last tie-break appears nowhere.
+5. **Missing step: FR-051 with grams turned on.** FR-051 says "halves or gram edits require an enabled setting". 5.11 tests only the off state: "«اسمح بالجرامات» ("Allow grams") off, Then no gram field on the result can be edited". With Allow grams on, nothing says what can be edited on Meal planner or Meal review, or that the limits list is checked again after a gram edit.
+6. **Missing steps: FRD §2.4 and §14 (Meal planner, Meal review).** Journey C says "The app matches known recipes and personal units and asks about unrecognized foods."
+   - 5.1 shows the photo's chips only as dishes («رز كبسة · دجاج · سلطة · لبن» "marked as available foods"). 5.14 starts from chips that are already Units. No line shows a photo chip matched to the eater's own Unit or Recipe, with the match visible.
+   - FRD §14 lists "photo" and "source details" for Meal review. 5.31 checks only the steppers and the plan column; no line shows the photo or the source details there.
+7. **eater-5.40: claims AT-32 but does not test it.** The trace cites AT-32 ("AI times out. Recent units and manual logging still work; pending analysis is not reported as consumed"). The story's lines test only the Kill switch (`AI_UNAVAILABLE`) and the quota (`RATE_LIMITED`). No line has a plan photo's Analysis time out with NFR-03's progress indicator and asynchronous recovery, while planning from Units keeps working.
+8. **eater-5.19 contradicts eater-5.2 and eater-5.40 on AI calls.**
+   - 5.19 gives every feasible plan a "generated `explanation`" (FRD §16.2), so finding counts calls the AI unless a switch is On.
+   - Yet 5.2 says "(planning from a list makes no AI call)" and 5.40 says "the planner, which needs no AI, always works".
+   - No line covers the explanation when the eater has not given the Consent for "sending … text to Google's AI" (map §3 row 1; FR-076), or has used up the daily AI quota. 5.40 line 2 covers only `POST /v1/analyses`.
+9. **eater-5.25: "Policy floor" names two numbers, and the floor itself is never tested.**
+   - The title is "The planner keeps to the Policy floor", and the fixture gives "calorie floor 1,200 kcal, hard stop 1,000 kcal".
+   - The only refusal is at 700 kcal, against "the hard stop of the Policy version In effect (1,000 kcal)". The screen calls 1,000 "the reviewed minimum" («… لا تقل عن ١٬٠٠٠ سعرة، وهو الحد الأدنى المراجَع»).
+   - No line covers a whole-day request between 1,000 and 1,199 kcal, which is below the 1,200 floor. So the map row "Eater → planner" ("floor policy respected") is shown only for the hard stop.
+10. **eater-7.18 and eater-8.23: app-proposed −20 % Targets break the map's deficit cap, and §7 does not flag it.**
+    - Map §1.6 Policy: "deficit cap (smaller of 15 % and 500–750 kcal)".
+    - 7.18's preview proposes "Base food Target 1,710 (maintenance without exercise 2,134.8, −20 %)", a 20 % deficit of 426.96 kcal. 8.23 labels Mona's 1,870 Target "Estimated: resting energy, activity, −20 %".
+    - The 20 % in FRD §11.3 comes from "the conversation's declared values", starting from "A user-provided RMR of 1,779". That makes it a user-provided Target (an FR-004 source). The file instead calls 1,779 a "resting estimate" (in the fixture, 7.13 and 7.20).
+11. **eater-7.13 and eater-7.18: a method and two defaults with no source and no `assumption` label.**
+    - FRD §12.2 says only "Manual activities reporting gross energy require conversion or confirmation".
+    - 7.13 fixes the method as "active = 175 − 1,779 × 30 / 1,440 = 137.9375", which subtracts a prorated resting estimate.
+    - 7.18 fixes the defaults "Credit 50 % of eligible Activity" and "Cap 300 kcal a day".
+    - None of these is labelled `assumption` or listed in §8. §8 does list the ±10 % tolerance, which is the same kind of value.
+12. **eater-7.4 `/s`: P30 is cited for more than it says.** The line reads "the app registers it at hourly frequency, the most HealthKit allows for that type (P30)". P30 says only that "some types update at most hourly". Neither P30 nor the refuter's quote names active energy as one of those types, and the line has no `assumption` label.
+13. **eater-5.14 against eater-5.5: the WF-5 done-when line cannot pass as written.**
+    - In 5.5, for Faisal (Target 1,900, 1,260 consumed), Meal planner opens with Calorie target «حوالي 640 — المتبقي اليوم». Its rule is "Given Calorie ceiling 400 and Calorie target "about 450" … "Find counts" is disabled".
+    - 5.14 uses the same eater on the same Day (5.28: "the remaining figure still reads 640") with "Calorie ceiling 500 and Carbohydrate maximum 30 %" and no target. By 5.5, the ceiling sits below the pre-filled target, so "Find counts" is disabled.
+    - §7 item 6 leaves the ceiling-only aim open, so the done-when fixture ("cap 500 kcal + carbs ≤30 %") needs its target stated, cleared or set.
+14. **Lines that cannot be observed as written.**
+    - 5.7 line 3 and 8.20 line 3 say "the field shows the fix beside it" without naming the message.
+    - 8.29 line 2 says "the export screen says so before the file is made" without giving the text.
+    - 5.30 line 3 needs "an iPad", which the profile does not prove (§0: "the smallest and largest iPhone simulator").
+15. **eater-5.29 and eater-5.33: Faisal is shown in the wrong digits.** The fixture and 5.41 give Faisal "Arabic (Gulf), Western digits". But 5.29 shows «تراجع: خطة الكبسة (٤ ملاعق رز، قطعتا دجاج)» and 5.33 shows «باقي: ملعقة رز ١», both in Arabic-Indic digits. His lines in 5.31 and 5.36 correctly read «3 من 4» and «3 مش 4».
+16. **Vocabulary: proposed places that §7 does not list.** D2 Places has no "Activity sheet" and no "saved Plans list". Both are marked *proposed* in §0.1 and §6, but neither is in §7 Conflicts.
+    - The Activity sheet carries acceptance lines in 7.5, 7.7, 7.9, 7.10, 7.14, 7.15, 7.20, 7.21 and 7.23.
+    - §6 says the saved Plans list is "used in … 5.20", but 5.20 and every other story never use it.
+17. **Vocabulary: other proposed names that §7 does not list.** §7 lists only `scope: "day"` (item 5) and the Activity states (item 17). These names appear in acceptance lines but are listed only in §6:
+    - labels: "Find counts", "Save plan", "Log leftovers", "Mark Day complete";
+    - API calls: `GET /v1/meal-plans/{id}`, `GET /v1/meal-plans?state=saved`, `POST /v1/meal-plans/{id}/validate`, `POST /v1/activity`, `GET /v1/activity`, `POST /v1/activity/{id}/void`, `POST /v1/days/{id}/complete`, `POST /v1/weights`, `GET /v1/targets`, `format=csv`;
+    - fields: `blocking[]`, `changes[]`, `left_out[]`, `preference_report`, `calorie_target_source`, `confirmed_as`.
+
+    The `activity_coverage.state` values `data`, `no_data` and `not_connected` (7.2, 7.3, 7.21) are in neither §6 nor §7.
+18. **Vocabulary: "target" names three things.**
+    - The eater's carbohydrate goal is "your 30 % maximum" in 8.1 ("Carbohydrate: within your 30 % maximum") but "your 30 % target" in 8.2 ("Carbohydrate: above your 30 % target"). Sam's fixture sets no macro goal at all.
+    - Meal planner's "Calorie target" ("about 450") reuses the map's word **Target** for a meal-level aim, as in 5.43: "uses what is left of the approved Target as its hidden Calorie target". The file settles the same double meaning for "plan" (§7 item 3) but not for "target".
+19. **Vocabulary: one Unit has two names, against FRD §5.1.** The fixture names it "foul spoon / معلقة فول". The stories call it a bite: 5.10 `/m` "a foul bite = 28 g", 5.12 "3 foul bites show 138 kcal", 5.21 "foul bite (57.39 %)". FRD §5.1: "The app shall not translate 'spoon' into 'bite' simply because both relate to the same food."
+20. **Vocabulary: "AI limit" instead of the map's quota.** 5.40 says "my AI limit reached" in its title and "his daily AI limit is reached" in line 2; §5 says "the AI limit". Map §1.6 and D2 (`RATE_LIMITED`, "also per-user AI quota") call this the per-user daily AI quota. This file also keeps "limits" for planner constraints (§0.1, "limits").
+21. **Arabic labels change with the eater's gender.** Map §1.4 says "Arabic labels are fixed once in the string catalogue and never vary between screens", and §6 promises "one Arabic label per English word".
+    - Mona gets feminine forms: 8.24 «صدّري الفترة» ("Export period"); 5.25 «تقدري تخطّطي وجبة واحدة أو تراجعي هدفك»; 5.26 «ضعي حدًا لهذه الوجبة إن أردتِ»; 8.20 «راجعيه» and «احتفظي به».
+    - Faisal gets masculine forms (5.40 «تقدر تخطّط من وحداتك»), so one English label has two Arabic forms.
+    - 8.20 mixes both in one prompt («احتفظي به» beside «استبعده من الاتجاه»).
+    - The user settings in map §1.6 hold no form of address, and FR-002 forbids inferring sex ("never infer it from … gender presentation").
+22. **The §9.3 coverage table is wrong for WF-8 "conflict".** It cites 8.9 (a late correction) and 8.11 (Target versions). Neither has a concurrent edit, a `STALE_REVISION` or a reconciliation. WF-8 has no conflict path, such as "Mark Day complete" sent from two devices, or a Day report left open while another device corrects an Entry.
+
+### Cross-lens (for the model phase join; not counted)
+
+- **§5 shared ids point at unrelated stories** in the current lens files:
+  - eater-7.2 and eater-7.9 → `support-9.19` is "Work fast at a desk, and still at phone width". The import and "no data" story is `support-7.1`, "See Activity import results".
+  - eater-5.40 → `admin-10.30` is "Two admins editing at once". The kill switch and quota stories are `admin-10.31`, `admin-10.33` and `admin-10.40`.
+  - eater-8.8 → `admin-10.26` is "Move to Rollout". "A Registry change never rewrites history" is `admin-10.29`.
+- **No Registry task writes plan explanations.** 5.19 and 5.40 line 3 rely on a "Kill switch for plan explanations", but the admin lens's Registry has six tasks (`meal`, `label`, `scale`, `ingredients`, `text`, `voice`).
+- **The approver lens has the same deficit cap.** approver-10.48 sets it at "the smaller of 15 % and 500 kcal", so the −20 % Targets in 7.18 and 8.23 (defect 10) break it there too.
+- **The word "paused".** 5.40's eater copy "Photo reading is paused" («متوقفة») clashes with the admin lens's rule "Nothing is called 'paused'" for Kill switch On.
